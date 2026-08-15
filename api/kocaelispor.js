@@ -1,62 +1,34 @@
-const BASE = 'https://www.tff.org/Default.aspx';
-
-function clean(s) {
-  return String(s || '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function parseMatches(html) {
-  const text = clean(html);
-  const re =
-    /(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})\s+([^\n]{2,120}?)\s+([^\n]{2,120}?)(?=\s+\d{2}\.\d{2}\.\d{4}|\s*$)/g;
-
-  const out = [];
-  let m;
-
-  while ((m = re.exec(text))) {
-    const home = clean(m[3]);
-    const away = clean(m[4]);
-
-    if (/KOCAELİSPOR/i.test(home + ' ' + away)) {
-      out.push({
-        date: m[1],
-        time: m[2],
-        home,
-        away
-      });
-    }
-  }
-
-  return out;
-}
+const SOFASCORE_URL =
+  'https://www.sofascore.com/api/v1/team/3065/events/next/0';
 
 export default async function handler(req, res) {
   try {
-    const week = Math.min(
-      34,
-      Math.max(1, Number(req.query.week) || 1)
-    );
-
-    const tffUrl = new URL(BASE);
-tffUrl.searchParams.set('hafta', String(week));
-tffUrl.searchParams.set('pageId', '198');
-
-    const r = await fetch(tffUrl, {
+    const response = await fetch(SOFASCORE_URL, {
       headers: {
-        'user-agent': 'KocaeliCep/1.0'
+        'User-Agent': 'Mozilla/5.0',
+        'Accept': 'application/json'
       }
     });
 
-    if (!r.ok) {
-      throw new Error(`TFF HTTP ${r.status}`);
+    if (!response.ok) {
+      throw new Error(`Sofascore HTTP ${response.status}`);
     }
 
-    const html = await r.text();
-    const matches = parseMatches(html);
+    const data = await response.json();
+
+    const events = (data.events || [])
+      .filter(event =>
+        event.homeTeam?.id === 3065 ||
+        event.awayTeam?.id === 3065
+      )
+      .map(event => ({
+        id: event.id,
+        date: new Date(event.startTimestamp * 1000).toISOString(),
+        home: event.homeTeam?.name || '',
+        away: event.awayTeam?.name || '',
+        tournament: event.tournament?.name || '',
+        status: event.status?.type || ''
+      }));
 
     res.setHeader(
       'Cache-Control',
@@ -65,20 +37,19 @@ tffUrl.searchParams.set('pageId', '198');
 
     return res.status(200).json({
       ok: true,
-      source: 'TFF',
-      season: '2026-2027',
-      week,
-      tffUrl,
-      matches,
+      source: 'Sofascore',
+      team: 'Kocaelispor',
+      teamId: 3065,
+      matches: events,
       updatedAt: new Date().toISOString()
     });
 
-  } catch (e) {
-    return res.status(502).json({
+  } catch (error) {
+    return res.status(500).json({
       ok: false,
-      source: 'TFF',
-      error: 'TFF verisi alınamadı',
-      detail: String(e.message || e)
+      source: 'Sofascore',
+      error: 'Maç verisi alınamadı',
+      detail: String(error.message || error)
     });
   }
 }
