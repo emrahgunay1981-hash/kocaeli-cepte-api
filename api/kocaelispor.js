@@ -41,7 +41,9 @@ export default async function handler(req, res) {
       Math.max(1, Number(req.query.week) || 1)
     );
 
-    const tffUrl = `${BASE}?hafta=${week}&pageId=198`;
+    const tffUrl = new URL(BASE);
+tffUrl.searchParams.set('hafta', String(week));
+tffUrl.searchParams.set('pageId', '198');
 
     const r = await fetch(tffUrl, {
       headers: {
