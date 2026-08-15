@@ -1,0 +1,82 @@
+const BASE = 'https://www.tff.org/Default.aspx';
+
+function clean(s) {
+  return String(s || '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseMatches(html) {
+  const text = clean(html);
+  const re =
+    /(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})\s+([^\n]{2,120}?)\s+([^\n]{2,120}?)(?=\s+\d{2}\.\d{2}\.\d{4}|\s*$)/g;
+
+  const out = [];
+  let m;
+
+  while ((m = re.exec(text))) {
+    const home = clean(m[3]);
+    const away = clean(m[4]);
+
+    if (/KOCAELİSPOR/i.test(home + ' ' + away)) {
+      out.push({
+        date: m[1],
+        time: m[2],
+        home,
+        away
+      });
+    }
+  }
+
+  return out;
+}
+
+export default async function handler(req, res) {
+  try {
+    const week = Math.min(
+      34,
+      Math.max(1, Number(req.query.week) || 1)
+    );
+
+    const tffUrl = `${BASE}?hafta=${week}&pageId=198`;
+
+    const r = await fetch(tffUrl, {
+      headers: {
+        'user-agent': 'KocaeliCep/1.0'
+      }
+    });
+
+    if (!r.ok) {
+      throw new Error(`TFF HTTP ${r.status}`);
+    }
+
+    const html = await r.text();
+    const matches = parseMatches(html);
+
+    res.setHeader(
+      'Cache-Control',
+      's-maxage=300, stale-while-revalidate=1800'
+    );
+
+    return res.status(200).json({
+      ok: true,
+      source: 'TFF',
+      season: '2026-2027',
+      week,
+      tffUrl,
+      matches,
+      updatedAt: new Date().toISOString()
+    });
+
+  } catch (e) {
+    return res.status(502).json({
+      ok: false,
+      source: 'TFF',
+      error: 'TFF verisi alınamadı',
+      detail: String(e.message || e)
+    });
+  }
+}
