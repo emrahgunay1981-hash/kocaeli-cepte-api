@@ -14,10 +14,10 @@ export default async function handler(req, res) {
     }
 
     const url =
-      `${API_URL}?team=1957&season=2026&next=10&timezone=Europe/Istanbul`;
+      `${API_URL}?team=1957&next=10&timezone=Europe/Istanbul`;
 
     const response = await fetch(url, {
-      headers: {
+  6    headers: {
         "x-apisports-key": apiKey,
         "Accept": "application/json"
       }
