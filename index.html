@@ -57,6 +57,7 @@
     border-radius: 12px;
     padding: 8px 12px;
     font-size: 12px;
+    position: relative;
   }
   .market-icon {
     width: 20px; height: 20px;
@@ -65,9 +66,16 @@
     font-size: 11px; font-weight: 700;
     flex-shrink: 0;
   }
-  .market-name { color: #9fb8a8; font-size: 10px; }
+  .market-name { color: #9fb8a8; font-size: 10px; display:flex; align-items:center; gap:4px; }
   .market-val { font-weight: 700; font-size: 12.5px; }
   .market-chg { font-size: 10px; }
+  .market-demo {
+    font-size: 8px;
+    color: #6b8574;
+    background: #16301f;
+    border-radius: 4px;
+    padding: 1px 4px;
+  }
   .up { color: #34c759; }
   .down { color: #ff453a; }
   .cats {
@@ -315,24 +323,58 @@
   </div>
 
 <script>
-  const rates = [
-    { icon:"$", color:"#34c759", name:"DOLAR", val:"32,41", chg:"%0,21", up:true },
-    { icon:"€", color:"#4aa3ff", name:"EURO", val:"35,08", chg:"%0,18", up:true },
-    { icon:"₺", color:"#e0b83c", name:"ALTIN", val:"2.395", chg:"%0,35", up:true },
-    { icon:"📈", color:"#c084fc", name:"BIST 100", val:"10.532", chg:"%0,48", up:true },
-    { icon:"₿", color:"#f0a83a", name:"BTC/USDT", val:"67.250", chg:"%0,62", up:false },
+  const staticRates = [
+    { icon:"₺", color:"#e0b83c", name:"ALTIN", val:"2.395", chg:"%0,35", up:true, demo:true },
+    { icon:"📈", color:"#c084fc", name:"BIST 100", val:"10.532", chg:"%0,48", up:true, demo:true },
   ];
-  const marketEl = document.getElementById('market');
-  marketEl.innerHTML = rates.map(r => `
-    <div class="market-card">
-      <div class="market-icon" style="background:${r.color}22;color:${r.color}">${r.icon}</div>
-      <div>
-        <div class="market-name">${r.name}</div>
-        <div><span class="market-val">${r.val}</span> <span class="market-chg ${r.up ? 'up' : 'down'}">${r.up ? '▲' : '▼'}${r.chg}</span></div>
-      </div>
-    </div>
-  `).join('');
+
+  function fmtNum(n, digits) {
+    if (n === null || n === undefined || isNaN(n)) return "-";
+    return Number(n).toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  }
+
+  function renderMarket(liveRates) {
+    const liveCards = liveRates.map(r => {
+      const up = r.changePct === null ? true : r.changePct >= 0;
+      const chg = r.changePct === null ? "-" : `%${Math.abs(r.changePct).toFixed(2)}`.replace('.', ',');
+      const icon = r.code === "USD" ? "$" : r.code === "EUR" ? "€" : "₿";
+      const color = r.code === "USD" ? "#34c759" : r.code === "EUR" ? "#4aa3ff" : "#f0a83a";
+      const digits = r.code === "BTC" ? 0 : 2;
+      return `
+        <div class="market-card">
+          <div class="market-icon" style="background:${color}22;color:${color}">${icon}</div>
+          <div>
+            <div class="market-name">${r.name}</div>
+            <div><span class="market-val">${fmtNum(r.value, digits)}</span> <span class="market-chg ${up ? 'up' : 'down'}">${up ? '▲' : '▼'}${chg}</span></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const demoCards = staticRates.map(r => `
+      <div class="market-card">
+        <div class="market-icon" style="background:${r.color}22;color:${r.color}">${r.icon}</div>
+        <div>
+          <div class="market-name">${r.name} <span class="market-demo">örnek</span></div>
+          <div><span class="market-val">${r.val}</span> <span class="market-chg ${r.up ? 'up' : 'down'}">${r.up ? '▲' : '▼'}${r.chg}</span></div>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('market').innerHTML = liveCards + demoCards;
+  }
+
+  renderMarket([
+    { code:"USD", name:"DOLAR", value: 32.41, changePct: 0.21 },
+    { code:"EUR", name:"EURO", value: 35.08, changePct: 0.18 },
+    { code:"BTC", name:"BTC/USDT", value: 67250, changePct: -0.62 },
+  ]);
+
+  fetch('/api/rates')
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) renderMarket(data.rates);
+    })
+    .catch(() => { /* canlı veri gelmezse örnek değerler kalır */ });
 </script>
 
 </body>
-  </html>
+</html>
