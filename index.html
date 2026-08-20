@@ -324,6 +324,7 @@
 
 <script>
   const staticRates = [
+    { icon:"₺", color:"#e0b83c", name:"ALTIN", val:"2.395", chg:"%0,35", up:true, demo:true },
     { icon:"📈", color:"#c084fc", name:"BIST 100", val:"10.532", chg:"%0,48", up:true, demo:true },
   ];
 
@@ -336,8 +337,8 @@
     const liveCards = liveRates.map(r => {
       const up = r.changePct === null ? true : r.changePct >= 0;
       const chg = r.changePct === null ? "-" : `%${Math.abs(r.changePct).toFixed(2)}`.replace('.', ',');
-      const icon = r.code === "USD" ? "$" : r.code === "EUR" ? "€" : r.code === "ALTIN" ? "₺" : "₿";
-      const color = r.code === "USD" ? "#34c759" : r.code === "EUR" ? "#4aa3ff" : r.code === "ALTIN" ? "#e0b83c" : "#f0a83a";
+      const icon = r.code === "USD" ? "$" : r.code === "EUR" ? "€" : "₿";
+      const color = r.code === "USD" ? "#34c759" : r.code === "EUR" ? "#4aa3ff" : "#f0a83a";
       const digits = r.code === "BTC" ? 0 : 2;
       return `
         <div class="market-card">
@@ -365,13 +366,12 @@
     { code:"USD", name:"DOLAR", value: 32.41, changePct: 0.21 },
     { code:"EUR", name:"EURO", value: 35.08, changePct: 0.18 },
     { code:"BTC", name:"BTC/USDT", value: 67250, changePct: -0.62 },
-    { code:"ALTIN", name:"ALTIN", value: 2395, changePct: 0.35 },
   ]);
 
   fetch('/api/rates')
     .then(r => r.json())
     .then(data => {
-      if (data.ok) renderMarket(data.rates);
+      if (data.ok) renderMarket(data.rates.filter(r => r.code !== "ALTIN"));
     })
     .catch(() => { /* canlı veri gelmezse örnek değerler kalır */ });
 </script>
