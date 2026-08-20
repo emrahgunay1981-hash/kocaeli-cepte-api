@@ -1,6 +1,6 @@
-// Dolar, Euro ve BTC için canlı veri çeker.
-// Altın ve BIST 100 için şimdilik ücretsiz/anahtarsız güvenilir bir kaynak yok,
-// bu yüzden onlar ayrı bir aşamada (bir API anahtarı ile) eklenecek.
+// Dolar, Euro, BTC ve Altın için canlı veri çeker.
+// BIST 100 için şimdilik ücretsiz/anahtarsız güvenilir bir kaynak yok,
+// bu yüzden o ayrı bir aşamada (bir API anahtarı ile) eklenecek.
 
 function fmtDate(d) {
   return d.toISOString().slice(0, 10);
@@ -33,18 +33,39 @@ async function getBtc() {
   return { value, changePct };
 }
 
+async function getAltin() {
+  const data = await fetch("https://finans.truncgil.com/v2/today.json").then(r => r.json());
+  const entry = data && (data["gram-altin"] || data["GRAM ALTIN"] || data["GRAM-ALTIN"]);
+  if (!entry) return { value: null, changePct: null };
+
+  const value = entry.Selling ?? entry.Satış ?? entry.satis ?? entry.Buying ?? entry.Alış ?? null;
+
+  let changePct = null;
+  const rawChange = entry.Change ?? entry.Değişim ?? entry.degisim ?? null;
+  if (typeof rawChange === "number") {
+    changePct = rawChange;
+  } else if (typeof rawChange === "string") {
+    const parsed = parseFloat(rawChange.replace("%", "").replace(",", "."));
+    changePct = isNaN(parsed) ? null : parsed;
+  }
+
+  return { value: value ? Number(value) : null, changePct };
+}
+
 export default async function handler(req, res) {
   try {
-    const [usd, eur, btc] = await Promise.all([
+    const [usd, eur, btc, altin] = await Promise.all([
       getFx("USD").catch(() => ({ value: null, changePct: null })),
       getFx("EUR").catch(() => ({ value: null, changePct: null })),
       getBtc().catch(() => ({ value: null, changePct: null })),
+      getAltin().catch(() => ({ value: null, changePct: null })),
     ]);
 
     const rates = [
       { code: "USD", name: "DOLAR", value: usd.value, changePct: usd.changePct },
       { code: "EUR", name: "EURO", value: eur.value, changePct: eur.changePct },
       { code: "BTC", name: "BTC/USDT", value: btc.value, changePct: btc.changePct },
+      { code: "ALTIN", name: "ALTIN", value: altin.value, changePct: altin.changePct },
     ];
 
     res.status(200).json({ ok: true, updated: new Date().toISOString(), rates });
