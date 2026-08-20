@@ -34,7 +34,7 @@ async function getBtc() {
 }
 
 async function getAltin() {
-  const data = await fetch("https://finans.truncgil.com/v2/today.json").then(r => r.json());
+  const data = await fetch("https://finans.truncgil.com/today.json").then(r => r.json());
   const entry = data && (data["gram-altin"] || data["GRAM ALTIN"] || data["GRAM-ALTIN"]);
   if (!entry) return { value: null, changePct: null };
 
