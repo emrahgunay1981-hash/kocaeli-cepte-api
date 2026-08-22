@@ -1,6 +1,6 @@
-// KOCAELİ CEPTE - Kocaeli odaklı çoklu haber sistemi
-// Tek bir haber sitesine bağlı değildir.
-// Farklı Kocaeli kaynaklarının RSS akışlarını birleştirir.
+// KOCAELİ CEPTE
+// Çoklu Kocaeli haber kaynağı
+// Öncü Haber kullanılmıyor.
 
 function extract(regex, str) {
   const m = str.match(regex);
@@ -25,14 +25,16 @@ function cleanText(str) {
 
 function timeAgo(pubDate) {
   const then = new Date(pubDate).getTime();
-  const now = Date.now();
 
-  if (!then) return "";
+  if (isNaN(then)) return "";
 
-  const diffMin = Math.floor((now - then) / 60000);
+  const diffMin = Math.floor((Date.now() - then) / 60000);
 
   if (diffMin < 1) return "az önce";
-  if (diffMin < 60) return `${diffMin} dakika önce`;
+
+  if (diffMin < 60) {
+    return `${diffMin} dakika önce`;
+  }
 
   const diffHour = Math.floor(diffMin / 60);
 
@@ -46,162 +48,157 @@ function timeAgo(pubDate) {
 }
 
 
-// Kocaeli odaklı RSS kaynakları
-const FEEDS = [
-
-  {
-    name: "Özgür Kocaeli",
-    url: "https://www.ozgurkocaeli.com.tr/rss/kategori/kocaeli-haberleri"
-  },
+const SOURCES = [
 
   {
     name: "Kocaeli Gazetesi",
-    url: "https://www.kocaeligazetesi.com.tr/rss/kategori/gundem"
+    url: "https://www.kocaeligazetesi.com.tr/rss/haber"
   },
 
   {
-    name: "Kocaeli Gündem",
-    url: "https://kocaeligundem.com/rss/kategori/son-dakika-kocaeli-haberler"
+    name: "Özgür Kocaeli",
+    url: "https://www.ozgurkocaeli.com.tr/rss/haber"
   },
 
   {
     name: "Ses Kocaeli",
-    url: "https://www.seskocaeli.com/rss/kategori/kocaeli-son-dakika-haberler"
-  },
-
-  {
-    name: "Kocaeli Koz",
-    url: "https://www.kocaelikoz.com/rss/kategori/kocaeli-haber"
+    url: "https://www.seskocaeli.com/rss/haber"
   },
 
   {
     name: "En Kocaeli",
-    url: "https://www.enkocaeli.com/rss/kategori/son-dakika-kocaeli-haberleri"
+    url: "https://www.enkocaeli.com/rss/haber"
+  },
+
+  {
+    name: "Kocaeli Gündem",
+    url: "https://kocaeligundem.com/rss/haber"
   }
 
 ];
 
 
-// RSS içindeki haberleri ayrıştır
-function parseItems(xml, sourceName) {
+async function getSource(source) {
 
-  const itemBlocks =
-    xml.match(/<item\b[\s\S]*?<\/item>/gi) || [];
+  try {
 
-  return itemBlocks.map(block => {
+    const response = await fetch(source.url);
 
-    const title = cleanText(
-      extract(
-        /<title[^>]*>([\s\S]*?)<\/title>/i,
-        block
-      )
+    if (!response.ok) {
+      return [];
+    }
+
+    const xml = await response.text();
+
+    const itemBlocks =
+      xml.match(/<item[\s\S]*?<\/item>/gi) || [];
+
+
+    return itemBlocks.slice(0, 10).map(block => {
+
+      const title = cleanText(
+        extract(
+          /<title>([\s\S]*?)<\/title>/i,
+          block
+        )
+      );
+
+      const link = cleanText(
+        extract(
+          /<link>([\s\S]*?)<\/link>/i,
+          block
+        )
+      );
+
+      const pubDate = cleanText(
+        extract(
+          /<pubDate>([\s\S]*?)<\/pubDate>/i,
+          block
+        )
+      );
+
+      const category = cleanText(
+        extract(
+          /<category[^>]*>([\s\S]*?)<\/category>/i,
+          block
+        )
+      );
+
+      let image = null;
+
+      const enclosure =
+        block.match(
+          /<enclosure[^>]+url=["']([^"']+)["']/i
+        );
+
+      if (enclosure) {
+        image = enclosure[1];
+      }
+
+
+      return {
+
+        title,
+
+        link,
+
+        category,
+
+        image,
+
+        time: pubDate
+          ? timeAgo(pubDate)
+          : "",
+
+        pubDate,
+
+        source: source.name
+
+      };
+
+    }).filter(item =>
+
+      item.title &&
+      item.link
+
     );
 
-    const link = cleanText(
-      extract(
-        /<link[^>]*>([\s\S]*?)<\/link>/i,
-        block
-      )
-    );
+  } catch (error) {
 
-    const pubDate = cleanText(
-      extract(
-        /<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i,
-        block
-      )
-    );
+    return [];
 
-    const category = cleanText(
-      extract(
-        /<category[^>]*>([\s\S]*?)<\/category>/i,
-        block
-      )
-    );
-
-    let image =
-      extract(/<enclosure[^>]+url=["']([^"']+)["']/i, block) ||
-      extract(/<media:content[^>]+url=["']([^"']+)["']/i, block) ||
-      extract(/<media:thumbnail[^>]+url=["']([^"']+)["']/i, block) ||
-      null;
-
-    return {
-      title,
-      link,
-      category,
-      image,
-      pubDate,
-      source: sourceName,
-      time: pubDate ? timeAgo(pubDate) : ""
-    };
-
-  }).filter(item => item.title && item.link);
+  }
 
 }
 
 
-// Ana API
 export default async function handler(req, res) {
 
   try {
 
-    // Bütün RSS kaynaklarını aynı anda çek
-    const results = await Promise.allSettled(
-
-      FEEDS.map(async feed => {
-
-        const response = await fetch(feed.url, {
-          headers: {
-            "User-Agent": "Kocaeli-Cepte/1.0"
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error(
-            `${feed.name} RSS hatası: ${response.status}`
-          );
-        }
-
-        const xml = await response.text();
-
-        return parseItems(xml, feed.name);
-
-      })
-
-    );
+    const results =
+      await Promise.all(
+        SOURCES.map(getSource)
+      );
 
 
-    // Başarılı kaynaklardan haberleri topla
-    let items = [];
-
-    results.forEach(result => {
-
-      if (result.status === "fulfilled") {
-        items.push(...result.value);
-      }
-
-    });
+    let items =
+      results.flat();
 
 
-    // Tarihe göre sırala
-    items.sort((a, b) => {
+    // Aynı haber birden fazla sitede varsa
+    // başlığına göre tekrarları temizle.
 
-      const dateA = new Date(a.pubDate || 0).getTime();
-      const dateB = new Date(b.pubDate || 0).getTime();
-
-      return dateB - dateA;
-
-    });
-
-
-    // Aynı haberi farklı kaynaklar verdiyse tek göster
     const seen = new Set();
 
     items = items.filter(item => {
 
-      const key = item.title
-        .toLowerCase()
-        .replace(/\s+/g, " ")
-        .trim();
+      const key =
+        item.title
+          .toLowerCase()
+          .replace(/[^a-z0-9çğıöşü\s]/gi, "")
+          .replace(/\s+/g, " ")
+          .trim();
 
       if (seen.has(key)) {
         return false;
@@ -214,32 +211,51 @@ export default async function handler(req, res) {
     });
 
 
-    // En güncel 6 haber
-    items = items.slice(0, 6);
+    // En yeni haberler üstte.
+
+    items.sort((a, b) => {
+
+      const dateA =
+        new Date(a.pubDate || 0).getTime();
+
+      const dateB =
+        new Date(b.pubDate || 0).getTime();
+
+      return dateB - dateA;
+
+    });
+
+
+    // İlk 20 haber.
+
+    items = items.slice(0, 20);
 
 
     res.status(200).json({
 
       ok: true,
 
-      source: "Kocaeli Cepte Çoklu Haber",
+      updated:
+        new Date().toISOString(),
 
-      updated: new Date().toISOString(),
+      count:
+        items.length,
+
+      sources:
+        SOURCES.map(s => s.name),
 
       items
 
     });
 
 
-  } catch (err) {
-
-    console.error("Haber API hatası:", err);
+  } catch (error) {
 
     res.status(500).json({
 
       ok: false,
 
-      error: "Haberler alınamadı"
+      error: "Kocaeli haberleri alınamadı"
 
     });
 
