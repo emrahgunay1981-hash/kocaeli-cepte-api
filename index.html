@@ -13,9 +13,9 @@
 }
 
 body {
-  font-family: -apple-system, "Segoe UI", Arial, sans-serif;
-  background: #0b1710;
-  color: #f2f5f2;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: #07140d;
+  color: #f3f7f4;
   padding-bottom: 90px;
 }
 
@@ -24,6 +24,7 @@ a {
   color: inherit;
 }
 
+/* ÜST BAR */
 .topbar {
   display: flex;
   align-items: center;
@@ -32,20 +33,21 @@ a {
 }
 
 .logo-badge {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  background: linear-gradient(160deg, #1e5631, #123a20);
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: linear-gradient(160deg, #16813c, #0c4d25);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 23px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.25);
 }
 
 .brand-name {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 800;
-  letter-spacing: 0.5px;
+  letter-spacing: .4px;
 }
 
 .brand-name span {
@@ -57,14 +59,15 @@ a {
   letter-spacing: 2px;
   color: #7f9b87;
   text-transform: uppercase;
+  margin-top: 2px;
 }
 
+/* PİYASA */
 .market {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   margin: 0 16px 18px;
-  padding-bottom: 2px;
   scrollbar-width: none;
 }
 
@@ -82,44 +85,32 @@ a {
   border-radius: 12px;
   padding: 8px 12px;
   font-size: 12px;
-  position: relative;
 }
 
 .market-icon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
   font-weight: 700;
-  flex-shrink: 0;
 }
 
 .market-name {
   color: #9fb8a8;
   font-size: 10px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .market-val {
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: 12px;
 }
 
 .market-chg {
   font-size: 10px;
-}
-
-.market-demo {
-  font-size: 8px;
-  color: #6b8574;
-  background: #16301f;
-  border-radius: 4px;
-  padding: 1px 4px;
+  margin-left: 3px;
 }
 
 .up {
@@ -130,9 +121,10 @@ a {
   color: #ff453a;
 }
 
+/* KATEGORİLER */
 .cats {
   display: flex;
-  gap: 22px;
+  gap: 20px;
   overflow-x: auto;
   padding: 4px 18px 20px;
   scrollbar-width: none;
@@ -148,7 +140,7 @@ a {
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
-  opacity: 0.85;
+  opacity: .82;
 }
 
 .cat.active {
@@ -183,6 +175,7 @@ a {
   font-weight: 600;
 }
 
+/* BÖLÜMLER */
 section {
   padding: 0 16px;
   margin-bottom: 26px;
@@ -196,7 +189,7 @@ section {
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 800;
 }
 
@@ -205,6 +198,7 @@ section {
   color: #7fbf8f;
 }
 
+/* HABERLER */
 .news-grid {
   display: flex;
   gap: 12px;
@@ -213,11 +207,11 @@ section {
 
 .news-hero {
   position: relative;
-  flex: 1.3;
+  flex: 1.25;
+  min-height: 250px;
   border-radius: 16px;
   overflow: hidden;
-  min-height: 230px;
-  background: linear-gradient(160deg, #173322, #0d1f15);
+  background: linear-gradient(160deg,#173322,#0d1f15);
   background-size: cover;
   background-position: center;
   display: flex;
@@ -231,8 +225,8 @@ section {
   inset: 0;
   background: linear-gradient(
     0deg,
-    rgba(0,0,0,0.75) 10%,
-    rgba(0,0,0,0.1) 70%
+    rgba(0,0,0,.82) 5%,
+    rgba(0,0,0,.1) 75%
   );
 }
 
@@ -247,11 +241,10 @@ section {
   left: 12px;
   background: #34c759;
   color: #06210f;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
   padding: 4px 8px;
   border-radius: 6px;
-  letter-spacing: 0.5px;
 }
 
 .news-hero h3 {
@@ -259,10 +252,16 @@ section {
   line-height: 1.3;
 }
 
+.news-hero .source {
+  font-size: 10px;
+  color: #9fd2aa;
+  margin-top: 7px;
+}
+
 .news-hero .time {
-  font-size: 11px;
+  font-size: 10px;
   color: #cfe8d6;
-  margin-top: 6px;
+  margin-top: 3px;
   display: block;
 }
 
@@ -278,20 +277,26 @@ section {
   border: 1px solid #1a3223;
   border-radius: 12px;
   padding: 10px;
-  font-size: 12.5px;
+  font-size: 12px;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.news-item .time {
-  color: #7f9b87;
-  font-size: 11px;
-  margin-top: 4px;
-  display: block;
+.news-item .source {
+  color: #6fbf80;
+  font-size: 9px;
+  margin-top: 5px;
 }
 
+.news-item .time {
+  color: #7f9b87;
+  font-size: 10px;
+  margin-top: 3px;
+}
+
+/* KART */
 .card {
   background: #10241a;
   border: 1px solid #1c3826;
@@ -314,16 +319,18 @@ section {
 .card-head .sub {
   font-size: 11px;
   color: #7f9b87;
+  margin-top: 2px;
 }
 
-.card-head .more {
+.more {
   font-size: 11px;
   color: #7fbf8f;
 }
 
+/* HIZLI MENÜ */
 .grid4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4,1fr);
   gap: 10px;
   text-align: center;
 }
@@ -348,11 +355,12 @@ section {
   font-size: 18px;
 }
 
+/* YER TUTUCU */
 .placeholder {
   text-align: center;
-  padding: 26px 10px;
+  padding: 25px 10px;
   color: #7f9b87;
-  font-size: 12.5px;
+  font-size: 12px;
 }
 
 .placeholder .big {
@@ -361,8 +369,10 @@ section {
   margin-bottom: 6px;
 }
 
+/* ALT MENÜ */
 .bottomnav {
   position: fixed;
+  z-index: 20;
   bottom: 0;
   left: 0;
   right: 0;
@@ -372,7 +382,6 @@ section {
   justify-content: space-around;
   align-items: center;
   padding: 10px 0 14px;
-  z-index: 100;
 }
 
 .nav-item {
@@ -400,13 +409,40 @@ section {
   font-size: 22px;
   font-weight: 700;
   margin-top: -22px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.3);
+}
+
+/* MOBİL */
+@media (max-width: 520px) {
+
+  .news-grid {
+    min-height: 250px;
+  }
+
+  .news-hero {
+    min-height: 250px;
+  }
+
+  .news-side {
+    min-width: 42%;
+  }
+
+  .news-hero h3 {
+    font-size: 15px;
+  }
+
+  .news-item {
+    font-size: 11px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- ÜST BAR -->
 <div class="topbar">
+
   <div class="logo-badge">🏙️</div>
 
   <div>
@@ -416,4 +452,670 @@ section {
 
     <div class="brand-tag">
       Şehrin cepteki hali
-    </div
+    </div>
+  </div>
+
+</div>
+
+
+<!-- PİYASA -->
+<div class="market" id="market"></div>
+
+
+<!-- KATEGORİLER -->
+<div class="cats">
+
+  <a href="#" class="cat active">
+    <div class="cat-circle">🏠</div>
+    <div class="cat-label">Tümü</div>
+  </a>
+
+  <a href="#haberler" class="cat">
+    <div class="cat-circle">📰</div>
+    <div class="cat-label">Haberler</div>
+  </a>
+
+  <a href="#ekonomi" class="cat">
+    <div class="cat-circle">💹</div>
+    <div class="cat-label">Ekonomi</div>
+  </a>
+
+  <a href="sport.html" class="cat">
+    <div class="cat-circle">⚽</div>
+    <div class="cat-label">Kocaelispor</div>
+  </a>
+
+  <a href="#etkinlik" class="cat">
+    <div class="cat-circle">🎫</div>
+    <div class="cat-label">Etkinlikler</div>
+  </a>
+
+  <a href="#hava" class="cat">
+    <div class="cat-circle">⛅</div>
+    <div class="cat-label">Hava</div>
+  </a>
+
+  <a href="#paylas" class="cat">
+    <div class="cat-circle">📷</div>
+    <div class="cat-label">Paylaş</div>
+  </a>
+
+</div>
+
+
+<!-- HABERLER -->
+<section id="haberler">
+
+  <div class="section-head">
+
+    <div class="section-title">
+      Kocaeli'den Son Dakika
+    </div>
+
+    <div class="section-more">
+      <a href="haberler.html">
+        Tüm Haberler ›
+      </a>
+    </div>
+
+  </div>
+
+
+  <div class="news-grid" id="news-grid">
+
+    <div class="placeholder" style="width:100%;">
+      <span class="big">📰</span>
+      Kocaeli haberleri yükleniyor...
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- EKONOMİ -->
+<section id="ekonomi">
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+        <h4>Ekonomi</h4>
+        <div class="sub">
+          Piyasalarda bugün
+        </div>
+      </div>
+
+    </div>
+
+    <div class="placeholder">
+
+      <span class="big">💹</span>
+
+      Kocaeli ve Türkiye ekonomi haberleri yakında burada
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- KOCAELİSPOR -->
+<section id="spor">
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+        <h4>Kocaelispor</h4>
+
+        <div class="sub">
+          Yeşil Siyahın Kalbi
+        </div>
+      </div>
+
+      <div class="more">
+        <a href="sport.html">
+          Tümünü Gör ›
+        </a>
+      </div>
+
+    </div>
+
+
+    <div class="grid4">
+
+      <a href="sport.html#haberler">
+        <div class="ic">📰</div>
+        Haberler
+      </a>
+
+      <a href="sport.html#tribun">
+        <div class="ic">📺</div>
+        Tribün
+      </a>
+
+      <a href="sport.html#program">
+        <div class="ic">📅</div>
+        Maç Programı
+      </a>
+
+      <a href="sport.html#puan">
+        <div class="ic">🏆</div>
+        Puan Durumu
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ETKİNLİKLER -->
+<section id="etkinlik">
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+        <h4>Etkinlikler</h4>
+
+        <div class="sub">
+          Kocaeli'de neler var?
+        </div>
+      </div>
+
+      <div class="more">
+        Yakında
+      </div>
+
+    </div>
+
+    <div class="placeholder">
+
+      <span class="big">🎫</span>
+
+      Kocaeli etkinlik takvimi yakında burada
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- HAVA -->
+<section id="hava">
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+        <h4>Hava Durumu</h4>
+
+        <div class="sub">
+          Kocaeli ve ilçeleri
+        </div>
+      </div>
+
+    </div>
+
+    <div class="placeholder">
+
+      <span class="big">⛅</span>
+
+      Kocaeli hava durumu yakında burada
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ŞEHİRDEN PAYLAŞ -->
+<section id="paylas">
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+        <h4>Şehirden Paylaş</h4>
+
+        <div class="sub">
+          Kocaeli'den canlı akış
+        </div>
+      </div>
+
+    </div>
+
+    <div class="placeholder">
+
+      <span class="big">📷</span>
+
+      Kocaelililerin paylaşımları yakında burada
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ALT MENÜ -->
+<div class="bottomnav">
+
+  <a href="#" class="nav-item active">
+    <div>🏠</div>
+    Ana Sayfa
+  </a>
+
+  <a href="haberler.html" class="nav-item">
+    <div>📰</div>
+    Haberler
+  </a>
+
+  <div class="nav-fab">
+    +
+  </div>
+
+  <div class="nav-item">
+    <div>🔔</div>
+    Bildirimler
+  </div>
+
+  <div class="nav-item">
+    <div>👤</div>
+    Profil
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   GÜVENLİ HTML
+========================= */
+
+function escapeHtml(value) {
+
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+/* =========================
+   PİYASA
+========================= */
+
+function fmtNum(n, digits) {
+
+  if (
+    n === null ||
+    n === undefined ||
+    isNaN(n)
+  ) {
+    return "-";
+  }
+
+  return Number(n).toLocaleString(
+    "tr-TR",
+    {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits
+    }
+  );
+}
+
+
+function renderMarket(rates) {
+
+  const market = document.getElementById("market");
+
+  if (!market) return;
+
+  market.innerHTML = rates.map(r => {
+
+    const change =
+      r.changePct === null ||
+      r.changePct === undefined
+        ? null
+        : Number(r.changePct);
+
+    const isUp =
+      change === null ? true : change >= 0;
+
+    const icon =
+      r.code === "USD"
+        ? "$"
+        : r.code === "EUR"
+        ? "€"
+        : r.code === "BTC"
+        ? "₿"
+        : "₺";
+
+    const color =
+      r.code === "USD"
+        ? "#34c759"
+        : r.code === "EUR"
+        ? "#4aa3ff"
+        : r.code === "BTC"
+        ? "#f0a83a"
+        : "#e0b83c";
+
+    const digits =
+      r.code === "BTC" ? 0 : 2;
+
+    const changeText =
+      change === null
+        ? ""
+        : `${isUp ? "▲" : "▼"}%${Math.abs(change).toFixed(2).replace(".", ",")}`;
+
+    return `
+      <div class="market-card">
+
+        <div
+          class="market-icon"
+          style="background:${color}22;color:${color}"
+        >
+          ${icon}
+        </div>
+
+        <div>
+
+          <div class="market-name">
+            ${escapeHtml(r.name)}
+          </div>
+
+          <div>
+
+            <span class="market-val">
+              ${fmtNum(r.value, digits)}
+            </span>
+
+            <span class="market-chg ${isUp ? "up" : "down"}">
+              ${changeText}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+  }).join("");
+
+}
+
+
+/* İlk gösterilecek değerler */
+renderMarket([
+
+  {
+    code: "USD",
+    name: "DOLAR",
+    value: 32.41,
+    changePct: 0.21
+  },
+
+  {
+    code: "EUR",
+    name: "EURO",
+    value: 35.08,
+    changePct: 0.18
+  },
+
+  {
+    code: "BTC",
+    name: "BTC/USDT",
+    value: 67250,
+    changePct: -0.62
+  }
+
+]);
+
+
+/* Canlı piyasa API */
+fetch("/api/rates")
+
+  .then(response => response.json())
+
+  .then(data => {
+
+    if (
+      data &&
+      data.ok &&
+      Array.isArray(data.rates)
+    ) {
+
+      renderMarket(
+        data.rates.filter(
+          r => r.code !== "ALTIN"
+        )
+      );
+
+    }
+
+  })
+
+  .catch(() => {
+    /* İlk değerler kalır */
+  });
+
+
+/* =========================
+   HABERLER
+========================= */
+
+function renderNews(items) {
+
+  const grid =
+    document.getElementById("news-grid");
+
+  if (!grid) return;
+
+
+  if (
+    !Array.isArray(items) ||
+    items.length === 0
+  ) {
+
+    grid.innerHTML = `
+      <div
+        class="placeholder"
+        style="width:100%;"
+      >
+        <span class="big">📰</span>
+        Şu anda Kocaeli haberi bulunamadı
+      </div>
+    `;
+
+    return;
+  }
+
+
+  /* İlk haber büyük */
+  const hero = items[0];
+
+  /* Sonraki 3 haber */
+  const sideItems =
+    items.slice(1, 4);
+
+
+  const safeTitle =
+    escapeHtml(hero.title);
+
+  const safeLink =
+    escapeHtml(hero.link);
+
+  const safeImage =
+    hero.image
+      ? String(hero.image).replace(/'/g, "%27")
+      : "";
+
+
+  const heroStyle =
+    safeImage
+      ? `
+        background-image:
+        linear-gradient(
+          160deg,
+          rgba(10,30,20,.2),
+          rgba(5,15,10,.75)
+        ),
+        url('${safeImage}');
+      `
+      : "";
+
+
+  grid.innerHTML = `
+
+    <a
+      href="${safeLink}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="news-hero"
+      style="${heroStyle}"
+    >
+
+      <span class="tag">
+        SON DAKİKA
+      </span>
+
+      <div>
+
+        <h3>
+          ${safeTitle}
+        </h3>
+
+        <div class="source">
+          ${escapeHtml(hero.source || "Kocaeli")}
+        </div>
+
+        <span class="time">
+          ${escapeHtml(hero.time || "")}
+        </span>
+
+      </div>
+
+    </a>
+
+
+    <div class="news-side">
+
+      ${sideItems.map(item => `
+
+        <a
+          href="${escapeHtml(item.link)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="news-item"
+        >
+
+          ${escapeHtml(item.title)}
+
+          <span class="source">
+            ${escapeHtml(item.source || "Kocaeli")}
+          </span>
+
+          <span class="time">
+            ${escapeHtml(item.time || "")}
+          </span>
+
+        </a>
+
+      `).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   HABER API
+========================= */
+
+fetch("/api/news")
+
+  .then(response => {
+
+    if (!response.ok) {
+      throw new Error("Haber API çalışmadı");
+    }
+
+    return response.json();
+
+  })
+
+  .then(data => {
+
+    if (
+      data &&
+      data.ok &&
+      Array.isArray(data.items)
+    ) {
+
+      renderNews(data.items);
+
+    } else {
+
+      throw new Error(
+        "Haber verisi bulunamadı"
+      );
+
+    }
+
+  })
+
+  .catch(error => {
+
+    console.error(
+      "Haberler yüklenemedi:",
+      error
+    );
+
+    const grid =
+      document.getElementById("news-grid");
+
+    if (grid) {
+
+      grid.innerHTML = `
+        <div
+          class="placeholder"
+          style="width:100%;"
+        >
+
+          <span class="big">⚠️</span>
+
+          Haberler şu anda yüklenemedi
+
+        </div>
+      `;
+
+    }
+
+  });
+
+</script>
+
+</body>
+          </html>
