@@ -1069,28 +1069,50 @@ function createWeatherExtra(data) {
 
   extra.innerHTML = `
 
-    <div class="weather-tabs">
+  <div class="weather-tabs">
 
-      <button
-        id="hourly-weather-btn"
-        onclick="showHourlyWeather()">
-        🕐 Saatlik
-      </button>
+    <button id="hourly-weather-btn">
+      🕐 Saatlik
+    </button>
 
-      <button
-        id="daily-weather-btn"
-        onclick="showDailyWeather()">
-        📅 Günlük
-      </button>
+    <button id="daily-weather-btn">
+      📅 Günlük
+    </button>
 
-    </div>
+  </div>
 
-    <div id="weather-list"></div>
+  <div id="weather-list"></div>
 
-  `;
+`;
 
 
-  showHourlyWeather();
+/* Butonları bağla */
+
+const hourlyBtn =
+  document.getElementById("hourly-weather-btn");
+
+const dailyBtn =
+  document.getElementById("daily-weather-btn");
+
+
+if (hourlyBtn) {
+  hourlyBtn.addEventListener(
+    "click",
+    showHourlyWeather
+  );
+}
+
+
+if (dailyBtn) {
+  dailyBtn.addEventListener(
+    "click",
+    showDailyWeather
+  );
+}
+
+
+showHourlyWeather();
+      
 
 }
 
