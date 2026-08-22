@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Kocaeli Cepte - Haberler</title>
 
 <style>
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,124 +15,297 @@
 }
 
 body {
-  font-family: -apple-system, "Segoe UI", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   background: #0b1710;
   color: #f2f5f2;
   padding-bottom: 30px;
 }
 
 a {
-  color: inherit;
   text-decoration: none;
+  color: inherit;
 }
+
+/* HEADER */
 
 .header {
-  padding: 20px 18px;
+  padding: 20px 18px 14px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  border-bottom: 1px solid #1c3826;
+  gap: 12px;
 }
 
-.back {
-  font-size: 28px;
-  color: #34c759;
+.logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #1e5631, #123a20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
 }
 
-.title {
+.brand {
   font-size: 20px;
   font-weight: 800;
 }
 
+.brand span {
+  color: #34c759;
+}
+
 .subtitle {
-  font-size: 10px;
   color: #7f9b87;
-  letter-spacing: 1px;
-  margin-top: 3px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
-.container {
-  padding: 18px 16px;
+/* BACK */
+
+.back {
+  margin: 0 16px 18px;
 }
 
-.news-list {
+.back a {
+  color: #7fbf8f;
+  font-size: 13px;
+}
+
+/* TITLE */
+
+.page-title {
+  padding: 0 16px;
+  margin-bottom: 15px;
+}
+
+.page-title h1 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.page-title p {
+  color: #7f9b87;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* FILTERS */
+
+.filters {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 16px 16px;
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #10241a;
+  border: 1px solid #1c3826;
+  color: #9fb8a8;
+  font-size: 11px;
+}
+
+.filter.active {
+  background: #34c759;
+  color: #06210f;
+  border-color: #34c759;
+  font-weight: 700;
+}
+
+/* NEWS */
+
+.news {
+  padding: 0 16px;
 }
 
 .news-card {
-  display: block;
+  display: flex;
+  gap: 12px;
   background: #10241a;
   border: 1px solid #1c3826;
-  border-radius: 15px;
-  padding: 15px;
+  border-radius: 14px;
+  padding: 11px;
+  margin-bottom: 10px;
 }
 
-.news-card h2 {
-  font-size: 16px;
-  line-height: 1.35;
-  margin-bottom: 8px;
+.news-image {
+  width: 105px;
+  height: 85px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #16301f;
+  background-size: cover;
+  background-position: center;
 }
 
-.news-card .time {
-  font-size: 11px;
-  color: #7f9b87;
+.news-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .source {
   display: inline-block;
-  margin-top: 8px;
-  font-size: 9px;
+  width: fit-content;
   color: #34c759;
-  background: #16301f;
-  padding: 4px 7px;
-  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-transform: uppercase;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px 10px;
+.news-title {
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.news-time {
   color: #7f9b87;
+  font-size: 10px;
+  margin-top: 6px;
 }
 
-.loading span {
-  display: block;
-  font-size: 30px;
+.loading,
+.empty,
+.error {
+  text-align: center;
+  padding: 45px 15px;
+  color: #7f9b87;
+  font-size: 13px;
+}
+
+.loading-icon {
+  font-size: 28px;
   margin-bottom: 8px;
 }
+
+/* DESKTOP */
+
+@media (min-width: 700px) {
+
+  .news {
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .page-title,
+  .filters,
+  .header,
+  .back {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
+
 </style>
+
 </head>
 
 <body>
 
+<!-- HEADER -->
+
 <div class="header">
 
-  <a href="index.html" class="back">
-    ‹
-  </a>
+  <div class="logo">
+    🏙️
+  </div>
 
   <div>
-    <div class="title">
-      Kocaeli Haberleri
+
+    <div class="brand">
+      KOCAELİ <span>CEPTE</span>
     </div>
 
     <div class="subtitle">
-      KOCAELİ CEPTE
+      Şehrin cepteki hali
     </div>
+
   </div>
 
 </div>
 
 
-<div class="container">
+<!-- GERİ -->
 
-  <div id="news-list" class="news-list">
+<div class="back">
 
-    <div class="loading">
-      <span>📰</span>
-      Kocaeli haberleri yükleniyor...
+  <a href="index.html">
+    ← Ana Sayfaya Dön
+  </a>
+
+</div>
+
+
+<!-- BAŞLIK -->
+
+<div class="page-title">
+
+  <h1>📰 Kocaeli Haberleri</h1>
+
+  <p>
+    Kocaeli'nin farklı haber kaynaklarından güncel haberler
+  </p>
+
+</div>
+
+
+<!-- FİLTRELER -->
+
+<div class="filters">
+
+  <div class="filter active" data-source="Tümü">
+    Tümü
+  </div>
+
+  <div class="filter" data-source="Kocaeli Gazetesi">
+    Kocaeli Gazetesi
+  </div>
+
+  <div class="filter" data-source="Özgür Kocaeli">
+    Özgür Kocaeli
+  </div>
+
+  <div class="filter" data-source="Ses Kocaeli">
+    Ses Kocaeli
+  </div>
+
+  <div class="filter" data-source="En Kocaeli">
+    En Kocaeli
+  </div>
+
+  <div class="filter" data-source="Kocaeli Gündem">
+    Kocaeli Gündem
+  </div>
+
+</div>
+
+
+<!-- HABERLER -->
+
+<div class="news" id="news">
+
+  <div class="loading">
+
+    <div class="loading-icon">
+      📰
     </div>
+
+    Haberler yükleniyor...
 
   </div>
 
@@ -139,9 +314,16 @@ a {
 
 <script>
 
+let allNews = [];
+
+
+/* HTML GÜVENLİĞİ */
+
 function escapeHtml(str) {
 
-  return String(str || "")
+  if (!str) return "";
+
+  return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -151,73 +333,181 @@ function escapeHtml(str) {
 }
 
 
-fetch("/api/news")
+/* HABERLERİ GÖSTER */
 
-  .then(response => response.json())
+function renderNews(source = "Tümü") {
 
-  .then(data => {
-
-    const list =
-      document.getElementById("news-list");
-
-    if (
-      !data.ok ||
-      !data.items ||
-      data.items.length === 0
-    ) {
-
-      list.innerHTML = `
-        <div class="loading">
-          <span>📰</span>
-          Haber bulunamadı.
-        </div>
-      `;
-
-      return;
-    }
+  const container =
+    document.getElementById("news");
 
 
-    list.innerHTML =
-      data.items.map(item => `
+  let news = allNews;
 
-        <a
-          href="${item.link}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="news-card"
-        >
 
-          <h2>
-            ${escapeHtml(item.title)}
-          </h2>
+  if (source !== "Tümü") {
 
-          <div class="time">
-            ${escapeHtml(item.time || "")}
-          </div>
+    news =
+      allNews.filter(item =>
+        item.source === source
+      );
 
-          <div class="source">
-            KOCAELİ CEPTE
-          </div>
+  }
 
-        </a>
 
-      `).join("");
+  if (!news.length) {
 
-  })
+    container.innerHTML = `
 
-  .catch(() => {
+      <div class="empty">
 
-    document.getElementById("news-list").innerHTML = `
+        📰<br><br>
 
-      <div class="loading">
-
-        <span>⚠️</span>
-
-        Haberler şu anda yüklenemiyor.
+        Bu kaynakta şu anda haber bulunamadı.
 
       </div>
 
     `;
+
+    return;
+
+  }
+
+
+  container.innerHTML = news.map(item => {
+
+    const image =
+      item.image
+        ? `background-image:url("${item.image}")`
+        : "";
+
+
+    return `
+
+      <a
+        class="news-card"
+        href="${item.link}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+
+        <div
+          class="news-image"
+          style="${image}"
+        ></div>
+
+
+        <div class="news-content">
+
+          <div class="source">
+
+            ${escapeHtml(item.source)}
+
+          </div>
+
+
+          <div class="news-title">
+
+            ${escapeHtml(item.title)}
+
+          </div>
+
+
+          <div class="news-time">
+
+            ${escapeHtml(item.time || "")}
+
+          </div>
+
+        </div>
+
+      </a>
+
+    `;
+
+  }).join("");
+
+}
+
+
+/* API'DEN HABERLER */
+
+fetch("/api/news")
+
+  .then(response => {
+
+    if (!response.ok) {
+      throw new Error("API hatası");
+    }
+
+    return response.json();
+
+  })
+
+  .then(data => {
+
+    if (
+      !data.ok ||
+      !Array.isArray(data.items)
+    ) {
+
+      throw new Error("Haber verisi yok");
+
+    }
+
+
+    allNews = data.items;
+
+    renderNews();
+
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+
+    document.getElementById("news").innerHTML = `
+
+      <div class="error">
+
+        📰<br><br>
+
+        Haberler şu anda yüklenemiyor.
+
+        <br><br>
+
+        Lütfen biraz sonra tekrar deneyin.
+
+      </div>
+
+    `;
+
+  });
+
+
+/* KAYNAK FİLTRELERİ */
+
+document
+  .querySelectorAll(".filter")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      document
+        .querySelectorAll(".filter")
+        .forEach(btn =>
+          btn.classList.remove("active")
+        );
+
+
+      button.classList.add("active");
+
+
+      renderNews(
+        button.dataset.source
+      );
+
+    });
 
   });
 
