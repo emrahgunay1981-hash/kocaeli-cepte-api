@@ -4,414 +4,416 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kocaeli Cepte</title>
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, "Segoe UI", Arial, sans-serif;
-    background: #0b1710;
-    color: #f2f5f2;
-    padding-bottom: 90px;
-  }
-  a { text-decoration: none; color: inherit; }
-  .topbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 20px 18px 14px;
-  }
-  .logo-badge {
-    width: 46px; height: 46px;
-    border-radius: 12px;
-    background: linear-gradient(160deg, #1e5631, #123a20);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-  }
-  .brand-name {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-  }
-  .brand-name span { color: #34c759; }
-  .brand-tag {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: #7f9b87;
-    text-transform: uppercase;
-  }
-  .market {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    margin: 0 16px 18px;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-  }
-  .market::-webkit-scrollbar { display: none; }
-  .market-card {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #10241a;
-    border: 1px solid #1c3826;
-    border-radius: 12px;
-    padding: 8px 12px;
-    font-size: 12px;
-    position: relative;
-  }
-  .market-icon {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700;
-    flex-shrink: 0;
-  }
-  .market-name { color: #9fb8a8; font-size: 10px; display:flex; align-items:center; gap:4px; }
-  .market-val { font-weight: 700; font-size: 12.5px; }
-  .market-chg { font-size: 10px; }
-  .market-demo {
-    font-size: 8px;
-    color: #6b8574;
-    background: #16301f;
-    border-radius: 4px;
-    padding: 1px 4px;
-  }
-  .up { color: #34c759; }
-  .down { color: #ff453a; }
-  .cats {
-    display: flex;
-    gap: 22px;
-    overflow-x: auto;
-    padding: 4px 18px 20px;
-    scrollbar-width: none;
-  }
-  .cats::-webkit-scrollbar { display: none; }
-  .cat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-    opacity: 0.85;
-  }
-  .cat.active { opacity: 1; }
-  .cat-circle {
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    background: #14261a;
-    border: 1px solid #1f3d28;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-  }
-  .cat.active .cat-circle {
-    border-color: #34c759;
-    background: #16321f;
-  }
-  .cat-label { font-size: 11px; color: #b7c9bd; white-space: nowrap; }
-  .cat.active .cat-label { color: #34c759; font-weight: 600; }
-  section { padding: 0 16px; margin-bottom: 26px; }
-  .section-head {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 12px;
-  }
-  .section-title { font-size: 16px; font-weight: 800; }
-  .section-more { font-size: 12px; color: #7fbf8f; }
-  .news-grid { display: flex; gap: 12px; align-items: stretch; }
-  .news-hero {
-    position: relative;
-    flex: 1.3;
-    border-radius: 16px;
-    overflow: hidden;
-    min-height: 230px;
-    background: linear-gradient(160deg,#173322,#0d1f15);
-    background-size: cover;
-    background-position: center;
-    display: flex; align-items: flex-end;
-    padding: 14px;
-  }
-  .news-hero::before {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(0deg, rgba(0,0,0,0.75) 10%, rgba(0,0,0,0.1) 70%);
-  }
-  .news-hero > * { position: relative; z-index: 1; }
-  .news-hero .tag {
-    position: absolute; top: 12px; left: 12px;
-    background: #34c759; color: #06210f;
-    font-size: 10px; font-weight: 800;
-    padding: 4px 8px; border-radius: 6px;
-    letter-spacing: 0.5px;
-  }
-  .news-hero h3 { font-size: 17px; line-height: 1.3; }
-  .news-hero .time { font-size: 11px; color: #cfe8d6; margin-top: 6px; display:block; }
-  .news-side { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-  .news-item {
-    background: #101f16;
-    border: 1px solid #1a3223;
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 12.5px;
-    flex: 1;
-    display: flex; flex-direction: column; justify-content: center;
-  }
-  .news-item .time { color: #7f9b87; font-size: 11px; margin-top: 4px; display:block; }
-  .card {
-    background: #10241a;
-    border: 1px solid #1c3826;
-    border-radius: 16px;
-    padding: 16px;
-  }
-  .card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; }
-  .card-head h4 { font-size: 15px; font-weight: 800; }
-  .card-head .sub { font-size: 11px; color: #7f9b87; }
-  .card-head .more { font-size: 11px; color: #7fbf8f; }
-  .grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; text-align:center; }
-  .grid4 a { display:flex; flex-direction:column; align-items:center; gap:6px; font-size: 10.5px; color:#cfe8d6; }
-  .grid4 .ic {
-    width: 46px; height:46px; border-radius: 50%;
-    background:#16301f; display:flex; align-items:center; justify-content:center;
-    font-size: 18px;
-  }
-  .placeholder {
-    text-align: center;
-    padding: 26px 10px;
-    color: #7f9b87;
-    font-size: 12.5px;
-  }
-  .placeholder .big { font-size: 26px; display:block; margin-bottom:6px; }
-  .bottomnav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: #0d1a12;
-    border-top: 1px solid #1c3826;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0 14px;
-  }
-  .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10.5px; color:#7f9b87; }
-  .nav-item.active { color: #34c759; }
-  .nav-fab {
-    width: 46px; height: 46px; border-radius: 50%;
-    background: #34c759; color:#06210f;
-    display:flex; align-items:center; justify-content:center;
-    font-size: 22px; font-weight:700;
-    margin-top: -22px;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", Arial, sans-serif;
+  background: #0b1710;
+  color: #f2f5f2;
+  padding-bottom: 90px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 18px 14px;
+}
+
+.logo-badge {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #1e5631, #123a20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.brand-name span {
+  color: #34c759;
+}
+
+.brand-tag {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #7f9b87;
+  text-transform: uppercase;
+}
+
+.market {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 16px 18px;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.market::-webkit-scrollbar {
+  display: none;
+}
+
+.market-card {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #10241a;
+  border: 1px solid #1c3826;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  position: relative;
+}
+
+.market-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.market-name {
+  color: #9fb8a8;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.market-val {
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+.market-chg {
+  font-size: 10px;
+}
+
+.market-demo {
+  font-size: 8px;
+  color: #6b8574;
+  background: #16301f;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.up {
+  color: #34c759;
+}
+
+.down {
+  color: #ff453a;
+}
+
+.cats {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  padding: 4px 18px 20px;
+  scrollbar-width: none;
+}
+
+.cats::-webkit-scrollbar {
+  display: none;
+}
+
+.cat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.cat.active {
+  opacity: 1;
+}
+
+.cat-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #14261a;
+  border: 1px solid #1f3d28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.cat.active .cat-circle {
+  border-color: #34c759;
+  background: #16321f;
+}
+
+.cat-label {
+  font-size: 11px;
+  color: #b7c9bd;
+  white-space: nowrap;
+}
+
+.cat.active .cat-label {
+  color: #34c759;
+  font-weight: 600;
+}
+
+section {
+  padding: 0 16px;
+  margin-bottom: 26px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.section-more {
+  font-size: 12px;
+  color: #7fbf8f;
+}
+
+.news-grid {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.news-hero {
+  position: relative;
+  flex: 1.3;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 230px;
+  background: linear-gradient(160deg, #173322, #0d1f15);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+}
+
+.news-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    rgba(0,0,0,0.75) 10%,
+    rgba(0,0,0,0.1) 70%
+  );
+}
+
+.news-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.news-hero .tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #34c759;
+  color: #06210f;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.news-hero h3 {
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.news-hero .time {
+  font-size: 11px;
+  color: #cfe8d6;
+  margin-top: 6px;
+  display: block;
+}
+
+.news-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.news-item {
+  background: #101f16;
+  border: 1px solid #1a3223;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 12.5px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.news-item .time {
+  color: #7f9b87;
+  font-size: 11px;
+  margin-top: 4px;
+  display: block;
+}
+
+.card {
+  background: #10241a;
+  border: 1px solid #1c3826;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-head h4 {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.card-head .sub {
+  font-size: 11px;
+  color: #7f9b87;
+}
+
+.card-head .more {
+  font-size: 11px;
+  color: #7fbf8f;
+}
+
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.grid4 a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: #cfe8d6;
+}
+
+.grid4 .ic {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #16301f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.placeholder {
+  text-align: center;
+  padding: 26px 10px;
+  color: #7f9b87;
+  font-size: 12.5px;
+}
+
+.placeholder .big {
+  font-size: 26px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.bottomnav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0d1a12;
+  border-top: 1px solid #1c3826;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0 14px;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  color: #7f9b87;
+}
+
+.nav-item.active {
+  color: #34c759;
+}
+
+.nav-fab {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #34c759;
+  color: #06210f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: -22px;
+}
 </style>
 </head>
+
 <body>
 
-  <div class="topbar">
-    <div class="logo-badge">🏙️</div>
-    <div>
-      <div class="brand-name">KOCAELİ <span>CEPTE</span></div>
-      <div class="brand-tag">Şehrin cepteki hali</div>
+<div class="topbar">
+  <div class="logo-badge">🏙️</div>
+
+  <div>
+    <div class="brand-name">
+      KOCAELİ <span>CEPTE</span>
     </div>
-  </div>
 
-  <div class="market" id="market"></div>
-
-  <div class="cats">
-    <div class="cat active"><div class="cat-circle">🏠</div><div class="cat-label">Tümü</div></div>
-    <a href="#haberler" class="cat"><div class="cat-circle">📰</div><div class="cat-label">Haberler</div></a>
-    <a href="#ekonomi" class="cat"><div class="cat-circle">💹</div><div class="cat-label">Ekonomi</div></a>
-    <a href="sport.html" class="cat"><div class="cat-circle">⚽</div><div class="cat-label">Kocaelispor</div></a>
-    <a href="#etkinlik" class="cat"><div class="cat-circle">🎫</div><div class="cat-label">Etkinlikler</div></a>
-    <a href="#hava" class="cat"><div class="cat-circle">⛅</div><div class="cat-label">Hava Durumu</div></a>
-    <a href="#paylas" class="cat"><div class="cat-circle">📷</div><div class="cat-label">Şehirden Paylaş</div></a>
-  </div>
-
-  <section id="haberler">
-    <div class="section-head">
-      <div class="section-title">Son Dakika</div>
-      <div class="section-more"><a href="https://www.kocaelioncu.com" target="_blank" style="color:#7fbf8f;">Tüm Haberler ›</a></div>
-    </div>
-    <div class="news-grid" id="news-grid">
-      <div class="placeholder" style="width:100%;"><span class="big">📰</span>Haberler yükleniyor...</div>
-    </div>
-  </section>
-
-  <section id="ekonomi">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <h4>Ekonomi</h4>
-          <div class="sub">Piyasalarda bugün</div>
-        </div>
-        <div class="more">Detaylar ›</div>
-      </div>
-      <div class="placeholder">
-        <span class="big">💹</span>
-        Ekonomi haberleri ve piyasa özeti yakında burada
-      </div>
-    </div>
-  </section>
-
-  <section id="spor">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <h4>Kocaelispor</h4>
-          <div class="sub">Yeşil Siyahın Kalbi</div>
-        </div>
-        <div class="more"><a href="sport.html" style="color:#7fbf8f;">Tümünü Gör ›</a></div>
-      </div>
-      <div class="grid4">
-        <a href="sport.html#haberler"><div class="ic">📰</div>Haberler</a>
-        <a href="sport.html#tribun"><div class="ic">📺</div>Canlı Tribün</a>
-        <a href="sport.html#program"><div class="ic">📅</div>Maç Programı</a>
-        <a href="sport.html#puan"><div class="ic">🏆</div>Puan Durumu</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="etkinlik">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <h4>Etkinlikler</h4>
-          <div class="sub">Kocaeli'de neler var?</div>
-        </div>
-        <div class="more">Tümünü Gör ›</div>
-      </div>
-      <div class="placeholder">
-        <span class="big">🎫</span>
-        Etkinlik takvimi yakında burada
-      </div>
-    </div>
-  </section>
-
-  <section id="hava">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <h4>Hava Durumu</h4>
-          <div class="sub">Kocaeli ve ilçeleri</div>
-        </div>
-      </div>
-      <div class="placeholder">
-        <span class="big">⛅</span>
-        Hava durumu verisi yakında burada
-      </div>
-    </div>
-  </section>
-
-  <section id="paylas">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <h4>Şehirden Paylaş</h4>
-          <div class="sub">Canlı akış</div>
-        </div>
-      </div>
-      <div class="placeholder">
-        <span class="big">📷</span>
-        Kullanıcı paylaşımları çok yakında burada
-      </div>
-    </div>
-  </section>
-
-  <div class="bottomnav">
-    <div class="nav-item active"><div>🏠</div>Ana Sayfa</div>
-    <a href="#haberler" class="nav-item"><div>📰</div>Haberler</a>
-    <div class="nav-fab">+</div>
-    <div class="nav-item"><div>🔔</div>Bildirimler</div>
-    <div class="nav-item"><div>👤</div>Profil</div>
-  </div>
-
-<script>
-  const staticRates = [
-    { icon:"₺", color:"#e0b83c", name:"ALTIN", val:"2.395", chg:"%0,35", up:true, demo:true },
-    { icon:"📈", color:"#c084fc", name:"BIST 100", val:"10.532", chg:"%0,48", up:true, demo:true },
-  ];
-
-  function fmtNum(n, digits) {
-    if (n === null || n === undefined || isNaN(n)) return "-";
-    return Number(n).toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
-  }
-
-  function renderMarket(liveRates) {
-    const liveCards = liveRates.map(r => {
-      const up = r.changePct === null ? true : r.changePct >= 0;
-      const chg = r.changePct === null ? "-" : `%${Math.abs(r.changePct).toFixed(2)}`.replace('.', ',');
-      const icon = r.code === "USD" ? "$" : r.code === "EUR" ? "€" : r.code === "ALTIN" ? "₺" : "₿";
-      const color = r.code === "USD" ? "#34c759" : r.code === "EUR" ? "#4aa3ff" : r.code === "ALTIN" ? "#e0b83c" : "#f0a83a";
-      const digits = r.code === "BTC" ? 0 : 2;
-      return `
-        <div class="market-card">
-          <div class="market-icon" style="background:${color}22;color:${color}">${icon}</div>
-          <div>
-            <div class="market-name">${r.name}</div>
-            <div><span class="market-val">${fmtNum(r.value, digits)}</span> <span class="market-chg ${up ? 'up' : 'down'}">${up ? '▲' : '▼'}${chg}</span></div>
-          </div>
-        </div>`;
-    }).join('');
-
-    const demoCards = staticRates.map(r => `
-      <div class="market-card">
-        <div class="market-icon" style="background:${r.color}22;color:${r.color}">${r.icon}</div>
-        <div>
-          <div class="market-name">${r.name} <span class="market-demo">örnek</span></div>
-          <div><span class="market-val">${r.val}</span> <span class="market-chg ${r.up ? 'up' : 'down'}">${r.up ? '▲' : '▼'}${r.chg}</span></div>
-        </div>
-      </div>`).join('');
-
-    document.getElementById('market').innerHTML = liveCards + demoCards;
-  }
-
-  renderMarket([
-    { code:"USD", name:"DOLAR", value: 32.41, changePct: 0.21 },
-    { code:"EUR", name:"EURO", value: 35.08, changePct: 0.18 },
-    { code:"BTC", name:"BTC/USDT", value: 67250, changePct: -0.62 },
-  ]);
-
-  fetch('/api/rates')
-    .then(r => r.json())
-    .then(data => {
-      if (data.ok) renderMarket(data.rates.filter(r => r.code !== "ALTIN"));
-    })
-    .catch(() => { /* canlı veri gelmezse örnek değerler kalır */ });
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  }
-
-  fetch('/api/news')
-    .then(r => r.json())
-    .then(data => {
-      const grid = document.getElementById('news-grid');
-      if (!data.ok || !data.items || data.items.length === 0) {
-        grid.innerHTML = `<div class="placeholder" style="width:100%;"><span class="big">📰</span>Haberler şu anda yüklenemedi</div>`;
-        return;
-      }
-
-      const [hero, ...rest] = data.items;
-      const sideItems = rest.slice(0, 3);
-
-      const heroBg = hero.image ? `background-image: linear-gradient(160deg, rgba(10,30,20,0.2), rgba(5,15,10,0.5)), url('${hero.image}');` : "";
-
-      grid.innerHTML = `
-        <a href="${hero.link}" target="_blank" class="news-hero" style="${heroBg}">
-          <span class="tag">SON DAKİKA</span>
-          <div>
-            <h3>${escapeHtml(hero.title)}</h3>
-            <span class="time">${escapeHtml(hero.time || "")}</span>
-          </div>
-        </a>
-        <div class="news-side">
-          ${sideItems.map(item => `
-            <a href="${item.link}" target="_blank" class="news-item">${escapeHtml(item.title)}<span class="time">${escapeHtml(item.time || "")}</span></a>
-          `).join('')}
-        </div>`;
-    })
-    .catch(() => {
-      const grid = document.getElementById('news-grid');
-      if (grid) grid.innerHTML = `<div class="placeholder" style="width:100%;"><span class="big">📰</span>Haberler şu anda yüklenemedi</div>`;
-    });
-</script>
-
-</body>
-</html>
+    <div class="brand-tag">
+      Şehrin cepteki hali
+    </div
