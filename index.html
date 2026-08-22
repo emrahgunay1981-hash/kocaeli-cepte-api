@@ -124,9 +124,17 @@
     overflow: hidden;
     min-height: 230px;
     background: linear-gradient(160deg,#173322,#0d1f15);
+    background-size: cover;
+    background-position: center;
     display: flex; align-items: flex-end;
     padding: 14px;
   }
+  .news-hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.75) 10%, rgba(0,0,0,0.1) 70%);
+  }
+  .news-hero > * { position: relative; z-index: 1; }
   .news-hero .tag {
     position: absolute; top: 12px; left: 12px;
     background: #34c759; color: #06210f;
@@ -216,21 +224,10 @@
   <section id="haberler">
     <div class="section-head">
       <div class="section-title">Son Dakika</div>
-      <div class="section-more">Tüm Haberler ›</div>
+      <div class="section-more"><a href="https://www.kocaelioncu.com" target="_blank" style="color:#7fbf8f;">Tüm Haberler ›</a></div>
     </div>
-    <div class="news-grid">
-      <div class="news-hero">
-        <span class="tag">SON DAKİKA</span>
-        <div>
-          <h3>İzmit Sahili yaz sezonuna hazır hale getiriliyor</h3>
-          <span class="time">15 dakika önce</span>
-        </div>
-      </div>
-      <div class="news-side">
-        <div class="news-item">Kartepe'de bahar renkleri büyülüyor<span class="time">32 dakika önce</span></div>
-        <div class="news-item">Kocaeli'de toplu taşıma hatlarına yeni düzenleme<span class="time">1 saat önce</span></div>
-        <div class="news-item">Dilovası OSB'de yeni yatırım anlaşması<span class="time">2 saat önce</span></div>
-      </div>
+    <div class="news-grid" id="news-grid">
+      <div class="placeholder" style="width:100%;"><span class="big">📰</span>Haberler yükleniyor...</div>
     </div>
   </section>
 
@@ -337,8 +334,8 @@
     const liveCards = liveRates.map(r => {
       const up = r.changePct === null ? true : r.changePct >= 0;
       const chg = r.changePct === null ? "-" : `%${Math.abs(r.changePct).toFixed(2)}`.replace('.', ',');
-      const icon = r.code === "USD" ? "$" : r.code === "EUR" ? "€" : "₿";
-      const color = r.code === "USD" ? "#34c759" : r.code === "EUR" ? "#4aa3ff" : "#f0a83a";
+      const icon = r.code === "USD" ? "$" : r.code === "EUR" ? "€" : r.code === "ALTIN" ? "₺" : "₿";
+      const color = r.code === "USD" ? "#34c759" : r.code === "EUR" ? "#4aa3ff" : r.code === "ALTIN" ? "#e0b83c" : "#f0a83a";
       const digits = r.code === "BTC" ? 0 : 2;
       return `
         <div class="market-card">
@@ -374,6 +371,46 @@
       if (data.ok) renderMarket(data.rates.filter(r => r.code !== "ALTIN"));
     })
     .catch(() => { /* canlı veri gelmezse örnek değerler kalır */ });
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  fetch('/api/news')
+    .then(r => r.json())
+    .then(data => {
+      const grid = document.getElementById('news-grid');
+      if (!data.ok || !data.items || data.items.length === 0) {
+        grid.innerHTML = `<div class="placeholder" style="width:100%;"><span class="big">📰</span>Haberler şu anda yüklenemedi</div>`;
+        return;
+      }
+
+      const [hero, ...rest] = data.items;
+      const sideItems = rest.slice(0, 3);
+
+      const heroBg = hero.image ? `background-image: linear-gradient(160deg, rgba(10,30,20,0.2), rgba(5,15,10,0.5)), url('${hero.image}');` : "";
+
+      grid.innerHTML = `
+        <a href="${hero.link}" target="_blank" class="news-hero" style="${heroBg}">
+          <span class="tag">SON DAKİKA</span>
+          <div>
+            <h3>${escapeHtml(hero.title)}</h3>
+            <span class="time">${escapeHtml(hero.time || "")}</span>
+          </div>
+        </a>
+        <div class="news-side">
+          ${sideItems.map(item => `
+            <a href="${item.link}" target="_blank" class="news-item">${escapeHtml(item.title)}<span class="time">${escapeHtml(item.time || "")}</span></a>
+          `).join('')}
+        </div>`;
+    })
+    .catch(() => {
+      const grid = document.getElementById('news-grid');
+      if (grid) grid.innerHTML = `<div class="placeholder" style="width:100%;"><span class="big">📰</span>Haberler şu anda yüklenemedi</div>`;
+    });
 </script>
 
 </body>
