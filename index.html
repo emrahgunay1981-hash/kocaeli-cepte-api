@@ -1312,7 +1312,15 @@ function showDailyWeather() {
 
 
 /* İlk açılışta hava durumunu getir */
+loadWeather();
 
+
+/* 10 dakikada bir güncelle */
+
+setInterval(
+  loadWeather,
+  10 * 60 * 1000
+);
 loadWeather();
 
 
