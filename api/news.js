@@ -1,6 +1,6 @@
 // KOCAELİ CEPTE
-// Çoklu Kocaeli haber kaynağı
-// Öncü Haber kullanılmıyor.
+// Çoklu Kocaeli haber sistemi
+// Öncü Haber KULLANILMIYOR.
 
 function extract(regex, str) {
   const m = str.match(regex);
@@ -48,6 +48,10 @@ function timeAgo(pubDate) {
 }
 
 
+// ==========================================
+// KOCAELİ HABER KAYNAKLARI
+// ==========================================
+
 const SOURCES = [
 
   {
@@ -78,11 +82,19 @@ const SOURCES = [
 ];
 
 
+// ==========================================
+// TEK KAYNAKTAN HABERLERİ AL
+// ==========================================
+
 async function getSource(source) {
 
   try {
 
-    const response = await fetch(source.url);
+    const response = await fetch(source.url, {
+      headers: {
+        "User-Agent": "KocaeliCepte/1.0"
+      }
+    });
 
     if (!response.ok) {
       return [];
@@ -94,76 +106,104 @@ async function getSource(source) {
       xml.match(/<item[\s\S]*?<\/item>/gi) || [];
 
 
-    return itemBlocks.slice(0, 10).map(block => {
+    const items = itemBlocks
+      .slice(0, 5)
+      .map(block => {
 
-      const title = cleanText(
-        extract(
-          /<title>([\s\S]*?)<\/title>/i,
-          block
-        )
-      );
-
-      const link = cleanText(
-        extract(
-          /<link>([\s\S]*?)<\/link>/i,
-          block
-        )
-      );
-
-      const pubDate = cleanText(
-        extract(
-          /<pubDate>([\s\S]*?)<\/pubDate>/i,
-          block
-        )
-      );
-
-      const category = cleanText(
-        extract(
-          /<category[^>]*>([\s\S]*?)<\/category>/i,
-          block
-        )
-      );
-
-      let image = null;
-
-      const enclosure =
-        block.match(
-          /<enclosure[^>]+url=["']([^"']+)["']/i
+        const title = cleanText(
+          extract(
+            /<title>([\s\S]*?)<\/title>/i,
+            block
+          )
         );
 
-      if (enclosure) {
-        image = enclosure[1];
-      }
+        const link = cleanText(
+          extract(
+            /<link>([\s\S]*?)<\/link>/i,
+            block
+          )
+        );
+
+        const pubDate = cleanText(
+          extract(
+            /<pubDate>([\s\S]*?)<\/pubDate>/i,
+            block
+          )
+        );
+
+        const category = cleanText(
+          extract(
+            /<category[^>]*>([\s\S]*?)<\/category>/i,
+            block
+          )
+        );
 
 
-      return {
+        // Haber resmi
+        let image = null;
 
-        title,
+        const enclosure =
+          block.match(
+            /<enclosure[^>]+url=["']([^"']+)["']/i
+          );
 
-        link,
+        if (enclosure) {
+          image = enclosure[1];
+        }
 
-        category,
 
-        image,
+        // Media RSS resmi
+        if (!image) {
 
-        time: pubDate
-          ? timeAgo(pubDate)
-          : "",
+          const mediaContent =
+            block.match(
+              /<media:content[^>]+url=["']([^"']+)["']/i
+            );
 
-        pubDate,
+          if (mediaContent) {
+            image = mediaContent[1];
+          }
 
-        source: source.name
+        }
 
-      };
 
-    }).filter(item =>
+        return {
 
-      item.title &&
-      item.link
+          title,
 
-    );
+          link,
+
+          category,
+
+          image,
+
+          time: pubDate
+            ? timeAgo(pubDate)
+            : "",
+
+          pubDate,
+
+          source: source.name
+
+        };
+
+      })
+      .filter(item =>
+        item.title &&
+        item.link
+      );
+
+
+    return items;
+
 
   } catch (error) {
+
+    console.log(
+      "RSS alınamadı:",
+      source.name,
+      error.message
+    );
 
     return [];
 
@@ -172,22 +212,39 @@ async function getSource(source) {
 }
 
 
+// ==========================================
+// API
+// ==========================================
+
 export default async function handler(req, res) {
 
   try {
 
+    // Bütün kaynakları aynı anda çekiyoruz.
+
     const results =
       await Promise.all(
-        SOURCES.map(getSource)
+        SOURCES.map(source =>
+          getSource(source)
+        )
       );
 
 
-    let items =
-      results.flat();
+    // Kaynakları birleştir.
+
+    let items = [];
 
 
-    // Aynı haber birden fazla sitede varsa
-    // başlığına göre tekrarları temizle.
+    results.forEach(sourceItems => {
+
+      items.push(...sourceItems);
+
+    });
+
+
+    // ======================================
+    // AYNI HABERLERİ TEMİZLE
+    // ======================================
 
     const seen = new Set();
 
@@ -196,13 +253,21 @@ export default async function handler(req, res) {
       const key =
         item.title
           .toLowerCase()
-          .replace(/[^a-z0-9çğıöşü\s]/gi, "")
-          .replace(/\s+/g, " ")
+          .replace(
+            /[^a-z0-9çğıöşü\s]/gi,
+            ""
+          )
+          .replace(
+            /\s+/g,
+            " "
+          )
           .trim();
+
 
       if (seen.has(key)) {
         return false;
       }
+
 
       seen.add(key);
 
@@ -211,25 +276,94 @@ export default async function handler(req, res) {
     });
 
 
-    // En yeni haberler üstte.
+    // ======================================
+    // TARİHE GÖRE SIRALA
+    // ======================================
 
     items.sort((a, b) => {
 
       const dateA =
-        new Date(a.pubDate || 0).getTime();
+        new Date(
+          a.pubDate || 0
+        ).getTime();
 
       const dateB =
-        new Date(b.pubDate || 0).getTime();
+        new Date(
+          b.pubDate || 0
+        ).getTime();
+
 
       return dateB - dateA;
 
     });
 
 
-    // İlk 20 haber.
+    // ======================================
+    // KAYNAK DENGESİ
+    // ======================================
 
-    items = items.slice(0, 20);
+    // Her kaynaktan maksimum 5 haber.
+    // Böylece tek bir site ana sayfayı
+    // tamamen kaplayamaz.
 
+    const sourceCount = {};
+
+    const balanced = [];
+
+
+    for (const item of items) {
+
+      const source =
+        item.source;
+
+
+      if (!sourceCount[source]) {
+        sourceCount[source] = 0;
+      }
+
+
+      if (sourceCount[source] >= 5) {
+        continue;
+      }
+
+
+      sourceCount[source]++;
+
+      balanced.push(item);
+
+
+      if (balanced.length >= 20) {
+        break;
+      }
+
+    }
+
+
+    // ======================================
+    // SON SIRALAMA
+    // ======================================
+
+    balanced.sort((a, b) => {
+
+      const dateA =
+        new Date(
+          a.pubDate || 0
+        ).getTime();
+
+      const dateB =
+        new Date(
+          b.pubDate || 0
+        ).getTime();
+
+
+      return dateB - dateA;
+
+    });
+
+
+    // ======================================
+    // CEVAP
+    // ======================================
 
     res.status(200).json({
 
@@ -239,12 +373,17 @@ export default async function handler(req, res) {
         new Date().toISOString(),
 
       count:
-        items.length,
+        balanced.length,
 
       sources:
-        SOURCES.map(s => s.name),
+        SOURCES.map(
+          source => source.name
+        ),
 
-      items
+      sourceCount,
+
+      items:
+        balanced
 
     });
 
@@ -255,7 +394,8 @@ export default async function handler(req, res) {
 
       ok: false,
 
-      error: "Kocaeli haberleri alınamadı"
+      error:
+        "Kocaeli haberleri alınamadı"
 
     });
 
