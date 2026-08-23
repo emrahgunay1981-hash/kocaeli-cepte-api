@@ -352,7 +352,29 @@ button {
   .news-title {
     font-size: 14px;
   }
+.weather-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
 
+.weather-tabs button {
+  flex: 1;
+  border: 0;
+  padding: 10px 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.07);
+  color: #dce9e2;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.weather-tabs button.active {
+  background: #34c759;
+  color: #06210f;
+}
 }
   /* =========================
    HAVA DURUMU
@@ -1067,19 +1089,21 @@ function createWeatherExtra(data) {
   }
 
 
-  extra.innerHTML = `
-
   <div class="weather-tabs">
 
-    <button id="hourly-weather-btn">
-      🕐 Saatlik
-    </button>
+  <button
+    id="hourly-weather-btn"
+    type="button">
+    🕐 Saatlik
+  </button>
 
-    <button id="daily-weather-btn">
-      📅 Günlük
-    </button>
+  <button
+    id="daily-weather-btn"
+    type="button">
+    📅 Günlük
+  </button>
 
-  </div>
+</div>
 
   <div id="weather-list"></div>
 
