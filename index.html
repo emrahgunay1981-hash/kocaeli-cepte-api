@@ -352,13 +352,6 @@ button {
   .news-title {
     font-size: 14px;
   }
-.weather-tabs {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  margin-bottom: 12px;
-}
-
 
 }
   /* =========================
@@ -1074,21 +1067,19 @@ function createWeatherExtra(data) {
   }
 
 
+  extra.innerHTML = `
+
   <div class="weather-tabs">
 
-  <button
-    id="hourly-weather-btn"
-    type="button">
-    🕐 Saatlik
-  </button>
+    <button id="hourly-weather-btn">
+      🕐 Saatlik
+    </button>
 
-  <button
-    id="daily-weather-btn"
-    type="button">
-    📅 Günlük
-  </button>
+    <button id="daily-weather-btn">
+      📅 Günlük
+    </button>
 
-</div>
+  </div>
 
   <div id="weather-list"></div>
 
