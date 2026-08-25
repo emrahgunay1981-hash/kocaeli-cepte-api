@@ -203,6 +203,31 @@ background: #071b12;
 
                                                                                                                                                                                                                 <div class="card fixture-card">
 
+  <div class="card fixture-card">
+
+  <div class="fixture-head">
+
+    <div class="news-icon">📅</div>
+
+    <div>
+      <div class="news-text">Maç Takvimi</div>
+      <small>Yaklaşan Kocaelispor maçları</small>
+    </div>
+
+  </div>
+
+  <div id="fixture-list">
+
+    <div class="fixture-loading">
+      Maçlar yükleniyor...
+    </div>
+
+  </div>
+
+  </div>
+
+</div>
+
   <div class="fixture-head">
     <div class="news-icon">📅</div>
 
@@ -260,6 +285,107 @@ background: #071b12;
                                                                                                                                                                                                                                                                                                                                                 Kadro
                                                                                                                                                                                                                                                                                                                                                   </div>
                                                                                                                                                                                                                                                                                                                                                   </nav>
+<script>
+async function loadKocaelisporFixtures() {
 
+  const list = document.getElementById("fixture-list");
+
+  if (!list) return;
+
+  try {
+
+    const response = await fetch("/api/kocaelispor");
+
+    if (!response.ok) {
+      throw new Error("API bağlantısı başarısız");
+    }
+
+    const data = await response.json();
+
+    if (!data.ok || !Array.isArray(data.matches)) {
+      throw new Error("Maç verisi bulunamadı");
+    }
+
+    const matches = data.matches;
+
+    if (!matches.length) {
+      list.innerHTML = `
+        <div class="fixture-loading">
+          Maç bulunamadı.
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = matches.map(match => {
+
+      const date = new Date(match.fixture.date);
+
+      const day = String(date.getDate()).padStart(2, "0");
+
+      const months = [
+        "OCA", "ŞUB", "MAR", "NİS",
+        "MAY", "HAZ", "TEM", "AĞU",
+        "EYL", "EKİ", "KAS", "ARA"
+      ];
+
+      const month = months[date.getMonth()];
+
+      const time = date.toLocaleTimeString("tr-TR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Istanbul"
+      });
+
+      const home = match.teams.home.name;
+      const away = match.teams.away.name;
+
+      let score = time;
+
+      if (match.fixture.status.short !== "NS") {
+
+        const homeScore = match.goals.home ?? "-";
+        const awayScore = match.goals.away ?? "-";
+
+        score = `${homeScore} - ${awayScore}`;
+      }
+
+      return `
+        <div class="fixture-item">
+
+          <div class="fixture-date">
+            <strong>${day}</strong>
+            <span>${month}</span>
+          </div>
+
+          <div class="fixture-teams">
+            <strong>${home}</strong>
+            <span>VS</span>
+            <strong>${away}</strong>
+          </div>
+
+          <div class="fixture-time">
+            ${score}
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+  } catch (error) {
+
+    console.error("Kocaelispor maçları yüklenemedi:", error);
+
+    list.innerHTML = `
+      <div class="fixture-loading">
+        ⚠️ Maç bilgileri şu anda alınamıyor.
+      </div>
+    `;
+  }
+}
+
+loadKocaelisporFixtures();
+      </script>
                                                                                                                                                                                                                                                                                                                                                   </body>
                                                                                                                                                                                                                                                                                                                                                   </html>
