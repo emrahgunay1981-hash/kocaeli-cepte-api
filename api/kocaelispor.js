@@ -1,4 +1,4 @@
-const API_URL = "https://v3.football.api-sports.io/fixtures";
+const API_URL = "https://v3.football.api-sports.io";
 
 export default async function handler(req, res) {
   try {
@@ -18,48 +18,61 @@ export default async function handler(req, res) {
       "Accept": "application/json"
     };
 
-    // Geçmiş maçlar
-    const lastUrl =
-      `${API_URL}?team=1957&last=10&timezone=Europe/Istanbul`;
+    // 1. Kocaelispor'un doğru takım ID'sini API'den bul
+    const teamResponse = await fetch(
+      `${API_URL}/teams?search=Kocaelispor`,
+      { headers }
+    );
 
-    // Gelecek maçlar
-    const nextUrl =
-      `${API_URL}?team=1957&next=20&timezone=Europe/Istanbul`;
+    const teamData = await teamResponse.json();
 
-    const [lastResponse, nextResponse] = await Promise.all([
-      fetch(lastUrl, { headers }),
-      fetch(nextUrl, { headers })
-    ]);
-
-    const lastData = await lastResponse.json();
-    const nextData = await nextResponse.json();
-
-    if (!lastResponse.ok || !nextResponse.ok) {
-      return res.status(500).json({
+    if (!teamResponse.ok) {
+      return res.status(teamResponse.status).json({
         ok: false,
-        error: "API-Football bağlantı hatası",
-        detail: {
-          last: lastData,
-          next: nextData
-        }
+        error: "Takım bilgisi alınamadı",
+        detail: teamData
       });
     }
 
-    const matches = [
-      ...(lastData.response || []),
-      ...(nextData.response || [])
-    ];
+    const team = (teamData.response || []).find(
+      item =>
+        item.team &&
+        item.team.name &&
+        item.team.name.toLowerCase().includes("kocaelispor")
+    );
 
-    // Tarihe göre sırala
-    matches.sort((a, b) => {
-      return new Date(a.fixture.date) - new Date(b.fixture.date);
-    });
+    if (!team) {
+      return res.status(404).json({
+        ok: false,
+        error: "Kocaelispor API'de bulunamadı",
+        detail: teamData
+      });
+    }
+
+    const teamId = team.team.id;
+
+    // 2. Kocaelispor'un gelecek 10 maçını getir
+    const fixturesResponse = await fetch(
+      `${API_URL}/fixtures?team=${teamId}&next=10&timezone=Europe/Istanbul`,
+      { headers }
+    );
+
+    const fixturesData = await fixturesResponse.json();
+
+    if (!fixturesResponse.ok) {
+      return res.status(fixturesResponse.status).json({
+        ok: false,
+        error: "Maç bilgileri alınamadı",
+        detail: fixturesData
+      });
+    }
 
     return res.status(200).json({
       ok: true,
       source: "API-Football",
-      team: "Kocaelispor",
-      matches
+      team: team.team.name,
+      teamId: teamId,
+      matches: fixturesData.response || []
     });
 
   } catch (error) {
