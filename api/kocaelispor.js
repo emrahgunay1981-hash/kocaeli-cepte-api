@@ -13,31 +13,53 @@ export default async function handler(req, res) {
       });
     }
 
-    const url =
-      `${API_URL}?team=1957&next=10&timezone=Europe/Istanbul`;
+    const headers = {
+      "x-apisports-key": apiKey,
+      "Accept": "application/json"
+    };
 
-    const response = await fetch(url, {
-  6    headers: {
-        "x-apisports-key": apiKey,
-        "Accept": "application/json"
-      }
-    });
+    // Geçmiş maçlar
+    const lastUrl =
+      `${API_URL}?team=1957&last=10&timezone=Europe/Istanbul`;
 
-    const data = await response.json();
+    // Gelecek maçlar
+    const nextUrl =
+      `${API_URL}?team=1957&next=20&timezone=Europe/Istanbul`;
 
-    if (!response.ok) {
-      return res.status(response.status).json({
+    const [lastResponse, nextResponse] = await Promise.all([
+      fetch(lastUrl, { headers }),
+      fetch(nextUrl, { headers })
+    ]);
+
+    const lastData = await lastResponse.json();
+    const nextData = await nextResponse.json();
+
+    if (!lastResponse.ok || !nextResponse.ok) {
+      return res.status(500).json({
         ok: false,
-        error: "API-Football hatası",
-        detail: data
+        error: "API-Football bağlantı hatası",
+        detail: {
+          last: lastData,
+          next: nextData
+        }
       });
     }
+
+    const matches = [
+      ...(lastData.response || []),
+      ...(nextData.response || [])
+    ];
+
+    // Tarihe göre sırala
+    matches.sort((a, b) => {
+      return new Date(a.fixture.date) - new Date(b.fixture.date);
+    });
 
     return res.status(200).json({
       ok: true,
       source: "API-Football",
       team: "Kocaelispor",
-      matches: data.response || []
+      matches
     });
 
   } catch (error) {
