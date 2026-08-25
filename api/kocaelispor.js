@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       "Accept": "application/json"
     };
 
-    // 1. Kocaelispor'un doğru takım ID'sini API'den bul
+    // Kocaelispor'u bul
     const teamResponse = await fetch(
       `${API_URL}/teams?search=Kocaelispor`,
       { headers }
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
 
     const teamId = team.team.id;
 
-    // 2. Kocaelispor'un gelecek 10 maçını getir
+    // Kocaelispor'un yaklaşan maçlarını getir
     const fixturesResponse = await fetch(
       `${API_URL}/fixtures?team=${teamId}&next=10&timezone=Europe/Istanbul`,
       { headers }
