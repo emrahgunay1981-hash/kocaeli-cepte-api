@@ -360,7 +360,51 @@ button {
   .mini-weather b {
     font-size: 16px;
   }
-    }
+    /* TRAFİK KARTI */
+
+.traffic-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  background: #0d241a;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 15px;
+  text-decoration: none;
+  color: white;
+}
+
+.traffic-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #123a29;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.traffic-info {
+  flex: 1;
+}
+
+.traffic-title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.traffic-desc {
+  margin-top: 3px;
+  color: #718b7f;
+  font-size: 11px;
+}
+
+.traffic-arrow {
+  font-size: 25px;
+  color: #12c95d;
+}
 </style>
 </head>
 
@@ -481,7 +525,34 @@ button {
     </div>
 
   </section>
+<!-- KOCAELİ TRAFİK -->
 
+<section class="section">
+
+  <a
+    class="traffic-card"
+    href="https://www.akillisehirkocaeli.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    <div class="traffic-icon">🚦</div>
+
+    <div class="traffic-info">
+      <div class="traffic-title">
+        Kocaeli Trafik
+      </div>
+
+      <div class="traffic-desc">
+        Canlı trafik yoğunluğunu görüntüle
+      </div>
+    </div>
+
+    <div class="traffic-arrow">›</div>
+
+  </a>
+
+</section>
 </main>
 
 
