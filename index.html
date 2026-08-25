@@ -354,7 +354,44 @@ button {
   }
 
 }
-  
+  .mini-weather {
+  margin: 8px 16px 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 12px;
+  color: #aebfb7;
+}
+
+.mini-weather strong {
+  color: #12c95d;
+}
+
+.mini-weather b {
+  color: #fff;
+  font-size: 17px;
+}
+
+.mini-weather #weather-icon {
+  font-size: 17px;
+}
+
+@media (max-width: 420px) {
+  .mini-weather {
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .mini-weather b {
+    font-size: 16px;
+  }
+    }
 </style>
 </head>
 
@@ -378,7 +415,18 @@ button {
 
 
 <main class="container">
-
+<div class="mini-weather" id="mini-weather">
+  <span id="weather-icon">🌤️</span>
+  <strong>İzmit</strong>
+  <b id="weather-temp">--°</b>
+  <span id="weather-desc">Yükleniyor...</span>
+  <span>•</span>
+  <span id="weather-feels">Hissedilen --°</span>
+  <span>•</span>
+  <span id="weather-humidity">💧 --%</span>
+  <span>•</span>
+  <span id="weather-wind">💨 -- km/sa</span>
+</div>
   <!-- MANŞET -->
 
   <section id="hero-area">
@@ -691,7 +739,106 @@ async function loadNews() {
 
 }
 
+/* =========================
+   MİNİ HAVA DURUMU
+========================= */
 
+async function loadMiniWeather() {
+
+  try {
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      "?latitude=40.7654" +
+      "&longitude=29.9408" +
+      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
+      "&timezone=Europe%2FIstanbul";
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Hava durumu alınamadı");
+    }
+
+    const data = await response.json();
+    const weather = data.current;
+
+    const temp = Math.round(weather.temperature_2m);
+    const feels = Math.round(weather.apparent_temperature);
+    const humidity = Math.round(weather.relative_humidity_2m);
+    const wind = Math.round(weather.wind_speed_10m);
+
+    let icon = "🌤️";
+    let description = "Parçalı bulutlu";
+
+    if (weather.weather_code === 0) {
+      icon = "☀️";
+      description = "Açık";
+    }
+    else if (weather.weather_code <= 3) {
+      icon = "🌤️";
+      description = "Parçalı bulutlu";
+    }
+    else if (weather.weather_code <= 48) {
+      icon = "🌫️";
+      description = "Sisli";
+    }
+    else if (weather.weather_code <= 67) {
+      icon = "🌧️";
+      description = "Yağmurlu";
+    }
+    else if (weather.weather_code <= 77) {
+      icon = "🌨️";
+      description = "Karlı";
+    }
+    else if (weather.weather_code <= 82) {
+      icon = "🌧️";
+      description = "Sağanak";
+    }
+    else {
+      icon = "⛈️";
+      description = "Fırtınalı";
+    }
+
+    document.getElementById("weather-icon").textContent = icon;
+
+    document.getElementById("weather-temp").textContent =
+      temp + "°";
+
+    document.getElementById("weather-desc").textContent =
+      description;
+
+    document.getElementById("weather-feels").textContent =
+      "Hissedilen " + feels + "°";
+
+    document.getElementById("weather-humidity").textContent =
+      "💧 " + humidity + "%";
+
+    document.getElementById("weather-wind").textContent =
+      "💨 " + wind + " km/sa";
+
+  }
+
+  catch (error) {
+
+    console.error("Hava durumu:", error);
+
+    document.getElementById("weather-desc").textContent =
+      "Veri alınamadı";
+
+  }
+
+}
+
+
+/* Hava durumunu başlat */
+
+loadMiniWeather();
+
+
+/* 10 dakikada bir güncelle */
+
+setInterval(loadMiniWeather, 10 * 60 * 1000);
 /* Sayfa açılınca haberleri getir */
 
 loadNews();
