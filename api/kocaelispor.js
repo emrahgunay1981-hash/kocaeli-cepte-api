@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
     // Kocaelispor'un yaklaşan maçlarını getir
     const fixturesResponse = await fetch(
-      `${API_URL}/fixtures?team=${teamId}&next=10&timezone=Europe/Istanbul`,
+      `${API_URL}/fixtures?team=${teamId}&league=203&season=2026&next=10&timezone=Europe/Istanbul`,
       { headers }
     );
 
