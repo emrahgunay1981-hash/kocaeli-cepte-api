@@ -286,6 +286,43 @@ background: #071b12;
                                                                                                                                                                                                                                                                                                                                                   </div>
                                                                                                                                                                                                                                                                                                                                                   </nav>
 <script>
+  // SON MAÇ
+const lastKocaelisporMatch = {
+  home: "Kocaelispor",
+  away: "Amed SK",
+  homeScore: 2,
+  awayScore: 0,
+  date: "24 AĞU",
+  competition: "Trendyol Süper Lig"
+};
+
+const lastMatchCard = document.querySelector(".next-match");
+
+if (lastMatchCard) {
+  const teams = lastMatchCard.querySelector(".teams");
+  const score = lastMatchCard.querySelector(".score");
+  const info = lastMatchCard.querySelector(".match-info");
+
+  if (teams) {
+    const teamNames = teams.querySelectorAll("span");
+
+    if (teamNames.length >= 3) {
+      teamNames[0].textContent = lastKocaelisporMatch.home;
+      teamNames[1].textContent = "VS";
+      teamNames[2].textContent = lastKocaelisporMatch.away;
+    }
+  }
+
+  if (score) {
+    score.textContent =
+      `${lastKocaelisporMatch.homeScore} : ${lastKocaelisporMatch.awayScore}`;
+  }
+
+  if (info) {
+    info.innerHTML =
+      `🏆 ${lastKocaelisporMatch.competition} &nbsp; • &nbsp; 📅 ${lastKocaelisporMatch.date}`;
+  }
+}
 const kocaelisporFixtures = [
   ["29 AĞU", "Konyaspor", "Kocaelispor", "19:00"],
   ["6 EYL", "Kocaelispor", "Samsunspor", "18:00"],
