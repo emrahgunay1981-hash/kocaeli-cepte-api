@@ -18,10 +18,13 @@ export default async function handler(req, res) {
       "Accept": "application/json"
     };
 
-    const teamId = 7411;
+    // Türkiye Süper Lig
+    // 2026/2027 sezonu
+    const leagueId = 203;
+    const season = 2026;
 
     const response = await fetch(
-      `${API_URL}/fixtures?team=${teamId}&from=2026-08-01&to=2027-06-30&timezone=Europe/Istanbul`,
+      `${API_URL}/fixtures?league=${leagueId}&season=${season}&timezone=Europe/Istanbul`,
       { headers }
     );
 
@@ -30,17 +33,28 @@ export default async function handler(req, res) {
     if (!response.ok) {
       return res.status(response.status).json({
         ok: false,
-        error: "Maç bilgileri alınamadı",
+        error: "Lig maçları alınamadı",
         detail: data
       });
     }
+
+    // Ligden gelen maçların içinden Kocaelispor'u bul
+    const matches = (data.response || []).filter(match => {
+      const homeId = match.teams?.home?.id;
+      const awayId = match.teams?.away?.id;
+
+      return homeId === 7411 || awayId === 7411;
+    });
 
     return res.status(200).json({
       ok: true,
       source: "API-Football",
       team: "Kocaelispor",
-      teamId: teamId,
-      matches: data.response || []
+      teamId: 7411,
+      league: "Türkiye Süper Lig",
+      season: season,
+      totalLeagueMatches: data.response?.length || 0,
+      matches: matches
     });
 
   } catch (error) {
