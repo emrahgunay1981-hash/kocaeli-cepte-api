@@ -13,14 +13,16 @@ export default async function handler(req, res) {
       });
     }
 
+    const headers = {
+      "x-apisports-key": apiKey,
+      "Accept": "application/json"
+    };
+
+    const teamId = 7411;
+
     const response = await fetch(
-      `${API_URL}/fixtures?team=7411&next=10&timezone=Europe/Istanbul`,
-      {
-        headers: {
-          "x-apisports-key": apiKey,
-          "Accept": "application/json"
-        }
-      }
+      `${API_URL}/fixtures?team=${teamId}&from=2026-08-01&to=2027-06-30&timezone=Europe/Istanbul`,
+      { headers }
     );
 
     const data = await response.json();
@@ -37,7 +39,7 @@ export default async function handler(req, res) {
       ok: true,
       source: "API-Football",
       team: "Kocaelispor",
-      teamId: 7411,
+      teamId: teamId,
       matches: data.response || []
     });
 
