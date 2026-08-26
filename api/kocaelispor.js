@@ -52,11 +52,12 @@ export default async function handler(req, res) {
     const teamId = team.team.id;
 
     // Kocaelispor'un yaklaşan maçlarını getir
-    const fixturesResponse = await fetch(
-      const fixturesResponse = await fetch(
+const fixturesResponse = await fetch(
   `${API_URL}/fixtures?team=${teamId}&next=10&timezone=Europe/Istanbul`,
   { headers }
 );
+
+const fixturesData = await fixturesResponse.json();
       { headers }
     );
 
