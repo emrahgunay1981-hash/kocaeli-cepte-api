@@ -304,6 +304,15 @@ function loadWidget() {
   result.innerHTML = "";
 
 
+  // Önceki widget scriptlerini temizle
+
+  document
+    .querySelectorAll(
+      'script[src*="eczaneadresi.com/api/public/widget/embed.js"]'
+    )
+    .forEach(oldScript => oldScript.remove());
+
+
   const widgetDiv =
     document.createElement("div");
 
@@ -374,7 +383,8 @@ function loadWidget() {
     document.createElement("script");
 
   script.src =
-    "https://eczaneadresi.com/api/public/widget/embed.js";
+    "https://eczaneadresi.com/api/public/widget/embed.js?_r=" +
+    Date.now();
 
   script.async = true;
 
