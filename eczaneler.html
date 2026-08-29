@@ -271,10 +271,6 @@ select {
 
 <script>
 
-const API =
-"https://eczaneadresi.com/api/public/v1/duty-pharmacies";
-
-
 const district =
 document.getElementById("district");
 
@@ -297,255 +293,92 @@ now.toLocaleDateString("tr-TR", {
 });
 
 
-// ECZANELERİ GETİR
+// ==========================================
+// EGZANEADRESİ.COM'UN RESMİ WIDGET SCRİPTİ
+// (fetch/CORS değil — <script> ile çalışır,
+// bu yüzden tarayıcı engeline takılmaz)
+// ==========================================
 
-async function loadPharmacies() {
+function loadWidget() {
 
-  result.innerHTML =
-    '<div class="loading">💊 Eczaneler yükleniyor...</div>';
+  result.innerHTML = "";
 
-  try {
 
-    let url =
-      API +
-      "?city=kocaeli&limit=200";
+  const widgetDiv =
+    document.createElement("div");
 
+  widgetDiv.id =
+    "eczane-adresi-widget";
 
-    if (district.value) {
+  widgetDiv.setAttribute(
+    "data-theme",
+    "dark"
+  );
 
-      url +=
-        "&district=" +
-        encodeURIComponent(
-          district.value
-        );
+  widgetDiv.setAttribute(
+    "data-accent",
+    "#12c95d"
+  );
 
-    }
+  widgetDiv.setAttribute(
+    "data-map",
+    "true"
+  );
 
+  widgetDiv.setAttribute(
+    "data-limit",
+    "30"
+  );
 
-    const response =
-      await fetch(url, {
 
-        headers: {
-          "Accept":
-            "application/json"
-        }
+  if (district.value) {
 
-      });
+    widgetDiv.setAttribute(
+      "data-scope",
+      "district"
+    );
 
+    widgetDiv.setAttribute(
+      "data-city",
+      "kocaeli"
+    );
 
-    if (!response.ok) {
+    widgetDiv.setAttribute(
+      "data-district",
+      district.value
+    );
 
-      throw new Error(
-        "API bağlantı hatası"
-      );
+  } else {
 
-    }
+    widgetDiv.setAttribute(
+      "data-scope",
+      "city"
+    );
 
-
-    const data =
-      await response.json();
-
-
-    const pharmacies =
-      data.pharmacies || [];
-
-
-    if (!pharmacies.length) {
-
-      result.innerHTML =
-        '<div class="error">' +
-        'Bugün için bu bölgede nöbetçi eczane bulunamadı.' +
-        '</div>';
-
-      return;
-
-    }
-
-
-    result.innerHTML = "";
-
-
-    // ECZANE SAYISI
-
-    const countBox =
-      document.createElement("div");
-
-    countBox.className =
-      "info";
-
-    countBox.innerHTML =
-      '💊 Bugün <span class="count">' +
-      pharmacies.length +
-      '</span> nöbetçi eczane bulundu.';
-
-    result.appendChild(countBox);
-
-
-    // ECZANELER
-
-    pharmacies.forEach(p => {
-
-      const name =
-        p.name ||
-        "Eczane";
-
-
-      const address =
-        p.address ||
-        "Adres bilgisi bulunamadı";
-
-
-      const phone =
-        p.phone ||
-        "";
-
-
-      const lat =
-        p.lat;
-
-
-      const lng =
-        p.lng;
-
-
-      // HARİTA LİNKİ
-
-      let mapUrl;
-
-
-      if (
-        lat !== undefined &&
-        lng !== undefined &&
-        lat !== null &&
-        lng !== null
-      ) {
-
-        mapUrl =
-          "https://www.google.com/maps/dir/?api=1&destination=" +
-          encodeURIComponent(
-            lat + "," + lng
-          );
-
-      } else {
-
-        mapUrl =
-          "https://www.google.com/maps/search/?api=1&query=" +
-          encodeURIComponent(
-            name + " " + address
-          );
-
-      }
-
-
-      // TELEFON
-
-      const phoneClean =
-        phone.replace(
-          /[^0-9+]/g,
-          ""
-        );
-
-
-      const card =
-        document.createElement("div");
-
-
-      card.className =
-        "card";
-
-
-      card.innerHTML = `
-
-        <div class="name">
-          💊 ${escapeHtml(name)}
-        </div>
-
-        <div class="address">
-          📍 ${escapeHtml(address)}
-        </div>
-
-        ${
-          phone
-          ? `
-            <a
-              class="phone"
-              href="tel:${phoneClean}">
-              📞 ${escapeHtml(phone)}
-            </a>
-          `
-          : ""
-        }
-
-
-        <div class="buttons">
-
-          ${
-            phone
-            ? `
-              <a
-                class="btn call"
-                href="tel:${phoneClean}">
-                📞 Ara
-              </a>
-            `
-            : ""
-          }
-
-
-          <a
-            class="btn map"
-            href="${mapUrl}"
-            target="_blank"
-            rel="noopener">
-            🗺️ Yol Tarifi
-          </a>
-
-        </div>
-
-      `;
-
-
-      result.appendChild(card);
-
-    });
-
-
-  } catch (error) {
-
-    console.error(error);
-
-
-    result.innerHTML = `
-
-      <div class="error">
-
-        ❌ Nöbetçi eczaneler şu anda yüklenemedi.
-
-        <br><br>
-
-        İnternet bağlantınızı kontrol edip
-        biraz sonra tekrar deneyin.
-
-      </div>
-
-    `;
+    widgetDiv.setAttribute(
+      "data-city",
+      "kocaeli"
+    );
 
   }
 
-}
+
+  result.appendChild(widgetDiv);
 
 
-// HTML GÜVENLİĞİ
+  // Script'i her seferinde yeniden ekleyip
+  // çalıştırıyoruz (cache'lense bile
+  // yeniden tetiklenmesi için).
 
-function escapeHtml(text) {
+  const script =
+    document.createElement("script");
 
-  const div =
-    document.createElement("div");
+  script.src =
+    "https://eczaneadresi.com/api/public/widget/embed.js";
 
-  div.textContent =
-    text;
+  script.async = true;
 
-  return div.innerHTML;
+  document.body.appendChild(script);
 
 }
 
@@ -554,13 +387,13 @@ function escapeHtml(text) {
 
 district.addEventListener(
   "change",
-  loadPharmacies
+  loadWidget
 );
 
 
 // SAYFA AÇILINCA
 
-loadPharmacies();
+loadWidget();
 
 </script>
 
