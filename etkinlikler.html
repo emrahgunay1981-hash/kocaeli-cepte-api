@@ -181,15 +181,20 @@ async function etkinlikleriGetir() {
 
     } catch (error) {
 
-        console.error(error);
+    console.error("ETKİNLİK API HATASI:", error);
 
-        status.innerHTML = `
-            <div>
-                ❌ Etkinlikler şu anda yüklenemedi.
-                <br><br>
-                Lütfen biraz sonra tekrar deneyin.
-            </div>
-        `;
+    status.innerHTML = `
+        <div style="color:#ff6b6b;">
+            ❌ Etkinlikler yüklenemedi.
+            <br><br>
+            <strong>Hata:</strong>
+            ${error.message || error}
+            <br><br>
+            <small>
+                API bağlantısı kontrol ediliyor...
+            </small>
+        </div>
+    `;
     }
 }
 
