@@ -1,1 +1,309 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kocaeli Cepte - Nöbetçi Eczaneler</title>
 
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #07111f;
+  color: white;
+}
+
+.header {
+  padding: 18px 16px;
+  background: #0d241a;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-title {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.header-sub {
+  margin-top: 5px;
+  color: #9aa8b7;
+  font-size: 12px;
+}
+
+.container {
+  padding: 15px;
+  max-width: 700px;
+  margin: auto;
+}
+
+select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: #0d241a;
+  color: white;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.loading {
+  text-align: center;
+  padding: 30px;
+  color: #aeb8c4;
+}
+
+.card {
+  background: #0d241a;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 16px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.address {
+  color: #aeb8c4;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.phone {
+  display: block;
+  color: #12c95d;
+  font-weight: 700;
+  margin-top: 9px;
+  text-decoration: none;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.btn {
+  flex: 1;
+  text-align: center;
+  padding: 11px 8px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.call {
+  background: #12c95d;
+  color: #07111f;
+}
+
+.map {
+  background: #172b40;
+  color: white;
+}
+
+.source {
+  text-align: center;
+  color: #748394;
+  font-size: 11px;
+  margin: 20px 0 8px;
+  line-height: 1.5;
+}
+
+.error {
+  background: #32151a;
+  color: #ffb4b4;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="header-title">💊 Nöbetçi Eczaneler</div>
+  <div class="header-sub">Kocaeli'de bugün nöbetçi eczaneler</div>
+</div>
+
+<div class="container">
+
+  <select id="district">
+    <option value="">Kocaeli - Tüm İlçeler</option>
+    <option value="izmit">İzmit</option>
+    <option value="gebze">Gebze</option>
+    <option value="darica">Darıca</option>
+    <option value="korfez">Körfez</option>
+    <option value="basiskele">Başiskele</option>
+    <option value="kartepe">Kartepe</option>
+    <option value="golcuk">Gölcük</option>
+    <option value="derince">Derince</option>
+    <option value="cayirova">Çayırova</option>
+    <option value="dilovasi">Dilovası</option>
+    <option value="kandira">Kandıra</option>
+    <option value="sapanca">Sapanca</option>
+  </select>
+
+  <div id="result">
+    <div class="loading">Eczaneler yükleniyor...</div>
+  </div>
+
+  <div class="source">
+    Veri: Eczane Adresi<br>
+    Nöbetçi eczane bilgileri günlük olarak güncellenmektedir.
+  </div>
+
+</div>
+
+<script>
+
+const API =
+"https://eczaneadresi.com/api/public/v1/duty-pharmacies";
+
+const district = document.getElementById("district");
+const result = document.getElementById("result");
+
+async function loadPharmacies() {
+
+  result.innerHTML =
+    '<div class="loading">💊 Eczaneler yükleniyor...</div>';
+
+  try {
+
+    let url = API + "?city=kocaeli&limit=100";
+
+    if (district.value) {
+      url += "&district=" + encodeURIComponent(district.value);
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("API bağlantı hatası");
+    }
+
+    const data = await response.json();
+
+    const pharmacies = data.pharmacies || [];
+
+    if (!pharmacies.length) {
+      result.innerHTML =
+        '<div class="error">Bugün için nöbetçi eczane bulunamadı.</div>';
+      return;
+    }
+
+    result.innerHTML = "";
+
+    pharmacies.forEach(p => {
+
+      const name = p.name || "Eczane";
+      const address = p.address || "Adres bilgisi bulunamadı";
+      const phone = p.phone || "";
+      const lat = p.lat;
+      const lng = p.lng;
+
+      let mapUrl = "";
+
+      if (lat && lng) {
+        mapUrl =
+          "https://www.google.com/maps/dir/?api=1&destination=" +
+          encodeURIComponent(lat + "," + lng);
+      } else {
+        mapUrl =
+          "https://www.google.com/maps/search/?api=1&query=" +
+          encodeURIComponent(name + " " + address);
+      }
+
+      const phoneClean =
+        phone.replace(/[^0-9+]/g, "");
+
+      const card = document.createElement("div");
+
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="name">💊 ${escapeHtml(name)}</div>
+
+        <div class="address">
+          📍 ${escapeHtml(address)}
+        </div>
+
+        ${
+          phone
+          ? `<a class="phone"
+                href="tel:${phoneClean}">
+                📞 ${escapeHtml(phone)}
+             </a>`
+          : ""
+        }
+
+        <div class="buttons">
+
+          ${
+            phone
+            ? `<a class="btn call"
+                 href="tel:${phoneClean}">
+                 📞 Ara
+               </a>`
+            : ""
+          }
+
+          <a class="btn map"
+             href="${mapUrl}"
+             target="_blank">
+             🗺️ Yol Tarifi
+          </a>
+
+        </div>
+      `;
+
+      result.appendChild(card);
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    result.innerHTML = `
+      <div class="error">
+        Nöbetçi eczaneler şu anda yüklenemedi.
+        <br><br>
+        Lütfen biraz sonra tekrar deneyin.
+      </div>
+    `;
+  }
+}
+
+function escapeHtml(text) {
+
+  const div = document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+}
+
+district.addEventListener("change", loadPharmacies);
+
+loadPharmacies();
+
+</script>
+
+</body>
+</html>
