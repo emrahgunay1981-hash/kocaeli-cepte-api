@@ -52,6 +52,38 @@ body {
     color: #bbb;
 }
 
+.theatre-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #168a52, #0d5c37);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    text-decoration: none;
+    color: white;
+}
+
+.theatre-card-text {
+    flex: 1;
+}
+
+.theatre-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.theatre-card-sub {
+    font-size: 13px;
+    color: #d9f2e4;
+}
+
+.theatre-card-arrow {
+    font-size: 22px;
+    margin-left: 12px;
+}
+
 .event {
     background: #102033;
     border-radius: 14px;
@@ -98,6 +130,14 @@ body {
 </div>
 
 <div class="container">
+
+    <a class="theatre-card" href="https://tiyatro.kocaeli.bel.tr/tr/tiyatro/oyunlar" target="_blank" rel="noopener">
+        <div class="theatre-card-text">
+            <div class="theatre-card-title">🎭 Kocaeli Şehir Tiyatrosu</div>
+            <div class="theatre-card-sub">Güncel oyun takvimini görüntüle</div>
+        </div>
+        <div class="theatre-card-arrow">→</div>
+    </a>
 
     <div id="status" class="status">
         Etkinlikler yükleniyor...
