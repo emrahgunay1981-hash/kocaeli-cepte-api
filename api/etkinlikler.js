@@ -1,14 +1,152 @@
-export default async function handler(req, res) {
-  // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+// ==========================================
+// KOCAELİ ETKİNLİKLERİ - ÇOKLU KAYNAK
+// 1) Kocaeli Büyükşehir Belediyesi (resmi RSS)
+// 2) Kocaeli Seyret (özel etkinlikler - konser, tiyatro vs.)
+// ==========================================
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+function cleanText(text) {
+  if (!text) return "";
+
+  return text
+    .replace(/<!\[CDATA\[/g, "")
+    .replace(/\]\]>/g, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extract(regex, str) {
+  const m = str.match(regex);
+  return m ? m[1].trim() : null;
+}
+
+
+// ==========================================
+// KAYNAK 1: BELEDİYE RESMİ RSS
+// ==========================================
+
+async function getBelediyeEtkinlikleri() {
 
   try {
+
+    const response = await fetch(
+      "https://kultursanat.kocaeli.bel.tr/etkinlik/feed/",
+      {
+        headers: {
+          "User-Agent": "KocaeliCepte/1.0"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const xml = await response.text();
+
+    const itemBlocks =
+      xml.match(/<item[\s\S]*?<\/item>/gi) || [];
+
+    const events = itemBlocks.map(block => {
+
+      const title = cleanText(
+        extract(/<title>([\s\S]*?)<\/title>/i, block)
+      );
+
+      const link = cleanText(
+        extract(/<link>([\s\S]*?)<\/link>/i, block)
+      );
+
+      const pubDate = cleanText(
+        extract(/<pubDate>([\s\S]*?)<\/pubDate>/i, block)
+      );
+
+      const description = cleanText(
+        extract(
+          /<description>([\s\S]*?)<\/description>/i,
+          block
+        ) ||
+        extract(
+          /<content:encoded>([\s\S]*?)<\/content:encoded>/i,
+          block
+        )
+      );
+
+      // Görsel (enclosure veya media:content)
+      let image = null;
+
+      const enclosure =
+        block.match(/<enclosure[^>]+url=["']([^"']+)["']/i);
+
+      if (enclosure) {
+        image = enclosure[1];
+      }
+
+      if (!image) {
+        const mediaContent =
+          block.match(
+            /<media:content[^>]+url=["']([^"']+)["']/i
+          );
+
+        if (mediaContent) {
+          image = mediaContent[1];
+        }
+      }
+
+      return {
+        title,
+        link,
+        date: pubDate
+          ? new Date(pubDate).toLocaleDateString("tr-TR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })
+          : "",
+        location: "Kocaeli Büyükşehir Belediyesi",
+        description: description
+          ? description.slice(0, 200)
+          : "",
+        image,
+        url: link,
+        source: "Kocaeli Büyükşehir Belediyesi"
+      };
+
+    }).filter(event => event.title && event.link);
+
+    return events;
+
+  } catch (error) {
+
+    console.log(
+      "Belediye RSS alınamadı:",
+      error.message
+    );
+
+    return [];
+
+  }
+
+}
+
+
+// ==========================================
+// KAYNAK 2: KOCAELİ SEYRET (özel etkinlikler)
+// ==========================================
+
+async function getSeyretEtkinlikleri() {
+
+  try {
+
     const response = await fetch(
       "https://www.kocaeliseyret.com/kocaeli-etkinlikler",
       {
@@ -19,34 +157,20 @@ export default async function handler(req, res) {
     );
 
     if (!response.ok) {
-      throw new Error("Kocaeli Seyret sayfasına ulaşılamadı.");
+      return [];
     }
 
     const html = await response.text();
 
     const events = [];
 
-    // HTML etiketlerini temizle
-    function cleanText(text) {
-      return text
-        .replace(/<script[\s\S]*?<\/script>/gi, "")
-        .replace(/<style[\s\S]*?<\/style>/gi, "")
-        .replace(/<[^>]+>/g, " ")
-        .replace(/&nbsp;/gi, " ")
-        .replace(/&amp;/gi, "&")
-        .replace(/&quot;/gi, '"')
-        .replace(/&#39;/gi, "'")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
-
-    // h2 ile başlayan etkinlik bloklarını yakala
     const eventRegex =
       /<h2[^>]*>\s*([\s\S]*?)<\/h2>([\s\S]*?)(?=<h2[^>]*>|<h3[^>]*>|<\/main>|<\/body>)/gi;
 
     let match;
 
     while ((match = eventRegex.exec(html)) !== null) {
+
       const rawTitle = match[1];
       const block = match[2];
 
@@ -56,18 +180,12 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // Bilet / detay bağlantısını bul
       const linkMatch = block.match(
         /<a[^>]+href=["']([^"']+)["'][^>]*>[\s\S]*?(?:Bilet|Detay)[\s\S]*?<\/a>/i
       );
 
-      let url = "";
+      let url = linkMatch ? linkMatch[1] : "";
 
-      if (linkMatch) {
-        url = linkMatch[1];
-      }
-
-      // Tarih ve saat
       const blockText = cleanText(block);
 
       const dateMatch = blockText.match(
@@ -76,7 +194,6 @@ export default async function handler(req, res) {
 
       const date = dateMatch ? dateMatch[1] : "";
 
-      // Mekan bilgisi
       let location = "";
 
       if (dateMatch) {
@@ -89,20 +206,10 @@ export default async function handler(req, res) {
           .trim();
       }
 
-      // Sadece gerçek etkinlikleri al
       const keywords = [
-        "konser",
-        "tiyatro",
-        "festival",
-        "stand up",
-        "stand-up",
-        "sergi",
-        "söyleşi",
-        "seminer",
-        "atölye",
-        "gösteri",
-        "müzik",
-        "etkinlik"
+        "konser", "tiyatro", "festival", "stand up",
+        "stand-up", "sergi", "söyleşi", "seminer",
+        "atölye", "gösteri", "müzik", "etkinlik"
       ];
 
       const searchText =
@@ -116,7 +223,6 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // Göreli URL'leri tamamla
       if (url && !url.startsWith("http")) {
         url =
           "https://www.kocaeliseyret.com" +
@@ -127,30 +233,87 @@ export default async function handler(req, res) {
         title,
         date,
         location,
+        description: "",
+        image: null,
         url,
+        link: url,
         source: "Kocaeli Seyret"
       });
+
     }
 
-    // Aynı etkinlikleri temizle
-    const uniqueEvents = Array.from(
-      new Map(
-        events.map(event => [
-          `${event.title}-${event.date}-${event.location}`,
-          event
-        ])
-      ).values()
+    return events;
+
+  } catch (error) {
+
+    console.log(
+      "Kocaeli Seyret alınamadı:",
+      error.message
     );
+
+    return [];
+
+  }
+
+}
+
+
+// ==========================================
+// API
+// ==========================================
+
+export default async function handler(req, res) {
+
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  try {
+
+    const [belediyeEvents, seyretEvents] = await Promise.all([
+      getBelediyeEtkinlikleri(),
+      getSeyretEtkinlikleri()
+    ]);
+
+    let events = [...belediyeEvents, ...seyretEvents];
+
+    // Aynı başlıklı etkinlikleri temizle
+    const seen = new Set();
+
+    events = events.filter(event => {
+
+      const key = event.title
+        .toLowerCase()
+        .replace(/[^a-z0-9çğıöşü\s]/gi, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+
+    });
 
     return res.status(200).json({
       success: true,
-      count: uniqueEvents.length,
-      events: uniqueEvents,
-      source: "Kocaeli Seyret",
+      count: events.length,
+      events,
+      sources: [
+        "Kocaeli Büyükşehir Belediyesi",
+        "Kocaeli Seyret"
+      ],
       updatedAt: new Date().toISOString()
     });
 
   } catch (error) {
+
     console.error("Etkinlik API hatası:", error);
 
     return res.status(500).json({
@@ -159,5 +322,8 @@ export default async function handler(req, res) {
       events: [],
       error: "Etkinlikler şu anda alınamadı."
     });
+
   }
+
 }
+  
