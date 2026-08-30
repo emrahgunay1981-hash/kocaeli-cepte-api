@@ -281,23 +281,25 @@ async function restoranlariGetir() {
                 ? '<span class="badge badge-price">' + priceText + '</span>'
                 : '';
 
-            const imgHtml = r.photoUrl
-                ? '<img src="' + r.photoUrl + '" alt="' + r.name + '">'
-                : '';
+            const mapsUrl = "https://www.google.com/maps/place/?q=place_id:" + r.id;
 
             return `
                 <div class="card">
-                    ${imgHtml}
-                    <div class="card-body">
-                        <div class="card-name">${r.name}</div>
-                        <div class="card-address">📍 ${r.address}</div>
-                        <div class="badges">
-                            ${ratingBadge}
-                            ${priceBadge}
-                            ${openBadge}
+                    <a href="${mapsUrl}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+                        ${imgHtml}
+                        <div class="card-body">
+                            <div class="card-name">${r.name}</div>
+                            <div class="card-address">📍 ${r.address}</div>
+                            <div class="badges">
+                                ${ratingBadge}
+                                ${priceBadge}
+                                ${openBadge}
+                            </div>
                         </div>
+                    </a>
+                    <div class="card-body" style="padding-top:0;">
                         <div class="our-rating">
-                            <div class="our-rating-label">Kocaeli Cepte Puanı (yakında)</div>
+                            <div class="our-rating-label">Kocaeli Cepte Puanı (yakında kaydedilecek)</div>
                             ${starsHtml(r.id, 0)}
                         </div>
                     </div>
@@ -305,6 +307,20 @@ async function restoranlariGetir() {
             `;
 
         }).join("");
+
+        // Yıldızlara tıklama etkileşimi (şimdilik sadece görsel, henüz kaydedilmiyor)
+        document.querySelectorAll(".stars").forEach(starGroup => {
+            starGroup.addEventListener("click", (e) => {
+                if (!e.target.classList.contains("star")) return;
+
+                const value = parseInt(e.target.dataset.value);
+                const stars = starGroup.querySelectorAll(".star");
+
+                stars.forEach((star, index) => {
+                    star.classList.toggle("filled", index < value);
+                });
+            });
+        });
 
     } catch (error) {
 
