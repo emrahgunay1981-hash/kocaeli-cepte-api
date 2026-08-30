@@ -281,7 +281,9 @@ async function restoranlariGetir() {
                 ? '<span class="badge badge-price">' + priceText + '</span>'
                 : '';
 
-            const mapsUrl = "https://www.google.com/maps/place/?q=place_id:" + r.id;
+            const mapsUrl = "https://www.google.com/maps/search/?api=1&query=" +
+                encodeURIComponent(r.name + " " + r.address) +
+                "&query_place_id=" + r.id;
 
             const imgHtml = r.photoUrl
                 ? '<img src="' + r.photoUrl + '" alt="' + r.name + '">'
