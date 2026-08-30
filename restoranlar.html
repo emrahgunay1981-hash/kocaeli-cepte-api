@@ -283,6 +283,10 @@ async function restoranlariGetir() {
 
             const mapsUrl = "https://www.google.com/maps/place/?q=place_id:" + r.id;
 
+            const imgHtml = r.photoUrl
+                ? '<img src="' + r.photoUrl + '" alt="' + r.name + '">'
+                : '';
+
             return `
                 <div class="card">
                     <a href="${mapsUrl}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
@@ -325,6 +329,8 @@ async function restoranlariGetir() {
     } catch (error) {
 
         console.error("RESTORAN API HATASI:", error);
+
+        status.style.display = "block";
 
         status.innerHTML = `
             <div class="error">
