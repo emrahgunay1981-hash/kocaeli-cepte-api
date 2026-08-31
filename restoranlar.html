@@ -305,7 +305,7 @@ async function restoranlariGetir() {
                     </a>
                     <div class="card-body" style="padding-top:0;">
                         <div class="our-rating">
-                            <div class="our-rating-label">Kocaeli Cepte Puanı (yakında kaydedilecek)</div>
+                            <div class="our-rating-label" data-label-for="${r.id}">Kocaeli Cepte Puanı</div>
                             ${starsHtml(r.id, 0)}
                         </div>
                     </div>
@@ -314,17 +314,99 @@ async function restoranlariGetir() {
 
         }).join("");
 
-        // Yıldızlara tıklama etkileşimi (şimdilik sadece görsel, henüz kaydedilmiyor)
+        // Kayıtlı puanları çek ve göster
+        try {
+
+            const placeIds = data.restaurants.map(r => r.id).join(",");
+
+            const ratingsResponse = await fetch(
+                "https://kocaeli-cepte-api.vercel.app/api/puan?placeIds=" +
+                encodeURIComponent(placeIds)
+            );
+
+            if (ratingsResponse.ok) {
+
+                const ratingsData = await ratingsResponse.json();
+
+                if (ratingsData.success) {
+
+                    Object.keys(ratingsData.ratings).forEach(placeId => {
+
+                        const info = ratingsData.ratings[placeId];
+                        const label = document.querySelector('[data-label-for="' + placeId + '"]');
+                        const starGroup = document.querySelector('.stars[data-place-id="' + placeId + '"]');
+
+                        if (label) {
+                            label.textContent = info.count > 0
+                                ? "Kocaeli Cepte Puanı: " + info.average + " (" + info.count + " oy)"
+                                : "Kocaeli Cepte Puanı (henüz oy yok)";
+                        }
+
+                        if (starGroup && info.count > 0) {
+                            const stars = starGroup.querySelectorAll(".star");
+                            const rounded = Math.round(info.average);
+                            stars.forEach((star, index) => {
+                                star.classList.toggle("filled", index < rounded);
+                            });
+                        }
+
+                    });
+
+                }
+
+            }
+
+        } catch (ratingError) {
+            console.error("Puanlar getirilemedi:", ratingError);
+        }
+
+        // Yıldızlara tıklama etkileşimi - artık gerçekten kaydediyor
         document.querySelectorAll(".stars").forEach(starGroup => {
-            starGroup.addEventListener("click", (e) => {
+            starGroup.addEventListener("click", async (e) => {
                 if (!e.target.classList.contains("star")) return;
 
                 const value = parseInt(e.target.dataset.value);
+                const placeId = starGroup.dataset.placeId;
                 const stars = starGroup.querySelectorAll(".star");
 
+                // Önce görsel olarak göster
                 stars.forEach((star, index) => {
                     star.classList.toggle("filled", index < value);
                 });
+
+                const label = document.querySelector('[data-label-for="' + placeId + '"]');
+                if (label) {
+                    label.textContent = "Kaydediliyor...";
+                }
+
+                try {
+
+                    const saveResponse = await fetch(
+                        "https://kocaeli-cepte-api.vercel.app/api/puan",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ placeId, rating: value })
+                        }
+                    );
+
+                    const saveData = await saveResponse.json();
+
+                    if (saveData.success && label) {
+                        label.textContent =
+                            "Kocaeli Cepte Puanı: " + saveData.average +
+                            " (" + saveData.count + " oy) — Teşekkürler!";
+                    } else if (label) {
+                        label.textContent = "Puan kaydedilemedi, tekrar deneyin.";
+                    }
+
+                } catch (err) {
+                    console.error("Puan kaydetme hatası:", err);
+                    if (label) {
+                        label.textContent = "Puan kaydedilemedi, tekrar deneyin.";
+                    }
+                }
+
             });
         });
 
