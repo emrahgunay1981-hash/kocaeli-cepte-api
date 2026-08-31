@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#061a12">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#061a12">
 
 <title>Kocaeli Cepte</title>
 
+
 <style>
+
+/* =========================
+   GENEL
+========================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,9 +26,16 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
   background: #061a12;
   color: #f4f7f5;
+
   padding-bottom: 90px;
 }
 
@@ -32,27 +50,43 @@ button {
   padding: 0 15px;
 }
 
-/* ÜST BAR */
+
+/* =========================
+   ÜST BAR
+========================= */
 
 .topbar {
+
   padding: 22px 15px 16px;
+
   display: flex;
   align-items: center;
+
   gap: 12px;
+
   background: #071d14;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+
+  border-bottom:
+    1px solid rgba(255,255,255,.06);
 }
 
 .logo {
+
   width: 54px;
   height: 54px;
+
   border-radius: 16px;
+
   background: #08783d;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-size: 27px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+
+  box-shadow:
+    0 6px 20px rgba(0,0,0,.25);
 }
 
 .brand {
@@ -60,8 +94,11 @@ button {
 }
 
 .brand-name {
+
   font-size: 25px;
+
   font-weight: 800;
+
   letter-spacing: -.5px;
 }
 
@@ -70,27 +107,93 @@ button {
 }
 
 .brand-tag {
+
   color: #8ca79b;
+
   font-size: 11px;
+
   letter-spacing: 2px;
+
   margin-top: 6px;
 }
 
-/* MANŞET */
+
+/* =========================
+   HAVA DURUMU
+========================= */
+
+.mini-weather {
+
+  margin: 8px 16px 12px;
+
+  padding: 8px 10px;
+
+  border-radius: 12px;
+
+  background:
+    rgba(255,255,255,0.06);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  font-size: 12px;
+
+  color: #aebfb7;
+}
+
+.mini-weather strong {
+  color: #12c95d;
+}
+
+.mini-weather b {
+
+  color: #fff;
+
+  font-size: 17px;
+}
+
+.mini-weather #weather-icon {
+  font-size: 17px;
+}
+
+
+/* =========================
+   MANŞET
+========================= */
 
 .hero {
+
   margin-top: 18px;
+
   border-radius: 20px;
+
   overflow: hidden;
+
   background: #10261d;
-  border: 1px solid rgba(255,255,255,.06);
+
+  border:
+    1px solid rgba(255,255,255,.06);
 }
 
 .hero-image {
+
   width: 100%;
+
   height: 230px;
+
   object-fit: cover;
+
   display: block;
+
   background: #12251e;
 }
 
@@ -99,43 +202,66 @@ button {
 }
 
 .breaking {
+
   display: inline-block;
+
   background: #12b957;
+
   color: #03150c;
+
   font-weight: 800;
+
   font-size: 11px;
+
   padding: 6px 9px;
+
   border-radius: 7px;
+
   margin-bottom: 9px;
 }
 
 .hero-title {
+
   font-size: 21px;
+
   line-height: 1.25;
+
   font-weight: 800;
 }
 
 .hero-meta {
+
   margin-top: 10px;
+
   color: #91a79d;
+
   font-size: 12px;
 }
 
-/* BAŞLIKLAR */
+
+/* =========================
+   BÖLÜMLER
+========================= */
 
 .section {
   margin-top: 25px;
 }
 
 .section-head {
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
   margin-bottom: 13px;
 }
 
 .section-title {
+
   font-size: 19px;
+
   font-weight: 800;
 }
 
@@ -144,32 +270,55 @@ button {
 }
 
 .refresh {
+
   border: 0;
+
   background: #102b20;
+
   color: #a9c2b5;
+
   border-radius: 10px;
+
   padding: 8px 11px;
+
   font-size: 13px;
+
   cursor: pointer;
 }
 
-/* HABER KARTLARI */
+
+/* =========================
+   HABER KARTLARI
+========================= */
 
 .news-list {
+
   display: flex;
+
   flex-direction: column;
+
   gap: 12px;
 }
 
 .news-card {
+
   display: flex;
+
   gap: 12px;
+
   padding: 11px;
+
   background: #0d241a;
-  border: 1px solid rgba(255,255,255,.055);
+
+  border:
+    1px solid rgba(255,255,255,.055);
+
   border-radius: 16px;
+
   text-decoration: none;
+
   color: inherit;
+
   transition: .2s;
 }
 
@@ -178,118 +327,340 @@ button {
 }
 
 .news-image {
+
   width: 115px;
+
   height: 92px;
+
   flex-shrink: 0;
+
   object-fit: cover;
+
   border-radius: 12px;
+
   background: #183127;
 }
 
 .news-info {
+
   min-width: 0;
+
   display: flex;
+
   flex-direction: column;
 }
 
 .news-title {
+
   font-size: 15px;
+
   line-height: 1.32;
+
   font-weight: 700;
+
   display: -webkit-box;
+
   -webkit-line-clamp: 3;
+
   -webkit-box-orient: vertical;
+
   overflow: hidden;
 }
 
 .news-bottom {
+
   margin-top: auto;
+
   padding-top: 7px;
+
   display: flex;
+
   justify-content: space-between;
+
   gap: 5px;
 }
 
 .source {
+
   color: #16c85c;
+
   font-size: 11px;
+
   font-weight: 700;
 }
 
 .time {
+
   color: #718a7e;
+
   font-size: 11px;
+
   white-space: nowrap;
 }
 
-/* KATEGORİ */
 
-/* YÜKLENİYOR */
+/* =========================
+   KATEGORİLER
+========================= */
+
+.category-row {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 11px;
+}
+
+.category {
+
+  display: block;
+
+  padding: 17px 15px;
+
+  border-radius: 16px;
+
+  background: #0d241a;
+
+  border:
+    1px solid rgba(255,255,255,.05);
+
+  text-decoration: none;
+
+  color: white;
+
+  min-height: 120px;
+}
+
+.category-icon {
+
+  font-size: 24px;
+
+  margin-bottom: 8px;
+}
+
+.category-name {
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  color: white;
+}
+
+.category-desc {
+
+  color: #718b7f;
+
+  font-size: 11px;
+
+  margin-top: 4px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================
+   TRAFİK
+========================= */
+
+.traffic-card {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 13px;
+
+  background: #0d241a;
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  border-radius: 15px;
+
+  text-decoration: none;
+
+  color: white;
+}
+
+.traffic-icon {
+
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 12px;
+
+  background: #123a29;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+
+  flex-shrink: 0;
+}
+
+.traffic-info {
+  flex: 1;
+}
+
+.traffic-title {
+
+  font-size: 14px;
+
+  font-weight: 800;
+}
+
+.traffic-desc {
+
+  margin-top: 3px;
+
+  color: #718b7f;
+
+  font-size: 11px;
+}
+
+.traffic-arrow {
+
+  font-size: 25px;
+
+  color: #12c95d;
+}
+
+
+/* =========================
+   YÜKLENİYOR
+========================= */
 
 .loading {
+
   text-align: center;
+
   padding: 35px 10px;
+
   color: #7d9589;
 }
 
 .spinner {
+
   width: 28px;
+
   height: 28px;
-  border: 3px solid #1b3b2d;
-  border-top-color: #12c95d;
+
+  border:
+    3px solid #1b3b2d;
+
+  border-top-color:
+    #12c95d;
+
   border-radius: 50%;
+
   margin: 0 auto 12px;
-  animation: spin .8s linear infinite;
+
+  animation:
+    spin .8s linear infinite;
 }
 
 @keyframes spin {
+
   to {
     transform: rotate(360deg);
   }
+
 }
 
+
+/* =========================
+   HATA
+========================= */
+
 .error {
+
   background: #321817;
+
   color: #ff9c95;
+
   border-radius: 14px;
+
   padding: 16px;
+
   text-align: center;
+
   font-size: 13px;
 }
 
-/* ALT MENÜ */
+
+/* =========================
+   ALT MENÜ
+========================= */
 
 .bottom-nav {
+
   position: fixed;
+
   bottom: 0;
+
   left: 0;
+
   right: 0;
+
   height: 72px;
-  background: rgba(5,20,14,.97);
-  border-top: 1px solid rgba(255,255,255,.08);
+
+  background:
+    rgba(5,20,14,.97);
+
+  border-top:
+    1px solid rgba(255,255,255,.08);
+
   display: flex;
+
   justify-content: center;
+
   z-index: 100;
+
   backdrop-filter: blur(12px);
 }
 
 .nav-inner {
+
   width: 100%;
+
   max-width: 700px;
+
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+
+  grid-template-columns:
+    repeat(3,1fr);
 }
 
 .nav-item {
+
   border: 0;
+
   background: transparent;
+
   color: #668074;
+
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
+
   align-items: center;
+
   gap: 4px;
+
   font-size: 11px;
+
   cursor: pointer;
 }
 
@@ -301,7 +672,10 @@ button {
   color: #19ce62;
 }
 
-/* MOBİL */
+
+/* =========================
+   MOBİL
+========================= */
 
 @media (max-width: 420px) {
 
@@ -314,7 +688,9 @@ button {
   }
 
   .news-image {
+
     width: 105px;
+
     height: 85px;
   }
 
@@ -322,213 +698,39 @@ button {
     font-size: 14px;
   }
 
-}
   .mini-weather {
-  margin: 8px 16px 12px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.06);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  font-size: 12px;
-  color: #aebfb7;
-}
 
-.mini-weather strong {
-  color: #12c95d;
-}
-
-.mini-weather b {
-  color: #fff;
-  font-size: 17px;
-}
-
-.mini-weather #weather-icon {
-  font-size: 17px;
-}
-
-  @media (max-width: 420px) {
-  .mini-weather {
     font-size: 11px;
+
     gap: 4px;
   }
 
   .mini-weather b {
     font-size: 16px;
   }
+
 }
 
-/* TRAFİK KARTI */
-
-.traffic-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px;
-  background: #0d241a;
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 15px;
-  text-decoration: none;
-  color: white;
-}
-
-.traffic-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #123a29;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
-
-.traffic-info {
-  flex: 1;
-}
-
-.traffic-title {
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.traffic-desc {
-  margin-top: 3px;
-  color: #718b7f;
-  font-size: 11px;
-}
-
-.traffic-arrow {
-  font-size: 25px;
-  color: #12c95d;
-}
-
-/* KATEGORİ KARTLARI */
-
-.category-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 11px;
-}
-
-.category {
-  display: block;
-  padding: 17px 15px;
-  border-radius: 16px;
-  background: #0d241a;
-  border: 1px solid rgba(255,255,255,.05);
-  text-decoration: none;
-  color: white;
-}
-
-.category-icon {
-  font-size: 24px;
-  margin-bottom: 8px;
-}
-
-.category-name {
-  font-size: 14px;
-  font-weight: 800;
-  color: white;
-}
-
-.category-desc {
-  color: #718b7f;
-  font-size: 11px;
-  margin-top: 4px;
-}
-
-.traffic-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px;
-  background: #0d241a;
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 15px;
-  text-decoration: none;
-  color: white;
-}
-
-.traffic-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #123a29;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
-
-.traffic-info {
-  flex: 1;
-}
-
-.traffic-title {
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.traffic-desc {
-  margin-top: 3px;
-  color: #718b7f;
-  font-size: 11px;
-}
-
-.traffic-arrow {
-  font-size: 25px;
-  color: #12c95d;
-/* KATEGORİ KARTLARI */
-
-.category-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 11px;
-}
-
-.category {
-  display: block;
-  padding: 17px 15px;
-  border-radius: 16px;
-  background: #0d241a;
-  border: 1px solid rgba(255,255,255,.05);
-  text-decoration: none;
-  color: white;
-}
-
-.category-icon {
-  font-size: 24px;
-  margin-bottom: 8px;
-}
-
-.category-name {
-  font-size: 14px;
-  font-weight: 800;
-  color: white;
-}
-
-.category-desc {
-  color: #718b7f;
-  font-size: 11px;
-  margin-top: 4px;
-}
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =========================
+     ÜST BAR
+========================= -->
+
 <header class="topbar">
 
-  <div class="logo">🏙️</div>
+  <div class="logo">
+    🏙️
+  </div>
 
   <div class="brand">
+
     <div class="brand-name">
       KOCAELİ <span>CEPTE</span>
     </div>
@@ -536,128 +738,286 @@ button {
     <div class="brand-tag">
       ŞEHRİN CEBİNDEKİ HALİ
     </div>
+
   </div>
 
 </header>
 
 
+
 <main class="container">
-<div class="mini-weather" id="mini-weather">
-  <span id="weather-icon">🌤️</span>
-  <strong>İzmit</strong>
-  <b id="weather-temp">--°</b>
-  <span id="weather-desc">Yükleniyor...</span>
-  <span>•</span>
-  <span id="weather-feels">Hissedilen --°</span>
-  <span>•</span>
-  <span id="weather-humidity">💧 --%</span>
-  <span>•</span>
-  <span id="weather-wind">💨 -- km/sa</span>
+
+
+<!-- =========================
+     HAVA DURUMU
+========================= -->
+
+<div class="mini-weather"
+     id="mini-weather">
+
+  <span id="weather-icon">
+    🌤️
+  </span>
+
+  <strong>
+    İzmit
+  </strong>
+
+  <b id="weather-temp">
+    --°
+  </b>
+
+  <span id="weather-desc">
+    Yükleniyor...
+  </span>
+
+  <span>
+    •
+  </span>
+
+  <span id="weather-feels">
+    Hissedilen --°
+  </span>
+
+  <span>
+    •
+  </span>
+
+  <span id="weather-humidity">
+    💧 --%
+  </span>
+
+  <span>
+    •
+  </span>
+
+  <span id="weather-wind">
+    💨 -- km/sa
+  </span>
+
 </div>
-  <!-- MANŞET -->
-
-  <section id="hero-area">
-
-    <div class="loading">
-      <div class="spinner"></div>
-      Haberler yükleniyor...
-    </div>
-
-  </section>
 
 
-  <!-- SON HABERLER -->
 
-  <section class="section">
+<!-- =========================
+     MANŞET
+========================= -->
 
-    <div class="section-head">
+<section id="hero-area">
 
-      <div class="section-title">
-        🔥 <span>Son</span> Haberler
-      </div>
+  <div class="loading">
 
-      <button class="refresh" onclick="loadNews()">
-        ↻ Yenile
-      </button>
+    <div class="spinner"></div>
 
-    </div>
+    Haberler yükleniyor...
 
-    <div id="news-grid" class="news-list">
-
-      <div class="loading">
-        <div class="spinner"></div>
-        Haberler getiriliyor...
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- KATEGORİLER -->
-
-  <section class="section">
-
-    <div class="section-title">
-      📰 <span>Kocaeli</span> Gündemi
-    </div>
-
-    <div class="category-row" style="margin-top:13px;">
-
-      <a class="category" href="haberler.html">
-        <div class="category-icon">📰</div>
-        <div class="category-name">Tüm Haberler</div>
-        <div class="category-desc">
-          Kocaeli'den son gelişmeler
-        </div>
-      </a>
-
-      <a class="category" href="sport.html">
-        <div class="category-icon">⚽</div>
-        <div class="category-name">Spor</div>
-        <div class="category-desc">
-          Kocaelispor ve spor
-        </div>
-      </a><a class="category" href="etkinlikler.html">
-    <div class="category-icon">🎫</div>
-    <div class="category-name">Etkinlikler</div>
-    <div class="category-desc">
-        Kocaeli'deki etkinlikler
-    </div>
-      </a>
-        </div>
-      </a>
-<a class="category" href="eczaneler.html">
-  <div class="category-icon">💊</div>
-  <div class="category-name">Nöbetçi Eczaneler</div>
-  <div class="category-desc">Bugün nöbetçi eczaneler</div>
-</a><a class="category" href="restoranlar.html">
-  <div class="category-icon">🍽️</div>
-  <div class="category-name">Restoranlar</div>
-  <div class="category-desc">Kocaeli'deki restoranlar</div>
-</a><a class="category" href="esnaf.html">
-
-  <div class="category-icon">🏪</div>
-
-  <div class="category-name">
-    Esnaf Rehberi
   </div>
 
-  <div class="category-desc">
-    Kuaför, tamirci, market ve daha fazlası
-  </div>
-
-</a>
-    </div>
-
-   </section>
-
-<!-- BELEDİYE & KAMU HİZMETLERİ -->
-
-<section class="section">
 </section>
 
-<!-- KOCAELİ TRAFİK -->
+
+
+<!-- =========================
+     SON HABERLER
+========================= -->
+
+<section class="section">
+
+  <div class="section-head">
+
+    <div class="section-title">
+
+      🔥 <span>Son</span> Haberler
+
+    </div>
+
+    <button
+      class="refresh"
+      onclick="loadNews()">
+
+      ↻ Yenile
+
+    </button>
+
+  </div>
+
+
+  <div
+    id="news-grid"
+    class="news-list">
+
+    <div class="loading">
+
+      <div class="spinner"></div>
+
+      Haberler getiriliyor...
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     KOCAELİ GÜNDEMİ
+========================= -->
+
+<section class="section">
+
+  <div class="section-title">
+
+    📰 <span>Kocaeli</span> Gündemi
+
+  </div>
+
+
+  <div
+    class="category-row"
+    style="margin-top:13px;">
+
+
+    <!-- TÜM HABERLER -->
+
+    <a
+      class="category"
+      href="haberler.html">
+
+      <div class="category-icon">
+        📰
+      </div>
+
+      <div class="category-name">
+        Tüm Haberler
+      </div>
+
+      <div class="category-desc">
+        Kocaeli'den son gelişmeler
+      </div>
+
+    </a>
+
+
+
+    <!-- SPOR -->
+
+    <a
+      class="category"
+      href="sport.html">
+
+      <div class="category-icon">
+        ⚽
+      </div>
+
+      <div class="category-name">
+        Spor
+      </div>
+
+      <div class="category-desc">
+        Kocaelispor ve spor
+      </div>
+
+    </a>
+
+
+
+    <!-- ETKİNLİKLER -->
+
+    <a
+      class="category"
+      href="etkinlikler.html">
+
+      <div class="category-icon">
+        🎫
+      </div>
+
+      <div class="category-name">
+        Etkinlikler
+      </div>
+
+      <div class="category-desc">
+        Kocaeli'deki etkinlikler
+      </div>
+
+    </a>
+
+
+
+    <!-- ECZANELER -->
+
+    <a
+      class="category"
+      href="eczaneler.html">
+
+      <div class="category-icon">
+        💊
+      </div>
+
+      <div class="category-name">
+        Nöbetçi Eczaneler
+      </div>
+
+      <div class="category-desc">
+        Bugün nöbetçi eczaneler
+      </div>
+
+    </a>
+
+
+
+    <!-- RESTORANLAR -->
+
+    <a
+      class="category"
+      href="restoranlar.html">
+
+      <div class="category-icon">
+        🍽️
+      </div>
+
+      <div class="category-name">
+        Restoranlar
+      </div>
+
+      <div class="category-desc">
+        Kocaeli'deki restoranlar
+      </div>
+
+    </a>
+
+
+
+    <!-- ESNAF -->
+
+    <a
+      class="category"
+      href="esnaf.html">
+
+      <div class="category-icon">
+        🏪
+      </div>
+
+      <div class="category-name">
+        Esnaf Rehberi
+      </div>
+
+      <div class="category-desc">
+        Kuaför, tamirci, market ve daha fazlası
+      </div>
+
+    </a>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     KOCAELİ TRAFİK
+========================= -->
 
 <section class="section">
 
@@ -665,12 +1025,16 @@ button {
     class="traffic-card"
     href="https://www.akillisehirkocaeli.com/"
     target="_blank"
-    rel="noopener noreferrer"
-  >
+    rel="noopener noreferrer">
 
-    <div class="traffic-icon">🚦</div>
+
+    <div class="traffic-icon">
+      🚦
+    </div>
+
 
     <div class="traffic-info">
+
       <div class="traffic-title">
         Kocaeli Trafik
       </div>
@@ -678,63 +1042,122 @@ button {
       <div class="traffic-desc">
         Canlı trafik yoğunluğunu görüntüle
       </div>
+
     </div>
 
-    <div class="traffic-arrow">›</div>
 
-</a>
+    <div class="traffic-arrow">
+      ›
+    </div>
+
+
+  </a>
+
 </section>
+
+
 </main>
 
 
-<!-- ALT MENÜ -->
+
+<!-- =========================
+     ALT MENÜ
+========================= -->
 
 <nav class="bottom-nav">
 
   <div class="nav-inner">
 
-    <button class="nav-item active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-      <div class="nav-icon">⌂</div>
+
+    <button
+      class="nav-item active"
+      onclick="window.scrollTo({
+        top:0,
+        behavior:'smooth'
+      })">
+
+      <div class="nav-icon">
+        ⌂
+      </div>
+
       Ana Sayfa
+
     </button>
 
-    <button class="nav-item" onclick="location.href='haberler.html'">
-      <div class="nav-icon">📰</div>
+
+
+    <button
+      class="nav-item"
+      onclick="location.href='haberler.html'">
+
+      <div class="nav-icon">
+        📰
+      </div>
+
       Haberler
+
     </button>
 
-    <button class="nav-item" onclick="location.href='sport.html'">
-      <div class="nav-icon">⚽</div>
+
+
+    <button
+      class="nav-item"
+      onclick="location.href='sport.html'">
+
+      <div class="nav-icon">
+        ⚽
+      </div>
+
       Spor
+
     </button>
+
 
   </div>
 
 </nav>
 
 
+
 <script>
+
+
+/* =========================
+   HABER DEĞİŞKENİ
+========================= */
 
 let allNews = [];
 
 
-/* HTML güvenliği */
+
+/* =========================
+   HTML GÜVENLİĞİ
+========================= */
 
 function escapeHtml(text) {
 
-  if (!text) return "";
+  if (!text) {
+    return "";
+  }
 
-  return text
+  return String(text)
+
     .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
 }
 
 
-/* Tarih */
+
+/* =========================
+   HABER SAATİ
+========================= */
 
 function getTime(item) {
 
@@ -746,255 +1169,547 @@ function getTime(item) {
 }
 
 
-/* Haberleri getir */
+
+/* =========================
+   HABERLERİ GETİR
+========================= */
 
 async function loadNews() {
 
-  const grid = document.getElementById("news-grid");
-  const hero = document.getElementById("hero-area");
+  const grid =
+    document.getElementById("news-grid");
+
+  const hero =
+    document.getElementById("hero-area");
+
 
   grid.innerHTML = `
+
     <div class="loading">
+
       <div class="spinner"></div>
+
       Haberler yenileniyor...
+
     </div>
+
   `;
 
+
   hero.innerHTML = `
+
     <div class="loading">
+
       <div class="spinner"></div>
+
       Güncel haberler getiriliyor...
+
     </div>
+
   `;
 
 
   try {
 
-    const response = await fetch("/api/news?cache=" + Date.now());
+
+    const response =
+      await fetch(
+        "/api/news?cache=" + Date.now()
+      );
+
 
     if (!response.ok) {
-      throw new Error("API bağlantısı başarısız");
+
+      throw new Error(
+        "API bağlantısı başarısız"
+      );
+
     }
 
-    const data = await response.json();
 
-    if (!data.ok || !data.items || !data.items.length) {
-      throw new Error("Haber bulunamadı");
+    const data =
+      await response.json();
+
+
+    if (
+      !data.ok ||
+      !data.items ||
+      !data.items.length
+    ) {
+
+      throw new Error(
+        "Haber bulunamadı"
+      );
+
     }
+
 
     allNews = data.items;
 
 
-    /* MANŞET */
 
-    const first = allNews[0];
+    /* =========================
+       MANŞET
+    ========================= */
+
+    const first =
+      allNews[0];
+
 
     hero.innerHTML = `
 
       <a
+
         class="hero"
+
         href="${escapeHtml(first.link)}"
+
         target="_blank"
+
         rel="noopener noreferrer"
-        style="display:block;text-decoration:none;color:inherit;"
+
+        style="
+          display:block;
+          text-decoration:none;
+          color:inherit;
+        "
+
       >
+
 
         ${
           first.image
-          ? `<img
+
+          ? `
+
+            <img
+
               class="hero-image"
+
               src="${escapeHtml(first.image)}"
+
               alt=""
-              onerror="this.style.display='none'"
-            >`
+
+              onerror="
+                this.style.display='none'
+              "
+
+            >
+
+          `
+
           : ""
+
         }
+
 
         <div class="hero-content">
 
+
           <div class="breaking">
+
             🔴 SON DAKİKA
+
           </div>
+
 
           <div class="hero-title">
+
             ${escapeHtml(first.title)}
+
           </div>
+
 
           <div class="hero-meta">
-            ${escapeHtml(first.source || "Kocaeli Haber")}
-            ${first.time ? " • " + escapeHtml(first.time) : ""}
+
+            ${escapeHtml(
+              first.source ||
+              "Kocaeli Haber"
+            )}
+
+            ${
+              first.time
+              ? " • " +
+                escapeHtml(first.time)
+              : ""
+            }
+
           </div>
 
+
         </div>
+
 
       </a>
 
     `;
 
 
-    /* HABER LİSTESİ */
 
-    const list = allNews.slice(1, 11);
+    /* =========================
+       HABER LİSTESİ
+    ========================= */
 
-    grid.innerHTML = list.map(item => `
+    const list =
+      allNews.slice(1, 11);
 
-      <a
-        class="news-card"
-        href="${escapeHtml(item.link)}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
 
-        ${
-          item.image
-          ? `
-            <img
-              class="news-image"
-              src="${escapeHtml(item.image)}"
-              alt=""
-              loading="lazy"
-              onerror="this.style.display='none'"
-            >
-          `
-          : `
-            <div class="news-image"></div>
-          `
-        }
+    grid.innerHTML =
+      list.map(item => `
 
-        <div class="news-info">
+        <a
 
-          <div class="news-title">
-            ${escapeHtml(item.title)}
+          class="news-card"
+
+          href="${escapeHtml(item.link)}"
+
+          target="_blank"
+
+          rel="noopener noreferrer"
+
+        >
+
+
+          ${
+            item.image
+
+            ? `
+
+              <img
+
+                class="news-image"
+
+                src="${escapeHtml(item.image)}"
+
+                alt=""
+
+                loading="lazy"
+
+                onerror="
+                  this.style.display='none'
+                "
+
+              >
+
+            `
+
+            : `
+
+              <div class="news-image"></div>
+
+            `
+
+          }
+
+
+          <div class="news-info">
+
+
+            <div class="news-title">
+
+              ${escapeHtml(item.title)}
+
+            </div>
+
+
+            <div class="news-bottom">
+
+
+              <span class="source">
+
+                ${escapeHtml(
+                  item.source ||
+                  "Kocaeli"
+                )}
+
+              </span>
+
+
+              <span class="time">
+
+                ${escapeHtml(
+                  getTime(item)
+                )}
+
+              </span>
+
+
+            </div>
+
+
           </div>
 
-          <div class="news-bottom">
 
-            <span class="source">
-              ${escapeHtml(item.source || "Kocaeli")}
-            </span>
+        </a>
 
-            <span class="time">
-              ${escapeHtml(getTime(item))}
-            </span>
-
-          </div>
-
-        </div>
-
-      </a>
-
-    `).join("");
+      `).join("");
 
 
-  } catch (error) {
+  }
 
-    console.error("Haberler yüklenemedi:", error);
+
+  catch (error) {
+
+
+    console.error(
+      "Haberler yüklenemedi:",
+      error
+    );
+
 
     hero.innerHTML = "";
 
+
     grid.innerHTML = `
+
       <div class="error">
-        ⚠️ Haberler şu anda yüklenemedi.<br><br>
-        Lütfen biraz sonra tekrar deneyin.
+
+        ⚠️ Haberler şu anda yüklenemedi.
+
         <br><br>
+
+        Lütfen biraz sonra tekrar deneyin.
+
+        <br><br>
+
         <button
           class="refresh"
-          onclick="loadNews()"
-        >
+          onclick="loadNews()">
+
           ↻ Tekrar Dene
+
         </button>
+
       </div>
+
     `;
 
   }
 
 }
 
+
+
 /* =========================
-   MİNİ HAVA DURUMU
+   HAVA DURUMU
 ========================= */
 
 async function loadMiniWeather() {
 
+
   try {
 
+
     const url =
+
       "https://api.open-meteo.com/v1/forecast" +
+
       "?latitude=40.7654" +
+
       "&longitude=29.9408" +
-      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
+
+      "&current=" +
+
+      "temperature_2m," +
+
+      "relative_humidity_2m," +
+
+      "apparent_temperature," +
+
+      "weather_code," +
+
+      "wind_speed_10m" +
+
       "&timezone=Europe%2FIstanbul";
 
-    const response = await fetch(url);
+
+    const response =
+      await fetch(url);
+
 
     if (!response.ok) {
-      throw new Error("Hava durumu alınamadı");
+
+      throw new Error(
+        "Hava durumu alınamadı"
+      );
+
     }
 
-    const data = await response.json();
-    const weather = data.current;
 
-    const temp = Math.round(weather.temperature_2m);
-    const feels = Math.round(weather.apparent_temperature);
-    const humidity = Math.round(weather.relative_humidity_2m);
-    const wind = Math.round(weather.wind_speed_10m);
+    const data =
+      await response.json();
+
+
+    const weather =
+      data.current;
+
+
+    const temp =
+      Math.round(
+        weather.temperature_2m
+      );
+
+
+    const feels =
+      Math.round(
+        weather.apparent_temperature
+      );
+
+
+    const humidity =
+      Math.round(
+        weather.relative_humidity_2m
+      );
+
+
+    const wind =
+      Math.round(
+        weather.wind_speed_10m
+      );
+
 
     let icon = "🌤️";
-    let description = "Parçalı bulutlu";
 
-    if (weather.weather_code === 0) {
+    let description =
+      "Parçalı bulutlu";
+
+
+
+    if (
+      weather.weather_code === 0
+    ) {
+
       icon = "☀️";
+
       description = "Açık";
+
     }
-    else if (weather.weather_code <= 3) {
+
+
+    else if (
+      weather.weather_code <= 3
+    ) {
+
       icon = "🌤️";
-      description = "Parçalı bulutlu";
+
+      description =
+        "Parçalı bulutlu";
+
     }
-    else if (weather.weather_code <= 48) {
+
+
+    else if (
+      weather.weather_code <= 48
+    ) {
+
       icon = "🌫️";
+
       description = "Sisli";
+
     }
-    else if (weather.weather_code <= 67) {
+
+
+    else if (
+      weather.weather_code <= 67
+    ) {
+
       icon = "🌧️";
+
       description = "Yağmurlu";
+
     }
-    else if (weather.weather_code <= 77) {
+
+
+    else if (
+      weather.weather_code <= 77
+    ) {
+
       icon = "🌨️";
+
       description = "Karlı";
+
     }
-    else if (weather.weather_code <= 82) {
+
+
+    else if (
+      weather.weather_code <= 82
+    ) {
+
       icon = "🌧️";
-      description = "Sağanak";
+
+      description =
+        "Sağanak";
+
     }
+
+
     else {
+
       icon = "⛈️";
-      description = "Fırtınalı";
+
+      description =
+        "Fırtınalı";
+
     }
 
-    document.getElementById("weather-icon").textContent = icon;
 
-    document.getElementById("weather-temp").textContent =
+
+    document.getElementById(
+      "weather-icon"
+    ).textContent = icon;
+
+
+    document.getElementById(
+      "weather-temp"
+    ).textContent =
       temp + "°";
 
-    document.getElementById("weather-desc").textContent =
+
+    document.getElementById(
+      "weather-desc"
+    ).textContent =
       description;
 
-    document.getElementById("weather-feels").textContent =
-      "Hissedilen " + feels + "°";
 
-    document.getElementById("weather-humidity").textContent =
-      "💧 " + humidity + "%";
+    document.getElementById(
+      "weather-feels"
+    ).textContent =
+      "Hissedilen " +
+      feels +
+      "°";
 
-    document.getElementById("weather-wind").textContent =
-      "💨 " + wind + " km/sa";
+
+    document.getElementById(
+      "weather-humidity"
+    ).textContent =
+      "💧 " +
+      humidity +
+      "%";
+
+
+    document.getElementById(
+      "weather-wind"
+    ).textContent =
+      "💨 " +
+      wind +
+      " km/sa";
+
 
   }
 
+
   catch (error) {
 
-    console.error("Hava durumu:", error);
 
-    document.getElementById("weather-desc").textContent =
+    console.error(
+      "Hava durumu:",
+      error
+    );
+
+
+    document.getElementById(
+      "weather-desc"
+    ).textContent =
       "Veri alınamadı";
 
   }
@@ -1002,21 +1717,29 @@ async function loadMiniWeather() {
 }
 
 
-/* Hava durumunu başlat */
+
+/* =========================
+   BAŞLAT
+========================= */
 
 loadMiniWeather();
 
 
-/* 10 dakikada bir güncelle */
+/* 10 DAKİKADA BİR HAVA DURUMU */
 
-setInterval(loadMiniWeather, 10 * 60 * 1000);
-/* Sayfa açılınca haberleri getir */
+setInterval(
+  loadMiniWeather,
+  10 * 60 * 1000
+);
+
+
+/* SAYFA AÇILINCA HABERLER */
 
 loadNews();
-  
-  
+
 
 </script>
 
+
 </body>
-</html>
+  </html>
