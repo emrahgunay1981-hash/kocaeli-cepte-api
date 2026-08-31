@@ -361,12 +361,40 @@ async function restoranlariGetir() {
         }
 
         // Yıldızlara tıklama etkileşimi - artık gerçekten kaydediyor
+        // ve cihaz başına (localStorage) sadece 1 kez oy vermeye izin veriyor
         document.querySelectorAll(".stars").forEach(starGroup => {
+
+            const placeId = starGroup.dataset.placeId;
+            const votedKey = "oy_verildi_" + placeId;
+            const label = document.querySelector('[data-label-for="' + placeId + '"]');
+
+            // Sayfa yüklenirken, daha önce oy verilmişse göster
+            const previousVote = localStorage.getItem(votedKey);
+
+            if (previousVote) {
+
+                const stars = starGroup.querySelectorAll(".star");
+                stars.forEach((star, index) => {
+                    star.classList.toggle("filled", index < parseInt(previousVote));
+                });
+
+                starGroup.style.opacity = "0.6";
+                starGroup.style.pointerEvents = "none";
+
+                if (label) {
+                    const currentText = label.textContent;
+                    label.textContent = currentText + " (Bu restorana oy verdiniz)";
+                }
+
+            }
+
             starGroup.addEventListener("click", async (e) => {
                 if (!e.target.classList.contains("star")) return;
 
+                // Zaten oy verilmişse hiçbir şey yapma
+                if (localStorage.getItem(votedKey)) return;
+
                 const value = parseInt(e.target.dataset.value);
-                const placeId = starGroup.dataset.placeId;
                 const stars = starGroup.querySelectorAll(".star");
 
                 // Önce görsel olarak göster
@@ -374,7 +402,6 @@ async function restoranlariGetir() {
                     star.classList.toggle("filled", index < value);
                 });
 
-                const label = document.querySelector('[data-label-for="' + placeId + '"]');
                 if (label) {
                     label.textContent = "Kaydediliyor...";
                 }
@@ -393,9 +420,17 @@ async function restoranlariGetir() {
                     const saveData = await saveResponse.json();
 
                     if (saveData.success && label) {
+
+                        // Bu cihazın bu restorana oy verdiğini kaydet
+                        localStorage.setItem(votedKey, value);
+
                         label.textContent =
                             "Kocaeli Cepte Puanı: " + saveData.average +
                             " (" + saveData.count + " oy) — Teşekkürler!";
+
+                        starGroup.style.opacity = "0.6";
+                        starGroup.style.pointerEvents = "none";
+
                     } else if (label) {
                         label.textContent = "Puan kaydedilemedi, tekrar deneyin.";
                     }
