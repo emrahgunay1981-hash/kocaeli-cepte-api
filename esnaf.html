@@ -161,6 +161,34 @@ select {
     margin-top: 12px;
 }
 
+.our-rating {
+    border-top: 1px solid #1d354d;
+    padding-top: 10px;
+    margin-top: 12px;
+}
+
+.our-rating-label {
+    font-size: 12px;
+    color: #8a97a8;
+    margin-bottom: 6px;
+}
+
+.stars {
+    display: flex;
+    gap: 4px;
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.star {
+    color: #3a4a5c;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+
 .btn {
     flex: 1;
     text-align: center;
@@ -358,11 +386,146 @@ async function esnafGetir() {
                             }
                             <a class="btn btn-map" href="${mapsUrl}" target="_blank" rel="noopener">🗺️ Yol Tarifi</a>
                         </div>
+                        <div class="our-rating">
+                            <div class="our-rating-label" data-label-for="${b.id}">Kocaeli Cepte Puanı</div>
+                            <div class="stars" data-place-id="${b.id}">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
 
         }).join("");
+
+        // Kayıtlı puanları çek ve göster
+        try {
+
+            const placeIds = data.businesses.map(b => b.id).join(",");
+
+            const ratingsResponse = await fetch(
+                "https://kocaeli-cepte-api.vercel.app/api/puan?placeIds=" +
+                encodeURIComponent(placeIds)
+            );
+
+            if (ratingsResponse.ok) {
+
+                const ratingsData = await ratingsResponse.json();
+
+                if (ratingsData.success) {
+
+                    Object.keys(ratingsData.ratings).forEach(placeId => {
+
+                        const info = ratingsData.ratings[placeId];
+                        const label = document.querySelector('[data-label-for="' + placeId + '"]');
+                        const starGroup = document.querySelector('.stars[data-place-id="' + placeId + '"]');
+
+                        if (label) {
+                            label.textContent = info.count > 0
+                                ? "Kocaeli Cepte Puanı: " + info.average + " (" + info.count + " oy)"
+                                : "Kocaeli Cepte Puanı (henüz oy yok)";
+                        }
+
+                        if (starGroup && info.count > 0) {
+                            const stars = starGroup.querySelectorAll(".star");
+                            const rounded = Math.round(info.average);
+                            stars.forEach((star, index) => {
+                                star.classList.toggle("filled", index < rounded);
+                            });
+                        }
+
+                    });
+
+                }
+
+            }
+
+        } catch (ratingError) {
+            console.error("Puanlar getirilemedi:", ratingError);
+        }
+
+        // Yıldızlara tıklama etkileşimi - cihaz başına (localStorage) sadece 1 kez oy
+        document.querySelectorAll(".stars").forEach(starGroup => {
+
+            const placeId = starGroup.dataset.placeId;
+            const votedKey = "oy_verildi_" + placeId;
+            const label = document.querySelector('[data-label-for="' + placeId + '"]');
+
+            const previousVote = localStorage.getItem(votedKey);
+
+            if (previousVote) {
+
+                const stars = starGroup.querySelectorAll(".star");
+                stars.forEach((star, index) => {
+                    star.classList.toggle("filled", index < parseInt(previousVote));
+                });
+
+                starGroup.style.opacity = "0.6";
+                starGroup.style.pointerEvents = "none";
+
+                if (label) {
+                    label.textContent = label.textContent + " (Bu işletmeye oy verdiniz)";
+                }
+
+            }
+
+            starGroup.addEventListener("click", async (e) => {
+                if (!e.target.classList.contains("star")) return;
+                if (localStorage.getItem(votedKey)) return;
+
+                const value = parseInt(e.target.dataset.value);
+                const stars = starGroup.querySelectorAll(".star");
+
+                stars.forEach((star, index) => {
+                    star.classList.toggle("filled", index < value);
+                });
+
+                if (label) {
+                    label.textContent = "Kaydediliyor...";
+                }
+
+                try {
+
+                    const saveResponse = await fetch(
+                        "https://kocaeli-cepte-api.vercel.app/api/puan",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ placeId, rating: value })
+                        }
+                    );
+
+                    const saveData = await saveResponse.json();
+
+                    if (saveData.success && label) {
+
+                        localStorage.setItem(votedKey, value);
+
+                        label.textContent =
+                            "Kocaeli Cepte Puanı: " + saveData.average +
+                            " (" + saveData.count + " oy) — Teşekkürler!";
+
+                        starGroup.style.opacity = "0.6";
+                        starGroup.style.pointerEvents = "none";
+
+                    } else if (label) {
+                        label.textContent = "Puan kaydedilemedi, tekrar deneyin.";
+                    }
+
+                } catch (err) {
+                    console.error("Puan kaydetme hatası:", err);
+                    if (label) {
+                        label.textContent = "Puan kaydedilemedi, tekrar deneyin.";
+                    }
+                }
+
+            });
+
+        });
 
     } catch (error) {
 
@@ -384,5 +547,4 @@ async function esnafGetir() {
 </script>
 
 </body>
-  </html>
-
+</html>
