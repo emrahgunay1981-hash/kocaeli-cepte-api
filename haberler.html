@@ -113,6 +113,7 @@ a {
   border: 1px solid #1c3826;
   color: #9fb8a8;
   font-size: 11px;
+  cursor: pointer;
 }
 
 .filter.active {
@@ -136,20 +137,40 @@ a {
   border-radius: 14px;
   padding: 11px;
   margin-bottom: 10px;
+  overflow: hidden;
 }
+
+.news-card:active {
+  transform: scale(.99);
+}
+
+/* HABER RESMİ */
 
 .news-image {
   width: 105px;
   height: 85px;
   flex-shrink: 0;
   border-radius: 10px;
+  object-fit: cover;
+  display: block;
   background: #16301f;
-  background-size: cover;
-  background-position: center;
 }
+
+/* RESİM YOKSA */
+
+.news-image.no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #52705e;
+  font-size: 24px;
+}
+
+/* HABER İÇERİĞİ */
 
 .news-content {
   min-width: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -207,6 +228,21 @@ a {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+}
+
+/* MOBİL */
+
+@media (max-width: 420px) {
+
+  .news-image {
+    width: 105px;
+    height: 85px;
+  }
+
+  .news-title {
+    font-size: 13px;
   }
 
 }
@@ -337,19 +373,15 @@ function escapeHtml(str) {
 
 function renderNews(source = "Tümü") {
 
-  const container =
-    document.getElementById("news");
-
+  const container = document.getElementById("news");
 
   let news = allNews;
 
-
   if (source !== "Tümü") {
 
-    news =
-      allNews.filter(item =>
-        item.source === source
-      );
+    news = allNews.filter(item =>
+      String(item.source || "").trim() === source
+    );
 
   }
 
@@ -375,47 +407,76 @@ function renderNews(source = "Tümü") {
 
   container.innerHTML = news.map(item => {
 
+    const title = escapeHtml(item.title || "Başlıksız haber");
+
+    const sourceName =
+      escapeHtml(item.source || "Kocaeli");
+
+    const time =
+      escapeHtml(item.time || "");
+
+    const link =
+      escapeHtml(item.link || "#");
+
     const image =
       item.image
-        ? `background-image:url("${item.image}")`
+        ? escapeHtml(String(item.image).trim())
         : "";
+
+
+    let imageHtml = "";
+
+    if (image) {
+
+      imageHtml = `
+
+        <img
+          class="news-image"
+          src="${image}"
+          alt=""
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          onerror="this.outerHTML='<div class=&quot;news-image no-image&quot;>📰</div>'"
+        >
+
+      `;
+
+    } else {
+
+      imageHtml = `
+
+        <div class="news-image no-image">
+          📰
+        </div>
+
+      `;
+
+    }
 
 
     return `
 
       <a
         class="news-card"
-        href="${item.link}"
+        href="${link}"
         target="_blank"
         rel="noopener noreferrer"
       >
 
-        <div
-          class="news-image"
-          style="${image}"
-        ></div>
-
+        ${imageHtml}
 
         <div class="news-content">
 
           <div class="source">
-
-            ${escapeHtml(item.source)}
-
+            ${sourceName}
           </div>
-
 
           <div class="news-title">
-
-            ${escapeHtml(item.title)}
-
+            ${title}
           </div>
 
-
           <div class="news-time">
-
-            ${escapeHtml(item.time || "")}
-
+            ${time}
           </div>
 
         </div>
@@ -431,19 +492,43 @@ function renderNews(source = "Tümü") {
 
 /* API'DEN HABERLER */
 
-fetch("/api/news")
+async function loadNews() {
 
-  .then(response => {
+  const container =
+    document.getElementById("news");
+
+
+  container.innerHTML = `
+
+    <div class="loading">
+
+      <div class="loading-icon">
+        📰
+      </div>
+
+      Haberler yükleniyor...
+
+    </div>
+
+  `;
+
+
+  try {
+
+    const response =
+      await fetch("/api/news?cache=" + Date.now());
+
 
     if (!response.ok) {
+
       throw new Error("API hatası");
+
     }
 
-    return response.json();
 
-  })
+    const data =
+      await response.json();
 
-  .then(data => {
 
     if (
       !data.ok ||
@@ -459,14 +544,18 @@ fetch("/api/news")
 
     renderNews();
 
-  })
-
-  .catch(error => {
-
-    console.error(error);
+  }
 
 
-    document.getElementById("news").innerHTML = `
+  catch (error) {
+
+    console.error(
+      "Haberler yüklenemedi:",
+      error
+    );
+
+
+    container.innerHTML = `
 
       <div class="error">
 
@@ -478,11 +567,30 @@ fetch("/api/news")
 
         Lütfen biraz sonra tekrar deneyin.
 
+        <br><br>
+
+        <button
+          onclick="loadNews()"
+          style="
+            border:0;
+            background:#34c759;
+            color:#06210f;
+            padding:9px 14px;
+            border-radius:10px;
+            font-weight:700;
+            cursor:pointer;
+          "
+        >
+          ↻ Tekrar Dene
+        </button>
+
       </div>
 
     `;
 
-  });
+  }
+
+}
 
 
 /* KAYNAK FİLTRELERİ */
@@ -510,6 +618,11 @@ document
     });
 
   });
+
+
+/* SAYFA AÇILINCA */
+
+loadNews();
 
 </script>
 
