@@ -1,512 +1,1020 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#061a12">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+  name="theme-color"
+  content="#061a12"
+>
 
 <title>Kocaeli Cepte</title>
 
+
 <style>
 
+/* ==========================================
+   GENEL
+========================================== */
+
 * {
+
   box-sizing: border-box;
+
   margin: 0;
+
   padding: 0;
+
 }
+
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
   background: #061a12;
+
   color: #f4f7f5;
+
   padding-bottom: 90px;
+
 }
+
 
 button {
+
   font-family: inherit;
+
 }
+
 
 .container {
+
   width: 100%;
+
   max-width: 700px;
+
   margin: auto;
+
   padding: 0 15px;
+
 }
 
-/* ÜST BAR */
+
+/* ==========================================
+   ÜST BAR
+========================================== */
 
 .topbar {
+
   padding: 22px 15px 16px;
+
   display: flex;
+
   align-items: center;
+
   gap: 12px;
+
   background: #071d14;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+
+  border-bottom:
+    1px solid
+    rgba(255,255,255,.06);
+
 }
+
 
 .logo {
+
   width: 54px;
+
   height: 54px;
+
   border-radius: 16px;
+
   background: #08783d;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   font-size: 27px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+
+  box-shadow:
+    0 6px 20px
+    rgba(0,0,0,.25);
+
 }
+
 
 .brand {
+
   line-height: 1.05;
+
 }
+
 
 .brand-name {
+
   font-size: 25px;
+
   font-weight: 800;
+
   letter-spacing: -.5px;
+
 }
+
 
 .brand-name span {
+
   color: #12c95d;
+
 }
+
 
 .brand-tag {
+
   color: #8ca79b;
+
   font-size: 11px;
+
   letter-spacing: 2px;
+
   margin-top: 6px;
-}
-
-/* MANŞET */
-
-.hero {
-  margin-top: 18px;
-  border-radius: 20px;
-  overflow: hidden;
-  background: #10261d;
-  border: 1px solid rgba(255,255,255,.06);
-}
-
-.hero-image {
-  width: 100%;
-  height: 230px;
-  object-fit: cover;
-  display: block;
-  background: #12251e;
-}
-
-.hero-content {
-  padding: 16px;
-}
-
-.breaking {
-  display: inline-block;
-  background: #12b957;
-  color: #03150c;
-  font-weight: 800;
-  font-size: 11px;
-  padding: 6px 9px;
-  border-radius: 7px;
-  margin-bottom: 9px;
-}
-
-.hero-title {
-  font-size: 21px;
-  line-height: 1.25;
-  font-weight: 800;
-}
-
-.hero-meta {
-  margin-top: 10px;
-  color: #91a79d;
-  font-size: 12px;
-}
-
-/* BAŞLIKLAR */
-
-.section {
-  margin-top: 25px;
-}
-
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 13px;
-}
-
-.section-title {
-  font-size: 19px;
-  font-weight: 800;
-}
-
-.section-title span {
-  color: #12c95d;
-}
-
-.refresh {
-  border: 0;
-  background: #102b20;
-  color: #a9c2b5;
-  border-radius: 10px;
-  padding: 8px 11px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-/* HABER KARTLARI */
-
-.news-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.news-card {
-  display: flex;
-  gap: 12px;
-  padding: 11px;
-  background: #0d241a;
-  border: 1px solid rgba(255,255,255,.055);
-  border-radius: 16px;
-  text-decoration: none;
-  color: inherit;
-  transition: .2s;
-}
-
-.news-card:active {
-  transform: scale(.985);
-}
-
-.news-image {
-  width: 115px;
-  height: 92px;
-  flex-shrink: 0;
-  object-fit: cover;
-  border-radius: 12px;
-  background: #183127;
-}
-
-.news-info {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.news-title {
-  font-size: 15px;
-  line-height: 1.32;
-  font-weight: 700;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.news-bottom {
-  margin-top: auto;
-  padding-top: 7px;
-  display: flex;
-  justify-content: space-between;
-  gap: 5px;
-}
-
-.source {
-  color: #16c85c;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.time {
-  color: #718a7e;
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-/* YÜKLENİYOR */
-
-.loading {
-  text-align: center;
-  padding: 35px 10px;
-  color: #7d9589;
-}
-
-.spinner {
-  width: 28px;
-  height: 28px;
-  border: 3px solid #1b3b2d;
-  border-top-color: #12c95d;
-  border-radius: 50%;
-  margin: 0 auto 12px;
-  animation: spin .8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.error {
-  background: #321817;
-  color: #ff9c95;
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-  font-size: 13px;
-}
-
-/* ALT MENÜ */
-
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: rgba(5,20,14,.97);
-  border-top: 1px solid rgba(255,255,255,.08);
-  display: flex;
-  justify-content: center;
-  z-index: 100;
-  backdrop-filter: blur(12px);
-}
-
-.nav-inner {
-  width: 100%;
-  max-width: 700px;
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-}
-
-.nav-item {
-  border: 0;
-  background: transparent;
-  color: #668074;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.nav-icon {
-  font-size: 21px;
-}
-
-.nav-item.active {
-  color: #19ce62;
-}
-
-/* MOBİL */
-
-@media (max-width: 420px) {
-
-  .hero-image {
-    height: 205px;
-  }
-
-  .hero-title {
-    font-size: 19px;
-  }
-
-  .news-image {
-    width: 105px;
-    height: 85px;
-  }
-
-  .news-title {
-    font-size: 14px;
-  }
 
 }
 
-/* HAVA DURUMU (büyütüldü) */
+
+/* ==========================================
+   HAVA DURUMU
+========================================== */
 
 .mini-weather {
-  margin: 8px 16px 10px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.06);
+
+  margin: 10px 0 12px;
+
+  padding: 15px 14px;
+
+  min-height: 58px;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255,255,255,0.06);
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
-  gap: 8px;
-  white-space: nowrap;
+
+  gap: 7px;
+
+  flex-wrap: wrap;
+
   overflow: hidden;
-  font-size: 14px;
+
+  font-size: 13px;
+
+  line-height: 1.4;
+
   color: #aebfb7;
+
+  text-align: center;
+
 }
+
 
 .mini-weather strong {
+
   color: #12c95d;
+
+  font-size: 15px;
+
 }
+
 
 .mini-weather b {
+
   color: #fff;
-  font-size: 20px;
+
+  font-size: 21px;
+
 }
 
+
 .mini-weather #weather-icon {
-  font-size: 20px;
+
+  font-size: 21px;
+
+  flex-shrink: 0;
+
 }
+
+
+.mini-weather span {
+
+  white-space: nowrap;
+
+}
+
 
 @media (max-width: 420px) {
 
   .mini-weather {
-    font-size: 12px;
+
+    margin: 10px 0 12px;
+
+    padding: 13px 9px;
+
     gap: 5px;
-    padding: 12px 10px;
+
+    font-size: 11px;
+
   }
+
+
+  .mini-weather strong {
+
+    font-size: 13px;
+
+  }
+
 
   .mini-weather b {
-    font-size: 18px;
+
+    font-size: 19px;
+
+  }
+
+
+  .mini-weather #weather-icon {
+
+    font-size: 19px;
+
   }
 
 }
 
-/* FİNANS ŞERİDİ (hava durumuyla aynı stil) */
+
+/* ==========================================
+   FİNANS
+========================================== */
 
 .mini-finance {
-  margin: 0 16px 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.06);
+
+  margin: 0 0 12px;
+
+  padding: 12px 10px;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255,255,255,0.06);
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
-  gap: 10px;
-  white-space: nowrap;
+
+  gap: 9px;
+
   overflow-x: auto;
-  font-size: 13px;
+
+  overflow-y: hidden;
+
+  font-size: 12px;
+
   color: #aebfb7;
+
+  scrollbar-width: none;
+
 }
+
+
+.mini-finance::-webkit-scrollbar {
+
+  display: none;
+
+}
+
 
 .mini-finance b {
+
   color: #fff;
-  font-size: 15px;
+
+  font-size: 14px;
+
 }
 
+
 .mini-finance .fin-item {
+
   display: flex;
+
   align-items: center;
+
   gap: 4px;
+
+  flex-shrink: 0;
+
 }
+
 
 @media (max-width: 420px) {
 
   .mini-finance {
-    font-size: 11px;
-    gap: 7px;
-    padding: 10px 8px;
+
+    font-size: 10px;
+
+    gap: 6px;
+
+    padding: 10px 7px;
+
   }
+
 
   .mini-finance b {
-    font-size: 13px;
+
+    font-size: 12px;
+
   }
 
 }
 
-/* TRAFİK KARTI */
+
+/* ==========================================
+   MANŞET
+========================================== */
+
+.hero {
+
+  margin-top: 18px;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  background: #10261d;
+
+  border:
+    1px solid
+    rgba(255,255,255,.06);
+
+}
+
+
+.hero-image {
+
+  width: 100%;
+
+  height: 230px;
+
+  object-fit: cover;
+
+  display: block;
+
+  background: #12251e;
+
+}
+
+
+.hero-content {
+
+  padding: 16px;
+
+}
+
+
+.breaking {
+
+  display: inline-block;
+
+  background: #12b957;
+
+  color: #03150c;
+
+  font-weight: 800;
+
+  font-size: 11px;
+
+  padding: 6px 9px;
+
+  border-radius: 7px;
+
+  margin-bottom: 9px;
+
+}
+
+
+.hero-title {
+
+  font-size: 21px;
+
+  line-height: 1.25;
+
+  font-weight: 800;
+
+}
+
+
+.hero-meta {
+
+  margin-top: 10px;
+
+  color: #91a79d;
+
+  font-size: 12px;
+
+}
+
+
+/* ==========================================
+   SECTIONS
+========================================== */
+
+.section {
+
+  margin-top: 25px;
+
+}
+
+
+.section-head {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 13px;
+
+}
+
+
+.section-title {
+
+  font-size: 19px;
+
+  font-weight: 800;
+
+}
+
+
+.section-title span {
+
+  color: #12c95d;
+
+}
+
+
+.refresh {
+
+  border: 0;
+
+  background: #102b20;
+
+  color: #a9c2b5;
+
+  border-radius: 10px;
+
+  padding: 8px 11px;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+}
+
+
+/* ==========================================
+   HABERLER
+========================================== */
+
+.news-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+}
+
+
+.news-card {
+
+  display: flex;
+
+  gap: 12px;
+
+  padding: 11px;
+
+  background: #0d241a;
+
+  border:
+    1px solid
+    rgba(255,255,255,.055);
+
+  border-radius: 16px;
+
+  text-decoration: none;
+
+  color: inherit;
+
+  transition: .2s;
+
+}
+
+
+.news-card:active {
+
+  transform: scale(.985);
+
+}
+
+
+.news-image {
+
+  width: 115px;
+
+  height: 92px;
+
+  flex-shrink: 0;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+
+  background: #183127;
+
+}
+
+
+.news-info {
+
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+.news-title {
+
+  font-size: 15px;
+
+  line-height: 1.32;
+
+  font-weight: 700;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+.news-bottom {
+
+  margin-top: auto;
+
+  padding-top: 7px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 5px;
+
+}
+
+
+.source {
+
+  color: #16c85c;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+}
+
+
+.time {
+
+  color: #718a7e;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+
+}
+
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.loading {
+
+  text-align: center;
+
+  padding: 35px 10px;
+
+  color: #7d9589;
+
+}
+
+
+.spinner {
+
+  width: 28px;
+
+  height: 28px;
+
+  border:
+    3px solid
+    #1b3b2d;
+
+  border-top-color:
+    #12c95d;
+
+  border-radius: 50%;
+
+  margin: 0 auto 12px;
+
+  animation:
+    spin .8s linear infinite;
+
+}
+
+
+@keyframes spin {
+
+  to {
+
+    transform: rotate(360deg);
+
+  }
+
+}
+
+
+.error {
+
+  background: #321817;
+
+  color: #ff9c95;
+
+  border-radius: 14px;
+
+  padding: 16px;
+
+  text-align: center;
+
+  font-size: 13px;
+
+}
+
+
+/* ==========================================
+   TRAFİK
+========================================== */
 
 .traffic-card {
+
   display: flex;
+
   align-items: center;
+
   gap: 12px;
+
   padding: 13px;
+
   background: #0d241a;
-  border: 1px solid rgba(255,255,255,.06);
+
+  border:
+    1px solid
+    rgba(255,255,255,.06);
+
   border-radius: 15px;
+
   text-decoration: none;
+
   color: white;
+
 }
+
 
 .traffic-icon {
+
   width: 42px;
+
   height: 42px;
+
   border-radius: 12px;
+
   background: #123a29;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   font-size: 22px;
+
   flex-shrink: 0;
+
 }
+
 
 .traffic-info {
+
   flex: 1;
+
 }
+
 
 .traffic-title {
+
   font-size: 14px;
+
   font-weight: 800;
+
 }
+
 
 .traffic-desc {
+
   margin-top: 3px;
+
   color: #718b7f;
+
   font-size: 11px;
+
 }
+
 
 .traffic-arrow {
+
   font-size: 25px;
+
   color: #12c95d;
+
 }
 
-/* KATEGORİ KARTLARI */
+
+/* ==========================================
+   KATEGORİLER
+========================================== */
 
 .category-row {
+
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
   gap: 11px;
+
 }
+
 
 .category {
+
   display: block;
+
   padding: 17px 15px;
+
   border-radius: 16px;
+
   background: #0d241a;
-  border: 1px solid rgba(255,255,255,.05);
+
+  border:
+    1px solid
+    rgba(255,255,255,.05);
+
   text-decoration: none;
+
   color: white;
+
 }
+
 
 .category-icon {
+
   font-size: 24px;
+
   margin-bottom: 8px;
+
 }
+
 
 .category-name {
+
   font-size: 14px;
+
   font-weight: 800;
+
   color: white;
+
 }
+
 
 .category-desc {
+
   color: #718b7f;
+
   font-size: 11px;
+
   margin-top: 4px;
+
 }
 
+
+/* ==========================================
+   ALT MENÜ
+========================================== */
+
+.bottom-nav {
+
+  position: fixed;
+
+  bottom: 0;
+
+  left: 0;
+
+  right: 0;
+
+  height: 72px;
+
+  background:
+    rgba(5,20,14,.97);
+
+  border-top:
+    1px solid
+    rgba(255,255,255,.08);
+
+  display: flex;
+
+  justify-content: center;
+
+  z-index: 100;
+
+  backdrop-filter: blur(12px);
+
+}
+
+
+.nav-inner {
+
+  width: 100%;
+
+  max-width: 700px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+}
+
+
+.nav-item {
+
+  border: 0;
+
+  background: transparent;
+
+  color: #668074;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 4px;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+}
+
+
+.nav-icon {
+
+  font-size: 21px;
+
+}
+
+
+.nav-item.active {
+
+  color: #19ce62;
+
+}
+
+
+/* ==========================================
+   MOBİL
+========================================== */
+
+@media (max-width: 420px) {
+
+  .hero-image {
+
+    height: 205px;
+
+  }
+
+
+  .hero-title {
+
+    font-size: 19px;
+
+  }
+
+
+  .news-image {
+
+    width: 105px;
+
+    height: 85px;
+
+  }
+
+
+  .news-title {
+
+    font-size: 14px;
+
+  }
+
+}
+
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- ========================================
+     ÜST BAR
+========================================= -->
+
 <header class="topbar">
 
-  <div class="logo">🏙️</div>
+  <div class="logo">
+
+    🏙️
+
+  </div>
+
 
   <div class="brand">
 
     <div class="brand-name">
+
       KOCAELİ <span>CEPTE</span>
+
     </div>
 
+
     <div class="brand-tag">
+
       ŞEHRİN CEBİNDEKİ HALİ
+
     </div>
 
   </div>
@@ -516,33 +1024,60 @@ button {
 
 <main class="container">
 
-<!-- HAVA DURUMU -->
 
-<div class="mini-weather" id="mini-weather">
+<!-- ========================================
+     HAVA DURUMU
+========================================= -->
 
-  <span id="weather-icon">🌤️</span>
+<div
+  class="mini-weather"
+  id="mini-weather"
+>
 
-  <strong>İzmit</strong>
+  <span id="weather-icon">
+    🌤️
+  </span>
 
-  <b id="weather-temp">--°</b>
+
+  <strong>
+    İzmit
+  </strong>
+
+
+  <b id="weather-temp">
+    --°
+  </b>
+
 
   <span id="weather-desc">
     Yükleniyor...
   </span>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <span id="weather-feels">
     Hissedilen --°
   </span>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <span id="weather-humidity">
     💧 --%
   </span>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <span id="weather-wind">
     💨 -- km/sa
@@ -551,40 +1086,87 @@ button {
 </div>
 
 
-<!-- FİNANS ŞERİDİ: DOLAR / EURO / ALTIN / BTC -->
+<!-- ========================================
+     FİNANS
+========================================= -->
 
-<div class="mini-finance" id="mini-finance">
+<div
+  class="mini-finance"
+  id="mini-finance"
+>
 
   <div class="fin-item">
-    <span>💵</span>
-    <b id="usd-value">--</b>
+
+    <span>
+      💵
+    </span>
+
+    <b id="usd-value">
+      --
+    </b>
+
   </div>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <div class="fin-item">
-    <span>💶</span>
-    <b id="eur-value">--</b>
+
+    <span>
+      💶
+    </span>
+
+    <b id="eur-value">
+      --
+    </b>
+
   </div>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <div class="fin-item">
-    <span>🥇</span>
-    <b id="gold-value">--</b>
+
+    <span>
+      🥇
+    </span>
+
+    <b id="gold-value">
+      --
+    </b>
+
   </div>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <div class="fin-item">
-    <span>₿</span>
-    <b id="btc-value">--</b>
+
+    <span>
+      ₿
+    </span>
+
+    <b id="btc-value">
+      --
+    </b>
+
   </div>
 
 </div>
 
 
-<!-- MANŞET -->
+<!-- ========================================
+     MANŞET
+========================================= -->
 
 <section id="hero-area">
 
@@ -599,21 +1181,30 @@ button {
 </section>
 
 
-<!-- SON HABERLER -->
+<!-- ========================================
+     SON HABERLER
+========================================= -->
 
 <section class="section">
 
   <div class="section-head">
 
     <div class="section-title">
-      🔥 <span>Son</span> Haberler
+
+      🔥
+      <span>Son</span>
+      Haberler
+
     </div>
+
 
     <button
       class="refresh"
       onclick="loadNews()"
     >
+
       ↻ Yenile
+
     </button>
 
   </div>
@@ -637,18 +1228,17 @@ button {
 </section>
 
 
-<!-- KATEGORİLER -->
+<!-- ========================================
+     KATEGORİLER
+========================================= -->
 
 <section class="section">
-
-  <!-- Kocaeli Gündemi başlığı kaldırıldı -->
 
   <div
     class="category-row"
     style="margin-top:13px;"
   >
 
-    <!-- TÜM HABERLER -->
 
     <a
       class="category"
@@ -670,8 +1260,6 @@ button {
     </a>
 
 
-    <!-- SPOR -->
-
     <a
       class="category"
       href="sport.html"
@@ -691,8 +1279,6 @@ button {
 
     </a>
 
-
-    <!-- ETKİNLİKLER -->
 
     <a
       class="category"
@@ -714,8 +1300,6 @@ button {
     </a>
 
 
-    <!-- NÖBETÇİ ECZANELER -->
-
     <a
       class="category"
       href="eczaneler.html"
@@ -736,8 +1320,6 @@ button {
     </a>
 
 
-    <!-- RESTORANLAR -->
-
     <a
       class="category"
       href="restoranlar.html"
@@ -757,8 +1339,6 @@ button {
 
     </a>
 
-
-    <!-- ESNAF -->
 
     <a
       class="category"
@@ -784,7 +1364,9 @@ button {
 </section>
 
 
-<!-- KOCAELİ TRAFİK -->
+<!-- ========================================
+     KOCAELİ TRAFİK
+========================================= -->
 
 <section class="section">
 
@@ -799,17 +1381,20 @@ button {
       🚦
     </div>
 
+
     <div class="traffic-info">
 
       <div class="traffic-title">
         Kocaeli Trafik
       </div>
 
+
       <div class="traffic-desc">
         Canlı trafik yoğunluğunu görüntüle
       </div>
 
     </div>
+
 
     <div class="traffic-arrow">
       ›
@@ -822,15 +1407,21 @@ button {
 </main>
 
 
-<!-- ALT MENÜ -->
+<!-- ========================================
+     ALT MENÜ
+========================================= -->
 
 <nav class="bottom-nav">
 
   <div class="nav-inner">
 
+
     <button
       class="nav-item active"
-      onclick="window.scrollTo({top:0,behavior:'smooth'})"
+      onclick="window.scrollTo({
+        top:0,
+        behavior:'smooth'
+      })"
     >
 
       <div class="nav-icon">
@@ -844,7 +1435,9 @@ button {
 
     <button
       class="nav-item"
-      onclick="location.href='haberler.html'"
+      onclick="
+        location.href='haberler.html'
+      "
     >
 
       <div class="nav-icon">
@@ -858,7 +1451,9 @@ button {
 
     <button
       class="nav-item"
-      onclick="location.href='sport.html'"
+      onclick="
+        location.href='sport.html'
+      "
     >
 
       <div class="nav-icon">
@@ -876,31 +1471,39 @@ button {
 
 <script>
 
+
+/* ==========================================
+   HABERLER
+========================================== */
+
 let allNews = [];
 
-
-/* HTML GÜVENLİĞİ */
 
 function escapeHtml(text) {
 
   if (!text) return "";
 
-  return text
+  return String(text)
+
     .replace(/&/g, "&amp;")
+
     .replace(/</g, "&lt;")
+
     .replace(/>/g, "&gt;")
+
     .replace(/"/g, "&quot;")
+
     .replace(/'/g, "&#039;");
 
 }
 
 
-/* TARİH */
-
 function getTime(item) {
 
   if (item.time) {
+
     return item.time;
+
   }
 
   return "";
@@ -908,15 +1511,18 @@ function getTime(item) {
 }
 
 
-/* HABERLERİ GETİR */
-
 async function loadNews() {
 
   const grid =
-    document.getElementById("news-grid");
+    document.getElementById(
+      "news-grid"
+    );
+
 
   const hero =
-    document.getElementById("hero-area");
+    document.getElementById(
+      "hero-area"
+    );
 
 
   grid.innerHTML = `
@@ -949,7 +1555,8 @@ async function loadNews() {
 
     const response =
       await fetch(
-        "/api/news?cache=" + Date.now()
+        "/api/news?cache=" +
+        Date.now()
       );
 
 
@@ -979,12 +1586,12 @@ async function loadNews() {
     }
 
 
-    allNews = data.items;
+    allNews =
+      data.items;
 
 
-    /* MANŞET */
-
-    const first = allNews[0];
+    const first =
+      allNews[0];
 
 
     hero.innerHTML = `
@@ -1004,12 +1611,16 @@ async function loadNews() {
         ${
           first.image
           ? `
+
             <img
               class="hero-image"
               src="${escapeHtml(first.image)}"
               alt=""
-              onerror="this.style.display='none'"
+              onerror="
+                this.style.display='none'
+              "
             >
+
           `
           : ""
         }
@@ -1023,7 +1634,11 @@ async function loadNews() {
 
 
           <div class="hero-title">
-            ${escapeHtml(first.title)}
+
+            ${escapeHtml(
+              first.title
+            )}
+
           </div>
 
 
@@ -1050,8 +1665,6 @@ async function loadNews() {
     `;
 
 
-    /* HABER LİSTESİ */
-
     const list =
       allNews.slice(1, 11);
 
@@ -1069,16 +1682,24 @@ async function loadNews() {
           ${
             item.image
             ? `
+
               <img
                 class="news-image"
                 src="${escapeHtml(item.image)}"
                 alt=""
                 loading="lazy"
-                onerror="this.style.display='none'"
+                onerror="
+                  this.style.display='none'
+                "
               >
+
             `
             : `
-              <div class="news-image"></div>
+
+              <div
+                class="news-image"
+              ></div>
+
             `
           }
 
@@ -1087,7 +1708,9 @@ async function loadNews() {
 
             <div class="news-title">
 
-              ${escapeHtml(item.title)}
+              ${escapeHtml(
+                item.title
+              )}
 
             </div>
 
@@ -1120,8 +1743,8 @@ async function loadNews() {
 
       `).join("");
 
-
   }
+
 
   catch (error) {
 
@@ -1150,7 +1773,9 @@ async function loadNews() {
           class="refresh"
           onclick="loadNews()"
         >
+
           ↻ Tekrar Dene
+
         </button>
 
       </div>
@@ -1162,9 +1787,9 @@ async function loadNews() {
 }
 
 
-/* =========================
-   MİNİ HAVA DURUMU
-========================= */
+/* ==========================================
+   HAVA DURUMU
+========================================== */
 
 async function loadMiniWeather() {
 
@@ -1200,6 +1825,18 @@ async function loadMiniWeather() {
       await response.json();
 
 
+    if (
+      !data ||
+      !data.current
+    ) {
+
+      throw new Error(
+        "Hava verisi yok"
+      );
+
+    }
+
+
     const weather =
       data.current;
 
@@ -1228,15 +1865,20 @@ async function loadMiniWeather() {
       );
 
 
-    let icon = "🌤️";
+    let icon =
+      "🌤️";
+
 
     let description =
       "Parçalı bulutlu";
 
 
-    if (weather.weather_code === 0) {
+    if (
+      weather.weather_code === 0
+    ) {
 
       icon = "☀️";
+
       description = "Açık";
 
     }
@@ -1246,6 +1888,7 @@ async function loadMiniWeather() {
     ) {
 
       icon = "🌤️";
+
       description =
         "Parçalı bulutlu";
 
@@ -1256,7 +1899,9 @@ async function loadMiniWeather() {
     ) {
 
       icon = "🌫️";
-      description = "Sisli";
+
+      description =
+        "Sisli";
 
     }
 
@@ -1265,7 +1910,9 @@ async function loadMiniWeather() {
     ) {
 
       icon = "🌧️";
-      description = "Yağmurlu";
+
+      description =
+        "Yağmurlu";
 
     }
 
@@ -1274,7 +1921,9 @@ async function loadMiniWeather() {
     ) {
 
       icon = "🌨️";
-      description = "Karlı";
+
+      description =
+        "Karlı";
 
     }
 
@@ -1283,21 +1932,26 @@ async function loadMiniWeather() {
     ) {
 
       icon = "🌧️";
-      description = "Sağanak";
+
+      description =
+        "Sağanak";
 
     }
 
     else {
 
       icon = "⛈️";
-      description = "Fırtınalı";
+
+      description =
+        "Fırtınalı";
 
     }
 
 
     document.getElementById(
       "weather-icon"
-    ).textContent = icon;
+    ).textContent =
+      icon;
 
 
     document.getElementById(
@@ -1337,6 +1991,7 @@ async function loadMiniWeather() {
 
   }
 
+
   catch (error) {
 
     console.error(
@@ -1355,37 +2010,73 @@ async function loadMiniWeather() {
 }
 
 
-/* =========================
-   MİNİ FİNANS (Dolar/Euro/Altın/BTC)
-========================= */
+/* ==========================================
+   FİNANS
+========================================== */
 
-function pickPrice(obj, key) {
+function formatFinance(value) {
 
-  if (!obj || !obj[key]) return null;
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
 
-  const item = obj[key];
+    return "--";
 
-  const raw =
-    item.satis ||
-    item.Satis ||
-    item.satış ||
-    item.fiyat ||
-    item.price ||
-    item.alis ||
-    item.Alis;
+  }
 
-  if (!raw) return null;
 
-  const num = parseFloat(
-    String(raw).replace(",", ".")
+  let text =
+    String(value)
+      .trim();
+
+
+  // Türkçe sayı formatlarını
+  // güvenli şekilde dönüştür
+
+  if (
+    text.includes(",") &&
+    text.includes(".")
+  ) {
+
+    text =
+      text
+        .replace(/\./g, "")
+        .replace(",", ".");
+
+  }
+
+  else if (
+    text.includes(",")
+  ) {
+
+    text =
+      text.replace(",", ".");
+
+  }
+
+
+  const number =
+    Number(text);
+
+
+  if (
+    isNaN(number)
+  ) {
+
+    return "--";
+
+  }
+
+
+  return number.toLocaleString(
+    "tr-TR",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }
   );
-
-  if (isNaN(num)) return null;
-
-  return num.toLocaleString("tr-TR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
 
 }
 
@@ -1394,93 +2085,126 @@ async function loadMiniFinance() {
 
   try {
 
-    const [dovizRes, altinRes, kriptoRes] =
-      await Promise.all([
-        fetch("https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR"),
-        fetch("https://api.genelpara.com/json/?list=altin&sembol=GA"),
-        fetch("https://api.genelpara.com/json/?list=kripto&sembol=BTC")
-      ]);
+    const response =
+      await fetch(
+        "/api/finance?cache=" +
+        Date.now()
+      );
 
 
-    const doviz =
-      dovizRes.ok ? await dovizRes.json() : null;
+    if (!response.ok) {
 
-    const altin =
-      altinRes.ok ? await altinRes.json() : null;
+      throw new Error(
+        "Finans API bağlantısı başarısız"
+      );
 
-    const kripto =
-      kriptoRes.ok ? await kriptoRes.json() : null;
-
-
-    const usd = pickPrice(doviz, "USD");
-    const eur = pickPrice(doviz, "EUR");
-
-    const gold =
-      pickPrice(altin, "GA") ||
-      pickPrice(altin, "gram") ||
-      pickPrice(altin, "GRA");
-
-    const btc = pickPrice(kripto, "BTC");
-
-
-    if (usd) {
-      document.getElementById("usd-value").textContent =
-        usd + "₺";
     }
 
-    if (eur) {
-      document.getElementById("eur-value").textContent =
-        eur + "₺";
+
+    const result =
+      await response.json();
+
+
+    if (
+      !result.success ||
+      !result.data
+    ) {
+
+      throw new Error(
+        "Finans verisi bulunamadı"
+      );
+
     }
 
-    if (gold) {
-      document.getElementById("gold-value").textContent =
-        gold + "₺";
-    }
 
-    if (btc) {
-      document.getElementById("btc-value").textContent =
-        "$" + btc;
-    }
+    const data =
+      result.data;
+
+
+    document.getElementById(
+      "usd-value"
+    ).textContent =
+      formatFinance(
+        data.usd
+      );
+
+
+    document.getElementById(
+      "eur-value"
+    ).textContent =
+      formatFinance(
+        data.eur
+      );
+
+
+    document.getElementById(
+      "gold-value"
+    ).textContent =
+      formatFinance(
+        data.gold
+      );
+
+
+    document.getElementById(
+      "btc-value"
+    ).textContent =
+      formatFinance(
+        data.btc
+      );
+
 
   }
+
 
   catch (error) {
 
     console.error(
-      "Finans verisi alınamadı:",
+      "Finans verileri yüklenemedi:",
       error
     );
+
+
+    document.getElementById(
+      "usd-value"
+    ).textContent =
+      "--";
+
+
+    document.getElementById(
+      "eur-value"
+    ).textContent =
+      "--";
+
+
+    document.getElementById(
+      "gold-value"
+    ).textContent =
+      "--";
+
+
+    document.getElementById(
+      "btc-value"
+    ).textContent =
+      "--";
 
   }
 
 }
 
 
-/* HAVA DURUMU VE FİNANSI BAŞLAT */
-
-loadMiniWeather();
-loadMiniFinance();
-
-
-/* PERİYODİK GÜNCELLEME */
-
-setInterval(
-  loadMiniWeather,
-  10 * 60 * 1000
-);
-
-setInterval(
-  loadMiniFinance,
-  5 * 60 * 1000
-);
-
-
-/* SAYFA AÇILINCA HABERLERİ GETİR */
+/* ==========================================
+   SAYFA AÇILINCA ÇALIŞTIR
+========================================== */
 
 loadNews();
+
+loadMiniWeather();
+
+loadMiniFinance();
+
 
 </script>
 
 </body>
+
 </html>
