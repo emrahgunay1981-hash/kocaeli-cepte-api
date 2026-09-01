@@ -6,7 +6,10 @@
 
 export default async function handler(req, res) {
 
+  // ==========================================
   // CORS
+  // ==========================================
+
   res.setHeader(
     "Access-Control-Allow-Origin",
     "*"
@@ -35,9 +38,9 @@ export default async function handler(req, res) {
 
   try {
 
-    // ======================================
-    // API'LER
-    // ======================================
+    // ==========================================
+    // GENELPARA API
+    // ==========================================
 
     const [
       dovizRes,
@@ -49,8 +52,8 @@ export default async function handler(req, res) {
         "https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR",
         {
           headers: {
-            "User-Agent":
-              "KocaeliCepte/1.0"
+            "User-Agent": "KocaeliCepte/1.0",
+            "Accept": "application/json"
           }
         }
       ),
@@ -59,8 +62,8 @@ export default async function handler(req, res) {
         "https://api.genelpara.com/json/?list=altin&sembol=GA",
         {
           headers: {
-            "User-Agent":
-              "KocaeliCepte/1.0"
+            "User-Agent": "KocaeliCepte/1.0",
+            "Accept": "application/json"
           }
         }
       ),
@@ -69,8 +72,8 @@ export default async function handler(req, res) {
         "https://api.genelpara.com/json/?list=kripto&sembol=BTC",
         {
           headers: {
-            "User-Agent":
-              "KocaeliCepte/1.0"
+            "User-Agent": "KocaeliCepte/1.0",
+            "Accept": "application/json"
           }
         }
       )
@@ -78,26 +81,43 @@ export default async function handler(req, res) {
     ]);
 
 
-    // ======================================
-    // HTTP KONTROL
-    // ======================================
+    // ==========================================
+    // HTTP KONTROLÜ
+    // ==========================================
 
-    if (
-      !dovizRes.ok ||
-      !altinRes.ok ||
-      !kriptoRes.ok
-    ) {
+    if (!dovizRes.ok) {
 
       throw new Error(
-        "GenelPara bağlantısı başarısız"
+        "Döviz API bağlantısı başarısız: " +
+        dovizRes.status
       );
 
     }
 
 
-    // ======================================
-    // JSON
-    // ======================================
+    if (!altinRes.ok) {
+
+      throw new Error(
+        "Altın API bağlantısı başarısız: " +
+        altinRes.status
+      );
+
+    }
+
+
+    if (!kriptoRes.ok) {
+
+      throw new Error(
+        "Kripto API bağlantısı başarısız: " +
+        kriptoRes.status
+      );
+
+    }
+
+
+    // ==========================================
+    // JSON VERİLERİ
+    // ==========================================
 
     const doviz =
       await dovizRes.json();
@@ -109,9 +129,9 @@ export default async function handler(req, res) {
       await kriptoRes.json();
 
 
-    // ======================================
-    // GÜVENLİ FİYAT OKUMA
-    // ======================================
+    // ==========================================
+    // FİYAT OKUMA
+    // ==========================================
 
     function getPrice(data, symbol) {
 
@@ -120,7 +140,12 @@ export default async function handler(req, res) {
       }
 
 
-      // Önce data alanı
+      // GenelPara güncel yapısı:
+      // data.data.USD
+      // data.data.EUR
+      // data.data.GA
+      // data.data.BTC
+
       const root =
         data.data || data;
 
@@ -134,19 +159,14 @@ export default async function handler(req, res) {
       }
 
 
-      const possibleValues = [
+      // Öncelik satış fiyatı
+      const values = [
 
         item.satis,
 
         item.Satis,
 
         item["satış"],
-
-        item.alis,
-
-        item.Alis,
-
-        item["alış"],
 
         item.fiyat,
 
@@ -162,14 +182,19 @@ export default async function handler(req, res) {
 
         item.close,
 
-        item.Close
+        item.Close,
+
+        item.alis,
+
+        item.Alis,
+
+        item["alış"]
 
       ];
 
 
       for (
-        const value
-        of possibleValues
+        const value of values
       ) {
 
         if (
@@ -190,9 +215,9 @@ export default async function handler(req, res) {
     }
 
 
-    // ======================================
-    // VERİLER
-    // ======================================
+    // ==========================================
+    // FİYATLAR
+    // ==========================================
 
     const usd =
       getPrice(
@@ -222,9 +247,24 @@ export default async function handler(req, res) {
       );
 
 
-    // ======================================
+    // ==========================================
+    // KONTROL
+    // ==========================================
+
+    console.log(
+      "FINANS:",
+      {
+        usd,
+        eur,
+        gold,
+        btc
+      }
+    );
+
+
+    // ==========================================
     // CEVAP
-    // ======================================
+    // ==========================================
 
     return res
       .status(200)
@@ -235,11 +275,8 @@ export default async function handler(req, res) {
         data: {
 
           usd: usd,
-
           eur: eur,
-
           gold: gold,
-
           btc: btc
 
         },
