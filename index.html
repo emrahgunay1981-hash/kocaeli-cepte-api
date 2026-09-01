@@ -323,20 +323,20 @@ button {
 
 }
 
-/* HAVA DURUMU */
+/* HAVA DURUMU (büyütüldü) */
 
 .mini-weather {
-  margin: 8px 16px 12px;
-  padding: 8px 10px;
-  border-radius: 12px;
+  margin: 8px 16px 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
   background: rgba(255,255,255,0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   white-space: nowrap;
   overflow: hidden;
-  font-size: 12px;
+  font-size: 14px;
   color: #aebfb7;
 }
 
@@ -346,22 +346,65 @@ button {
 
 .mini-weather b {
   color: #fff;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 .mini-weather #weather-icon {
-  font-size: 17px;
+  font-size: 20px;
 }
 
 @media (max-width: 420px) {
 
   .mini-weather {
-    font-size: 11px;
-    gap: 4px;
+    font-size: 12px;
+    gap: 5px;
+    padding: 12px 10px;
   }
 
   .mini-weather b {
-    font-size: 16px;
+    font-size: 18px;
+  }
+
+}
+
+/* FİNANS ŞERİDİ (hava durumuyla aynı stil) */
+
+.mini-finance {
+  margin: 0 16px 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+  overflow-x: auto;
+  font-size: 13px;
+  color: #aebfb7;
+}
+
+.mini-finance b {
+  color: #fff;
+  font-size: 15px;
+}
+
+.mini-finance .fin-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 420px) {
+
+  .mini-finance {
+    font-size: 11px;
+    gap: 7px;
+    padding: 10px 8px;
+  }
+
+  .mini-finance b {
+    font-size: 13px;
   }
 
 }
@@ -504,6 +547,39 @@ button {
   <span id="weather-wind">
     💨 -- km/sa
   </span>
+
+</div>
+
+
+<!-- FİNANS ŞERİDİ: DOLAR / EURO / ALTIN / BTC -->
+
+<div class="mini-finance" id="mini-finance">
+
+  <div class="fin-item">
+    <span>💵</span>
+    <b id="usd-value">--</b>
+  </div>
+
+  <span>•</span>
+
+  <div class="fin-item">
+    <span>💶</span>
+    <b id="eur-value">--</b>
+  </div>
+
+  <span>•</span>
+
+  <div class="fin-item">
+    <span>🥇</span>
+    <b id="gold-value">--</b>
+  </div>
+
+  <span>•</span>
+
+  <div class="fin-item">
+    <span>₿</span>
+    <b id="btc-value">--</b>
+  </div>
 
 </div>
 
@@ -1279,24 +1355,65 @@ async function loadMiniWeather() {
 }
 
 
-/* HAVA DURUMUNU BAŞLAT */
+/* =========================
+   MİNİ FİNANS (Dolar/Euro/Altın/BTC)
+========================= */
 
-loadMiniWeather();
+function pickPrice(obj, key) {
+
+  if (!obj || !obj[key]) return null;
+
+  const item = obj[key];
+
+  const raw =
+    item.satis ||
+    item.Satis ||
+    item.satış ||
+    item.fiyat ||
+    item.price ||
+    item.alis ||
+    item.Alis;
+
+  if (!raw) return null;
+
+  const num = parseFloat(
+    String(raw).replace(",", ".")
+  );
+
+  if (isNaN(num)) return null;
+
+  return num.toLocaleString("tr-TR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+}
 
 
-/* 10 DAKİKADA BİR GÜNCELLE */
+async function loadMiniFinance() {
 
-setInterval(
-  loadMiniWeather,
-  10 * 60 * 1000
-);
+  try {
+
+    const [dovizRes, altinRes, kriptoRes] =
+      await Promise.all([
+        fetch("https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR"),
+        fetch("https://api.genelpara.com/json/?list=altin&sembol=GA"),
+        fetch("https://api.genelpara.com/json/?list=kripto&sembol=BTC")
+      ]);
 
 
-/* SAYFA AÇILINCA HABERLERİ GETİR */
+    const doviz =
+      dovizRes.ok ? await dovizRes.json() : null;
 
-loadNews();
+    const altin =
+      altinRes.ok ? await altinRes.json() : null;
 
-</script>
+    const kripto =
+      kriptoRes.ok ? await kriptoRes.json() : null;
 
-</body>
-      </html>
+
+    const usd = pickPrice(doviz, "USD");
+    const eur = pickPrice(doviz, "EUR");
+
+    const gold =
+      pickPrice(alti
