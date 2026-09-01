@@ -1416,4 +1416,71 @@ async function loadMiniFinance() {
     const eur = pickPrice(doviz, "EUR");
 
     const gold =
-      pickPrice(alti
+      pickPrice(altin, "GA") ||
+      pickPrice(altin, "gram") ||
+      pickPrice(altin, "GRA");
+
+    const btc = pickPrice(kripto, "BTC");
+
+
+    if (usd) {
+      document.getElementById("usd-value").textContent =
+        usd + "₺";
+    }
+
+    if (eur) {
+      document.getElementById("eur-value").textContent =
+        eur + "₺";
+    }
+
+    if (gold) {
+      document.getElementById("gold-value").textContent =
+        gold + "₺";
+    }
+
+    if (btc) {
+      document.getElementById("btc-value").textContent =
+        "$" + btc;
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Finans verisi alınamadı:",
+      error
+    );
+
+  }
+
+}
+
+
+/* HAVA DURUMU VE FİNANSI BAŞLAT */
+
+loadMiniWeather();
+loadMiniFinance();
+
+
+/* PERİYODİK GÜNCELLEME */
+
+setInterval(
+  loadMiniWeather,
+  10 * 60 * 1000
+);
+
+setInterval(
+  loadMiniFinance,
+  5 * 60 * 1000
+);
+
+
+/* SAYFA AÇILINCA HABERLERİ GETİR */
+
+loadNews();
+
+</script>
+
+</body>
+</html>
