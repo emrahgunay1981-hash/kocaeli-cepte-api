@@ -1649,7 +1649,7 @@ async function loadNews() {
 
 
 /* ==========================================
-   HAVA DURUMU
+   MİNİ HAVA DURUMU
 ========================================== */
 
 async function loadMiniWeather() {
@@ -1658,431 +1658,110 @@ async function loadMiniWeather() {
 
     const url =
       "https://api.open-meteo.com/v1/forecast" +
-      "?latitude=40.7654" +
-      "&longitude=29.9408" +
-      "&current=" +
-      "temperature_2m," +
-      "relative_humidity_2m," +
-      "apparent_temperature," +
-      "weather_code," +
-      "wind_speed_10m" +
+      "?latitude=40.7654&longitude=29.9408" +
+      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
       "&timezone=Europe%2FIstanbul";
 
-
-    const response =
-      await fetch(url);
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Hava durumu alınamadı"
-      );
-
-    }
-
-
-    const data =
-      await response.json();
-
-
-    if (
-      !data ||
-      !data.current
-    ) {
-
-      throw new Error(
-        "Hava verisi yok"
-      );
-
-    }
-
-
-    const weather =
-      data.current;
-
-
-    const temp =
-      Math.round(
-        weather.temperature_2m
-      );
-
-
-    const feels =
-      Math.round(
-        weather.apparent_temperature
-      );
-
-
-    const humidity =
-      Math.round(
-        weather.relative_humidity_2m
-      );
-
-
-    const wind =
-      Math.round(
-        weather.wind_speed_10m
-      );
-
-
-    let icon =
-      "🌤️";
-
-
-    let description =
-      "Parçalı bulutlu";
-
-
-    if (
-      weather.weather_code === 0
-    ) {
-
-      icon = "☀️";
-      description = "Açık";
-
-    }
-
-    else if (
-      weather.weather_code <= 3
-    ) {
-
-      icon = "🌤️";
-      description =
-        "Parçalı bulutlu";
-
-    }
-
-    else if (
-      weather.weather_code <= 48
-    ) {
-
-      icon = "🌫️";
-      description =
-        "Sisli";
-
-    }
-
-    else if (
-      weather.weather_code <= 67
-    ) {
-
-      icon = "🌧️";
-      description =
-        "Yağmurlu";
-
-    }
-
-    else if (
-      weather.weather_code <= 77
-    ) {
-
-      icon = "🌨️";
-      description =
-        "Karlı";
-
-    }
-
-    else if (
-      weather.weather_code <= 82
-    ) {
-
-      icon = "🌧️";
-      description =
-        "Sağanak";
-
-    }
-
-    else {
-
-      icon = "⛈️";
-      description =
-        "Fırtınalı";
-
-    }
-
-
-    document.getElementById(
-      "weather-icon"
-    ).textContent =
-      icon;
-
-
-    document.getElementById(
-      "weather-temp"
-    ).textContent =
-      temp + "°";
-
-
-    document.getElementById(
-      "weather-desc"
-    ).textContent =
-      description;
-
-
-    document.getElementById(
-      "weather-feels"
-    ).textContent =
-      "Hissedilen " +
-      feels +
-      "°";
-
-
-    document.getElementById(
-      "weather-humidity"
-    ).textContent =
-      "💧 " +
-      humidity +
-      "%";
-
-
-    document.getElementById(
-      "weather-wind"
-    ).textContent =
-      "💨 " +
-      wind +
-      " km/sa";
-
-  }
-
-
-  catch (error) {
-
-    console.error(
-      "Hava durumu:",
-      error
-    );
-
-
-    document.getElementById(
-      "weather-desc"
-    ).textContent =
-      "Veri alınamadı";
-
+    const response = await fetch(url);
+
+    if (!response.ok) throw new Error("Hava durumu alınamadı");
+
+    const data = await response.json();
+    const weather = data.current;
+
+    const temp = Math.round(weather.temperature_2m);
+    const feels = Math.round(weather.apparent_temperature);
+    const humidity = Math.round(weather.relative_humidity_2m);
+    const wind = Math.round(weather.wind_speed_10m);
+
+    let icon = "🌤️";
+    let description = "Parçalı bulutlu";
+
+    if (weather.weather_code === 0) { icon = "☀️"; description = "Açık"; }
+    else if (weather.weather_code <= 3) { icon = "🌤️"; description = "Parçalı bulutlu"; }
+    else if (weather.weather_code <= 48) { icon = "🌫️"; description = "Sisli"; }
+    else if (weather.weather_code <= 67) { icon = "🌧️"; description = "Yağmurlu"; }
+    else if (weather.weather_code <= 77) { icon = "🌨️"; description = "Karlı"; }
+    else if (weather.weather_code <= 82) { icon = "🌧️"; description = "Sağanak"; }
+    else { icon = "⛈️"; description = "Fırtınalı"; }
+
+    document.getElementById("weather-icon").textContent = icon;
+    document.getElementById("weather-temp").textContent = temp + "°";
+    document.getElementById("weather-desc").textContent = description;
+    document.getElementById("weather-feels").textContent = "Hissedilen " + feels + "°";
+    document.getElementById("weather-humidity").textContent = "💧 " + humidity + "%";
+    document.getElementById("weather-wind").textContent = "💨 " + wind + " km/sa";
+
+  } catch (error) {
+    console.error("Hava durumu:", error);
+    document.getElementById("weather-desc").textContent = "Veri alınamadı";
   }
 
 }
 
 
 /* ==========================================
-   FİNANS
-   /api/finance
+   MİNİ FİNANS
 ========================================== */
 
-function formatFinance(value) {
+function formatFinansSayi(raw) {
 
-  if (
-    value === null ||
-    value === undefined ||
-    value === ""
-  ) {
+  if (raw === null || raw === undefined || raw === "") return null;
 
-    return "--";
+  const num = parseFloat(String(raw).replace(",", "."));
 
-  }
+  if (isNaN(num)) return null;
 
-
-  let text =
-    String(value)
-      .trim();
-
-
-  /*
-     GenelPara'dan gelebilecek
-     Türkçe sayı formatlarını
-     güvenli şekilde çeviriyoruz.
-  */
-
-  if (
-    text.includes(",") &&
-    text.includes(".")
-  ) {
-
-    text =
-      text
-        .replace(/\./g, "")
-        .replace(",", ".");
-
-  }
-
-  else if (
-    text.includes(",")
-  ) {
-
-    text =
-      text.replace(",", ".");
-
-  }
-
-
-  const number =
-    Number(text);
-
-
-  if (
-    isNaN(number)
-  ) {
-
-    return "--";
-
-  }
-
-
-  return number.toLocaleString(
-    "tr-TR",
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }
-  );
+  return num.toLocaleString("tr-TR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 
 }
-
 
 async function loadMiniFinance() {
 
   try {
 
-    const response =
-      await fetch(
-        "/api/finance?cache=" +
-        Date.now()
-      );
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Finans API bağlantısı başarısız"
-      );
-
-    }
-
-
-    const result =
-      await response.json();
-
-
-    console.log(
-      "Finans API:",
-      result
+    const response = await fetch(
+      "https://kocaeli-cepte-api.vercel.app/api/finans"
     );
 
+    if (!response.ok) throw new Error("Finans API bağlantısı başarısız");
 
-    if (
-      !result.success ||
-      !result.data
-    ) {
+    const result = await response.json();
 
-      throw new Error(
-        "Finans verisi bulunamadı"
-      );
+    if (!result.success) throw new Error(result.error || "Bilinmeyen hata");
 
-    }
+    const data = result.data || {};
 
+    const usd = formatFinansSayi(data.usd);
+    const eur = formatFinansSayi(data.eur);
+    const gold = formatFinansSayi(data.gold);
+    const btc = formatFinansSayi(data.btc);
 
-    const data =
-      result.data;
+    if (usd) document.getElementById("usd-value").textContent = usd + "₺";
+    if (eur) document.getElementById("eur-value").textContent = eur + "₺";
+    if (gold) document.getElementById("gold-value").textContent = gold + "₺";
+    if (btc) document.getElementById("btc-value").textContent = "$" + btc;
 
-
-    document.getElementById(
-      "usd-value"
-    ).textContent =
-      formatFinance(
-        data.usd
-      );
-
-
-    document.getElementById(
-      "eur-value"
-    ).textContent =
-      formatFinance(
-        data.eur
-      );
-
-
-    document.getElementById(
-      "gold-value"
-    ).textContent =
-      formatFinance(
-        data.gold
-      );
-
-
-    document.getElementById(
-      "btc-value"
-    ).textContent =
-      formatFinance(
-        data.btc
-      );
-
-
-  }
-
-
-  catch (error) {
-
-    console.error(
-      "Finans verileri yüklenemedi:",
-      error
-    );
-
-
-    document.getElementById(
-      "usd-value"
-    ).textContent =
-      "--";
-
-
-    document.getElementById(
-      "eur-value"
-    ).textContent =
-      "--";
-
-
-    document.getElementById(
-      "gold-value"
-    ).textContent =
-      "--";
-
-
-    document.getElementById(
-      "btc-value"
-    ).textContent =
-      "--";
-
+  } catch (error) {
+    console.error("Finans verisi alınamadı:", error);
   }
 
 }
 
 
-/* ==========================================
-   BAŞLAT
-========================================== */
+loadMiniWeather();
+loadMiniFinance();
+
+setInterval(loadMiniWeather, 10 * 60 * 1000);
+setInterval(loadMiniFinance, 5 * 60 * 1000);
 
 loadNews();
 
-loadMiniWeather();
-
-loadMiniFinance();
-
-
-/*
-   Hava ve finansı periyodik yenile.
-   Sayfa açık kaldığında veriler güncel kalır.
-*/
-
-setInterval(
-  loadMiniWeather,
-  10 * 60 * 1000
-);
-
-setInterval(
-  loadMiniFinance,
-  5 * 60 * 1000
-);
-
 </script>
+
 
 </body>
 
