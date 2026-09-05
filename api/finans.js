@@ -162,7 +162,7 @@ export default async function handler(req, res) {
     const json = JSON.parse(btc.text);
 
     if (json && json.bitcoin && json.bitcoin.usd) {
-      btcUsd = json.bitcoin.usd.toLocaleString("en-US");
+      btcUsd = Math.round(json.bitcoin.usd).toLocaleString("tr-TR");
     }
 
   } catch (e) {}
