@@ -1,7 +1,7 @@
 // ==========================================
-// FİNANS VERİLERİ - Dolar, Euro, Altın, BTC
-// GenelPara API'yi sunucu tarafında çeker
-// (tarayıcıdan doğrudan çağrılamıyor - CORS engeli var)
+// KOCAELİ CEPTE - FİNANS API
+// Dolar / Euro / Gram Altın / Bitcoin
+// GenelPara API'nin GÜNCEL veri yapısına göre düzeltildi
 // ==========================================
 
 export default async function handler(req, res) {
@@ -14,49 +14,21 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
+  // Gerçek bir tarayıcı gibi görünen başlıklar
+  // (bot engeline takılmamak için)
+  const browserHeaders = {
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
+    "Referer": "https://www.genelpara.com/"
+  };
+
   try {
 
     const [dovizRes, altinRes, kriptoRes] = await Promise.all([
-      fetch("https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR", {
-        headers: { "User-Agent": "KocaeliCepte/1.0" }
-      }),
-      fetch("https://api.genelpara.com/json/?list=altin&sembol=GA", {
-        headers: { "User-Agent": "KocaeliCepte/1.0" }
-      }),
-      fetch("https://api.genelpara.com/json/?list=kripto&sembol=BTC", {
-        headers: { "User-Agent": "KocaeliCepte/1.0" }
-      })
-    ]);
-
-    const dovizText = await dovizRes.text();
-    const altinText = await altinRes.text();
-    const kriptoText = await kriptoRes.text();
-
-    let doviz = null;
-    let altin = null;
-    let kripto = null;
-
-    try { doviz = JSON.parse(dovizText); } catch (e) {}
-    try { altin = JSON.parse(altinText); } catch (e) {}
-    try { kripto = JSON.parse(kriptoText); } catch (e) {}
-
-    return res.status(200).json({
-      success: true,
-      doviz,
-      altin,
-      kripto,
-      updatedAt: new Date().toISOString()
-    });
-
-  } catch (error) {
-
-    console.error("Finans API hatası:", error);
-
-    return res.status(500).json({
-      success: false,
-      error: "Finans verileri alınamadı."
-    });
-
-  }
-
-}
+      fetch(
+        "https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR",
+        { headers: browserHeaders }
+      ),
