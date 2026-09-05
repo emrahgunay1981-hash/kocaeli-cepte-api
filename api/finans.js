@@ -72,9 +72,9 @@ export default async function handler(req, res) {
       browserHeaders
     ),
 
-    // Altın (ons/USD) - GoldPrice.org
+    // Altın (ons/USD) - Yahoo Finance (Gold Futures GC=F)
     fetchWithTimeout(
-      "https://data-asg.goldprice.org/dbXRates/USD",
+      "https://query1.finance.yahoo.com/v8/finance/chart/GC=F",
       5000,
       browserHeaders
     ),
@@ -125,9 +125,9 @@ export default async function handler(req, res) {
 
   // ==========================================
   // ALTIN
-  // GoldPrice.org "items[0].xauPrice" = 1 ons altın (USD)
+  // Yahoo Finance (GC=F) = 1 ons altın vadeli işlem fiyatı (USD)
   // 1 ons = 31.1034768 gram
-  // gram altın (USD) = xauPrice / 31.1034768
+  // gram altın (USD) = fiyat / 31.1034768
   // gram altın (TL) = gram altın (USD) * usdTry
   // ==========================================
 
@@ -135,15 +135,17 @@ export default async function handler(req, res) {
 
     const json = JSON.parse(gold.text);
 
-    if (
+    const yahooPrice =
       json &&
-      json.items &&
-      json.items[0] &&
-      json.items[0].xauPrice &&
-      usdTry
-    ) {
+      json.chart &&
+      json.chart.result &&
+      json.chart.result[0] &&
+      json.chart.result[0].meta &&
+      json.chart.result[0].meta.regularMarketPrice;
 
-      const gramUsd = json.items[0].xauPrice / 31.1034768;
+    if (yahooPrice && usdTry) {
+
+      const gramUsd = yahooPrice / 31.1034768;
 
       goldGramTry = (gramUsd * parseFloat(usdTry)).toFixed(2);
 
@@ -162,7 +164,7 @@ export default async function handler(req, res) {
     const json = JSON.parse(btc.text);
 
     if (json && json.bitcoin && json.bitcoin.usd) {
-      btcUsd = Math.round(json.bitcoin.usd).toLocaleString("tr-TR");
+      btcUsd = Number(json.bitcoin.usd).toFixed(2);
     }
 
   } catch (e) {}
@@ -196,3 +198,4 @@ export default async function handler(req, res) {
   });
 
 }
+  
