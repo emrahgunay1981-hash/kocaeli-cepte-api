@@ -1,15 +1,9 @@
 // ==========================================
-// KOCAELİ CEPTE - FİNANS API (v2)
+// KOCAELİ CEPTE - FİNANS API
 // Dolar / Euro / Gram Altın / Bitcoin
-//
-// GenelPara Cloudflare bot korumasına takıldığı için
-// terk edildi. Bunun yerine:
-// - Dolar/Euro: Frankfurter.app (Avrupa Merkez Bankası verisi)
-// - Altın: GoldPrice.org (ons/USD, gram/TL'ye çevriliyor)
-// - Bitcoin: CoinGecko
 // ==========================================
 
-async function fetchWithTimeout(url, timeoutMs, headers) {
+async function fetchWithTimeout(url, timeoutMs = 7000) {
 
   const controller = new AbortController();
 
@@ -20,17 +14,25 @@ async function fetchWithTimeout(url, timeoutMs, headers) {
   try {
 
     const response = await fetch(url, {
-      headers: headers || {},
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "User-Agent": "KocaeliCepte/1.0"
+      },
       signal: controller.signal
     });
 
-    clearTimeout(timer);
-
     const text = await response.text();
 
-    return { ok: response.ok, status: response.status, text: text };
+    clearTimeout(timer);
 
-  } catch (err) {
+    return {
+      ok: response.ok,
+      status: response.status,
+      text: text
+    };
+
+  } catch (error) {
 
     clearTimeout(timer);
 
@@ -38,7 +40,7 @@ async function fetchWithTimeout(url, timeoutMs, headers) {
       ok: false,
       status: 0,
       text: "",
-      error: String(err && err.message ? err.message : err)
+      error: error?.message || "Bağlantı hatası"
     };
 
   }
@@ -46,156 +48,373 @@ async function fetchWithTimeout(url, timeoutMs, headers) {
 }
 
 
-export default async function handler(req, res) {
+// ==========================================
+// JSON GÜVENLİ OKUMA
+// ==========================================
 
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+function parseJSON(text) {
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
+  try {
+
+    if (!text) {
+      return null;
+    }
+
+    return JSON.parse(text);
+
+  } catch (error) {
+
+    return null;
+
   }
 
-  const browserHeaders = {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json"
-  };
+}
 
-  const [usdEurResult, goldResult, btcResult] = await Promise.allSettled([
 
-    // Dolar ve Euro -> TL (Frankfurter.app)
+// ==========================================
+// ANA API
+// ==========================================
+
+export default async function handler(req, res) {
+
+  // ==========================================
+  // CORS
+  // ==========================================
+
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "*"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, OPTIONS"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type"
+  );
+
+  // ==========================================
+  // OPTIONS
+  // ==========================================
+
+  if (req.method === "OPTIONS") {
+
+    return res.status(200).end();
+
+  }
+
+
+  // ==========================================
+  // SADECE GET
+  // ==========================================
+
+  if (req.method !== "GET") {
+
+    return res.status(405).json({
+      success: false,
+      error: "Method Not Allowed"
+    });
+
+  }
+
+
+  // ==========================================
+  // DIŞ SERVİSLER
+  // ==========================================
+
+  const results = await Promise.allSettled([
+
+    // ------------------------------------------
+    // 1 - DOLAR / EURO
+    // Frankfurter / ECB referans kuru
+    // ------------------------------------------
+
     fetchWithTimeout(
-      "https://api.frankfurter.app/latest?from=TRY&to=USD,EUR",
-      5000,
-      browserHeaders
+      "https://api.frankfurter.app/latest?from=USD&to=TRY,EUR",
+      7000
     ),
 
-    // Altın (ons/USD) - Yahoo Finance (Gold Futures GC=F)
+    // ------------------------------------------
+    // 2 - ALTIN
+    // Yahoo Finance - Gold Futures
+    // ------------------------------------------
+
     fetchWithTimeout(
-      "https://query1.finance.yahoo.com/v8/finance/chart/GC=F",
-      5000,
-      browserHeaders
+      "https://query1.finance.yahoo.com/v8/finance/chart/GC=F?interval=1m&range=1d",
+      7000
     ),
 
-    // Bitcoin/USD - CoinGecko
+    // ------------------------------------------
+    // 3 - BITCOIN
+    // CoinGecko
+    // ------------------------------------------
+
     fetchWithTimeout(
       "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
-      5000,
-      browserHeaders
+      7000
     )
 
   ]);
 
-  const usdEur = usdEurResult.status === "fulfilled" ? usdEurResult.value : { text: "", error: "rejected" };
-  const gold = goldResult.status === "fulfilled" ? goldResult.value : { text: "", error: "rejected" };
-  const btc = btcResult.status === "fulfilled" ? btcResult.value : { text: "", error: "rejected" };
+
+  // ==========================================
+  // SONUÇLARI AL
+  // ==========================================
+
+  const currencyResult =
+    results[0]?.status === "fulfilled"
+      ? results[0].value
+      : {
+          ok: false,
+          status: 0,
+          text: ""
+        };
+
+
+  const goldResult =
+    results[1]?.status === "fulfilled"
+      ? results[1].value
+      : {
+          ok: false,
+          status: 0,
+          text: ""
+        };
+
+
+  const btcResult =
+    results[2]?.status === "fulfilled"
+      ? results[2].value
+      : {
+          ok: false,
+          status: 0,
+          text: ""
+        };
+
+
+  // ==========================================
+  // DEĞERLER
+  // ==========================================
 
   let usdTry = null;
   let eurTry = null;
   let goldGramTry = null;
   let btcUsd = null;
 
+
   // ==========================================
   // DOLAR / EURO
-  // Frankfurter "from=TRY&to=USD,EUR" verir:
-  // rates.USD = 1 TL kaç USD eder (çok küçük bir sayı)
-  // Bunu ters çevirip "1 USD kaç TL" haline getiriyoruz.
+  //
+  // Frankfurter:
+  //
+  // 1 USD = X TRY
+  // 1 USD = X EUR
+  //
+  // Bu nedenle:
+  //
+  // USD/TRY = rates.TRY
+  //
+  // EUR/TRY =
+  // USD/TRY ÷ USD/EUR
   // ==========================================
 
   try {
 
-    const json = JSON.parse(usdEur.text);
+    const json = parseJSON(currencyResult.text);
 
-    if (json && json.rates) {
+    if (
+      json &&
+      json.rates
+    ) {
 
-      if (json.rates.USD) {
-        usdTry = (1 / json.rates.USD).toFixed(2);
+      // DOLAR
+      if (
+        typeof json.rates.TRY === "number" &&
+        json.rates.TRY > 0
+      ) {
+
+        usdTry =
+          Number(json.rates.TRY).toFixed(2);
+
       }
 
-      if (json.rates.EUR) {
-        eurTry = (1 / json.rates.EUR).toFixed(2);
+
+      // EURO
+      if (
+        typeof json.rates.EUR === "number" &&
+        json.rates.EUR > 0 &&
+        usdTry
+      ) {
+
+        eurTry =
+          (
+            Number(usdTry) /
+            Number(json.rates.EUR)
+          ).toFixed(2);
+
       }
 
     }
 
-  } catch (e) {}
+  } catch (error) {
+
+    console.error(
+      "Döviz verisi okunamadı:",
+      error
+    );
+
+  }
 
 
   // ==========================================
   // ALTIN
-  // Yahoo Finance (GC=F) = 1 ons altın vadeli işlem fiyatı (USD)
+  //
+  // Yahoo GC=F
+  //
   // 1 ons = 31.1034768 gram
-  // gram altın (USD) = fiyat / 31.1034768
-  // gram altın (TL) = gram altın (USD) * usdTry
+  //
+  // Gram altın USD =
+  // Ons fiyatı / 31.1034768
+  //
+  // Gram altın TL =
+  // Gram USD × Dolar/TL
   // ==========================================
 
   try {
 
-    const json = JSON.parse(gold.text);
+    const json = parseJSON(goldResult.text);
 
     const yahooPrice =
-      json &&
-      json.chart &&
-      json.chart.result &&
-      json.chart.result[0] &&
-      json.chart.result[0].meta &&
-      json.chart.result[0].meta.regularMarketPrice;
+      json?.chart?.result?.[0]?.meta?.regularMarketPrice;
 
-    if (yahooPrice && usdTry) {
 
-      const gramUsd = yahooPrice / 31.1034768;
+    if (
+      typeof yahooPrice === "number" &&
+      yahooPrice > 0 &&
+      usdTry
+    ) {
 
-      goldGramTry = (gramUsd * parseFloat(usdTry)).toFixed(2);
+      const gramUsd =
+        yahooPrice / 31.1034768;
+
+
+      goldGramTry =
+        (
+          gramUsd *
+          Number(usdTry)
+        ).toFixed(2);
 
     }
 
-  } catch (e) {}
+  } catch (error) {
+
+    console.error(
+      "Altın verisi okunamadı:",
+      error
+    );
+
+  }
 
 
   // ==========================================
-  // BİTCOİN
-  // CoinGecko: { bitcoin: { usd: 12345 } }
+  // BITCOIN
   // ==========================================
 
   try {
 
-    const json = JSON.parse(btc.text);
+    const json = parseJSON(
+      btcResult.text
+    );
 
-    if (json && json.bitcoin && json.bitcoin.usd) {
-      btcUsd = Number(json.bitcoin.usd).toFixed(2);
+
+    const bitcoinPrice =
+      json?.bitcoin?.usd;
+
+
+    if (
+      typeof bitcoinPrice === "number" &&
+      bitcoinPrice > 0
+    ) {
+
+      btcUsd =
+        bitcoinPrice.toFixed(2);
+
     }
 
-  } catch (e) {}
+  } catch (error) {
 
+    console.error(
+      "Bitcoin verisi okunamadı:",
+      error
+    );
+
+  }
+
+
+  // ==========================================
+  // EN AZ BİR VERİ GELDİ Mİ?
+  // ==========================================
+
+  const hasData =
+    usdTry !== null ||
+    eurTry !== null ||
+    goldGramTry !== null ||
+    btcUsd !== null;
+
+
+  // ==========================================
+  // HİÇ VERİ GELMEDİYSE
+  // ==========================================
+
+  if (!hasData) {
+
+    return res.status(502).json({
+
+      success: false,
+
+      data: {
+        usd: null,
+        eur: null,
+        gold: null,
+        btc: null
+      },
+
+      error:
+        "Finans servislerinden veri alınamadı.",
+
+      updatedAt:
+        new Date().toISOString()
+
+    });
+
+  }
+
+
+  // ==========================================
+  // BAŞARILI CEVAP
+  // ==========================================
 
   return res.status(200).json({
 
     success: true,
 
     data: {
+
       usd: usdTry,
+
       eur: eurTry,
+
       gold: goldGramTry,
+
       btc: btcUsd
+
     },
 
-    debug: {
-      usdEurStatus: usdEur.status,
-      goldStatus: gold.status,
-      btcStatus: btc.status,
-      usdEurError: usdEur.error || null,
-      goldError: gold.error || null,
-      btcError: btc.error || null,
-      usdEurSnippet: (usdEur.text || "").slice(0, 200),
-      goldSnippet: (gold.text || "").slice(0, 200),
-      btcSnippet: (btc.text || "").slice(0, 200)
-    },
-
-    updatedAt: new Date().toISOString()
+    updatedAt:
+      new Date().toISOString()
 
   });
 
 }
-  
