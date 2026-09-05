@@ -1,8 +1,84 @@
 // ==========================================
 // KOCAELİ CEPTE - FİNANS API
 // Dolar / Euro / Gram Altın / Bitcoin
-// GenelPara API'nin GÜNCEL veri yapısına göre düzeltildi
+// Her istek ayrı korumalı - biri çökerse diğerleri etkilenmez
 // ==========================================
+
+const browserHeaders = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Referer": "https://www.genelpara.com/"
+};
+
+
+async function fetchWithTimeout(url, timeoutMs) {
+
+  const controller = new AbortController();
+
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  try {
+
+    const response = await fetch(url, {
+      headers: browserHeaders,
+      signal: controller.signal
+    });
+
+    clearTimeout(timer);
+
+    const text = await response.text();
+
+    return { ok: response.ok, status: response.status, text: text };
+
+  } catch (err) {
+
+    clearTimeout(timer);
+
+    return { ok: false, status: 0, text: "", error: String(err && err.message ? err.message : err) };
+
+  }
+
+}
+
+
+function getPrice(rawText, symbol) {
+
+  if (!rawText) return null;
+
+  let json = null;
+
+  try {
+    json = JSON.parse(rawText);
+  } catch (e) {
+    return null;
+  }
+
+  if (!json) return null;
+
+  const root = json.data || json;
+
+  const item = root[symbol];
+
+  if (!item) return null;
+
+  const raw =
+    item.satis ||
+    item.Satis ||
+    item.alis ||
+    item.Alis ||
+    item.fiyat ||
+    item.price ||
+    item.last ||
+    item.close;
+
+  return raw || null;
+
+}
+
 
 export default async function handler(req, res) {
 
@@ -14,115 +90,46 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Gerçek bir tarayıcı gibi görünen başlıklar
-  // (bot engeline takılmamak için)
-  const browserHeaders = {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
-    "Referer": "https://www.genelpara.com/"
-  };
+  const results = await Promise.allSettled([
+    fetchWithTimeout("https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR", 5000),
+    fetchWithTimeout("https://api.genelpara.com/json/?list=altin&sembol=GA", 5000),
+    fetchWithTimeout("https://api.genelpara.com/json/?list=kripto&sembol=BTC", 5000)
+  ]);
 
-  try {
+  const dovizResult = results[0].status === "fulfilled" ? results[0].value : { text: "", error: "rejected" };
+  const altinResult = results[1].status === "fulfilled" ? results[1].value : { text: "", error: "rejected" };
+  const kriptoResult = results[2].status === "fulfilled" ? results[2].value : { text: "", error: "rejected" };
 
-    const [dovizRes, altinRes, kriptoRes] = await Promise.all([
-      fetch(
-        "https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR",
-        { headers: browserHeaders }
-      ),
-      fetch(
-        "https://api.genelpara.com/json/?list=altin&sembol=GA",
-        { headers: browserHeaders }
-      ),
-      fetch(
-        "https://api.genelpara.com/json/?list=kripto&sembol=BTC",
-        { headers: browserHeaders }
-      )
-    ]);
+  const usd = getPrice(dovizResult.text, "USD");
+  const eur = getPrice(dovizResult.text, "EUR");
+  const gold = getPrice(altinResult.text, "GA");
+  const btc = getPrice(kriptoResult.text, "BTC");
 
-    const dovizText = await dovizRes.text();
-    const altinText = await altinRes.text();
-    const kriptoText = await kriptoRes.text();
+  return res.status(200).json({
 
-    let dovizJson = null;
-    let altinJson = null;
-    let kriptoJson = null;
+    success: true,
 
-    try { dovizJson = JSON.parse(dovizText); } catch (e) {}
-    try { altinJson = JSON.parse(altinText); } catch (e) {}
-    try { kriptoJson = JSON.parse(kriptoText); } catch (e) {}
+    data: {
+      usd,
+      eur,
+      gold,
+      btc
+    },
 
-    // ==========================================
-    // FİYAT OKUMA
-    // Güncel GenelPara yapısı: { data: { USD: { satis: "..." } } }
-    // ==========================================
+    debug: {
+      dovizStatus: dovizResult.status,
+      altinStatus: altinResult.status,
+      kriptoStatus: kriptoResult.status,
+      dovizError: dovizResult.error || null,
+      altinError: altinResult.error || null,
+      kriptoError: kriptoResult.error || null,
+      dovizSnippet: (dovizResult.text || "").slice(0, 200),
+      altinSnippet: (altinResult.text || "").slice(0, 200),
+      kriptoSnippet: (kriptoResult.text || "").slice(0, 200)
+    },
 
-    function getPrice(json, symbol) {
+    updatedAt: new Date().toISOString()
 
-      if (!json) return null;
-
-      const root = json.data || json;
-
-      const item = root[symbol];
-
-      if (!item) return null;
-
-      const raw =
-        item.satis ||
-        item.Satis ||
-        item.alis ||
-        item.Alis ||
-        item.fiyat ||
-        item.price ||
-        item.last ||
-        item.close;
-
-      return raw || null;
-
-    }
-
-    const usd = getPrice(dovizJson, "USD");
-    const eur = getPrice(dovizJson, "EUR");
-    const gold = getPrice(altinJson, "GA");
-    const btc = getPrice(kriptoJson, "BTC");
-
-    return res.status(200).json({
-
-      success: true,
-
-      data: {
-        usd,
-        eur,
-        gold,
-        btc
-      },
-
-      // Hata ayıklama için ham cevapları da ekliyoruz
-      // (sorun devam ederse burayı inceleyeceğiz)
-      debug: {
-        dovizStatus: dovizRes.status,
-        altinStatus: altinRes.status,
-        kriptoStatus: kriptoRes.status,
-        dovizRawSnippet: dovizText.slice(0, 150),
-        altinRawSnippet: altinText.slice(0, 150),
-        kriptoRawSnippet: kriptoText.slice(0, 150)
-      },
-
-      updatedAt: new Date().toISOString()
-
-    });
-
-  } catch (error) {
-
-    console.error("Finans API hatası:", error);
-
-    return res.status(500).json({
-      success: false,
-      error: "Finans verileri alınamadı: " + error.message
-    });
-
-  }
+  });
 
 }
