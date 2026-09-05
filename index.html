@@ -25,12 +25,18 @@
 ========================================== */
 
 * {
+
   box-sizing: border-box;
+
   margin: 0;
+
   padding: 0;
+
 }
 
+
 body {
+
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -39,20 +45,31 @@ body {
     sans-serif;
 
   background: #061a12;
+
   color: #f4f7f5;
 
   padding-bottom: 90px;
+
 }
+
 
 button {
+
   font-family: inherit;
+
 }
 
+
 .container {
+
   width: 100%;
+
   max-width: 700px;
+
   margin: auto;
+
   padding: 0 15px;
+
 }
 
 
@@ -61,10 +78,13 @@ button {
 ========================================== */
 
 .topbar {
+
   padding: 22px 15px 16px;
 
   display: flex;
+
   align-items: center;
+
   gap: 12px;
 
   background: #071d14;
@@ -72,10 +92,14 @@ button {
   border-bottom:
     1px solid
     rgba(255,255,255,.06);
+
 }
 
+
 .logo {
+
   width: 54px;
+
   height: 54px;
 
   border-radius: 16px;
@@ -83,7 +107,9 @@ button {
   background: #08783d;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   font-size: 27px;
@@ -91,27 +117,45 @@ button {
   box-shadow:
     0 6px 20px
     rgba(0,0,0,.25);
+
 }
+
 
 .brand {
+
   line-height: 1.05;
+
 }
+
 
 .brand-name {
+
   font-size: 25px;
+
   font-weight: 800;
+
   letter-spacing: -.5px;
+
 }
+
 
 .brand-name span {
+
   color: #12c95d;
+
 }
 
+
 .brand-tag {
+
   color: #8ca79b;
+
   font-size: 11px;
+
   letter-spacing: 2px;
+
   margin-top: 6px;
+
 }
 
 
@@ -120,11 +164,122 @@ button {
 ========================================== */
 
 .mini-weather {
-  margin: 12px 0 10px;
+
+  margin: 10px 0 12px;
 
   padding: 15px 14px;
 
-  min-height: 64px;
+  min-height: 58px;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255,255,255,0.06);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  flex-wrap: wrap;
+
+  overflow: hidden;
+
+  font-size: 13px;
+
+  line-height: 1.4;
+
+  color: #aebfb7;
+
+  text-align: center;
+
+}
+
+
+.mini-weather strong {
+
+  color: #12c95d;
+
+  font-size: 15px;
+
+}
+
+
+.mini-weather b {
+
+  color: #fff;
+
+  font-size: 21px;
+
+}
+
+
+.mini-weather #weather-icon {
+
+  font-size: 21px;
+
+  flex-shrink: 0;
+
+}
+
+
+.mini-weather span {
+
+  white-space: nowrap;
+
+}
+
+
+@media (max-width: 420px) {
+
+  .mini-weather {
+
+    margin: 10px 0 12px;
+
+    padding: 13px 9px;
+
+    gap: 5px;
+
+    font-size: 11px;
+
+  }
+
+
+  .mini-weather strong {
+
+    font-size: 13px;
+
+  }
+
+
+  .mini-weather b {
+
+    font-size: 19px;
+
+  }
+
+
+  .mini-weather #weather-icon {
+
+    font-size: 19px;
+
+  }
+
+}
+
+
+/* ==========================================
+   FİNANS
+========================================== */
+
+.mini-finance {
+
+  margin: 0 0 12px;
+
+  padding: 12px 10px;
 
   border-radius: 16px;
 
@@ -139,100 +294,94 @@ button {
 
   gap: 8px;
 
-  flex-wrap: wrap;
-
-  overflow: hidden;
-
-  font-size: 13px;
-
-  line-height: 1.35;
-
-  color: #aebfb7;
-
-  text-align: center;
-}
-
-.mini-weather strong {
-  color: #12c95d;
-  font-size: 15px;
-}
-
-.mini-weather b {
-  color: #fff;
-  font-size: 22px;
-}
-
-.mini-weather #weather-icon {
-  font-size: 22px;
-  flex-shrink: 0;
-}
-
-.mini-weather span {
-  white-space: nowrap;
-}
-
-
-/* ==========================================
-   FİNANS
-========================================== */
-
-.mini-finance {
-  margin: 0 0 14px;
-
-  padding: 13px 10px;
-
-  min-height: 50px;
-
-  border-radius: 16px;
-
-  background:
-    rgba(255,255,255,0.06);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: flex-start;
-
-  gap: 10px;
-
   overflow-x: auto;
 
   overflow-y: hidden;
 
-  font-size: 12px;
+  font-size: 11px;
 
   color: #aebfb7;
 
   scrollbar-width: none;
 
-  -webkit-overflow-scrolling: touch;
 }
+
 
 .mini-finance::-webkit-scrollbar {
+
   display: none;
+
 }
 
-.mini-finance b {
-  color: #fff;
-  font-size: 14px;
-}
 
 .mini-finance .fin-item {
+
   display: flex;
 
   align-items: center;
 
-  gap: 5px;
+  gap: 4px;
 
   flex-shrink: 0;
 
   white-space: nowrap;
+
 }
 
-.finance-separator {
-  color: #557267;
-  flex-shrink: 0;
+
+.mini-finance .fin-name {
+
+  color: #12c95d;
+
+  font-weight: 800;
+
+}
+
+
+.mini-finance b {
+
+  color: #fff;
+
+  font-size: 14px;
+
+}
+
+
+.mini-finance .currency {
+
+  color: #aebfb7;
+
+  font-size: 11px;
+
+}
+
+
+@media (max-width: 420px) {
+
+  .mini-finance {
+
+    font-size: 10px;
+
+    gap: 5px;
+
+    padding: 10px 7px;
+
+  }
+
+
+  .mini-finance b {
+
+    font-size: 12px;
+
+  }
+
+
+  .mini-finance .currency {
+
+    font-size: 10px;
+
+  }
+
 }
 
 
@@ -241,6 +390,7 @@ button {
 ========================================== */
 
 .hero {
+
   margin-top: 18px;
 
   border-radius: 20px;
@@ -252,10 +402,14 @@ button {
   border:
     1px solid
     rgba(255,255,255,.06);
+
 }
 
+
 .hero-image {
+
   width: 100%;
+
   height: 230px;
 
   object-fit: cover;
@@ -263,13 +417,19 @@ button {
   display: block;
 
   background: #12251e;
+
 }
+
 
 .hero-content {
+
   padding: 16px;
+
 }
 
+
 .breaking {
+
   display: inline-block;
 
   background: #12b957;
@@ -285,20 +445,29 @@ button {
   border-radius: 7px;
 
   margin-bottom: 9px;
+
 }
+
 
 .hero-title {
+
   font-size: 21px;
+
   line-height: 1.25;
+
   font-weight: 800;
+
 }
 
+
 .hero-meta {
+
   margin-top: 10px;
 
   color: #91a79d;
 
   font-size: 12px;
+
 }
 
 
@@ -307,10 +476,14 @@ button {
 ========================================== */
 
 .section {
+
   margin-top: 25px;
+
 }
 
+
 .section-head {
+
   display: flex;
 
   justify-content: space-between;
@@ -318,18 +491,28 @@ button {
   align-items: center;
 
   margin-bottom: 13px;
+
 }
+
 
 .section-title {
+
   font-size: 19px;
+
   font-weight: 800;
+
 }
+
 
 .section-title span {
+
   color: #12c95d;
+
 }
 
+
 .refresh {
+
   border: 0;
 
   background: #102b20;
@@ -343,6 +526,7 @@ button {
   font-size: 13px;
 
   cursor: pointer;
+
 }
 
 
@@ -351,14 +535,18 @@ button {
 ========================================== */
 
 .news-list {
+
   display: flex;
 
   flex-direction: column;
 
   gap: 12px;
+
 }
 
+
 .news-card {
+
   display: flex;
 
   gap: 12px;
@@ -378,14 +566,21 @@ button {
   color: inherit;
 
   transition: .2s;
+
 }
+
 
 .news-card:active {
+
   transform: scale(.985);
+
 }
 
+
 .news-image {
+
   width: 115px;
+
   height: 92px;
 
   flex-shrink: 0;
@@ -395,17 +590,23 @@ button {
   border-radius: 12px;
 
   background: #183127;
+
 }
 
+
 .news-info {
+
   min-width: 0;
 
   display: flex;
 
   flex-direction: column;
+
 }
 
+
 .news-title {
+
   font-size: 15px;
 
   line-height: 1.32;
@@ -419,9 +620,12 @@ button {
   -webkit-box-orient: vertical;
 
   overflow: hidden;
+
 }
 
+
 .news-bottom {
+
   margin-top: auto;
 
   padding-top: 7px;
@@ -431,22 +635,29 @@ button {
   justify-content: space-between;
 
   gap: 5px;
+
 }
 
+
 .source {
+
   color: #16c85c;
 
   font-size: 11px;
 
   font-weight: 700;
+
 }
 
+
 .time {
+
   color: #718a7e;
 
   font-size: 11px;
 
   white-space: nowrap;
+
 }
 
 
@@ -455,15 +666,20 @@ button {
 ========================================== */
 
 .loading {
+
   text-align: center;
 
   padding: 35px 10px;
 
   color: #7d9589;
+
 }
 
+
 .spinner {
+
   width: 28px;
+
   height: 28px;
 
   border:
@@ -479,15 +695,23 @@ button {
 
   animation:
     spin .8s linear infinite;
+
 }
+
 
 @keyframes spin {
+
   to {
+
     transform: rotate(360deg);
+
   }
+
 }
 
+
 .error {
+
   background: #321817;
 
   color: #ff9c95;
@@ -499,6 +723,7 @@ button {
   text-align: center;
 
   font-size: 13px;
+
 }
 
 
@@ -507,6 +732,7 @@ button {
 ========================================== */
 
 .traffic-card {
+
   display: flex;
 
   align-items: center;
@@ -526,10 +752,14 @@ button {
   text-decoration: none;
 
   color: white;
+
 }
 
+
 .traffic-icon {
+
   width: 42px;
+
   height: 42px;
 
   border-radius: 12px;
@@ -545,28 +775,43 @@ button {
   font-size: 22px;
 
   flex-shrink: 0;
+
 }
+
 
 .traffic-info {
+
   flex: 1;
+
 }
+
 
 .traffic-title {
+
   font-size: 14px;
+
   font-weight: 800;
+
 }
 
+
 .traffic-desc {
+
   margin-top: 3px;
 
   color: #718b7f;
 
   font-size: 11px;
+
 }
 
+
 .traffic-arrow {
+
   font-size: 25px;
+
   color: #12c95d;
+
 }
 
 
@@ -575,15 +820,19 @@ button {
 ========================================== */
 
 .category-row {
+
   display: grid;
 
   grid-template-columns:
     repeat(2, 1fr);
 
   gap: 11px;
+
 }
 
+
 .category {
+
   display: block;
 
   padding: 17px 15px;
@@ -599,27 +848,38 @@ button {
   text-decoration: none;
 
   color: white;
+
 }
+
 
 .category-icon {
+
   font-size: 24px;
+
   margin-bottom: 8px;
+
 }
 
+
 .category-name {
+
   font-size: 14px;
 
   font-weight: 800;
 
   color: white;
+
 }
 
+
 .category-desc {
+
   color: #718b7f;
 
   font-size: 11px;
 
   margin-top: 4px;
+
 }
 
 
@@ -628,6 +888,7 @@ button {
 ========================================== */
 
 .bottom-nav {
+
   position: fixed;
 
   bottom: 0;
@@ -652,9 +913,12 @@ button {
   z-index: 100;
 
   backdrop-filter: blur(12px);
+
 }
 
+
 .nav-inner {
+
   width: 100%;
 
   max-width: 700px;
@@ -663,9 +927,12 @@ button {
 
   grid-template-columns:
     repeat(3,1fr);
+
 }
 
+
 .nav-item {
+
   border: 0;
 
   background: transparent;
@@ -685,14 +952,21 @@ button {
   font-size: 11px;
 
   cursor: pointer;
+
 }
+
 
 .nav-icon {
+
   font-size: 21px;
+
 }
 
+
 .nav-item.active {
+
   color: #19ce62;
+
 }
 
 
@@ -702,179 +976,33 @@ button {
 
 @media (max-width: 420px) {
 
-  .container {
-    padding: 0 12px;
-  }
-
-  .topbar {
-    padding:
-      18px 13px 14px;
-  }
-
-  .logo {
-    width: 50px;
-    height: 50px;
-    font-size: 25px;
-  }
-
-  .brand-name {
-    font-size: 22px;
-  }
-
-  .brand-tag {
-    font-size: 9px;
-    letter-spacing: 1.5px;
-  }
-
-
-  /* HAVA DURUMU */
-
-  .mini-weather {
-    min-height: 78px;
-
-    padding:
-      12px 8px;
-
-    gap: 5px;
-
-    font-size: 11px;
-
-    line-height: 1.3;
-  }
-
-  .mini-weather strong {
-    font-size: 13px;
-  }
-
-  .mini-weather b {
-    font-size: 19px;
-  }
-
-  .mini-weather #weather-icon {
-    font-size: 19px;
-  }
-
-
-  /*
-     Hava durumu bilgilerinin
-     kaymasını engeller.
-     İlk satır:
-     ikon + İzmit + sıcaklık + durum
-
-     İkinci satır:
-     hissedilen + nem + rüzgar
-  */
-
-  #weather-feels {
-    margin-left: 5px;
-  }
-
-
-  /* FİNANS */
-
-  .mini-finance {
-    min-height: 48px;
-
-    padding:
-      10px 8px;
-
-    gap: 7px;
-
-    font-size: 10px;
-
-    justify-content: flex-start;
-  }
-
-  .mini-finance b {
-    font-size: 13px;
-  }
-
-  .mini-finance .fin-item {
-    gap: 3px;
-  }
-
-
-  /* MANŞET */
-
   .hero-image {
+
     height: 205px;
+
   }
+
 
   .hero-title {
+
     font-size: 19px;
+
   }
 
-
-  /* HABER */
 
   .news-image {
+
     width: 105px;
+
     height: 85px;
+
   }
+
 
   .news-title {
+
     font-size: 14px;
-  }
 
-}
-
-
-/* ==========================================
-   ÇOK KÜÇÜK EKRANLAR
-========================================== */
-
-@media (max-width: 360px) {
-
-  .mini-weather {
-    font-size: 10px;
-    gap: 4px;
-  }
-
-  .mini-weather strong {
-    font-size: 12px;
-  }
-
-  .mini-weather b {
-    font-size: 18px;
-  }
-
-  .mini-weather #weather-icon {
-    font-size: 18px;
-  }
-
-  .mini-finance {
-    font-size: 9px;
-  }
-
-  .mini-finance b {
-    font-size: 12px;
-  }
-
-}
-
-
-/* ==========================================
-   TABLET / MASAÜSTÜ
-========================================== */
-
-@media (min-width: 600px) {
-
-  .mini-weather {
-    padding: 17px 20px;
-    font-size: 14px;
-  }
-
-  .mini-weather strong {
-    font-size: 16px;
-  }
-
-  .mini-weather b {
-    font-size: 23px;
-  }
-
-  .mini-finance {
-    justify-content: center;
-    padding: 14px 20px;
   }
 
 }
@@ -894,17 +1022,25 @@ button {
 <header class="topbar">
 
   <div class="logo">
+
     🏙️
+
   </div>
+
 
   <div class="brand">
 
     <div class="brand-name">
+
       KOCAELİ <span>CEPTE</span>
+
     </div>
 
+
     <div class="brand-tag">
+
       ŞEHRİN CEBİNDEKİ HALİ
+
     </div>
 
   </div>
@@ -928,31 +1064,46 @@ button {
     🌤️
   </span>
 
+
   <strong>
     İzmit
   </strong>
+
 
   <b id="weather-temp">
     --°
   </b>
 
+
   <span id="weather-desc">
     Yükleniyor...
   </span>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <span id="weather-feels">
     Hissedilen --°
   </span>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <span id="weather-humidity">
     💧 --%
   </span>
 
-  <span>•</span>
+
+  <span>
+    •
+  </span>
+
 
   <span id="weather-wind">
     💨 -- km/sa
@@ -972,47 +1123,99 @@ button {
 
   <div class="fin-item">
 
-    <span>💵</span>
+    <span>
+      💵
+    </span>
+
+    <span class="fin-name">
+      USD
+    </span>
 
     <b id="usd-value">
       --
     </b>
 
+    <span class="currency">
+      ₺
+    </span>
+
   </div>
 
-  <span class="finance-separator">•</span>
+
+  <span>
+    •
+  </span>
+
 
   <div class="fin-item">
 
-    <span>💶</span>
+    <span>
+      💶
+    </span>
+
+    <span class="fin-name">
+      EUR
+    </span>
 
     <b id="eur-value">
       --
     </b>
 
+    <span class="currency">
+      ₺
+    </span>
+
   </div>
 
-  <span class="finance-separator">•</span>
+
+  <span>
+    •
+  </span>
+
 
   <div class="fin-item">
 
-    <span>🥇</span>
+    <span>
+      🥇
+    </span>
+
+    <span class="fin-name">
+      GRAM
+    </span>
 
     <b id="gold-value">
       --
     </b>
 
+    <span class="currency">
+      ₺
+    </span>
+
   </div>
 
-  <span class="finance-separator">•</span>
+
+  <span>
+    •
+  </span>
+
 
   <div class="fin-item">
 
-    <span>₿</span>
+    <span>
+      ₿
+    </span>
+
+    <span class="fin-name">
+      BTC
+    </span>
 
     <b id="btc-value">
       --
     </b>
+
+    <span class="currency">
+      $
+    </span>
 
   </div>
 
@@ -1051,6 +1254,7 @@ button {
       Haberler
 
     </div>
+
 
     <button
       class="refresh"
@@ -1160,7 +1364,7 @@ button {
     </a>
 
 
-    <!-- ECZANELER -->
+    <!-- NÖBETÇİ ECZANELER -->
 
     <a
       class="category"
@@ -1224,26 +1428,31 @@ button {
       </div>
 
     </a>
-<a
-  class="category"
-  href="https://yandex.com/maps/?ll=29.9192,40.7654&z=12"
-  target="_blank"
-  rel="noopener noreferrer"
->
 
-  <div class="category-icon">
-    🧭
-  </div>
 
-  <div class="category-name">
-    Navigasyon
-  </div>
+    <!-- NAVİGASYON -->
 
-  <div class="category-desc">
-    Yandex ile yol tarifi al
-  </div>
+    <a
+      class="category"
+      href="https://yandex.com.tr/maps/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
 
-</a>
+      <div class="category-icon">
+        🧭
+      </div>
+
+      <div class="category-name">
+        Navigasyon
+      </div>
+
+      <div class="category-desc">
+        Yandex ile yol tarifi al
+      </div>
+
+    </a>
+
   </div>
 
 </section>
@@ -1266,17 +1475,20 @@ button {
       🚦
     </div>
 
+
     <div class="traffic-info">
 
       <div class="traffic-title">
         Kocaeli Trafik
       </div>
 
+
       <div class="traffic-desc">
         Canlı trafik yoğunluğunu görüntüle
       </div>
 
     </div>
+
 
     <div class="traffic-arrow">
       ›
@@ -1296,6 +1508,7 @@ button {
 <nav class="bottom-nav">
 
   <div class="nav-inner">
+
 
     <button
       class="nav-item active"
@@ -1362,9 +1575,18 @@ button {
 let allNews = [];
 
 
+/* ==========================================
+   HTML GÜVENLİĞİ
+========================================== */
+
 function escapeHtml(text) {
 
-  if (!text) return "";
+  if (!text) {
+
+    return "";
+
+  }
+
 
   return String(text)
 
@@ -1381,10 +1603,16 @@ function escapeHtml(text) {
 }
 
 
+/* ==========================================
+   HABER SAATİ
+========================================== */
+
 function getTime(item) {
 
   if (item.time) {
+
     return item.time;
+
   }
 
   return "";
@@ -1392,12 +1620,97 @@ function getTime(item) {
 }
 
 
+/* ==========================================
+   SON DAKİKA KONTROLÜ
+========================================== */
+
+function isBreakingNews(item) {
+
+  const time =
+    String(item.time || "")
+      .toLowerCase()
+      .trim();
+
+
+  if (!time) {
+
+    return false;
+
+  }
+
+
+  /* Az önce */
+
+  if (
+    time.includes("az önce") ||
+    time.includes("şimdi")
+  ) {
+
+    return true;
+
+  }
+
+
+  /* Dakika */
+
+  const minuteMatch =
+    time.match(
+      /(\d+)\s*dakika/
+    );
+
+
+  if (minuteMatch) {
+
+    const minutes =
+      parseInt(
+        minuteMatch[1],
+        10
+      );
+
+
+    return minutes <= 60;
+
+  }
+
+
+  /* Saat */
+
+  const hourMatch =
+    time.match(
+      /(\d+)\s*saat/
+    );
+
+
+  if (hourMatch) {
+
+    const hours =
+      parseInt(
+        hourMatch[1],
+        10
+      );
+
+
+    return hours < 1;
+
+  }
+
+
+  return false;
+
+}
+
+
+/* ==========================================
+   HABERLERİ GETİR
+========================================== */
+
 async function loadNews() {
 
   const grid =
     document.getElementById(
       "news-grid"
     );
+
 
   const hero =
     document.getElementById(
@@ -1470,8 +1783,18 @@ async function loadNews() {
       data.items;
 
 
+    /* ======================================
+       MANŞET
+    ====================================== */
+
     const first =
       allNews[0];
+
+
+    const breakingText =
+      isBreakingNews(first)
+        ? "🔴 SON DAKİKA"
+        : "📰 MANŞET";
 
 
     hero.innerHTML = `
@@ -1509,7 +1832,9 @@ async function loadNews() {
         <div class="hero-content">
 
           <div class="breaking">
-            🔴 SON DAKİKA
+
+            ${breakingText}
+
           </div>
 
 
@@ -1544,6 +1869,10 @@ async function loadNews() {
 
     `;
 
+
+    /* ======================================
+       SON HABERLER
+    ====================================== */
 
     const list =
       allNews.slice(1, 11);
@@ -1668,7 +1997,7 @@ async function loadNews() {
 
 
 /* ==========================================
-   MİNİ HAVA DURUMU
+   HAVA DURUMU
 ========================================== */
 
 async function loadMiniWeather() {
@@ -1677,44 +2006,318 @@ async function loadMiniWeather() {
 
     const url =
       "https://api.open-meteo.com/v1/forecast" +
-      "?latitude=40.7654&longitude=29.9408" +
-      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
+      "?latitude=40.7654" +
+      "&longitude=29.9408" +
+      "&current=" +
+      "temperature_2m," +
+      "relative_humidity_2m," +
+      "apparent_temperature," +
+      "weather_code," +
+      "wind_speed_10m" +
       "&timezone=Europe%2FIstanbul";
 
-    const response = await fetch(url);
 
-    if (!response.ok) throw new Error("Hava durumu alınamadı");
+    const response =
+      await fetch(url);
 
-    const data = await response.json();
-    const weather = data.current;
 
-    const temp = Math.round(weather.temperature_2m);
-    const feels = Math.round(weather.apparent_temperature);
-    const humidity = Math.round(weather.relative_humidity_2m);
-    const wind = Math.round(weather.wind_speed_10m);
+    if (!response.ok) {
 
-    let icon = "🌤️";
-    let description = "Parçalı bulutlu";
+      throw new Error(
+        "Hava durumu alınamadı"
+      );
 
-    if (weather.weather_code === 0) { icon = "☀️"; description = "Açık"; }
-    else if (weather.weather_code <= 3) { icon = "🌤️"; description = "Parçalı bulutlu"; }
-    else if (weather.weather_code <= 48) { icon = "🌫️"; description = "Sisli"; }
-    else if (weather.weather_code <= 67) { icon = "🌧️"; description = "Yağmurlu"; }
-    else if (weather.weather_code <= 77) { icon = "🌨️"; description = "Karlı"; }
-    else if (weather.weather_code <= 82) { icon = "🌧️"; description = "Sağanak"; }
-    else { icon = "⛈️"; description = "Fırtınalı"; }
+    }
 
-    document.getElementById("weather-icon").textContent = icon;
-    document.getElementById("weather-temp").textContent = temp + "°";
-    document.getElementById("weather-desc").textContent = description;
-    document.getElementById("weather-feels").textContent = "Hissedilen " + feels + "°";
-    document.getElementById("weather-humidity").textContent = "💧 " + humidity + "%";
-    document.getElementById("weather-wind").textContent = "💨 " + wind + " km/sa";
 
-  } catch (error) {
-    console.error("Hava durumu:", error);
-    document.getElementById("weather-desc").textContent = "Veri alınamadı";
+    const data =
+      await response.json();
+
+
+    if (
+      !data ||
+      !data.current
+    ) {
+
+      throw new Error(
+        "Hava verisi yok"
+      );
+
+    }
+
+
+    const weather =
+      data.current;
+
+
+    const temp =
+      Math.round(
+        weather.temperature_2m
+      );
+
+
+    const feels =
+      Math.round(
+        weather.apparent_temperature
+      );
+
+
+    const humidity =
+      Math.round(
+        weather.relative_humidity_2m
+      );
+
+
+    const wind =
+      Math.round(
+        weather.wind_speed_10m
+      );
+
+
+    let icon =
+      "🌤️";
+
+
+    let description =
+      "Parçalı bulutlu";
+
+
+    if (
+      weather.weather_code === 0
+    ) {
+
+      icon = "☀️";
+
+      description =
+        "Açık";
+
+    }
+
+
+    else if (
+      weather.weather_code <= 3
+    ) {
+
+      icon = "🌤️";
+
+      description =
+        "Parçalı bulutlu";
+
+    }
+
+
+    else if (
+      weather.weather_code <= 48
+    ) {
+
+      icon = "🌫️";
+
+      description =
+        "Sisli";
+
+    }
+
+
+    else if (
+      weather.weather_code <= 67
+    ) {
+
+      icon = "🌧️";
+
+      description =
+        "Yağmurlu";
+
+    }
+
+
+    else if (
+      weather.weather_code <= 77
+    ) {
+
+      icon = "🌨️";
+
+      description =
+        "Karlı";
+
+    }
+
+
+    else if (
+      weather.weather_code <= 82
+    ) {
+
+      icon = "🌧️";
+
+      description =
+        "Sağanak";
+
+    }
+
+
+    else {
+
+      icon = "⛈️";
+
+      description =
+        "Fırtınalı";
+
+    }
+
+
+    document.getElementById(
+      "weather-icon"
+    ).textContent =
+      icon;
+
+
+    document.getElementById(
+      "weather-temp"
+    ).textContent =
+      temp + "°";
+
+
+    document.getElementById(
+      "weather-desc"
+    ).textContent =
+      description;
+
+
+    document.getElementById(
+      "weather-feels"
+    ).textContent =
+      "Hissedilen " +
+      feels +
+      "°";
+
+
+    document.getElementById(
+      "weather-humidity"
+    ).textContent =
+      "💧 " +
+      humidity +
+      "%";
+
+
+    document.getElementById(
+      "weather-wind"
+    ).textContent =
+      "💨 " +
+      wind +
+      " km/sa";
+
   }
+
+
+  catch (error) {
+
+    console.error(
+      "Hava durumu:",
+      error
+    );
+
+
+    document.getElementById(
+      "weather-desc"
+    ).textContent =
+      "Veri alınamadı";
+
+  }
+
+}
+
+
+/* ==========================================
+   FİNANS FORMATLAMA
+========================================== */
+
+function formatFinance(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return "--";
+
+  }
+
+
+  let text =
+    String(value)
+      .trim();
+
+
+  /*
+     Para sembollerini temizle
+     Örnek:
+     $79,591.00
+     ₺48,45
+  */
+
+  text =
+    text.replace(
+      /[$₺€£]/g,
+      ""
+    )
+    .trim();
+
+
+  /*
+     Türkçe sayı formatı
+
+     6.974,15
+     → 6974.15
+  */
+
+  if (
+    text.includes(",") &&
+    text.includes(".")
+  ) {
+
+    text =
+      text
+        .replace(/\./g, "")
+        .replace(",", ".");
+
+  }
+
+
+  else if (
+    text.includes(",")
+  ) {
+
+    /*
+       Eğer virgül varsa
+       ondalık kabul et
+    */
+
+    text =
+      text.replace(",", ".");
+
+  }
+
+
+  const number =
+    Number(text);
+
+
+  if (
+    isNaN(number)
+  ) {
+
+    return "--";
+
+  }
+
+
+  return number.toLocaleString(
+    "tr-TR",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }
+  );
 
 }
 
@@ -1723,64 +2326,136 @@ async function loadMiniWeather() {
    MİNİ FİNANS
 ========================================== */
 
-function formatFinansSayi(raw) {
-
-  if (raw === null || raw === undefined || raw === "") return null;
-
-  const num = parseFloat(String(raw).replace(",", "."));
-
-  if (isNaN(num)) return null;
-
-  return num.toLocaleString("tr-TR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-
-}
-
 async function loadMiniFinance() {
 
   try {
 
-    const response = await fetch(
-      "https://kocaeli-cepte-api.vercel.app/api/finans"
+    const response =
+      await fetch(
+        "/api/finance?cache=" +
+        Date.now()
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Finans API bağlantısı başarısız"
+      );
+
+    }
+
+
+    const result =
+      await response.json();
+
+
+    if (
+      !result.success ||
+      !result.data
+    ) {
+
+      throw new Error(
+        "Finans verisi bulunamadı"
+      );
+
+    }
+
+
+    const data =
+      result.data;
+
+
+    /* DOLAR */
+
+    document.getElementById(
+      "usd-value"
+    ).textContent =
+      formatFinance(
+        data.usd
+      );
+
+
+    /* EURO */
+
+    document.getElementById(
+      "eur-value"
+    ).textContent =
+      formatFinance(
+        data.eur
+      );
+
+
+    /* GRAM ALTIN */
+
+    document.getElementById(
+      "gold-value"
+    ).textContent =
+      formatFinance(
+        data.gold
+      );
+
+
+    /* BTC */
+
+    document.getElementById(
+      "btc-value"
+    ).textContent =
+      formatFinance(
+        data.btc
+      );
+
+  }
+
+
+  catch (error) {
+
+    console.error(
+      "Finans verileri yüklenemedi:",
+      error
     );
 
-    if (!response.ok) throw new Error("Finans API bağlantısı başarısız");
 
-    const result = await response.json();
+    document.getElementById(
+      "usd-value"
+    ).textContent =
+      "--";
 
-    if (!result.success) throw new Error(result.error || "Bilinmeyen hata");
 
-    const data = result.data || {};
+    document.getElementById(
+      "eur-value"
+    ).textContent =
+      "--";
 
-    const usd = formatFinansSayi(data.usd);
-    const eur = formatFinansSayi(data.eur);
-    const gold = formatFinansSayi(data.gold);
-    const btc = formatFinansSayi(data.btc);
 
-    if (usd) document.getElementById("usd-value").textContent = usd + "₺";
-    if (eur) document.getElementById("eur-value").textContent = eur + "₺";
-    if (gold) document.getElementById("gold-value").textContent = gold + "₺";
-    if (btc) document.getElementById("btc-value").textContent = "$" + btc;
+    document.getElementById(
+      "gold-value"
+    ).textContent =
+      "--";
 
-  } catch (error) {
-    console.error("Finans verisi alınamadı:", error);
+
+    document.getElementById(
+      "btc-value"
+    ).textContent =
+      "--";
+
   }
 
 }
 
 
-loadMiniWeather();
-loadMiniFinance();
-
-setInterval(loadMiniWeather, 10 * 60 * 1000);
-setInterval(loadMiniFinance, 5 * 60 * 1000);
+/* ==========================================
+   SAYFA AÇILINCA ÇALIŞTIR
+========================================== */
 
 loadNews();
 
-</script>
+loadMiniWeather();
 
+loadMiniFinance();
+
+
+</script>
 
 </body>
 
