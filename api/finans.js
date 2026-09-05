@@ -1,34 +1,33 @@
-// ==========================================
-// KOCAELİ CEPTE - FİNANS API
-// Dolar / Euro / Gram Altın / Bitcoin
-// GenelPara API'nin GÜNCEL veri yapısına göre düzeltildi
-// ==========================================
+        usd,
+        eur,
+        gold,
+        btc
+      },
 
-export default async function handler(req, res) {
+      // Hata ayıklama için ham cevapları da ekliyoruz
+      // (sorun devam ederse burayı inceleyeceğiz)
+      debug: {
+        dovizStatus: dovizRes.status,
+        altinStatus: altinRes.status,
+        kriptoStatus: kriptoRes.status,
+        dovizRawSnippet: dovizText.slice(0, 150),
+        altinRawSnippet: altinText.slice(0, 150),
+        kriptoRawSnippet: kriptoText.slice(0, 150)
+      },
 
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      updatedAt: new Date().toISOString()
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
+    });
+
+  } catch (error) {
+
+    console.error("Finans API hatası:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: "Finans verileri alınamadı: " + error.message
+    });
+
   }
 
-  // Gerçek bir tarayıcı gibi görünen başlıklar
-  // (bot engeline takılmamak için)
-  const browserHeaders = {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
-    "Referer": "https://www.genelpara.com/"
-  };
-
-  try {
-
-    const [dovizRes, altinRes, kriptoRes] = await Promise.all([
-      fetch(
-        "https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR",
-        { headers: browserHeaders }
-      ),
+}
