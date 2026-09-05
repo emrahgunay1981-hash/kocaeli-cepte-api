@@ -1,19 +1,15 @@
 // ==========================================
-// KOCAELİ CEPTE - FİNANS API
+// KOCAELİ CEPTE - FİNANS API (v2)
 // Dolar / Euro / Gram Altın / Bitcoin
-// Her istek ayrı korumalı - biri çökerse diğerleri etkilenmez
+//
+// GenelPara Cloudflare bot korumasına takıldığı için
+// terk edildi. Bunun yerine:
+// - Dolar/Euro: Frankfurter.app (Avrupa Merkez Bankası verisi)
+// - Altın: GoldPrice.org (ons/USD, gram/TL'ye çevriliyor)
+// - Bitcoin: CoinGecko
 // ==========================================
 
-const browserHeaders = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-  "Accept": "application/json, text/plain, */*",
-  "Referer": "https://www.genelpara.com/"
-};
-
-
-async function fetchWithTimeout(url, timeoutMs) {
+async function fetchWithTimeout(url, timeoutMs, headers) {
 
   const controller = new AbortController();
 
@@ -24,7 +20,7 @@ async function fetchWithTimeout(url, timeoutMs) {
   try {
 
     const response = await fetch(url, {
-      headers: browserHeaders,
+      headers: headers || {},
       signal: controller.signal
     });
 
@@ -38,44 +34,14 @@ async function fetchWithTimeout(url, timeoutMs) {
 
     clearTimeout(timer);
 
-    return { ok: false, status: 0, text: "", error: String(err && err.message ? err.message : err) };
+    return {
+      ok: false,
+      status: 0,
+      text: "",
+      error: String(err && err.message ? err.message : err)
+    };
 
   }
-
-}
-
-
-function getPrice(rawText, symbol) {
-
-  if (!rawText) return null;
-
-  let json = null;
-
-  try {
-    json = JSON.parse(rawText);
-  } catch (e) {
-    return null;
-  }
-
-  if (!json) return null;
-
-  const root = json.data || json;
-
-  const item = root[symbol];
-
-  if (!item) return null;
-
-  const raw =
-    item.satis ||
-    item.Satis ||
-    item.alis ||
-    item.Alis ||
-    item.fiyat ||
-    item.price ||
-    item.last ||
-    item.close;
-
-  return raw || null;
 
 }
 
@@ -90,42 +56,139 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const results = await Promise.allSettled([
-    fetchWithTimeout("https://api.genelpara.com/json/?list=doviz&sembol=USD,EUR", 5000),
-    fetchWithTimeout("https://api.genelpara.com/json/?list=altin&sembol=GA", 5000),
-    fetchWithTimeout("https://api.genelpara.com/json/?list=kripto&sembol=BTC", 5000)
+  const browserHeaders = {
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "application/json"
+  };
+
+  const [usdEurResult, goldResult, btcResult] = await Promise.allSettled([
+
+    // Dolar ve Euro -> TL (Frankfurter.app)
+    fetchWithTimeout(
+      "https://api.frankfurter.app/latest?from=TRY&to=USD,EUR",
+      5000,
+      browserHeaders
+    ),
+
+    // Altın (ons/USD) - GoldPrice.org
+    fetchWithTimeout(
+      "https://data-asg.goldprice.org/dbXRates/USD",
+      5000,
+      browserHeaders
+    ),
+
+    // Bitcoin/USD - CoinGecko
+    fetchWithTimeout(
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+      5000,
+      browserHeaders
+    )
+
   ]);
 
-  const dovizResult = results[0].status === "fulfilled" ? results[0].value : { text: "", error: "rejected" };
-  const altinResult = results[1].status === "fulfilled" ? results[1].value : { text: "", error: "rejected" };
-  const kriptoResult = results[2].status === "fulfilled" ? results[2].value : { text: "", error: "rejected" };
+  const usdEur = usdEurResult.status === "fulfilled" ? usdEurResult.value : { text: "", error: "rejected" };
+  const gold = goldResult.status === "fulfilled" ? goldResult.value : { text: "", error: "rejected" };
+  const btc = btcResult.status === "fulfilled" ? btcResult.value : { text: "", error: "rejected" };
 
-  const usd = getPrice(dovizResult.text, "USD");
-  const eur = getPrice(dovizResult.text, "EUR");
-  const gold = getPrice(altinResult.text, "GA");
-  const btc = getPrice(kriptoResult.text, "BTC");
+  let usdTry = null;
+  let eurTry = null;
+  let goldGramTry = null;
+  let btcUsd = null;
+
+  // ==========================================
+  // DOLAR / EURO
+  // Frankfurter "from=TRY&to=USD,EUR" verir:
+  // rates.USD = 1 TL kaç USD eder (çok küçük bir sayı)
+  // Bunu ters çevirip "1 USD kaç TL" haline getiriyoruz.
+  // ==========================================
+
+  try {
+
+    const json = JSON.parse(usdEur.text);
+
+    if (json && json.rates) {
+
+      if (json.rates.USD) {
+        usdTry = (1 / json.rates.USD).toFixed(2);
+      }
+
+      if (json.rates.EUR) {
+        eurTry = (1 / json.rates.EUR).toFixed(2);
+      }
+
+    }
+
+  } catch (e) {}
+
+
+  // ==========================================
+  // ALTIN
+  // GoldPrice.org "items[0].xauPrice" = 1 ons altın (USD)
+  // 1 ons = 31.1034768 gram
+  // gram altın (USD) = xauPrice / 31.1034768
+  // gram altın (TL) = gram altın (USD) * usdTry
+  // ==========================================
+
+  try {
+
+    const json = JSON.parse(gold.text);
+
+    if (
+      json &&
+      json.items &&
+      json.items[0] &&
+      json.items[0].xauPrice &&
+      usdTry
+    ) {
+
+      const gramUsd = json.items[0].xauPrice / 31.1034768;
+
+      goldGramTry = (gramUsd * parseFloat(usdTry)).toFixed(2);
+
+    }
+
+  } catch (e) {}
+
+
+  // ==========================================
+  // BİTCOİN
+  // CoinGecko: { bitcoin: { usd: 12345 } }
+  // ==========================================
+
+  try {
+
+    const json = JSON.parse(btc.text);
+
+    if (json && json.bitcoin && json.bitcoin.usd) {
+      btcUsd = json.bitcoin.usd.toLocaleString("en-US");
+    }
+
+  } catch (e) {}
+
 
   return res.status(200).json({
 
     success: true,
 
     data: {
-      usd,
-      eur,
-      gold,
-      btc
+      usd: usdTry,
+      eur: eurTry,
+      gold: goldGramTry,
+      btc: btcUsd
     },
 
     debug: {
-      dovizStatus: dovizResult.status,
-      altinStatus: altinResult.status,
-      kriptoStatus: kriptoResult.status,
-      dovizError: dovizResult.error || null,
-      altinError: altinResult.error || null,
-      kriptoError: kriptoResult.error || null,
-      dovizSnippet: (dovizResult.text || "").slice(0, 200),
-      altinSnippet: (altinResult.text || "").slice(0, 200),
-      kriptoSnippet: (kriptoResult.text || "").slice(0, 200)
+      usdEurStatus: usdEur.status,
+      goldStatus: gold.status,
+      btcStatus: btc.status,
+      usdEurError: usdEur.error || null,
+      goldError: gold.error || null,
+      btcError: btc.error || null,
+      usdEurSnippet: (usdEur.text || "").slice(0, 200),
+      goldSnippet: (gold.text || "").slice(0, 200),
+      btcSnippet: (btc.text || "").slice(0, 200)
     },
 
     updatedAt: new Date().toISOString()
