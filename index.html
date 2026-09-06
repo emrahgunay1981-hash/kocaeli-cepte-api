@@ -2443,7 +2443,79 @@ async function loadMiniFinance() {
 
 }
 
+/* ==========================================
+   MİNİ FİNANS (Dolar/Euro/Altın/BTC)
+========================================== */
 
+function formatFinansSayi(raw) {
+
+  if (raw === null || raw === undefined || raw === "") {
+    return null;
+  }
+
+  const num = parseFloat(String(raw).replace(",", "."));
+
+  if (isNaN(num)) {
+    return null;
+  }
+
+  return num.toLocaleString("tr-TR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+}
+
+
+async function loadMiniFinance() {
+
+  try {
+
+    const response = await fetch(
+      "https://kocaeli-cepte-api.vercel.app/api/finans"
+    );
+
+    if (!response.ok) {
+      throw new Error("Finans API bağlantısı başarısız");
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || "Bilinmeyen hata");
+    }
+
+    const data = result.data || {};
+
+    const usd = formatFinansSayi(data.usd);
+    const eur = formatFinansSayi(data.eur);
+    const gold = formatFinansSayi(data.gold);
+    const btc = formatFinansSayi(data.btc);
+
+    if (usd) {
+      document.getElementById("usd-value").textContent = usd;
+    }
+
+    if (eur) {
+      document.getElementById("eur-value").textContent = eur;
+    }
+
+    if (gold) {
+      document.getElementById("gold-value").textContent = gold;
+    }
+
+    if (btc) {
+      document.getElementById("btc-value").textContent = btc;
+    }
+
+  } catch (error) {
+    console.error("Finans verisi alınamadı:", error);
+  }
+
+}
+
+
+setInterval(loadMiniFinance, 5 * 60 * 1000);
 /* ==========================================
    SAYFA AÇILINCA ÇALIŞTIR
 ========================================== */
