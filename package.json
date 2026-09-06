@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@upstash/redis": "^1.34.0"
+    "@upstash/redis": "^1.34.0",
+    "jszip": "^3.10.1",
+    "papaparse": "^5.4.1"
   }
 }
-
