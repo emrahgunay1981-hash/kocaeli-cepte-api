@@ -1,1 +1,377 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kocaeli Cepte - Acil Durum</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #07111f;
+    color: white;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #2a0d0d;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #ff8787;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 8px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.container {
+    padding: 16px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 24px 0 12px;
+    color: #12c95d;
+}
+
+.section-title:first-child {
+    margin-top: 0;
+}
+
+.call-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.call-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #3a1414;
+    border: 1px solid rgba(255,100,100,.3);
+    border-radius: 14px;
+    padding: 16px 8px;
+    text-decoration: none;
+    color: white;
+}
+
+.call-number {
+    font-size: 26px;
+    font-weight: 900;
+    color: #ff8787;
+}
+
+.call-label {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #d9a3a3;
+    text-align: center;
+}
+
+.quake-status {
+    text-align: center;
+    padding: 20px 10px;
+    color: #8a97a8;
+    font-size: 13px;
+}
+
+.quake-card {
+    background: #102033;
+    border: 1px solid #1d354d;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.quake-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.quake-mag {
+    font-size: 20px;
+    font-weight: 900;
+    padding: 4px 12px;
+    border-radius: 10px;
+    background: #1a3a2a;
+    color: #4ade80;
+}
+
+.quake-mag.orange {
+    background: #3a2a14;
+    color: #ffb84d;
+}
+
+.quake-mag.red {
+    background: #3a1414;
+    color: #ff6b6b;
+}
+
+.quake-time {
+    color: #718b7f;
+    font-size: 12px;
+}
+
+.quake-place {
+    font-size: 14px;
+    color: #d5dde0;
+}
+
+.info-card {
+    background: #102033;
+    border: 1px solid #1d354d;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    font-size: 14px;
+    color: #d5dde0;
+}
+
+.info-card ul, .info-card ol {
+    margin: 8px 0 0;
+    padding-left: 20px;
+}
+
+.info-card li {
+    margin-bottom: 6px;
+}
+
+.afad-link {
+    display: block;
+    text-align: center;
+    background: #123a29;
+    color: #4ade80;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 14px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.error {
+    background: #32151a;
+    color: #ffb4b4;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>🚨 Acil Durum &amp; Deprem</h1>
+    <a class="back" href="index.html">← Kocaeli Cepte'ye Dön</a>
+</div>
+
+<div class="container">
+
+    <div class="section-title">📞 Acil Arama</div>
+
+    <div class="call-grid">
+
+        <a class="call-btn" href="tel:112">
+            <div class="call-number">112</div>
+            <div class="call-label">Acil Çağrı Merkezi<br>(Ambulans/Polis/İtfaiye)</div>
+        </a>
+
+        <a class="call-btn" href="tel:122">
+            <div class="call-number">122</div>
+            <div class="call-label">AFAD</div>
+        </a>
+
+        <a class="call-btn" href="tel:153">
+            <div class="call-number">153</div>
+            <div class="call-label">Kocaeli Büyükşehir<br>Belediyesi</div>
+        </a>
+
+        <a class="call-btn" href="tel:187">
+            <div class="call-number">187</div>
+            <div class="call-label">Doğalgaz Acil</div>
+        </a>
+
+    </div>
+
+
+    <div class="section-title">🌍 Kocaeli Çevresindeki Son Depremler</div>
+
+    <div id="quake-status" class="quake-status">
+        Deprem verileri yükleniyor...
+    </div>
+
+    <div id="quake-list"></div>
+
+
+    <div class="section-title">⚠️ Deprem Anında Ne Yapmalı?</div>
+
+    <div class="info-card">
+        <strong>Çök - Kapan - Tutun</strong>
+        <ol>
+            <li>Yere çök, sağlam bir masa/eşyanın altına gir</li>
+            <li>Başını ve boynunu koruyacak şekilde kapan</li>
+            <li>Sarsıntı bitene kadar tutunarak bekle</li>
+        </ol>
+        <br>
+        <strong>Yapılmaması gerekenler:</strong>
+        <ul>
+            <li>Asansör kullanma</li>
+            <li>Merdivenlere veya balkona koşma</li>
+            <li>Pencereden uzak dur</li>
+        </ul>
+    </div>
+
+
+    <div class="section-title">🎒 Deprem Çantası Kontrol Listesi</div>
+
+    <div class="info-card">
+        <ul>
+            <li>Su (kişi başı en az 2 litre)</li>
+            <li>Konserve/kuru gıda ve konserve açacağı</li>
+            <li>İlk yardım çantası ve düzenli kullanılan ilaçlar</li>
+            <li>El feneri ve yedek pil</li>
+            <li>Düdük (yardım çağırmak için)</li>
+            <li>Powerbank ve şarj kablosu</li>
+            <li>Önemli belgelerin fotokopisi (kimlik, tapu vb.)</li>
+            <li>Nakit para</li>
+            <li>Sağlam ayakkabı ve mevsimlik kıyafet</li>
+            <li>Islak mendil ve hijyen malzemeleri</li>
+        </ul>
+    </div>
+
+
+    <a
+        class="afad-link"
+        href="https://www.afad.gov.tr/"
+        target="_blank"
+        rel="noopener"
+    >
+        AFAD Resmi Sitesini Görüntüle →
+    </a>
+
+</div>
+
+<script>
+
+function timeAgo(dateStr) {
+
+    const then = new Date(dateStr).getTime();
+    const diffMin = Math.floor((Date.now() - then) / 60000);
+
+    if (diffMin < 1) return "az önce";
+    if (diffMin < 60) return diffMin + " dakika önce";
+
+    const diffHour = Math.floor(diffMin / 60);
+    if (diffHour < 24) return diffHour + " saat önce";
+
+    const diffDay = Math.floor(diffHour / 24);
+    return diffDay + " gün önce";
+
+}
+
+function magClass(mag) {
+    if (mag >= 5) return "red";
+    if (mag >= 4) return "orange";
+    return "";
+}
+
+async function depremleriGetir() {
+
+    const status = document.getElementById("quake-status");
+    const list = document.getElementById("quake-list");
+
+    try {
+
+        const url =
+            "https://earthquake.usgs.gov/fdsnws/event/1/query" +
+            "?format=geojson" +
+            "&latitude=40.7654" +
+            "&longitude=29.9408" +
+            "&maxradiuskm=150" +
+            "&minmagnitude=2" +
+            "&orderby=time" +
+            "&limit=15" +
+            "&starttime=" + new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Deprem verisi alınamadı (HTTP " + response.status + ")");
+        }
+
+        const data = await response.json();
+
+        status.style.display = "none";
+
+        if (!data.features || data.features.length === 0) {
+            list.innerHTML = '<div class="quake-status">Son 30 günde bölgede kayıtlı deprem bulunamadı.</div>';
+            return;
+        }
+
+        list.innerHTML = data.features.map(f => {
+
+            const mag = f.properties.mag ? f.properties.mag.toFixed(1) : "?";
+            const place = f.properties.place || "Bilinmeyen konum";
+            const time = f.properties.time;
+
+            return `
+                <div class="quake-card">
+                    <div class="quake-top">
+                        <span class="quake-mag ${magClass(f.properties.mag)}">${mag}</span>
+                        <span class="quake-time">${timeAgo(time)}</span>
+                    </div>
+                    <div class="quake-place">📍 ${place}</div>
+                </div>
+            `;
+
+        }).join("");
+
+    } catch (error) {
+
+        console.error("DEPREM API HATASI:", error);
+
+        status.innerHTML = `
+            <div class="error">
+                ❌ Deprem verileri şu anda yüklenemedi.
+                <br><br>
+                <strong>Hata:</strong> ${error.message || error}
+            </div>
+        `;
+
+    }
+
+}
+
+depremleriGetir();
+
+</script>
+
+</body>
+</html>
 
