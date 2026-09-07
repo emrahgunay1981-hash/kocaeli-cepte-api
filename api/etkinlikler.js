@@ -2,6 +2,9 @@
 // KOCAELİ ETKİNLİKLERİ - ÇOKLU KAYNAK
 // 1) Kocaeli Büyükşehir Belediyesi (resmi RSS)
 // 2) Kocaeli Seyret (özel etkinlikler - konser, tiyatro vs.)
+//
+// Zaman aşımı korumalı: bir kaynak yavaşsa/yanıt
+// vermiyorsa diğerini bekletmez, sayfa hızlı yüklenir.
 // ==========================================
 
 function cleanText(text) {
@@ -29,6 +32,35 @@ function extract(regex, str) {
   return m ? m[1].trim() : null;
 }
 
+async function fetchWithTimeout(url, options, timeoutMs) {
+
+  const controller = new AbortController();
+
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  try {
+
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+
+    clearTimeout(timer);
+
+    return response;
+
+  } catch (err) {
+
+    clearTimeout(timer);
+
+    throw err;
+
+  }
+
+}
+
 
 // ==========================================
 // KAYNAK 1: BELEDİYE RESMİ RSS
@@ -38,13 +70,14 @@ async function getBelediyeEtkinlikleri() {
 
   try {
 
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       "https://kultursanat.kocaeli.bel.tr/etkinlik/feed/",
       {
         headers: {
           "User-Agent": "KocaeliCepte/1.0"
         }
-      }
+      },
+      6000
     );
 
     if (!response.ok) {
@@ -81,7 +114,6 @@ async function getBelediyeEtkinlikleri() {
         )
       );
 
-      // Görsel (enclosure veya media:content)
       let image = null;
 
       const enclosure =
@@ -147,13 +179,14 @@ async function getSeyretEtkinlikleri() {
 
   try {
 
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       "https://www.kocaeliseyret.com/kocaeli-etkinlikler",
       {
         headers: {
           "User-Agent": "Mozilla/5.0"
         }
-      }
+      },
+      6000
     );
 
     if (!response.ok) {
@@ -274,14 +307,24 @@ export default async function handler(req, res) {
 
   try {
 
-    const [belediyeEvents, seyretEvents] = await Promise.all([
+    // Promise.allSettled: bir kaynak zaman aşımına uğrasa
+    // bile diğerinin sonucu kaybolmaz, ikisi paralel çalışır
+    // (art arda değil), bu yüzden toplam bekleme süresi
+    // en yavaş kaynağın süresi kadar olur (6 saniyeyi geçmez).
+
+    const [belediyeResult, seyretResult] = await Promise.allSettled([
       getBelediyeEtkinlikleri(),
       getSeyretEtkinlikleri()
     ]);
 
+    const belediyeEvents =
+      belediyeResult.status === "fulfilled" ? belediyeResult.value : [];
+
+    const seyretEvents =
+      seyretResult.status === "fulfilled" ? seyretResult.value : [];
+
     let events = [...belediyeEvents, ...seyretEvents];
 
-    // Aynı başlıklı etkinlikleri temizle
     const seen = new Set();
 
     events = events.filter(event => {
@@ -326,4 +369,3 @@ export default async function handler(req, res) {
   }
 
 }
-  
