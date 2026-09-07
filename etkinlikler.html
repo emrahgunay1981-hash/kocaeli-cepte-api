@@ -52,6 +52,8 @@ body {
     color: #bbb;
 }
 
+/* ÜST KARTLAR */
+
 .theatre-card {
     display: flex;
     align-items: center;
@@ -77,12 +79,15 @@ body {
 .theatre-card-sub {
     font-size: 13px;
     color: #d9f2e4;
+    line-height: 1.4;
 }
 
 .theatre-card-arrow {
     font-size: 22px;
     margin-left: 12px;
 }
+
+/* ETKİNLİKLER */
 
 .event {
     background: #102033;
@@ -125,56 +130,114 @@ body {
 <body>
 
 <div class="header">
+
     <h1>📅 Kocaeli Etkinlikleri</h1>
-    <a class="back" href="index.html">← Kocaeli Cepte'ye Dön</a>
+
+    <a class="back" href="index.html">
+        ← Kocaeli Cepte'ye Dön
+    </a>
+
 </div>
+
 
 <div class="container">
 
-    <a class="theatre-card" href="https://tiyatro.kocaeli.bel.tr/tr/tiyatro/oyunlar" target="_blank" rel="noopener">
+
+    <!-- ŞEHİR TİYATROSU -->
+
+    <a
+        class="theatre-card"
+        href="https://tiyatro.kocaeli.bel.tr/tr/tiyatro/oyunlar"
+        target="_blank"
+        rel="noopener"
+    >
+
         <div class="theatre-card-text">
-            <div class="theatre-card-title">🎭 Kocaeli Şehir Tiyatrosu</div>
-            <div class="theatre-card-sub">Güncel oyun takvimini görüntüle</div>
+
+            <div class="theatre-card-title">
+                🎭 Kocaeli Şehir Tiyatrosu
+            </div>
+
+            <div class="theatre-card-sub">
+                Güncel oyun takvimini görüntüle
+            </div>
+
         </div>
-        <div class="theatre-card-arrow">→</div>
+
+        <div class="theatre-card-arrow">
+            →
+        </div>
+
     </a>
 
-    <a class="theatre-card" href="https://boxofficeturkiye.com/seanslar/sehir/kocaeli/izmit" target="_blank" rel="noopener">
+
+    <!-- SİNEMA -->
+
+    <a
+        class="theatre-card"
+        href="https://boxofficeturkiye.com/seanslar/sehir/kocaeli/izmit"
+        target="_blank"
+        rel="noopener"
+    >
+
         <div class="theatre-card-text">
-            <div class="theatre-card-title">🎬 Sinema Seansları</div>
-            <div class="theatre-card-sub">Vizyondaki filmler ve seans saatleri</div>
+
+            <div class="theatre-card-title">
+                🎬 Sinema Seansları
+            </div>
+
+            <div class="theatre-card-sub">
+                Vizyondaki filmler ve seans saatleri
+            </div>
+
         </div>
-        <div class="theatre-card-arrow">→</div>
+
+        <div class="theatre-card-arrow">
+            →
+        </div>
+
     </a>
-   href="https://www.kocaeli.bel.tr/"
-   target="_blank"
-   rel="noopener">
 
-    <div class="theatre-card-text">
 
-        <div class="theatre-card-title">
-            👧 Çocuk Etkinlikleri
+    <!-- ÇOCUK ETKİNLİKLERİ -->
+
+    <a
+        class="theatre-card"
+        href="https://www.kocaeli.bel.tr/"
+        target="_blank"
+        rel="noopener"
+    >
+
+        <div class="theatre-card-text">
+
+            <div class="theatre-card-title">
+                👧 Çocuk Etkinlikleri
+            </div>
+
+            <div class="theatre-card-sub">
+                Çocuk tiyatrosu, atölyeler, oyunlar ve aile etkinlikleri
+            </div>
+
         </div>
 
-        <div class="theatre-card-sub">
-            Çocuk tiyatrosu, atölyeler, oyunlar ve aile etkinlikleri
+        <div class="theatre-card-arrow">
+            →
         </div>
 
-    </div>
+    </a>
 
-    <div class="theatre-card-arrow">
-        →
-    </div>
 
-</a>
+    <!-- ETKİNLİKLER -->
+
     <div id="status" class="status">
         Etkinlikler yükleniyor...
     </div>
 
     <div id="events"></div>
 
+
 </div>
-<a class="theatre-card"
+
 
 <script>
 
@@ -197,6 +260,7 @@ async function etkinlikleriGetir() {
 
         status.style.display = "none";
 
+
         if (!data.events || data.events.length === 0) {
 
             eventsDiv.innerHTML = `
@@ -207,6 +271,7 @@ async function etkinlikleriGetir() {
 
             return;
         }
+
 
         eventsDiv.innerHTML = data.events.map(event => `
 
@@ -237,7 +302,11 @@ async function etkinlikleriGetir() {
                 ${
                     event.url
                     ? `
-                    <a href="${event.url}" target="_blank">
+                    <a
+                        href="${event.url}"
+                        target="_blank"
+                        rel="noopener"
+                    >
                         Etkinlik Detayları →
                     </a>
                     `
@@ -248,24 +317,40 @@ async function etkinlikleriGetir() {
 
         `).join("");
 
+
     } catch (error) {
 
-    console.error("ETKİNLİK API HATASI:", error);
+        console.error(
+            "ETKİNLİK API HATASI:",
+            error
+        );
 
-    status.innerHTML = `
-        <div style="color:#ff6b6b;">
-            ❌ Etkinlikler yüklenemedi.
-            <br><br>
-            <strong>Hata:</strong>
-            ${error.message || error}
-            <br><br>
-            <small>
-                API bağlantısı kontrol ediliyor...
-            </small>
-        </div>
-    `;
+
+        status.innerHTML = `
+
+            <div style="color:#ff6b6b;">
+
+                ❌ Etkinlikler yüklenemedi.
+
+                <br><br>
+
+                <strong>Hata:</strong>
+                ${error.message || error}
+
+                <br><br>
+
+                <small>
+                    API bağlantısı kontrol ediliyor...
+                </small>
+
+            </div>
+
+        `;
+
     }
+
 }
+
 
 etkinlikleriGetir();
 
