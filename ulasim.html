@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kocaeli Cepte - Ulaşım</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #07111f;
+    color: white;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0d241a;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 8px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.container {
+    padding: 16px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin: 22px 0 10px;
+    color: #12c95d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-title:first-child {
+    margin-top: 0;
+}
+
+.link-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px;
+    background: #102033;
+    border: 1px solid #1d354d;
+    border-radius: 15px;
+    text-decoration: none;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.link-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: #123a29;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.link-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.link-title {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.link-desc {
+    margin-top: 3px;
+    color: #8a97a8;
+    font-size: 12px;
+}
+
+.link-arrow {
+    font-size: 24px;
+    color: #12c95d;
+    flex-shrink: 0;
+}
+
+.info-note {
+    background: #102033;
+    border: 1px solid #1d354d;
+    border-radius: 14px;
+    padding: 14px;
+    color: #8a97a8;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>🚌 Ulaşım</h1>
+    <a class="back" href="index.html">← Kocaeli Cepte'ye Dön</a>
+</div>
+
+<div class="container">
+
+    <div class="section-title">Otobüs &amp; Tramvay</div>
+
+    <a
+        class="link-card"
+        href="https://www.kocaeli.bel.tr/hatlar/"
+        target="_blank"
+        rel="noopener"
+    >
+        <div class="link-icon">🚌</div>
+        <div class="link-info">
+            <div class="link-title">Hat, Durak ve Saat Arama</div>
+            <div class="link-desc">Otobüs hattı seç, durak ve saatleri gör</div>
+        </div>
+        <div class="link-arrow">›</div>
+    </a>
+
+    <a
+        class="link-card"
+        href="https://e-komobil.com/"
+        target="_blank"
+        rel="noopener"
+    >
+        <div class="link-icon">📍</div>
+        <div class="link-info">
+            <div class="link-title">Canlı Araç Takibi (e-komobil)</div>
+            <div class="link-desc">Durağa yaklaşan otobüsleri anlık gör</div>
+        </div>
+        <div class="link-arrow">›</div>
+    </a>
+
+    <a
+        class="link-card"
+        href="https://www.ulasimpark.com.tr/teleferik"
+        target="_blank"
+        rel="noopener"
+    >
+        <div class="link-icon">🚡</div>
+        <div class="link-info">
+            <div class="link-title">Kartepe Teleferiği</div>
+            <div class="link-desc">Saatler ve bilgiler</div>
+        </div>
+        <div class="link-arrow">›</div>
+    </a>
+
+
+    <div class="section-title">Deniz Ulaşımı</div>
+
+    <a
+        class="link-card"
+        href="https://e-komobil.com/"
+        target="_blank"
+        rel="noopener"
+    >
+        <div class="link-icon">⛴️</div>
+        <div class="link-info">
+            <div class="link-title">Vapur Saatleri</div>
+            <div class="link-desc">Körfez hattı ve diğer deniz ulaşımı</div>
+        </div>
+        <div class="link-arrow">›</div>
+    </a>
+
+
+    <div class="section-title">Kocaeli Kart &amp; Bakiye</div>
+
+    <a
+        class="link-card"
+        href="https://www.ulasimpark.com.tr/"
+        target="_blank"
+        rel="noopener"
+    >
+        <div class="link-icon">💳</div>
+        <div class="link-info">
+            <div class="link-title">Kocaeli Kart Bakiye Sorgulama</div>
+            <div class="link-desc">UlaşımPark resmi sitesi</div>
+        </div>
+        <div class="link-arrow">›</div>
+    </a>
+
+
+    <div class="section-title">Yol Tarifi</div>
+
+    <a
+        class="link-card"
+        href="https://yandex.com/maps/?ll=29.9192,40.7654&z=12"
+        target="_blank"
+        rel="noopener"
+    >
+        <div class="link-icon">🧭</div>
+        <div class="link-info">
+            <div class="link-title">Yandex Navigasyon</div>
+            <div class="link-desc">Araçla veya toplu taşımayla yol tarifi</div>
+        </div>
+        <div class="link-arrow">›</div>
+    </a>
+
+
+    <div class="info-note">
+        ℹ️ Bu sayfa, Kocaeli'nin resmi ulaşım kaynaklarına hızlı erişim sağlar. Güncel hat, durak ve sefer saatleri için UlaşımPark ve e-komobil'in kendi sistemlerini kullanmanız önerilir.
+    </div>
+
+</div>
+
+</body>
+</html>
 
