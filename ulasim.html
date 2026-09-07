@@ -1,1 +1,811 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Ulaşım | Kocaeli Cepte</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #061a12;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: auto;
+      padding: 16px;
+      padding-bottom: 90px;
+    }
+
+    /* =========================
+       ÜST BAR
+    ========================= */
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.06);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .title-area {
+      flex: 1;
+    }
+
+    .title-area h1 {
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+
+    .title-area p {
+      color: #9eb1a9;
+      font-size: 12px;
+    }
+
+    /* =========================
+       ARAMA
+    ========================= */
+
+    .search-box {
+      margin-bottom: 16px;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 52px;
+      border: none;
+      outline: none;
+      border-radius: 16px;
+      padding: 0 16px;
+      background: rgba(255,255,255,.07);
+      color: white;
+      font-size: 15px;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .search-box input::placeholder {
+      color: #81958c;
+    }
+
+    /* =========================
+       HIZLI ULAŞIM
+    ========================= */
+
+    .section-title {
+      font-size: 15px;
+      margin: 20px 2px 10px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .quick-card {
+      min-height: 105px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.06);
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .quick-card:active {
+      transform: scale(.98);
+    }
+
+    .quick-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .quick-card h3 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .quick-card p {
+      color: #8fa59b;
+      font-size: 11px;
+    }
+
+    /* =========================
+       YAKIN DURAK
+    ========================= */
+
+    .location-card {
+      padding: 17px;
+      border-radius: 18px;
+      background: linear-gradient(
+        135deg,
+        rgba(23,100,70,.45),
+        rgba(255,255,255,.05)
+      );
+      border: 1px solid rgba(255,255,255,.08);
+      margin-top: 12px;
+    }
+
+    .location-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .location-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.08);
+      font-size: 22px;
+    }
+
+    .location-text {
+      flex: 1;
+    }
+
+    .location-text strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .location-text span {
+      color: #9bb0a7;
+      font-size: 11px;
+    }
+
+    .location-btn {
+      margin-top: 14px;
+      width: 100%;
+      height: 42px;
+      border: none;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #062016;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* =========================
+       MENÜ
+    ========================= */
+
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.05);
+      cursor: pointer;
+    }
+
+    .menu-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: rgba(255,255,255,.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      margin-right: 12px;
+    }
+
+    .menu-text {
+      flex: 1;
+    }
+
+    .menu-text strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .menu-text span {
+      color: #91a69d;
+      font-size: 11px;
+    }
+
+    .arrow {
+      color: #8fa59b;
+      font-size: 20px;
+    }
+
+    /* =========================
+       BİLGİ KARTI
+    ========================= */
+
+    .info-card {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.05);
+    }
+
+    .info-card h3 {
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .info-card p {
+      color: #91a69d;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       ALT NAV
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 520px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: rgba(4,20,14,.96);
+      border-top: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #82978e;
+      text-decoration: none;
+      font-size: 10px;
+      min-width: 70px;
+    }
+
+    .nav-item div {
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active {
+      color: white;
+    }
+
+    @media (max-width: 380px) {
+
+      .container {
+        padding: 12px;
+      }
+
+      .quick-grid {
+        gap: 8px;
+      }
+
+      .quick-card {
+        padding: 13px;
+      }
+
+      .title-area h1 {
+        font-size: 20px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- ÜST BAR -->
+
+  <div class="topbar">
+
+    <button
+      class="back-btn"
+      onclick="history.back()"
+    >
+      ‹
+    </button>
+
+    <div class="title-area">
+
+      <h1>🚌 Ulaşım</h1>
+
+      <p>Kocaeli ulaşım bilgileri</p>
+
+    </div>
+
+  </div>
+
+
+  <!-- ARAMA -->
+
+  <div class="search-box">
+
+    <input
+      type="search"
+      id="searchInput"
+      placeholder="Durak, hat veya güzergâh ara..."
+    >
+
+  </div>
+
+
+  <!-- HIZLI ULAŞIM -->
+
+  <div class="section-title">
+    Hızlı Ulaşım
+  </div>
+
+  <div class="quick-grid">
+
+    <div
+      class="quick-card"
+      onclick="showComingSoon('Yakındaki Duraklar')"
+    >
+
+      <div class="quick-icon">
+        📍
+      </div>
+
+      <h3>Yakındaki Duraklar</h3>
+
+      <p>Konumuna yakın durakları bul</p>
+
+    </div>
+
+
+    <div
+      class="quick-card"
+      onclick="showComingSoon('Otobüs Hatları')"
+    >
+
+      <div class="quick-icon">
+        🚌
+      </div>
+
+      <h3>Otobüs Hatları</h3>
+
+      <p>Kocaeli otobüs hatlarını görüntüle</p>
+
+    </div>
+
+
+    <div
+      class="quick-card"
+      onclick="showComingSoon('Otobüs Saatleri')"
+    >
+
+      <div class="quick-icon">
+        🕐
+      </div>
+
+      <h3>Otobüs Saatleri</h3>
+
+      <p>Sefer saatlerini öğren</p>
+
+    </div>
+
+
+    <div
+      class="quick-card"
+      onclick="showComingSoon('Güzergâhlar')"
+    >
+
+      <div class="quick-icon">
+        🗺️
+      </div>
+
+      <h3>Güzergâhlar</h3>
+
+      <p>Hatların güzergâhlarını incele</p>
+
+    </div>
+
+  </div>
+
+
+  <!-- KONUM -->
+
+  <div class="section-title">
+    📍 Konumuna Göre
+  </div>
+
+  <div class="location-card">
+
+    <div class="location-top">
+
+      <div class="location-icon">
+        📍
+      </div>
+
+      <div class="location-text">
+
+        <strong>Yakınımdaki Durakları Bul</strong>
+
+        <span>
+          Konum izni vererek sana en yakın durakları görebilirsin.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="location-btn"
+      onclick="findNearbyStops()"
+    >
+      📍 Konumumu Kullan
+    </button>
+
+  </div>
+
+
+  <!-- DİĞER ULAŞIM -->
+
+  <div class="section-title">
+    Diğer Ulaşım
+  </div>
+
+  <div class="menu-list">
+
+
+    <div
+      class="menu-item"
+      onclick="showComingSoon('Tramvay')"
+    >
+
+      <div class="menu-icon">
+        🚋
+      </div>
+
+      <div class="menu-text">
+
+        <strong>Tramvay</strong>
+
+        <span>
+          Tramvay hatları ve sefer bilgileri
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </div>
+
+
+    <div
+      class="menu-item"
+      onclick="showComingSoon('Tren')"
+    >
+
+      <div class="menu-icon">
+        🚆
+      </div>
+
+      <div class="menu-text">
+
+        <strong>Tren</strong>
+
+        <span>
+          Tren istasyonları ve ulaşım bilgileri
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </div>
+
+
+    <div
+      class="menu-item"
+      onclick="showComingSoon('Deniz Ulaşımı')"
+    >
+
+      <div class="menu-icon">
+        ⛴️
+      </div>
+
+      <div class="menu-text">
+
+        <strong>Deniz Ulaşımı</strong>
+
+        <span>
+          Vapur ve deniz otobüsü seferleri
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </div>
+
+
+    <div
+      class="menu-item"
+      onclick="showComingSoon('Taksi')"
+    >
+
+      <div class="menu-icon">
+        🚕
+      </div>
+
+      <div class="menu-text">
+
+        <strong>Taksi</strong>
+
+        <span>
+          Kocaeli'deki taksi durakları
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </div>
+
+
+    <div
+      class="menu-item"
+      onclick="window.open('https://www.akillisehirkocaeli.com/', '_blank')"
+    >
+
+      <div class="menu-icon">
+        🚦
+      </div>
+
+      <div class="menu-text">
+
+        <strong>Trafik Durumu</strong>
+
+        <span>
+          Kocaeli canlı trafik bilgileri
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- BİLGİ -->
+
+  <div class="info-card">
+
+    <h3>🚌 Kocaeli Ulaşım</h3>
+
+    <p>
+      Kocaeli Cepte üzerinden otobüs hatları,
+      duraklar, sefer saatleri ve diğer ulaşım
+      seçeneklerine kolayca ulaşabileceksin.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ALT NAV -->
+
+<div class="bottom-nav">
+
+  <a
+    href="index.html"
+    class="nav-item"
+  >
+
+    <div>🏠</div>
+
+    Ana Sayfa
+
+  </a>
+
+
+  <a
+    href="haberler.html"
+    class="nav-item"
+  >
+
+    <div>📰</div>
+
+    Haberler
+
+  </a>
+
+
+  <a
+    href="sport.html"
+    class="nav-item"
+  >
+
+    <div>⚽</div>
+
+    Spor
+
+  </a>
+
+
+  <a
+    href="ulasim.html"
+    class="nav-item active"
+  >
+
+    <div>🚌</div>
+
+    Ulaşım
+
+  </a>
+
+</div>
+
+
+<script>
+
+  // ==========================================
+  // ARAMA
+  // ==========================================
+
+  const searchInput =
+    document.getElementById("searchInput");
+
+  searchInput.addEventListener(
+    "input",
+    function () {
+
+      const value =
+        this.value
+          .toLocaleLowerCase("tr-TR")
+          .trim();
+
+      const items =
+        document.querySelectorAll(
+          ".quick-card, .menu-item"
+        );
+
+
+      items.forEach(function(item) {
+
+        const text =
+          item.innerText
+            .toLocaleLowerCase("tr-TR");
+
+        if (!value || text.includes(value)) {
+
+          item.style.display = "";
+
+        } else {
+
+          item.style.display = "none";
+
+        }
+
+      });
+
+    }
+  );
+
+
+  // ==========================================
+  // YAKIN DURAKLAR
+  // ==========================================
+
+  function findNearbyStops() {
+
+    if (!navigator.geolocation) {
+
+      alert(
+        "Bu cihazda konum özelliği desteklenmiyor."
+      );
+
+      return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+      function(position) {
+
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+
+        alert(
+          "Konumunuz alındı.\n\n" +
+          "Enlem: " +
+          latitude.toFixed(5) +
+          "\nBoylam: " +
+          longitude.toFixed(5) +
+          "\n\nYakındaki durak sistemi bir sonraki aşamada bağlanacak."
+        );
+
+      },
+
+      function() {
+
+        alert(
+          "Konum alınamadı. " +
+          "Lütfen konum iznini kontrol edin."
+        );
+
+      }
+
+    );
+
+  }
+
+
+  // ==========================================
+  // HENÜZ HAZIR OLMAYAN BÖLÜMLER
+  // ==========================================
+
+  function showComingSoon(name) {
+
+    alert(
+      name +
+      " bölümü hazırlanıyor.\n\n" +
+      "Bir sonraki aşamada gerçek Kocaeli ulaşım verileri bağlanacak."
+    );
+
+  }
+
+</script>
+
+</body>
+        </html>
