@@ -11,7 +11,10 @@ const CATEGORIES = {
   su_tesisatcisi: "su tesisatçısı",
   cilingir: "çilingir",
   veteriner: "veteriner",
-  terzi: "terzi"
+  terzi: "terzi",
+  taksi: "taksi durağı",
+  antikaci: "antikacı",
+  spor_salonu: "spor salonu"
 };
 
 export default async function handler(req, res) {
@@ -134,5 +137,4 @@ export default async function handler(req, res) {
 
   }
 
-      }
-
+}
