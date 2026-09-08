@@ -2,6 +2,7 @@
 // Kocaelispor haber sistemi
 // Anasayfadaki 5 Kocaeli haber kaynağından
 // Kocaelispor haberlerini otomatik filtreler.
+// Haber görsellerini de almaya çalışır.
 
 
 function extract(regex, str) {
@@ -147,6 +148,96 @@ function isKocaelisporNews(item) {
 
 
 // ==========================================
+// HABER GÖRSELİNİ BUL
+// ==========================================
+
+function getImage(block, description) {
+
+    let image = null;
+
+
+    // 1. enclosure
+    const enclosure =
+        block.match(
+            /<enclosure[^>]+url=["']([^"']+)["'][^>]*>/i
+        );
+
+    if (enclosure) {
+        image = enclosure[1];
+    }
+
+
+    // 2. media:content
+    if (!image) {
+
+        const mediaContent =
+            block.match(
+                /<media:content[^>]+url=["']([^"']+)["'][^>]*>/i
+            );
+
+        if (mediaContent) {
+            image = mediaContent[1];
+        }
+
+    }
+
+
+    // 3. media:thumbnail
+    if (!image) {
+
+        const mediaThumbnail =
+            block.match(
+                /<media:thumbnail[^>]+url=["']([^"']+)["'][^>]*>/i
+            );
+
+        if (mediaThumbnail) {
+            image = mediaThumbnail[1];
+        }
+
+    }
+
+
+    // 4. description içindeki img
+    if (!image && description) {
+
+        const img =
+            description.match(
+                /<img[^>]+src=["']([^"']+)["']/i
+            );
+
+        if (img) {
+            image = img[1];
+        }
+
+    }
+
+
+    // 5. og:image benzeri veri varsa
+    if (!image && description) {
+
+        const imageMatch =
+            description.match(
+                /(?:image|imageurl|thumbnail)["'\s:=]+["']?(https?:\/\/[^"'\s>]+)/i
+            );
+
+        if (imageMatch) {
+            image = imageMatch[1];
+        }
+
+    }
+
+
+    if (!image) {
+        return null;
+    }
+
+
+    return image.trim();
+
+}
+
+
+// ==========================================
 // TEK KAYNAKTAN HABERLERİ AL
 // ==========================================
 
@@ -235,12 +326,26 @@ async function getSource(source) {
                     );
 
 
+                // HTML içeren açıklamayı
+                // görsel bulmadan önce alıyoruz.
+
+                const rawDescription =
+                    extract(
+                        /<description>([\s\S]*?)<\/description>/i,
+                        block
+                    ) || "";
+
+
                 const description =
                     cleanText(
-                        extract(
-                            /<description>([\s\S]*?)<\/description>/i,
-                            block
-                        )
+                        rawDescription
+                    );
+
+
+                const image =
+                    getImage(
+                        block,
+                        rawDescription
                     );
 
 
@@ -253,6 +358,8 @@ async function getSource(source) {
                     category,
 
                     description,
+
+                    image,
 
                     pubDate,
 
@@ -494,7 +601,7 @@ export default async function handler(req, res) {
 
 
         // ==================================
-        // SPORT.HTML İÇİN FORMAT
+        // SPORT.HTML FORMAT
         // ==================================
 
         const formatted =
@@ -514,6 +621,9 @@ export default async function handler(req, res) {
 
                 time:
                     item.time,
+
+                image:
+                    item.image,
 
                 source:
                     item.source
