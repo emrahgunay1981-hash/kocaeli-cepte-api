@@ -45,6 +45,15 @@ body {
   margin: auto;
 }
 
+.back {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #12c95d;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 select {
   width: 100%;
   padding: 14px;
@@ -66,6 +75,11 @@ select {
   line-height: 1.5;
 }
 
+.count {
+  color: #12c95d;
+  font-weight: 700;
+}
+
 .loading {
   text-align: center;
   padding: 30px;
@@ -84,6 +98,17 @@ select {
   font-size: 18px;
   font-weight: 800;
   margin-bottom: 8px;
+}
+
+.district {
+  display: inline-block;
+  background: #123b28;
+  color: #12c95d;
+  padding: 5px 9px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .address {
@@ -126,6 +151,24 @@ select {
   color: white;
 }
 
+.error {
+  background: #32151a;
+  color: #ffb4b4;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.empty {
+  background: #0d241a;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  color: #aeb8c4;
+  font-size: 14px;
+}
+
 .source {
   text-align: center;
   color: #748394;
@@ -137,20 +180,6 @@ select {
 .source a {
   color: #12c95d;
   text-decoration: none;
-}
-
-.error {
-  background: #32151a;
-  color: #ffb4b4;
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.count {
-  color: #12c95d;
-  font-weight: 700;
 }
 
 </style>
@@ -172,6 +201,11 @@ select {
 
 
 <div class="container">
+
+  <a class="back" href="index.html">
+    ← Ana Sayfa
+  </a>
+
 
   <select id="district">
 
@@ -236,7 +270,21 @@ select {
 
     <br>
 
-    🕘 Nöbetçi eczane listesi günlük olarak güncellenir.
+    🕘 Güncel nöbetçi eczane listesi
+
+    <br>
+
+    📍
+
+    <span id="selectedDistrict">
+      Kocaeli - Tüm İlçeler
+    </span>
+
+    <br><br>
+
+    <span id="countText">
+      Eczaneler yükleniyor...
+    </span>
 
   </div>
 
@@ -252,7 +300,12 @@ select {
 
   <div class="source">
 
-    Veri: <a href="https://eczaneadresi.com" target="_blank">
+    Veri:
+    <a
+      href="https://eczaneadresi.com"
+      target="_blank"
+      rel="noopener"
+    >
       Eczane Adresi
     </a>
 
@@ -272,13 +325,19 @@ select {
 <script>
 
 const district =
-document.getElementById("district");
+  document.getElementById("district");
 
 const result =
-document.getElementById("result");
+  document.getElementById("result");
 
 const today =
-document.getElementById("today");
+  document.getElementById("today");
+
+const countText =
+  document.getElementById("countText");
+
+const selectedDistrict =
+  document.getElementById("selectedDistrict");
 
 
 // BUGÜNÜN TARİHİ
@@ -286,109 +345,349 @@ document.getElementById("today");
 const now = new Date();
 
 today.textContent =
-now.toLocaleDateString("tr-TR", {
-  day: "numeric",
-  month: "long",
-  year: "numeric"
-});
+  now.toLocaleDateString("tr-TR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
 
 
-// ==========================================
-// EGZANEADRESİ.COM'UN RESMİ WIDGET SCRİPTİ
-// (fetch/CORS değil — <script> ile çalışır,
-// bu yüzden tarayıcı engeline takılmaz)
-// ==========================================
+// İLÇE İSİMLERİ
 
-function loadWidget() {
+const districtNames = {
 
-  result.innerHTML = "";
+  izmit: "İzmit",
+  gebze: "Gebze",
+  darica: "Darıca",
+  korfez: "Körfez",
+  basiskele: "Başiskele",
+  kartepe: "Kartepe",
+  golcuk: "Gölcük",
+  derince: "Derince",
+  cayirova: "Çayırova",
+  dilovasi: "Dilovası",
+  kandira: "Kandıra",
+  karamursel: "Karamürsel"
 
-
-  // Önceki widget scriptlerini temizle
-
-  document
-    .querySelectorAll(
-      'script[src*="eczaneadresi.com/api/public/widget/embed.js"]'
-    )
-    .forEach(oldScript => oldScript.remove());
-
-
-  const widgetDiv =
-    document.createElement("div");
-
-  widgetDiv.id =
-    "eczane-adresi-widget";
-
-  widgetDiv.setAttribute(
-    "data-theme",
-    "dark"
-  );
-
-  widgetDiv.setAttribute(
-    "data-accent",
-    "#12c95d"
-  );
-
-  widgetDiv.setAttribute(
-    "data-map",
-    "true"
-  );
-
-  widgetDiv.setAttribute(
-    "data-limit",
-    "30"
-  );
+};
 
 
-  if (district.value) {
+// TELEFON NUMARASINI TEMİZLE
 
-    widgetDiv.setAttribute(
-      "data-scope",
-      "district"
-    );
+function cleanPhone(phone) {
 
-    widgetDiv.setAttribute(
-      "data-city",
-      "kocaeli"
-    );
+  if (!phone) return "";
 
-    widgetDiv.setAttribute(
-      "data-district",
-      district.value
-    );
+  return String(phone)
+    .replace(/[^\d+]/g, "");
+
+}
+
+
+// HARİTA LİNKİ
+
+function mapLink(address, latitude, longitude) {
+
+  if (
+    latitude !== null &&
+    latitude !== undefined &&
+    longitude !== null &&
+    longitude !== undefined
+  ) {
+
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      latitude + "," + longitude
+    )}`;
+
+  }
+
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    address + ", Kocaeli"
+  )}`;
+
+}
+
+
+// HTML GÜVENLİĞİ
+
+function escapeHtml(value) {
+
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+// ECZANELERİ GETİR
+
+async function loadPharmacies() {
+
+  result.innerHTML = `
+    <div class="loading">
+      💊 Eczaneler yükleniyor...
+    </div>
+  `;
+
+  countText.textContent =
+    "Eczaneler yükleniyor...";
+
+
+  const districtValue =
+    district.value;
+
+
+  if (districtValue) {
+
+    selectedDistrict.textContent =
+      districtNames[districtValue] ||
+      districtValue;
 
   } else {
 
-    widgetDiv.setAttribute(
-      "data-scope",
-      "city"
-    );
-
-    widgetDiv.setAttribute(
-      "data-city",
-      "kocaeli"
-    );
+    selectedDistrict.textContent =
+      "Kocaeli - Tüm İlçeler";
 
   }
 
 
-  result.appendChild(widgetDiv);
+  try {
+
+    let url =
+      "/api/eczaneler";
 
 
-  // Script'i her seferinde yeniden ekleyip
-  // çalıştırıyoruz (cache'lense bile
-  // yeniden tetiklenmesi için).
+    if (districtValue) {
 
-  const script =
-    document.createElement("script");
+      url +=
+        "?district=" +
+        encodeURIComponent(districtValue);
 
-  script.src =
-    "https://eczaneadresi.com/api/public/widget/embed.js?_r=" +
-    Date.now();
+    }
 
-  script.async = true;
 
-  document.body.appendChild(script);
+    const response =
+      await fetch(
+        url + (
+          url.includes("?")
+            ? "&"
+            : "?"
+        ) +
+        "cache=" +
+        Date.now(),
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "API bağlantısı başarısız"
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (!data.success) {
+
+      throw new Error(
+        data.error ||
+        "Eczane verileri alınamadı"
+      );
+
+    }
+
+
+    const pharmacies =
+      Array.isArray(data.pharmacies)
+        ? data.pharmacies
+        : [];
+
+
+    countText.innerHTML =
+      `<span class="count">${pharmacies.length}</span> nöbetçi eczane bulundu.`;
+
+
+    if (!pharmacies.length) {
+
+      result.innerHTML = `
+        <div class="empty">
+          💊 Bu ilçede şu anda nöbetçi eczane verisi bulunamadı.
+          <br><br>
+          Lütfen daha sonra tekrar deneyin.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    result.innerHTML =
+      pharmacies
+        .map((pharmacy) => {
+
+          const name =
+            escapeHtml(
+              pharmacy.name
+            );
+
+          const districtName =
+            escapeHtml(
+              pharmacy.district ||
+              ""
+            );
+
+          const address =
+            escapeHtml(
+              pharmacy.address ||
+              "Adres bilgisi bulunamadı."
+            );
+
+
+          const phone =
+            cleanPhone(
+              pharmacy.phone
+            );
+
+
+          const latitude =
+            pharmacy.latitude ??
+            null;
+
+
+          const longitude =
+            pharmacy.longitude ??
+            null;
+
+
+          const map =
+            mapLink(
+              pharmacy.address || "",
+              latitude,
+              longitude
+            );
+
+
+          return `
+
+            <div class="card">
+
+              <div class="name">
+                ${name}
+              </div>
+
+              ${
+                districtName
+                  ? `
+                    <div class="district">
+                      📍 ${districtName}
+                    </div>
+                  `
+                  : ""
+              }
+
+              <div class="address">
+                ${address}
+              </div>
+
+              ${
+                phone
+                  ? `
+                    <a
+                      class="phone"
+                      href="tel:${phone}"
+                    >
+                      📞 ${escapeHtml(
+                        pharmacy.phone
+                      )}
+                    </a>
+                  `
+                  : ""
+              }
+
+              <div class="buttons">
+
+                ${
+                  phone
+                    ? `
+                      <a
+                        class="btn call"
+                        href="tel:${phone}"
+                      >
+                        📞 Ara
+                      </a>
+                    `
+                    : ""
+                }
+
+                <a
+                  class="btn map"
+                  href="${map}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  🗺️ Haritada Göster
+                </a>
+
+              </div>
+
+            </div>
+
+          `;
+
+        })
+        .join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "Eczaneler yüklenemedi:",
+      error
+    );
+
+
+    countText.textContent =
+      "Veri alınamadı.";
+
+
+    result.innerHTML = `
+
+      <div class="error">
+
+        ❌ Nöbetçi eczane verileri alınamadı.
+
+        <br><br>
+
+        Lütfen internet bağlantınızı kontrol edip
+        tekrar deneyin.
+
+        <br><br>
+
+        <strong>
+          Veri kaynağı:
+          Eczane Adresi
+        </strong>
+
+      </div>
+
+    `;
+
+  }
 
 }
 
@@ -397,13 +696,13 @@ function loadWidget() {
 
 district.addEventListener(
   "change",
-  loadWidget
+  loadPharmacies
 );
 
 
 // SAYFA AÇILINCA
 
-loadWidget();
+loadPharmacies();
 
 </script>
 
