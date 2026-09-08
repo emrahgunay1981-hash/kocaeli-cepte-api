@@ -1,20 +1,13 @@
 // KOCAELİ CEPTE
-// Kocaelispor haber sistemi
-// Anasayfadaki 5 Kocaeli haber kaynağından
-// Kocaelispor haberlerini otomatik filtreler.
-// Haber görsellerini de almaya çalışır.
-
+// Kocaelispor özel haber sistemi
+// 5 Kocaeli haber kaynağından beslenir.
 
 function extract(regex, str) {
-
     const m = str.match(regex);
-
-    return m ? m[1].trim() : null;
+    return m ? m[1].trim() : "";
 }
 
-
 function cleanText(str) {
-
     if (!str) return "";
 
     return str
@@ -32,24 +25,15 @@ function cleanText(str) {
         .trim();
 }
 
-
 function timeAgo(pubDate) {
+    const then = new Date(pubDate).getTime();
 
-    const then =
-        new Date(pubDate).getTime();
-
-    if (isNaN(then)) {
-        return "";
-    }
+    if (isNaN(then)) return "";
 
     const diffMin =
-        Math.floor(
-            (Date.now() - then) / 60000
-        );
+        Math.floor((Date.now() - then) / 60000);
 
-    if (diffMin < 1) {
-        return "az önce";
-    }
+    if (diffMin < 1) return "az önce";
 
     if (diffMin < 60) {
         return `${diffMin} dakika önce`;
@@ -70,44 +54,44 @@ function timeAgo(pubDate) {
 
 
 // ==========================================
-// KOCAELİ HABER KAYNAKLARI
+// KAYNAKLAR
 // ==========================================
 
 const SOURCES = [
 
     {
         name: "Kocaeli Gazetesi",
-        url: "https://www.kocaeligazetesi.com.tr/rss/haber"
+        url: "https://www.kocaeligazetesi.com.tr/rss/kategori/kocaelispor"
     },
 
     {
         name: "Özgür Kocaeli",
-        url: "https://www.ozgurkocaeli.com.tr/rss/haber"
+        url: "https://www.ozgurkocaeli.com.tr/rss/kategori/kocaelispor-haberleri"
     },
 
     {
         name: "Ses Kocaeli",
-        url: "https://www.seskocaeli.com/rss/haber"
+        url: "https://www.seskocaeli.com/rss/kategori/kocaeli-spor-haberleri"
     },
 
     {
         name: "En Kocaeli",
-        url: "https://www.enkocaeli.com/rss/haber"
+        url: "https://www.enkocaeli.com/rss/kategori/kocaeli-spor-haberleri"
     },
 
     {
         name: "Kocaeli Gündem",
-        url: "https://kocaeligundem.com/rss/haber"
+        url: "https://kocaeligundem.com/rss/kategori/spor"
     }
 
 ];
 
 
 // ==========================================
-// KOCAELİSPOR KELİMELERİ
+// KOCAELİSPOR ANAHTAR KELİMELERİ
 // ==========================================
 
-const KOCAELISPOR_KEYWORDS = [
+const KEYWORDS = [
 
     "kocaelispor",
     "kocaeli spor",
@@ -116,50 +100,49 @@ const KOCAELISPOR_KEYWORDS = [
     "yeşil-siyahlı",
     "yeşil siyahlı",
     "yeşil-siyah",
-    "yeşil siyah"
+    "yeşil siyah",
+    "hodri meydan",
+    "turka kocaeli stadyumu"
 
 ];
 
 
 // ==========================================
-// HABER KOCAELİSPOR İLE İLGİLİ Mİ?
+// HABERİN KOCAELİSPOR İLE İLGİSİ
 // ==========================================
 
 function isKocaelisporNews(item) {
 
     const text = [
-
         item.title || "",
         item.description || "",
         item.category || ""
-
     ]
         .join(" ")
         .toLocaleLowerCase("tr-TR");
 
-
-    return KOCAELISPOR_KEYWORDS.some(
-        keyword =>
-            text.includes(
-                keyword.toLocaleLowerCase("tr-TR")
-            )
+    return KEYWORDS.some(keyword =>
+        text.includes(
+            keyword.toLocaleLowerCase("tr-TR")
+        )
     );
 }
 
 
 // ==========================================
-// HABER GÖRSELİNİ BUL
+// GÖRSEL BUL
 // ==========================================
 
-function getImage(block, description) {
+function getImage(block, rawDescription) {
 
     let image = null;
 
 
-    // 1. enclosure
+    // enclosure
+
     const enclosure =
         block.match(
-            /<enclosure[^>]+url=["']([^"']+)["'][^>]*>/i
+            /<enclosure[^>]+url=["']([^"']+)["']/i
         );
 
     if (enclosure) {
@@ -167,41 +150,44 @@ function getImage(block, description) {
     }
 
 
-    // 2. media:content
+    // media:content
+
     if (!image) {
 
-        const mediaContent =
+        const media =
             block.match(
-                /<media:content[^>]+url=["']([^"']+)["'][^>]*>/i
+                /<media:content[^>]+url=["']([^"']+)["']/i
             );
 
-        if (mediaContent) {
-            image = mediaContent[1];
+        if (media) {
+            image = media[1];
         }
 
     }
 
 
-    // 3. media:thumbnail
+    // media:thumbnail
+
     if (!image) {
 
-        const mediaThumbnail =
+        const thumbnail =
             block.match(
-                /<media:thumbnail[^>]+url=["']([^"']+)["'][^>]*>/i
+                /<media:thumbnail[^>]+url=["']([^"']+)["']/i
             );
 
-        if (mediaThumbnail) {
-            image = mediaThumbnail[1];
+        if (thumbnail) {
+            image = thumbnail[1];
         }
 
     }
 
 
-    // 4. description içindeki img
-    if (!image && description) {
+    // description içindeki img
+
+    if (!image && rawDescription) {
 
         const img =
-            description.match(
+            rawDescription.match(
                 /<img[^>]+src=["']([^"']+)["']/i
             );
 
@@ -212,33 +198,14 @@ function getImage(block, description) {
     }
 
 
-    // 5. og:image benzeri veri varsa
-    if (!image && description) {
-
-        const imageMatch =
-            description.match(
-                /(?:image|imageurl|thumbnail)["'\s:=]+["']?(https?:\/\/[^"'\s>]+)/i
-            );
-
-        if (imageMatch) {
-            image = imageMatch[1];
-        }
-
-    }
-
-
-    if (!image) {
-        return null;
-    }
-
-
-    return image.trim();
-
+    return image
+        ? image.trim()
+        : null;
 }
 
 
 // ==========================================
-// TEK KAYNAKTAN HABERLERİ AL
+// KAYNAK HABERLERİNİ AL
 // ==========================================
 
 async function getSource(source) {
@@ -277,112 +244,106 @@ async function getSource(source) {
             await response.text();
 
 
-        const itemBlocks =
+        const blocks =
             xml.match(
                 /<item[\s\S]*?<\/item>/gi
             ) || [];
 
 
-        const items = itemBlocks
-
-            .slice(0, 15)
-
-            .map(block => {
+        const items = [];
 
 
-                const title =
-                    cleanText(
-                        extract(
-                            /<title>([\s\S]*?)<\/title>/i,
-                            block
-                        )
-                    );
+        for (
+            const block of blocks.slice(0, 30)
+        ) {
 
-
-                const link =
-                    cleanText(
-                        extract(
-                            /<link>([\s\S]*?)<\/link>/i,
-                            block
-                        )
-                    );
-
-
-                const pubDate =
-                    cleanText(
-                        extract(
-                            /<pubDate>([\s\S]*?)<\/pubDate>/i,
-                            block
-                        )
-                    );
-
-
-                const category =
-                    cleanText(
-                        extract(
-                            /<category[^>]*>([\s\S]*?)<\/category>/i,
-                            block
-                        )
-                    );
-
-
-                // HTML içeren açıklamayı
-                // görsel bulmadan önce alıyoruz.
-
-                const rawDescription =
+            const title =
+                cleanText(
                     extract(
-                        /<description>([\s\S]*?)<\/description>/i,
+                        /<title>([\s\S]*?)<\/title>/i,
                         block
-                    ) || "";
+                    )
+                );
 
 
-                const description =
-                    cleanText(
-                        rawDescription
-                    );
+            const link =
+                cleanText(
+                    extract(
+                        /<link>([\s\S]*?)<\/link>/i,
+                        block
+                    )
+                );
 
 
-                const image =
-                    getImage(
-                        block,
-                        rawDescription
-                    );
+            const pubDate =
+                cleanText(
+                    extract(
+                        /<pubDate>([\s\S]*?)<\/pubDate>/i,
+                        block
+                    )
+                );
 
 
-                return {
-
-                    title,
-
-                    link,
-
-                    category,
-
-                    description,
-
-                    image,
-
-                    pubDate,
-
-                    time:
-                        pubDate
-                            ? timeAgo(pubDate)
-                            : "",
-
-                    source:
-                        source.name
-
-                };
-
-            })
+            const category =
+                cleanText(
+                    extract(
+                        /<category[^>]*>([\s\S]*?)<\/category>/i,
+                        block
+                    )
+                );
 
 
-            .filter(item =>
+            const rawDescription =
+                extract(
+                    /<description>([\s\S]*?)<\/description>/i,
+                    block
+                ) || "";
 
+
+            const description =
+                cleanText(
+                    rawDescription
+                );
+
+
+            const image =
+                getImage(
+                    block,
+                    rawDescription
+                );
+
+
+            const item = {
+
+                title,
+                link,
+                category,
+                description,
+                image,
+                pubDate,
+
+                time:
+                    pubDate
+                        ? timeAgo(pubDate)
+                        : "",
+
+                source:
+                    source.name
+
+            };
+
+
+            if (
                 item.title &&
                 item.link &&
                 isKocaelisporNews(item)
+            ) {
 
-            );
+                items.push(item);
+
+            }
+
+        }
 
 
         return items;
@@ -429,20 +390,14 @@ export default async function handler(req, res) {
 
 
     if (req.method === "OPTIONS") {
-
-        return res
-            .status(200)
-            .end();
-
+        return res.status(200).end();
     }
 
 
     try {
 
 
-        // ==================================
-        // TÜM KAYNAKLARI AYNI ANDA ÇEK
-        // ==================================
+        // 5 kaynağı aynı anda çek
 
         const results =
             await Promise.all(
@@ -455,15 +410,13 @@ export default async function handler(req, res) {
         let items = [];
 
 
-        results.forEach(
-            sourceItems => {
+        results.forEach(sourceItems => {
 
-                items.push(
-                    ...sourceItems
-                );
+            items.push(
+                ...sourceItems
+            );
 
-            }
-        );
+        });
 
 
         // ==================================
@@ -476,7 +429,6 @@ export default async function handler(req, res) {
 
         items =
             items.filter(item => {
-
 
                 const key =
                     item.title
@@ -493,9 +445,7 @@ export default async function handler(req, res) {
 
 
                 if (seen.has(key)) {
-
                     return false;
-
                 }
 
 
@@ -530,7 +480,7 @@ export default async function handler(req, res) {
 
 
         // ==================================
-        // EN FAZLA 5 HABER / KAYNAK
+        // KAYNAK BAŞINA MAKSİMUM 8
         // ==================================
 
         const sourceCount = {};
@@ -540,24 +490,19 @@ export default async function handler(req, res) {
 
         for (const item of items) {
 
-
             const source =
                 item.source;
 
 
             if (!sourceCount[source]) {
-
                 sourceCount[source] = 0;
-
             }
 
 
             if (
-                sourceCount[source] >= 5
+                sourceCount[source] >= 8
             ) {
-
                 continue;
-
             }
 
 
@@ -567,18 +512,16 @@ export default async function handler(req, res) {
 
 
             if (
-                balanced.length >= 20
+                balanced.length >= 30
             ) {
-
                 break;
-
             }
 
         }
 
 
         // ==================================
-        // SON SIRALAMA
+        // TEKRAR TARİHE GÖRE SIRALA
         // ==================================
 
         balanced.sort((a, b) => {
@@ -640,7 +583,7 @@ export default async function handler(req, res) {
             success: true,
 
             source:
-                "Kocaeli haber kaynakları",
+                "5 Kocaeli haber kaynağı",
 
             count:
                 formatted.length,
@@ -663,7 +606,6 @@ export default async function handler(req, res) {
 
 
     } catch (error) {
-
 
         console.error(
             "Kocaelispor API hatası:",
