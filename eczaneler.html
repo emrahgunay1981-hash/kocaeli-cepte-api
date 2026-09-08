@@ -72,7 +72,7 @@ select {
   margin-bottom: 12px;
   color: #aeb8c4;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .count {
@@ -151,22 +151,23 @@ select {
   color: white;
 }
 
-.error {
-  background: #32151a;
-  color: #ffb4b4;
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
 .empty {
   background: #0d241a;
-  padding: 20px;
+  padding: 22px;
   border-radius: 14px;
   text-align: center;
   color: #aeb8c4;
   font-size: 14px;
+  line-height: 1.6;
+}
+
+.error {
+  background: #32151a;
+  color: #ffb4b4;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .source {
@@ -213,53 +214,18 @@ select {
       Kocaeli - Tüm İlçeler
     </option>
 
-    <option value="izmit">
-      İzmit
-    </option>
-
-    <option value="gebze">
-      Gebze
-    </option>
-
-    <option value="darica">
-      Darıca
-    </option>
-
-    <option value="korfez">
-      Körfez
-    </option>
-
-    <option value="basiskele">
-      Başiskele
-    </option>
-
-    <option value="kartepe">
-      Kartepe
-    </option>
-
-    <option value="golcuk">
-      Gölcük
-    </option>
-
-    <option value="derince">
-      Derince
-    </option>
-
-    <option value="cayirova">
-      Çayırova
-    </option>
-
-    <option value="dilovasi">
-      Dilovası
-    </option>
-
-    <option value="kandira">
-      Kandıra
-    </option>
-
-    <option value="karamursel">
-      Karamürsel
-    </option>
+    <option value="izmit">İzmit</option>
+    <option value="gebze">Gebze</option>
+    <option value="darica">Darıca</option>
+    <option value="korfez">Körfez</option>
+    <option value="basiskele">Başiskele</option>
+    <option value="kartepe">Kartepe</option>
+    <option value="golcuk">Gölcük</option>
+    <option value="derince">Derince</option>
+    <option value="cayirova">Çayırova</option>
+    <option value="dilovasi">Dilovası</option>
+    <option value="kandira">Kandıra</option>
+    <option value="karamursel">Karamürsel</option>
 
   </select>
 
@@ -274,9 +240,7 @@ select {
 
     <br>
 
-    📍
-
-    <span id="selectedDistrict">
+    📍 <span id="selectedDistrict">
       Kocaeli - Tüm İlçeler
     </span>
 
@@ -324,7 +288,7 @@ select {
 
 <script>
 
-const district =
+const districtSelect =
   document.getElementById("district");
 
 const result =
@@ -339,20 +303,6 @@ const countText =
 const selectedDistrict =
   document.getElementById("selectedDistrict");
 
-
-// BUGÜNÜN TARİHİ
-
-const now = new Date();
-
-today.textContent =
-  now.toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
-
-
-// İLÇE İSİMLERİ
 
 const districtNames = {
 
@@ -372,47 +322,26 @@ const districtNames = {
 };
 
 
-// TELEFON NUMARASINI TEMİZLE
+// TARİH
 
-function cleanPhone(phone) {
+const now = new Date();
 
-  if (!phone) return "";
-
-  return String(phone)
-    .replace(/[^\d+]/g, "");
-
-}
-
-
-// HARİTA LİNKİ
-
-function mapLink(address, latitude, longitude) {
-
-  if (
-    latitude !== null &&
-    latitude !== undefined &&
-    longitude !== null &&
-    longitude !== undefined
-  ) {
-
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      latitude + "," + longitude
-    )}`;
-
-  }
-
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    address + ", Kocaeli"
-  )}`;
-
-}
+today.textContent =
+  now.toLocaleDateString("tr-TR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
 
 
 // HTML GÜVENLİĞİ
 
 function escapeHtml(value) {
 
-  if (value === null || value === undefined) {
+  if (
+    value === null ||
+    value === undefined
+  ) {
     return "";
   }
 
@@ -426,13 +355,69 @@ function escapeHtml(value) {
 }
 
 
+// TELEFON
+
+function cleanPhone(phone) {
+
+  if (!phone) {
+    return "";
+  }
+
+  return String(phone)
+    .replace(/[^\d+]/g, "");
+
+}
+
+
+// HARİTA
+
+function createMapLink(pharmacy) {
+
+  const lat =
+    pharmacy.latitude ??
+    pharmacy.lat ??
+    null;
+
+  const lng =
+    pharmacy.longitude ??
+    pharmacy.lng ??
+    null;
+
+
+  if (
+    lat !== null &&
+    lng !== null
+  ) {
+
+    return (
+      "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent(lat + "," + lng)
+    );
+
+  }
+
+
+  const address =
+    pharmacy.address ||
+    pharmacy.name ||
+    "Kocaeli";
+
+
+  return (
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(address + ", Kocaeli")
+  );
+
+}
+
+
 // ECZANELERİ GETİR
 
 async function loadPharmacies() {
 
   result.innerHTML = `
     <div class="loading">
-      💊 Eczaneler yükleniyor...
+      💊 Güncel eczaneler getiriliyor...
     </div>
   `;
 
@@ -440,49 +425,65 @@ async function loadPharmacies() {
     "Eczaneler yükleniyor...";
 
 
-  const districtValue =
-    district.value;
+  const selected =
+    districtSelect.value;
 
 
-  if (districtValue) {
-
-    selectedDistrict.textContent =
-      districtNames[districtValue] ||
-      districtValue;
-
-  } else {
-
-    selectedDistrict.textContent =
-      "Kocaeli - Tüm İlçeler";
-
-  }
+  selectedDistrict.textContent =
+    selected
+      ? districtNames[selected]
+      : "Kocaeli - Tüm İlçeler";
 
 
   try {
 
-    let url =
-      "/api/eczaneler";
+    /*
+      DOĞRUDAN ECZANE ADRESİ API
+
+      Tüm Kocaeli:
+      city=kocaeli
+
+      Belirli ilçe:
+      city=kocaeli&district=izmit
+    */
+
+    const params =
+      new URLSearchParams();
+
+    params.set(
+      "city",
+      "kocaeli"
+    );
+
+    params.set(
+      "limit",
+      "200"
+    );
 
 
-    if (districtValue) {
+    if (selected) {
 
-      url +=
-        "?district=" +
-        encodeURIComponent(districtValue);
+      params.set(
+        "district",
+        selected
+      );
 
     }
 
 
+    const apiUrl =
+      "https://eczaneadresi.com/api/public/v1/duty-pharmacies?" +
+      params.toString();
+
+
     const response =
       await fetch(
-        url + (
-          url.includes("?")
-            ? "&"
-            : "?"
-        ) +
-        "cache=" +
-        Date.now(),
+        apiUrl,
         {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          },
           cache: "no-store"
         }
       );
@@ -491,7 +492,8 @@ async function loadPharmacies() {
     if (!response.ok) {
 
       throw new Error(
-        "API bağlantısı başarısız"
+        "API hata kodu: " +
+        response.status
       );
 
     }
@@ -499,16 +501,6 @@ async function loadPharmacies() {
 
     const data =
       await response.json();
-
-
-    if (!data.success) {
-
-      throw new Error(
-        data.error ||
-        "Eczane verileri alınamadı"
-      );
-
-    }
 
 
     const pharmacies =
@@ -521,14 +513,20 @@ async function loadPharmacies() {
       `<span class="count">${pharmacies.length}</span> nöbetçi eczane bulundu.`;
 
 
-    if (!pharmacies.length) {
+    if (pharmacies.length === 0) {
 
       result.innerHTML = `
+
         <div class="empty">
-          💊 Bu ilçede şu anda nöbetçi eczane verisi bulunamadı.
+
+          💊 Bu seçim için nöbetçi eczane bulunamadı.
+
           <br><br>
-          Lütfen daha sonra tekrar deneyin.
+
+          Lütfen biraz sonra tekrar deneyin.
+
         </div>
+
       `;
 
       return;
@@ -537,19 +535,23 @@ async function loadPharmacies() {
 
 
     result.innerHTML =
-      pharmacies
-        .map((pharmacy) => {
+      pharmacies.map(
+        pharmacy => {
 
           const name =
             escapeHtml(
-              pharmacy.name
+              pharmacy.name ||
+              "Eczane"
             );
+
 
           const districtName =
             escapeHtml(
               pharmacy.district ||
+              pharmacy.cityDistrict ||
               ""
             );
+
 
           const address =
             escapeHtml(
@@ -560,25 +562,15 @@ async function loadPharmacies() {
 
           const phone =
             cleanPhone(
-              pharmacy.phone
+              pharmacy.phone ||
+              pharmacy.telephone ||
+              ""
             );
 
 
-          const latitude =
-            pharmacy.latitude ??
-            null;
-
-
-          const longitude =
-            pharmacy.longitude ??
-            null;
-
-
           const map =
-            mapLink(
-              pharmacy.address || "",
-              latitude,
-              longitude
+            createMapLink(
+              pharmacy
             );
 
 
@@ -590,6 +582,7 @@ async function loadPharmacies() {
                 ${name}
               </div>
 
+
               ${
                 districtName
                   ? `
@@ -600,9 +593,11 @@ async function loadPharmacies() {
                   : ""
               }
 
+
               <div class="address">
                 ${address}
               </div>
+
 
               ${
                 phone
@@ -612,12 +607,15 @@ async function loadPharmacies() {
                       href="tel:${phone}"
                     >
                       📞 ${escapeHtml(
-                        pharmacy.phone
+                        pharmacy.phone ||
+                        pharmacy.telephone ||
+                        ""
                       )}
                     </a>
                   `
                   : ""
               }
+
 
               <div class="buttons">
 
@@ -634,6 +632,7 @@ async function loadPharmacies() {
                     : ""
                 }
 
+
                 <a
                   class="btn map"
                   href="${map}"
@@ -649,14 +648,14 @@ async function loadPharmacies() {
 
           `;
 
-        })
-        .join("");
+        }
+      ).join("");
 
 
   } catch (error) {
 
     console.error(
-      "Eczaneler yüklenemedi:",
+      "Nöbetçi eczane API hatası:",
       error
     );
 
@@ -673,15 +672,11 @@ async function loadPharmacies() {
 
         <br><br>
 
-        Lütfen internet bağlantınızı kontrol edip
-        tekrar deneyin.
+        API bağlantısında geçici bir sorun oluştu.
 
         <br><br>
 
-        <strong>
-          Veri kaynağı:
-          Eczane Adresi
-        </strong>
+        Lütfen birkaç saniye sonra tekrar deneyin.
 
       </div>
 
@@ -692,15 +687,15 @@ async function loadPharmacies() {
 }
 
 
-// İLÇE DEĞİŞİNCE
+// İLÇE DEĞİŞTİR
 
-district.addEventListener(
+districtSelect.addEventListener(
   "change",
   loadPharmacies
 );
 
 
-// SAYFA AÇILINCA
+// İLK AÇILIŞ
 
 loadPharmacies();
 
