@@ -1,6 +1,7 @@
 // ==========================================
 // KOCAELİ CEPTE
 // KOCAELİSPOR HABER API
+// Kaynak: 1966kocaelispor.com
 // ==========================================
 
 export default async function handler(req, res) {
@@ -20,147 +21,147 @@ export default async function handler(req, res) {
         "Content-Type"
     );
 
-
     if (req.method === "OPTIONS") {
         return res.status(200).end();
     }
 
-
     if (req.method !== "GET") {
-
         return res.status(405).json({
             success: false,
             error: "Method Not Allowed"
         });
-
     }
-
 
     try {
 
-        /*
-         * 1966 Kocaelispor RSS
-         */
+        // 1966 Kocaelispor'un sitelere ekleme haber akışı
+        const url =
+            "https://1966kocaelispor.com/sitene-ekle/manset.php";
 
-        const rssUrl =
-            "https://1966kocaelispor.com/rss/";
-
-
-        const response = await fetch(
-            rssUrl,
-            {
-                headers: {
-                    "User-Agent":
-                        "KocaeliCepte/1.0"
-                }
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (compatible; KocaeliCepte/1.0)",
+                "Accept":
+                    "text/html,application/xhtml+xml"
             }
-        );
-
+        });
 
         if (!response.ok) {
-
             throw new Error(
-                "RSS kaynağına ulaşılamadı"
+                "Kocaelispor haber kaynağına ulaşılamadı"
             );
-
         }
 
+        const html = await response.text();
 
-        const xml =
-            await response.text();
+        // Haber bağlantılarını yakala
+        const links = [];
 
+        const regex =
+            /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
 
-        /*
-         * RSS içindeki item kayıtlarını bul
-         */
+        let match;
 
-        const items =
-            xml.match(
-                /<item[\s\S]*?<\/item>/gi
-            ) || [];
+        while ((match = regex.exec(html)) !== null) {
 
+            let href = match[1];
+            let title = match[2];
 
-        const news =
-            items
-                .map(item => {
+            // HTML temizle
+            title = cleanHTML(title);
 
-                    function getTag(tag) {
+            // Gereksiz / boş bağlantıları geç
+            if (!title || title.length < 8) {
+                continue;
+            }
 
-                        const regex =
-                            new RegExp(
-                                `<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`,
-                                "i"
-                            );
+            // Menü ve gereksiz bağlantıları filtrele
+            const lowerTitle =
+                title.toLocaleLowerCase("tr-TR");
 
-                        const match =
-                            item.match(regex);
+            const ignored = [
+                "ana sayfa",
+                "üye ol",
+                "üye girişi",
+                "iletişim",
+                "rss",
+                "sitene ekle",
+                "haber ara",
+                "günün haberleri",
+                "haber arşivi",
+                "genel",
+                "gündem",
+                "süper lig",
+                "yönetim",
+                "futbolcular",
+                "antrenörler",
+                "taraftar",
+                "başkanlar",
+                "altyapı",
+                "tff"
+            ];
 
-                        if (!match) {
-                            return "";
-                        }
+            if (
+                ignored.some(word =>
+                    lowerTitle === word
+                )
+            ) {
+                continue;
+            }
 
-                        return match[1]
-                            .replace(
-                                /<!\[CDATA\[([\s\S]*?)\]\]>/g,
-                                "$1"
-                            )
-                            .trim();
+            // Link göreceliyse tam URL yap
+            if (href.startsWith("/")) {
+                href =
+                    "https://1966kocaelispor.com" +
+                    href;
+            }
 
-                    }
+            if (
+                !href.startsWith(
+                    "https://1966kocaelispor.com/"
+                )
+            ) {
+                continue;
+            }
 
+            // Aynı haberi ikinci kez ekleme
+            const exists =
+                links.some(item =>
+                    item.url === href
+                );
 
-                    const title =
-                        getTag("title");
+            if (exists) {
+                continue;
+            }
 
+            links.push({
+                title: title,
+                url: href,
+                description: "",
+                date: "",
+                source: "1966 Kocaelispor"
+            });
 
-                    const link =
-                        getTag("link");
+            // En fazla 20 haber
+            if (links.length >= 20) {
+                break;
+            }
+        }
 
+        if (links.length === 0) {
 
-                    const description =
-                        getTag("description");
+            return res.status(502).json({
+                success: false,
+                items: [],
+                error:
+                    "Kocaelispor haberleri bulunamadı.",
+                updatedAt:
+                    new Date().toISOString()
+            });
 
-
-                    const pubDate =
-                        getTag("pubDate");
-
-
-                    const category =
-                        getTag("category");
-
-
-                    if (!title) {
-                        return null;
-                    }
-
-
-                    return {
-
-                        title: cleanHTML(title),
-
-                        description:
-                            cleanHTML(
-                                description
-                            ).substring(
-                                0,
-                                300
-                            ),
-
-                        url: link,
-
-                        date: pubDate,
-
-                        category:
-                            cleanHTML(
-                                category
-                            )
-
-                    };
-
-                })
-                .filter(Boolean)
-                .slice(0, 30);
-
+        }
 
         return res.status(200).json({
 
@@ -169,21 +170,19 @@ export default async function handler(req, res) {
             source:
                 "1966kocaelispor.com",
 
-            items: news,
+            items: links,
 
             updatedAt:
                 new Date().toISOString()
 
         });
 
-
     } catch (error) {
 
         console.error(
-            "KOCAELİSPOR RSS HATASI:",
+            "KOCAELİSPOR API HATASI:",
             error
         );
-
 
         return res.status(502).json({
 
@@ -200,13 +199,12 @@ export default async function handler(req, res) {
         });
 
     }
-
 }
 
 
-/*
- * HTML temizleme
- */
+// ==========================================
+// HTML TEMİZLEME
+// ==========================================
 
 function cleanHTML(text) {
 
@@ -214,24 +212,27 @@ function cleanHTML(text) {
         return "";
     }
 
-
     return String(text)
 
+        // Script
         .replace(
             /<script[\s\S]*?<\/script>/gi,
             ""
         )
 
+        // Style
         .replace(
             /<style[\s\S]*?<\/style>/gi,
             ""
         )
 
+        // HTML etiketleri
         .replace(
             /<[^>]+>/g,
             " "
         )
 
+        // HTML karakterleri
         .replace(
             /&nbsp;/gi,
             " "
@@ -253,10 +254,54 @@ function cleanHTML(text) {
         )
 
         .replace(
+            /&#x27;/gi,
+            "'"
+        )
+
+        .replace(
+            /&ouml;/gi,
+            "ö"
+        )
+
+        .replace(
+            /&Ouml;/g,
+            "Ö"
+        )
+
+        .replace(
+            /&uuml;/gi,
+            "ü"
+        )
+
+        .replace(
+            /&Uuml;/g,
+            "Ü"
+        )
+
+        .replace(
+            /&ccedil;/gi,
+            "ç"
+        )
+
+        .replace(
+            /&Ccedil;/g,
+            "Ç"
+        )
+
+        .replace(
+            /&scedil;/gi,
+            "ş"
+        )
+
+        .replace(
+            /&Scedil;/g,
+            "Ş"
+        )
+
+        .replace(
             /\s+/g,
             " "
         )
 
         .trim();
-
-}
+    }
