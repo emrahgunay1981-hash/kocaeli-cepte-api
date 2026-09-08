@@ -3,372 +3,345 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>7 Cepte</title>
 
+<title>Kocaeli Cepte - Kocaelispor Haberleri</title>
 
 <style>
+
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
     margin: 0;
-      padding: 0;
-      }
-
-      body {
-        font-family: Arial, sans-serif;
-          font-family: Arial, sans-serif;
-background: #071b12;
-            color: white;
-              padding-bottom: 80px;
-              }
-
-              .header {
-                background: linear-gradient(135deg, #008b45, #005b2d);
-                  padding: 22px 18px;
-                    text-align: center;
-                    }
-
-                    .logo {
-                      font-size: 38px;
-                        font-weight: 900;
-                        }
-
-                        .subtitle {
-                          margin-top: 5px;
-                            opacity: .9;
-                            }
-
-                            .hero {
-                              padding: 20px;
-                              }
-
-                              .card {
-                                background: #10281d;
-                                  border-radius: 18px;
-                                    padding: 18px;
-                                      margin-bottom: 15px;
-                                        border: 1px solid #1b4a34;
-                                        }
-
-                                        .next-match {
-                                          text-align: center;
-                                          }
-
-                                          .match-title {
-                                            color: #52d98c;
-                                              font-size: 14px;
-                                                margin-bottom: 12px;
-                                                }
-
-                                                .teams {
-                                                  display: flex;
-                                                    justify-content: space-around;
-                                                      align-items: center;
-                                                        font-size: 20px;
-                                                          font-weight: bold;
-                                                          }
-
-                                                          .vs {
-                                                            color: #aaa;
-                                                              font-size: 14px;
-                                                              }
-
-                                                              .score {
-                                                                text-align: center;
-                                                                  font-size: 32px;
-                                                                    font-weight: bold;
-                                                                      margin-top: 12px;
-                                                                      }
-
-                                                                      .section-title {
-                                                                        margin: 20px 0 10px;
-                                                                          font-size: 21px;
-                                                                          }
-
-                                                                          .news {
-                                                                            display: flex;
-                                                                              gap: 12px;
-                                                                                align-items: center;
-                                                                                }
-
-                                                                                .news-icon {
-                                                                                  background: #008b45;
-                                                                                    width: 48px;
-                                                                                      height: 48px;
-                                                                                        border-radius: 12px;
-                                                                                          display: flex;
-                                                                                            align-items: center;
-                                                                                              justify-content: center;
-                                                                                                font-size: 23px;
-                                                                                                }
-
-                                                                                                .news-text {
-                                                                                                  font-weight: bold;
-                                                                                                  }
-
-                                                                                                  .bottom-nav {
-                                                                                                    position: fixed;
-                                                                                                      bottom: 0;
-                                                                                                        left: 0;
-                                                                                                          right: 0;
-                                                                                                            height: 70px;
-                                                                                                              background: #06140d;
-                                                                                                                border-top: 1px solid #1b4a34;
-                                                                                                                  display: flex;
-                                                                                                                    justify-content: space-around;
-                                                                                                                      align-items: center;
-                                                                                                                      }
-
-                                                                                                                      .nav-item {
-                                                                                                                        text-align: center;
-                                                                                                                          color: #aaa;
-                                                                                                                            font-size: 12px;
-                                                                                                                            }
-
-                                                                                                                            .nav-item.active {
-                                                                                                                              color: #39d67d;
-                                                                                                                              }
-
-                                                                                                                              .nav-icon {
-                                                                                                                                font-size: 23px;
-                                                                                                                                  display: block;
-                                                                                                                                    margin-bottom: 3px;
-                                                                                                                                    .match-info {
-  margin-top: 10px;
-  text-align: center;
-  color: #8fb5a2;
-  font-size: 12px;
+    font-family: Arial, sans-serif;
+    background: #071b12;
+    color: white;
+    padding-bottom: 80px;
 }
 
-.next-match {
-  box-shadow: 0 8px 25px rgba(0,0,0,.18);
+.header {
+    background: linear-gradient(135deg, #008b45, #005b2d);
+    padding: 22px 18px;
 }
 
-.score {
-  color: #ffffff;
-  letter-spacing: 3px;
+.header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
-                                                                                                                                    </style>
-                                                                                                                                    </head>
 
-                                                                                                                                    <body>
-
-                                                                                                                                    <header class="header">
-                                                                                                                                      <div class="logo">41</div>
-                                                                                                                                        <h1>KOCAELİSPOR</h1>
-                                                                                                                                          <div class="subtitle">Kocaelispor Cepte</div>
-                                                                                                                                          </header>
-
-                                                                                                                                          <main class="hero">
-
-                                                                                                                                            <div class="card next-match">
-
-  <div class="match-title">SON MAÇ</div>
-
-  <div class="teams">
-    <span>Kocaelispor</span>
-
-    <span class="vs">VS</span>
-
-    <span>Rakip</span>
-  </div>
-
-  <div class="score">
-    - : -
-  </div>
-
-  <div class="match-info">
-    🏆 Lig &nbsp; • &nbsp; 📅 Yakında
-  </div>
-
-                                                                                                                                            
-                                                                                                                                                
-
-                                                                                                                                      
-                                                                                                                                                          
-                                                                                                                                                              
-                                                                                                                                                                      
-                                                                                                                        
-                                                                                                                                                                              
-                                                                                                                                                                                </div>
-
-                                                                                                                                                                                  <h2 class="section-title">🟢 Son Haberler</h2>
-
-                                                                                                                                                                                    <div class="card news">
-                                                                                                                                                                                        <div class="news-icon">⚽</div>
-                                                                                                                                                                                            <div>
-                                                                                                                                                                                                  <div class="news-text">Kocaelispor haberleri</div>
-                                                                                                                                                                                                        <small>En güncel gelişmeler burada</small>
-                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                              </div>
-
-                                                                                                                                                                                                                <div class="card fixture-card">
-
-  <div class="card fixture-card">
-
-  <div class="fixture-head">
-
-    <div class="news-icon">📅</div>
-
-    <div>
-      <div class="news-text">Maç Takvimi</div>
-      <small>Yaklaşan Kocaelispor maçları</small>
-    </div>
-
-  </div>
-
-  <div id="fixture-list">
-
-    <div class="fixture-loading">
-      Maçlar yükleniyor...
-    </div>
-
-  </div>
-
-  </div>
-
-</div>
-
-  <div class="fixture-head">
-    <div class="news-icon">📅</div>
-
-    <div>
-      <div class="news-text">Maç Takvimi</div>
-      <small>Yaklaşan Kocaelispor maçları</small>
-    
-
-  </div>
-
-                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                           
-                                                                                                                                                                                                                      
-                                                                                                                                                                                                                     
-                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                          
-
-                                                                                                                                                                                                                                            <div class="card news">
-                                                                                                                                                                                                                                                <div class="news-icon">👥</div>
-                                                                                                                                                                                                                                                    <div>
-                                                                                                                                                                                                                                                          <div class="news-text">Kadro</div>
-                                                                                                                                                                                                                                                                <small>Kocaelispor oyuncuları</small>
-                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                      </div>
-
-                                                                                                                                                                                                                                                                        <div class="card news">
-                                                                                                                                                                                                                                                                            <div class="news-icon">📊</div>
-                                                                                                                                                                                                                                                                                <div>
-                                                                                                                                                                                                                                                                                      <div class="news-text">Puan Durumu</div>
-                                                                                                                                                                                                                                                                                            <small>Ligdeki güncel sıralama</small>
-                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                  </div>
-
-                                                                                                                                                                                                                                                                                                  </main>
-
-                                                                                                                                                                                                                                                                                                  <nav class="bottom-nav">
-                                                                                                                                                                                                                                                                                                    <div class="nav-item active">
-                                                                                                                                                                                                                                                                                                        <span class="nav-icon">🏠</span>
-                                                                                                                                                                                                                                                                                                            Ana Sayfa
-                                                                                                                                                                                                                                                                                                              </div>
-
-                                                                                                                                                                                                                                                                                                                <div class="nav-item">
-                                                                                                                                                                                                                                                                                                                    <span class="nav-icon">⚽</span>
-                                                                                                                                                                                                                                                                                                                        Maçlar
-                                                                                                                                                                                                                                                                                                                          </div>
-
-                                                                                                                                                                                                                                                                                                                            <div class="nav-item">
-                                                                                                                                                                                                                                                                                                                                <span class="nav-icon">📰</span>
-                                                                                                                                                                                                                                                                                                                                    Haberler
-                                                                                                                                                                                                                                                                                                                                      </div>
-
-                                                                                                                                                                                                                                                                                                                                        <div class="nav-item">
-                                                                                                                                                                                                                                                                                                                                            <span class="nav-icon">👥</span>
-                                                                                                                                                                                                                                                                                                                                                Kadro
-                                                                                                                                                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                                                                                                                                                  </nav>
-<script>
-  // SON MAÇ
-const lastKocaelisporMatch = {
-  home: "Kocaelispor",
-  away: "Amed SK",
-  homeScore: 2,
-  awayScore: 0,
-  date: "24 AĞU",
-  competition: "Trendyol Süper Lig"
-};
-
-const lastMatchCard = document.querySelector(".next-match");
-
-if (lastMatchCard) {
-  const teams = lastMatchCard.querySelector(".teams");
-  const score = lastMatchCard.querySelector(".score");
-  const info = lastMatchCard.querySelector(".match-info");
-
-  if (teams) {
-    const teamNames = teams.querySelectorAll("span");
-
-    if (teamNames.length >= 3) {
-      teamNames[0].textContent = lastKocaelisporMatch.home;
-      teamNames[1].textContent = "VS";
-      teamNames[2].textContent = lastKocaelisporMatch.away;
-    }
-  }
-
-  if (score) {
-    score.textContent =
-      `${lastKocaelisporMatch.homeScore} : ${lastKocaelisporMatch.awayScore}`;
-  }
-
-  if (info) {
-    info.innerHTML =
-      `🏆 ${lastKocaelisporMatch.competition} &nbsp; • &nbsp; 📅 ${lastKocaelisporMatch.date}`;
-  }
+.back {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.18);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
 }
-const kocaelisporFixtures = [
-  ["29 AĞU", "Konyaspor", "Kocaelispor", "19:00"],
-  ["6 EYL", "Kocaelispor", "Samsunspor", "18:00"],
-  ["13 EYL", "Galatasaray", "Kocaelispor", "20:00"],
-  ["20 EYL", "Kocaelispor", "Gaziantep FK", "20:00"],
-  ["11 EKİ", "Beşiktaş", "Kocaelispor", "20:00"],
-  ["18 EKİ", "Kocaelispor", "Göztepe", "20:00"],
-  ["25 EKİ", "Alanyaspor", "Kocaelispor", "20:00"]
-];
 
-const list = document.querySelector(".fixture-card");
+.logo {
+    font-size: 30px;
+    font-weight: 900;
+}
 
-if (list) {
-  list.innerHTML = `
-    <div class="fixture-head">
-      <div class="news-icon">📅</div>
-      <div>
-        <div class="news-text">Maç Takvimi</div>
-        <small>Yaklaşan Kocaelispor maçları</small>
-      </div>
-    </div>
+.header h1 {
+    margin: 5px 0 0 52px;
+    font-size: 20px;
+}
 
-    <div class="fixture-list">
-      ${kocaelisporFixtures.map(match => `
-        <div class="fixture-item">
+.subtitle {
+    margin: 5px 0 0 52px;
+    font-size: 13px;
+    opacity: .9;
+}
 
-          <div class="fixture-date">
-            <strong>${match[0].split(" ")[0]}</strong>
-            <span>${match[0].split(" ")[1]}</span>
-          </div>
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 18px;
+}
 
-          <div class="fixture-teams">
-            <strong>${match[1]}</strong>
-            <span>VS</span>
-            <strong>${match[2]}</strong>
-          </div>
+.section-title {
+    margin: 5px 0 14px;
+    font-size: 21px;
+}
 
-          <div class="fixture-time">
-            ${match[3]}
-          </div>
+.news-card {
+    background: #10281d;
+    border: 1px solid #1b4a34;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
 
+.news-title {
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 9px;
+}
+
+.news-date {
+    color: #7fae96;
+    font-size: 12px;
+    margin-bottom: 9px;
+}
+
+.news-description {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.news-button {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 9px 14px;
+    border-radius: 9px;
+    background: #008b45;
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.status {
+    text-align: center;
+    color: #aaa;
+    padding: 35px 10px;
+}
+
+.error {
+    color: #ff7777;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: #06140d;
+    border-top: 1px solid #1b4a34;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 20;
+}
+
+.nav-item {
+    text-align: center;
+    color: #aaa;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.nav-item.active {
+    color: #39d67d;
+}
+
+.nav-icon {
+    font-size: 23px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-top">
+
+        <a class="back" href="index.html">
+            ←
+        </a>
+
+        <div class="logo">
+            41
         </div>
-      `).join("")}
+
     </div>
-  `;
+
+    <h1>
+        KOCAELİSPOR
+    </h1>
+
+    <div class="subtitle">
+        Kocaelispor'dan son gelişmeler
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <h2 class="section-title">
+        🟢 Kocaelispor Haberleri
+    </h2>
+
+    <div id="status" class="status">
+        Haberler yükleniyor...
+    </div>
+
+    <div id="news"></div>
+
+</main>
+
+
+<nav class="bottom-nav">
+
+    <a href="index.html" class="nav-item">
+
+        <span class="nav-icon">🏠</span>
+        Ana Sayfa
+
+    </a>
+
+    <a href="haberler.html" class="nav-item">
+
+        <span class="nav-icon">📰</span>
+        Haberler
+
+    </a>
+
+    <a href="sport.html" class="nav-item active">
+
+        <span class="nav-icon">⚽</span>
+        Kocaelispor
+
+    </a>
+
+    <a href="ulasim.html" class="nav-item">
+
+        <span class="nav-icon">🚌</span>
+        Ulaşım
+
+    </a>
+
+</nav>
+
+
+<script>
+
+async function kocaelisporHaberleriniGetir() {
+
+    const status = document.getElementById("status");
+    const newsDiv = document.getElementById("news");
+
+    try {
+
+        /*
+         * Kocaelispor haber API'si
+         */
+
+        const response = await fetch(
+            "https://kocaeli-cepte-api.vercel.app/api/kocaelispor"
+        );
+
+        if (!response.ok) {
+            throw new Error("Kocaelispor haber API bağlantısı başarısız");
+        }
+
+        const data = await response.json();
+
+        if (!data.items || data.items.length === 0) {
+
+            status.innerHTML = `
+                <div class="status">
+                    Şu anda Kocaelispor haberi bulunamadı.
+                </div>
+            `;
+
+            return;
+        }
+
+        status.style.display = "none";
+
+
+        newsDiv.innerHTML = data.items.map(item => `
+
+            <article class="news-card">
+
+                <div class="news-title">
+                    ${item.title || "Kocaelispor Haberi"}
+                </div>
+
+                ${
+                    item.date
+                    ? `
+                        <div class="news-date">
+                            📅 ${item.date}
+                        </div>
+                    `
+                    : ""
+                }
+
+                ${
+                    item.description
+                    ? `
+                        <div class="news-description">
+                            ${item.description}
+                        </div>
+                    `
+                    : ""
+                }
+
+                ${
+                    item.url
+                    ? `
+                        <a
+                            class="news-button"
+                            href="${item.url}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Haberi Oku →
+                        </a>
+                    `
+                    : ""
+                }
+
+            </article>
+
+        `).join("");
+
+
+    } catch (error) {
+
+        console.error(
+            "KOCAELİSPOR HABER API HATASI:",
+            error
+        );
+
+        status.innerHTML = `
+            <div class="error">
+
+                ❌ Kocaelispor haberleri yüklenemedi.
+
+                <br><br>
+
+                API bağlantısı kontrol ediliyor...
+
+            </div>
+        `;
+
+    }
+
 }
+
+
+kocaelisporHaberleriniGetir();
+
 </script>
-                                                                                                                                                                                                                                                                                                                                                  </body>
-                                                                                                                                                                                                                                                                                                                                                  </html>
+
+</body>
+</html>
