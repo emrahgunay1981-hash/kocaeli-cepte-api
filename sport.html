@@ -14,60 +14,8 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #061a12;
-      color: #ffffff;
+      color: #fff;
       padding-bottom: 80px;
-    }
-
-    header {
-      background: #061a12;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid #173c2c;
-    }
-
-    .back {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: #123827;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      color: #ffffff;
-      font-size: 28px;
-      flex-shrink: 0;
-    }
-
-    .logo {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #006b3c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-
-    .header-text {
-      flex: 1;
-    }
-
-    .header-title {
-      font-size: 19px;
-      font-weight: 800;
-      margin-bottom: 3px;
-    }
-
-    .header-subtitle {
-      color: #9bc8b1;
-      font-size: 12px;
     }
 
     .container {
@@ -84,7 +32,7 @@
       position: relative;
       width: calc(100% + 28px);
       margin-left: -14px;
-      height: 360px;
+      height: 600px;
       overflow: hidden;
       background: #020805;
     }
@@ -105,17 +53,38 @@
       background:
         linear-gradient(
           to bottom,
-          rgba(0, 0, 0, 0.05) 0%,
-          rgba(0, 10, 5, 0.12) 35%,
-          rgba(0, 8, 5, 0.88) 100%
+          rgba(0,0,0,0.05) 0%,
+          rgba(0,10,5,0.12) 40%,
+          rgba(0,8,5,0.90) 100%
         );
+    }
+
+    /* GERİ BUTONU */
+
+    .back-button {
+      position: absolute;
+      top: 22px;
+      left: 22px;
+      width: 52px;
+      height: 52px;
+      border-radius: 15px;
+      background: rgba(0,70,42,0.85);
+      border: 1px solid rgba(25,216,121,0.35);
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      line-height: 1;
+      z-index: 10;
     }
 
     .hero-content {
       position: absolute;
       left: 26px;
       right: 20px;
-      bottom: 28px;
+      bottom: 38px;
     }
 
     .hero-title {
@@ -132,7 +101,7 @@
     .hero-title .kocaelispor {
       display: block;
       color: #19d879;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
     }
 
     /* HABERLERİ YEŞİL FIRÇA ÜZERİNDE SİYAH */
@@ -157,8 +126,8 @@
       transform: skewX(-8deg);
       border-radius: 4px;
       box-shadow:
-        -8px 5px 0 rgba(25, 216, 121, 0.65),
-        7px -3px 0 rgba(25, 216, 121, 0.35);
+        -8px 5px 0 rgba(25,216,121,0.65),
+        7px -3px 0 rgba(25,216,121,0.35);
     }
 
     .hero-title .haberleri {
@@ -181,9 +150,9 @@
       font-size: 14px;
       letter-spacing: 4px;
       font-weight: 700;
-      color: #ffffff;
+      color: #fff;
       text-transform: uppercase;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
     }
 
     /* =========================
@@ -203,7 +172,7 @@
       border-radius: 16px;
       margin-bottom: 16px;
       overflow: hidden;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.18);
     }
 
     .news-image {
@@ -242,7 +211,7 @@
     .news-button {
       display: inline-block;
       background: #087f49;
-      color: #ffffff;
+      color: #fff;
       text-decoration: none;
       padding: 10px 14px;
       border-radius: 10px;
@@ -300,19 +269,15 @@
       margin-bottom: 3px;
     }
 
-    /* =========================
-       TELEFON
-    ========================== */
-
     @media (max-width: 500px) {
 
       .hero {
-        height: 340px;
+        height: 600px;
       }
 
       .hero-content {
         left: 22px;
-        bottom: 26px;
+        bottom: 32px;
       }
 
       .hero-title {
@@ -337,32 +302,9 @@
 
 <body>
 
-  <header>
-
-    <a class="back" href="index.html">‹</a>
-
-    <div class="logo">
-      41
-    </div>
-
-    <div class="header-text">
-
-      <div class="header-title">
-        KOCAELİSPOR
-      </div>
-
-      <div class="header-subtitle">
-        Kocaelispor'dan son haberler
-      </div>
-
-    </div>
-
-  </header>
-
-
   <main class="container">
 
-    <!-- TRİBÜN GÖRSELİ -->
+    <!-- KOCAELİSPOR TRİBÜN BANNER -->
 
     <section class="hero">
 
@@ -374,6 +316,14 @@
 
       <div class="hero-overlay"></div>
 
+      <!-- GERİ -->
+
+      <a class="back-button" href="index.html">
+        ‹
+      </a>
+
+      <!-- BAŞLIK -->
+
       <div class="hero-content">
 
         <h1 class="hero-title">
@@ -383,18 +333,14 @@
           </span>
 
           <span class="haberleri-wrap">
-
             <span class="haberleri">
               HABERLERİ
             </span>
-
           </span>
 
         </h1>
 
-
         <div class="hero-line"></div>
-
 
         <div class="hero-slogan">
           BİR ŞEHRİN ORTAK SEVDASI
@@ -408,7 +354,6 @@
     <div id="status">
       Haberler yükleniyor...
     </div>
-
 
     <div id="news"></div>
 
@@ -476,17 +421,11 @@
         document.getElementById("news");
 
 
-      /*
-        API'nin ilk istekte geç cevap vermesi
-        durumuna karşı 3 otomatik deneme.
-      */
-
       for (let attempt = 1; attempt <= 3; attempt++) {
 
         try {
 
           status.style.display = "block";
-
 
           status.innerHTML =
             attempt === 1
@@ -545,7 +484,6 @@
             div.textContent = text;
 
             return div.innerHTML;
-
           }
 
 
@@ -662,17 +600,11 @@
                     ? `
 
                       <img
-
                         class="news-image"
-
                         src="${escapeHTML(image)}"
-
                         alt="${title}"
-
                         loading="lazy"
-
                         onerror="this.style.display='none'"
-
                       >
 
                     `
@@ -689,91 +621,56 @@
                     <div class="news-content">
 
                       <div class="news-title">
-
                         ${title}
-
                       </div>
 
 
                       ${
                         date
-
                           ? `
-
                             <div class="news-date">
-
                               📅 ${date}
-
                             </div>
-
                           `
-
                           : ""
-
                       }
 
 
                       ${
                         description
-
                           ? `
-
                             <div class="news-description">
-
                               ${description}
-
                             </div>
-
                           `
-
                           : ""
-
                       }
 
 
                       ${
                         source
-
                           ? `
-
                             <div class="news-source">
-
                               📰 ${source}
-
                             </div>
-
                           `
-
                           : ""
-
                       }
 
 
                       ${
                         item.url
-
                           ? `
-
                             <a
-
                               class="news-button"
-
                               href="${escapeHTML(item.url)}"
-
                               target="_blank"
-
                               rel="noopener noreferrer"
-
                             >
-
                               Haberi Oku →
-
                             </a>
-
                           `
-
                           : ""
-
                       }
 
                     </div>
@@ -797,9 +694,7 @@
           console.error(
 
             "Kocaelispor haber denemesi:",
-
             attempt,
-
             error
 
           );
@@ -810,7 +705,6 @@
             await new Promise(
 
               resolve =>
-
                 setTimeout(
                   resolve,
                   2500
@@ -844,10 +738,6 @@
 
     }
 
-
-    /*
-      Sayfa açıldığında haberleri getir.
-    */
 
     kocaelisporHaberleriniGetir();
 
