@@ -109,6 +109,10 @@ body {
     font-size: 13px;
 }
 
+.news-button:hover {
+    background: #00a653;
+}
+
 .status {
     text-align: center;
     color: #aaa;
@@ -200,31 +204,23 @@ body {
 <nav class="bottom-nav">
 
     <a href="index.html" class="nav-item">
-
         <span class="nav-icon">🏠</span>
         Ana Sayfa
-
     </a>
 
     <a href="haberler.html" class="nav-item">
-
         <span class="nav-icon">📰</span>
         Haberler
-
     </a>
 
     <a href="sport.html" class="nav-item active">
-
         <span class="nav-icon">⚽</span>
         Kocaelispor
-
     </a>
 
     <a href="ulasim.html" class="nav-item">
-
         <span class="nav-icon">🚌</span>
         Ulaşım
-
     </a>
 
 </nav>
@@ -239,26 +235,24 @@ async function kocaelisporHaberleriniGetir() {
 
     try {
 
-        /*
-         * Kocaelispor haber API'si
-         */
-
         const response = await fetch(
             "https://kocaeli-cepte-api.vercel.app/api/kocaelispor"
         );
 
         if (!response.ok) {
-            throw new Error("Kocaelispor haber API bağlantısı başarısız");
+            throw new Error("API bağlantısı başarısız");
         }
 
         const data = await response.json();
 
-        if (!data.items || data.items.length === 0) {
+        if (
+            !data.success ||
+            !data.items ||
+            data.items.length === 0
+        ) {
 
             status.innerHTML = `
-                <div class="status">
-                    Şu anda Kocaelispor haberi bulunamadı.
-                </div>
+                Şu anda Kocaelispor haberi bulunamadı.
             `;
 
             return;
@@ -267,52 +261,126 @@ async function kocaelisporHaberleriniGetir() {
         status.style.display = "none";
 
 
-        newsDiv.innerHTML = data.items.map(item => `
+        function escapeHTML(text) {
 
-            <article class="news-card">
+            if (!text) return "";
 
-                <div class="news-title">
-                    ${item.title || "Kocaelispor Haberi"}
-                </div>
+            const div = document.createElement("div");
+            div.textContent = text;
 
-                ${
-                    item.date
-                    ? `
-                        <div class="news-date">
-                            📅 ${item.date}
-                        </div>
-                    `
-                    : ""
-                }
+            return div.innerHTML;
+        }
 
-                ${
+
+        function formatDate(dateString) {
+
+            if (!dateString) return "";
+
+            const date = new Date(dateString);
+
+            if (isNaN(date.getTime())) {
+                return escapeHTML(dateString);
+            }
+
+            return date.toLocaleString("tr-TR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+
+        function cleanDescription(text) {
+
+            if (!text) return "";
+
+            const temp = document.createElement("div");
+
+            temp.innerHTML = text;
+
+            let clean = temp.textContent || temp.innerText || "";
+
+            clean = clean
+                .replace(/\s+/g, " ")
+                .trim();
+
+            if (clean.length > 280) {
+                clean = clean.substring(0, 280) + "...";
+            }
+
+            return escapeHTML(clean);
+        }
+
+
+        newsDiv.innerHTML = data.items
+            .slice(0, 20)
+            .map(item => {
+
+                const title = escapeHTML(
+                    item.title || "Kocaelispor Haberi"
+                );
+
+                const description = cleanDescription(
                     item.description
-                    ? `
-                        <div class="news-description">
-                            ${item.description}
+                );
+
+                const date = formatDate(
+                    item.date
+                );
+
+                const url = item.url || "#";
+
+                return `
+
+                    <article class="news-card">
+
+                        <div class="news-title">
+                            ${title}
                         </div>
-                    `
-                    : ""
-                }
 
-                ${
-                    item.url
-                    ? `
-                        <a
-                            class="news-button"
-                            href="${item.url}"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            Haberi Oku →
-                        </a>
-                    `
-                    : ""
-                }
+                        ${
+                            date
+                            ? `
+                                <div class="news-date">
+                                    📅 ${date}
+                                </div>
+                            `
+                            : ""
+                        }
 
-            </article>
+                        ${
+                            description
+                            ? `
+                                <div class="news-description">
+                                    ${description}
+                                </div>
+                            `
+                            : ""
+                        }
 
-        `).join("");
+                        ${
+                            item.url
+                            ? `
+                                <a
+                                    class="news-button"
+                                    href="${url}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Haberi Oku →
+                                </a>
+                            `
+                            : ""
+                        }
+
+                    </article>
+
+                `;
+
+            })
+            .join("");
 
 
     } catch (error) {
@@ -324,13 +392,9 @@ async function kocaelisporHaberleriniGetir() {
 
         status.innerHTML = `
             <div class="error">
-
                 ❌ Kocaelispor haberleri yüklenemedi.
-
                 <br><br>
-
-                API bağlantısı kontrol ediliyor...
-
+                Lütfen daha sonra tekrar deneyin.
             </div>
         `;
 
