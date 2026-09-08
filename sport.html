@@ -19,8 +19,8 @@
     }
 
     header {
-      background: #0a2419;
-      padding: 18px 16px;
+      background: #061a12;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -37,20 +37,29 @@
       justify-content: center;
       text-decoration: none;
       color: white;
-      font-size: 22px;
+      font-size: 28px;
+      flex-shrink: 0;
     }
 
     .logo {
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
       border-radius: 12px;
       background: #ffffff;
       color: #006b3c;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .header-text {
@@ -71,17 +80,76 @@
     .container {
       max-width: 700px;
       margin: auto;
-      padding: 18px 14px;
+      padding: 0 14px 20px;
     }
 
-    .page-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin: 8px 0 18px;
+    /* TRİBÜN HERO */
+
+    .hero {
+      position: relative;
+      width: calc(100% + 28px);
+      margin-left: -14px;
+      height: 360px;
+      overflow: hidden;
+      background: #071b13;
     }
 
-    .page-title span {
-      color: #4bd48a;
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(0, 20, 12, 0.15) 0%,
+          rgba(0, 20, 12, 0.25) 35%,
+          rgba(0, 20, 12, 0.88) 100%
+        );
+    }
+
+    .hero-content {
+      position: absolute;
+      left: 28px;
+      right: 20px;
+      bottom: 30px;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: 36px;
+      line-height: 1.02;
+      font-weight: 900;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+    }
+
+    .hero-title span {
+      color: #22d879;
+      display: block;
+    }
+
+    .hero-line {
+      width: 65px;
+      height: 4px;
+      background: #22d879;
+      margin: 18px 0 14px;
+      border-radius: 5px;
+    }
+
+    .hero-slogan {
+      font-size: 14px;
+      letter-spacing: 4px;
+      font-weight: 600;
+      color: #ffffff;
+      text-transform: uppercase;
     }
 
     #status {
@@ -93,7 +161,7 @@
 
     .news-card {
       background: #0b2419;
-      border: 1px solid #173c2c;
+      border: 1px solid #174b35;
       border-radius: 16px;
       margin-bottom: 16px;
       overflow: hidden;
@@ -180,7 +248,7 @@
     }
 
     .bottom-nav a.active {
-      color: #4bd48a;
+      color: #22d879;
       font-weight: 700;
     }
 
@@ -191,6 +259,25 @@
     }
 
     @media (max-width: 500px) {
+
+      .hero {
+        height: 330px;
+      }
+
+      .hero-content {
+        left: 22px;
+        bottom: 26px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-slogan {
+        font-size: 12px;
+        letter-spacing: 3px;
+      }
+
       .news-image {
         height: 190px;
       }
@@ -205,21 +292,57 @@
 <body>
 
   <header>
+
     <a class="back" href="index.html">‹</a>
 
-    <div class="logo">41</div>
+    <div class="logo">
+      41
+    </div>
 
     <div class="header-text">
-      <div class="header-title">KOCAELİSPOR</div>
-      <div class="header-subtitle">Kocaelispor'dan son haberler</div>
+      <div class="header-title">
+        KOCAELİSPOR
+      </div>
+
+      <div class="header-subtitle">
+        Kocaelispor'dan son haberler
+      </div>
     </div>
+
   </header>
+
 
   <main class="container">
 
-    <div class="page-title">
-      🟢 Kocaelispor <span>Haberleri</span>
-    </div>
+    <!-- TRİBÜN BANNER -->
+
+    <section class="hero">
+
+      <img
+        class="hero-image"
+        src="kocaelispor-tribun.webp"
+        alt="Kocaelispor tribünleri"
+      >
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+
+        <h1 class="hero-title">
+          KOCAELİSPOR
+          <span>HABERLERİ</span>
+        </h1>
+
+        <div class="hero-line"></div>
+
+        <div class="hero-slogan">
+          BİR ŞEHRİN ORTAK SEVDASI
+        </div>
+
+      </div>
+
+    </section>
+
 
     <div id="status">
       Haberler yükleniyor...
@@ -229,7 +352,9 @@
 
   </main>
 
+
   <nav class="bottom-nav">
+
     <a href="index.html">
       <span class="nav-icon">🏠</span>
       Ana Sayfa
@@ -249,7 +374,9 @@
       <span class="nav-icon">🚌</span>
       Ulaşım
     </a>
+
   </nav>
+
 
   <script>
 
@@ -257,11 +384,6 @@
 
       const status = document.getElementById("status");
       const newsDiv = document.getElementById("news");
-
-      /*
-        API bazen ilk istekte geç cevap verebildiği için
-        sayfayı yenilemeye gerek kalmadan 3 kez deniyoruz.
-      */
 
       for (let attempt = 1; attempt <= 3; attempt++) {
 
@@ -274,6 +396,7 @@
               ? "Haberler yükleniyor..."
               : "Haberler yeniden deneniyor...";
 
+
           const response = await fetch(
             "https://kocaeli-cepte-api.vercel.app/api/kocaelispor?cache=" + Date.now(),
             {
@@ -281,11 +404,14 @@
             }
           );
 
+
           if (!response.ok) {
             throw new Error("API bağlantısı başarısız");
           }
 
+
           const data = await response.json();
+
 
           if (
             !data.success ||
@@ -295,6 +421,7 @@
             throw new Error("Haber bulunamadı");
           }
 
+
           status.style.display = "none";
 
 
@@ -302,7 +429,8 @@
 
             if (!text) return "";
 
-            const div = document.createElement("div");
+            const div =
+              document.createElement("div");
 
             div.textContent = text;
 
@@ -314,19 +442,25 @@
 
             if (!dateString) return "";
 
-            const date = new Date(dateString);
+            const date =
+              new Date(dateString);
+
 
             if (isNaN(date.getTime())) {
               return escapeHTML(dateString);
             }
 
-            return date.toLocaleString("tr-TR", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit"
-            });
+
+            return date.toLocaleString(
+              "tr-TR",
+              {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              }
+            );
           }
 
 
@@ -334,18 +468,22 @@
 
             if (!text) return "";
 
-            const temp = document.createElement("div");
+            const temp =
+              document.createElement("div");
 
             temp.innerHTML = text;
+
 
             let clean =
               temp.textContent ||
               temp.innerText ||
               "";
 
+
             clean = clean
               .replace(/\s+/g, " ")
               .trim();
+
 
             if (clean.length > 300) {
               clean =
@@ -353,122 +491,126 @@
                 "...";
             }
 
+
             return escapeHTML(clean);
           }
 
 
-          newsDiv.innerHTML = data.items
-            .slice(0, 20)
-            .map(item => {
+          newsDiv.innerHTML =
+            data.items
+              .slice(0, 20)
+              .map(item => {
 
-              const title = escapeHTML(
-                item.title ||
-                "Kocaelispor Haberi"
-              );
-
-              const description =
-                cleanDescription(
-                  item.description
-                );
-
-              const date =
-                formatDate(item.date);
-
-              const source =
-                escapeHTML(
-                  item.source || ""
-                );
-
-              const image =
-                item.image || "";
-
-              const imageHTML =
-                image
-                  ? `
-                    <img
-                      class="news-image"
-                      src="${escapeHTML(image)}"
-                      alt="${title}"
-                      loading="lazy"
-                      onerror="this.style.display='none'"
-                    >
-                  `
-                  : "";
+                const title =
+                  escapeHTML(
+                    item.title ||
+                    "Kocaelispor Haberi"
+                  );
 
 
-              return `
-                <article class="news-card">
+                const description =
+                  cleanDescription(
+                    item.description
+                  );
 
-                  ${imageHTML}
 
-                  <div class="news-content">
+                const date =
+                  formatDate(item.date);
 
-                    <div class="news-title">
-                      ${title}
+
+                const source =
+                  escapeHTML(
+                    item.source || ""
+                  );
+
+
+                const image =
+                  item.image || "";
+
+
+                const imageHTML =
+                  image
+                    ? `
+                      <img
+                        class="news-image"
+                        src="${escapeHTML(image)}"
+                        alt="${title}"
+                        loading="lazy"
+                        onerror="this.style.display='none'"
+                      >
+                    `
+                    : "";
+
+
+                return `
+                  <article class="news-card">
+
+                    ${imageHTML}
+
+                    <div class="news-content">
+
+                      <div class="news-title">
+                        ${title}
+                      </div>
+
+                      ${
+                        date
+                          ? `
+                            <div class="news-date">
+                              📅 ${date}
+                            </div>
+                          `
+                          : ""
+                      }
+
+                      ${
+                        description
+                          ? `
+                            <div class="news-description">
+                              ${description}
+                            </div>
+                          `
+                          : ""
+                      }
+
+                      ${
+                        source
+                          ? `
+                            <div class="news-source">
+                              📰 ${source}
+                            </div>
+                          `
+                          : ""
+                      }
+
+                      ${
+                        item.url
+                          ? `
+                            <a
+                              class="news-button"
+                              href="${escapeHTML(item.url)}"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Haberi Oku →
+                            </a>
+                          `
+                          : ""
+                      }
+
                     </div>
 
-                    ${
-                      date
-                        ? `
-                          <div class="news-date">
-                            📅 ${date}
-                          </div>
-                        `
-                        : ""
-                    }
+                  </article>
+                `;
 
-                    ${
-                      description
-                        ? `
-                          <div class="news-description">
-                            ${description}
-                          </div>
-                        `
-                        : ""
-                    }
+              })
+              .join("");
 
-                    ${
-                      source
-                        ? `
-                          <div class="news-source">
-                            📰 ${source}
-                          </div>
-                        `
-                        : ""
-                    }
-
-                    ${
-                      item.url
-                        ? `
-                          <a
-                            class="news-button"
-                            href="${escapeHTML(item.url)}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Haberi Oku →
-                          </a>
-                        `
-                        : ""
-                    }
-
-                  </div>
-
-                </article>
-              `;
-
-            })
-            .join("");
-
-
-          /*
-            Haberler başarıyla geldiyse
-            fonksiyondan çıkıyoruz.
-          */
 
           return;
 
         }
+
 
         catch (error) {
 
@@ -478,9 +620,6 @@
             error
           );
 
-          /*
-            Son deneme değilse 2,5 saniye bekle.
-          */
 
           if (attempt < 3) {
 
@@ -496,11 +635,6 @@
       }
 
 
-      /*
-        3 denemede de başarısız olursa
-        kullanıcıya hata göster.
-      */
-
       status.style.display = "block";
 
       status.innerHTML = `
@@ -513,10 +647,6 @@
 
     }
 
-
-    /*
-      Sayfa açılır açılmaz çalışır.
-    */
 
     kocaelisporHaberleriniGetir();
 
