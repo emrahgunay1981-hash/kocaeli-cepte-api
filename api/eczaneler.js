@@ -1,202 +1,259 @@
+const SOURCE_URL =
+  "https://www.bugunkocaeli.com.tr/kocaeli-nobetci-eczaneler";
+
 const DISTRICTS = [
-  { key: "basiskele", name: "Başiskele", api: "BAŞİSKELE" },
-  { key: "cayirova", name: "Çayırova", api: "ÇAYIROVA" },
-  { key: "darica", name: "Darıca", api: "DARICA" },
-  { key: "derince", name: "Derince", api: "DERİNCE" },
-  { key: "dilovasi", name: "Dilovası", api: "DİLOVASI" },
-  { key: "gebze", name: "Gebze", api: "GEBZE" },
-  { key: "golcuk", name: "Gölcük", api: "GÖLCÜK" },
-  { key: "izmit", name: "İzmit", api: "İZMİT" },
-  { key: "kandira", name: "Kandıra", api: "KANDIRA" },
-  { key: "karamursel", name: "Karamürsel", api: "KARAMÜRSEL" },
-  { key: "kartepe", name: "Kartepe", api: "KARTEPE" },
-  { key: "korfez", name: "Körfez", api: "KÖRFEZ" }
+  "Başiskele",
+  "Çayırova",
+  "Darıca",
+  "Derince",
+  "Dilovası",
+  "Gebze",
+  "Gölcük",
+  "İzmit",
+  "Kandıra",
+  "Karamürsel",
+  "Kartepe",
+  "Körfez"
 ];
 
-const API_BASE =
-  "https://eczane.te-robotik.com.tr/api/v1/nobetci";
+function cleanText(text) {
+  if (!text) return "";
 
-function getValue(obj, keys) {
-  for (const key of keys) {
-    if (
-      obj &&
-      obj[key] !== undefined &&
-      obj[key] !== null &&
-      obj[key] !== ""
-    ) {
-      return obj[key];
+  return text
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&#x27;/gi, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalize(text) {
+  return String(text || "")
+    .toLocaleLowerCase("tr-TR")
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .trim();
+}
+
+function getDistrict(text) {
+  const normalized = normalize(text);
+
+  for (const district of DISTRICTS) {
+    if (normalized.includes(normalize(district))) {
+      return district;
     }
   }
 
   return "";
 }
 
-function normalizeList(data) {
-  if (Array.isArray(data)) {
-    return data;
-  }
+function getPhone(text) {
+  const match = text.match(
+    /0?\s*\(?262\)?[\s.-]*\d{3}[\s.-]*\d{2}[\s.-]*\d{2}/
+  );
 
-  if (Array.isArray(data?.data)) {
-    return data.data;
-  }
-
-  if (Array.isArray(data?.pharmacies)) {
-    return data.pharmacies;
-  }
-
-  if (Array.isArray(data?.eczaneler)) {
-    return data.eczaneler;
-  }
-
-  if (Array.isArray(data?.results)) {
-    return data.results;
-  }
-
-  return [];
+  return match
+    ? match[0].replace(/\s+/g, " ").trim()
+    : "";
 }
 
-function normalizePharmacy(item, district) {
-
-  const coordinates =
-    item?.konum ||
-    item?.location ||
-    item?.coordinates ||
-    {};
-
-  const latitude =
-    getValue(item, [
-      "latitude",
-      "lat",
-      "enlem"
-    ]) ||
-    getValue(coordinates, [
-      "latitude",
-      "lat",
-      "enlem"
-    ]) ||
-    null;
-
-  const longitude =
-    getValue(item, [
-      "longitude",
-      "lng",
-      "lon",
-      "boylam"
-    ]) ||
-    getValue(coordinates, [
-      "longitude",
-      "lng",
-      "lon",
-      "boylam"
-    ]) ||
-    null;
-
-  return {
-    name: getValue(item, [
-      "name",
-      "ad",
-      "eczane_adi",
-      "eczaneAdi",
-      "title"
-    ]),
-
-    district:
-      getValue(item, [
-        "district",
-        "ilce"
-      ]) ||
-      district.name,
-
-    address: getValue(item, [
-      "address",
-      "adres"
-    ]),
-
-    phone: getValue(item, [
-      "phone",
-      "telefon",
-      "tel"
-    ]),
-
-    latitude,
-    longitude,
-
-    dutyStart: getValue(item, [
-      "dutyStart",
-      "duty_start",
-      "baslangic"
-    ]),
-
-    dutyEnd: getValue(item, [
-      "dutyEnd",
-      "duty_end",
-      "bitis"
-    ]),
-
-    source:
-      "Nöbetçi Eczane API"
-  };
+function getMapLink(address) {
+  return (
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(address + ", Kocaeli")
+  );
 }
 
-async function getDistrictPharmacies(district) {
+function parsePharmacies(html) {
 
-  const url =
-    API_BASE +
-    "?il=" +
-    encodeURIComponent("KOCAELİ") +
-    "&ilce=" +
-    encodeURIComponent(district.api) +
-    "&gun=bugun";
+  const pharmacies = [];
 
-  try {
+  /*
+    Güncel liste bölümünü bul.
+  */
 
-    const response =
-      await fetch(url, {
-        headers: {
-          "Accept": "application/json"
-        },
-        cache: "no-store"
+  const startMatch = html.match(
+    /Kocaeli\s+\d{1,2}\s+[A-Za-zÇĞİÖŞÜçğıöşü]+\s+2026[\s\S]{0,500}?nöbetçi eczane adres/i
+  );
+
+  let section = html;
+
+  if (startMatch) {
+    section = html.slice(startMatch.index);
+  }
+
+  /*
+    Listenin bittiği yer.
+  */
+
+  const endMatch = section.match(
+    /Her eczane gece boyunca açık olmayabilir/i
+  );
+
+  if (endMatch) {
+    section = section.slice(0, endMatch.index);
+  }
+
+  /*
+    Eczane başlıklarını yakala.
+  */
+
+  const headingRegex =
+    /<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi;
+
+  const headings = [];
+
+  let match;
+
+  while ((match = headingRegex.exec(section)) !== null) {
+
+    const name =
+      cleanText(match[1]);
+
+    if (!name) continue;
+
+    if (
+      /eczane/i.test(name) &&
+      !/nöbetçi eczane/i.test(name)
+    ) {
+
+      headings.push({
+        name,
+        start: match.index,
+        end: headingRegex.lastIndex
       });
 
-    if (!response.ok) {
+    }
+  }
 
-      console.error(
-        district.name,
-        "API:",
-        response.status
+  for (let i = 0; i < headings.length; i++) {
+
+    const current = headings[i];
+
+    const next = headings[i + 1];
+
+    const block =
+      section.slice(
+        current.end,
+        next ? next.start : undefined
       );
 
-      return [];
+    const text =
+      cleanText(block);
+
+    const district =
+      getDistrict(text);
+
+    if (!district) continue;
+
+    const phone =
+      getPhone(text);
+
+    let address =
+      text;
+
+    if (phone) {
+      address =
+        address.replace(phone, "");
     }
 
-    const data =
-      await response.json();
+    /*
+      Gereksiz ifadeleri temizle.
+    */
 
-    const list =
-      normalizeList(data);
+    address =
+      address
+        .replace(/Yol Tarifi Al/gi, "")
+        .replace(/Haritada Göster/gi, "")
+        .replace(/Ara/gi, "")
+        .replace(/\s+/g, " ")
+        .trim();
 
-    return list
-      .map(item =>
-        normalizePharmacy(
-          item,
-          district
+    /*
+      Bazı sayfalarda önce ilçe,
+      sonra adres geliyor.
+      İlçe bilgisini adresten çıkar.
+    */
+
+    address =
+      address
+        .replace(
+          new RegExp(
+            "^" +
+            district.replace(
+              /[.*+?^${}()|[\]\\]/g,
+              "\\$&"
+            ) +
+            "\\s*",
+            "i"
+          ),
+          ""
         )
-      )
-      .filter(item =>
-        item.name
-      );
+        .trim();
 
-  } catch (error) {
+    pharmacies.push({
 
-    console.error(
-      "İlçe alınamadı:",
-      district.name,
-      error.message
-    );
+      name:
+        current.name,
 
-    return [];
+      district,
+
+      address:
+        address ||
+        district + ", Kocaeli",
+
+      phone,
+
+      map:
+        getMapLink(
+          address ||
+          district
+        ),
+
+      source:
+        "Bugün Kocaeli / Kocaeli Eczacı Odası verileri"
+
+    });
   }
+
+  /*
+    Tekrarları temizle.
+  */
+
+  const seen = new Set();
+
+  return pharmacies.filter(
+    pharmacy => {
+
+      const key =
+        normalize(
+          pharmacy.name
+        ) +
+        "|" +
+        normalize(
+          pharmacy.district
+        );
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+
+      return true;
+    }
+  );
 }
+
 
 export default async function handler(req, res) {
 
@@ -204,82 +261,61 @@ export default async function handler(req, res) {
 
     const requestedDistrict =
       typeof req.query?.district === "string"
-        ? req.query.district
-            .trim()
-            .toLowerCase()
+        ? req.query.district.trim()
         : "";
 
-    let districts =
-      DISTRICTS;
+    const response =
+      await fetch(
+        SOURCE_URL,
+        {
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 KocaeliCepte/1.0",
+            "Accept":
+              "text/html,application/xhtml+xml"
+          },
+          cache: "no-store"
+        }
+      );
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Kaynak sayfaya ulaşılamadı: " +
+        response.status
+      );
+    }
+
+    const html =
+      await response.text();
+
+    let pharmacies =
+      parsePharmacies(html);
+
+    /*
+      İlçe seçilmişse filtrele.
+    */
 
     if (requestedDistrict) {
 
-      districts =
-        DISTRICTS.filter(
-          item =>
-            item.key === requestedDistrict
+      const wanted =
+        normalize(
+          DISTRICTS.find(
+            district =>
+              normalize(district) ===
+              normalize(requestedDistrict)
+          ) ||
+          requestedDistrict
         );
 
-      if (!districts.length) {
-
-        return res.status(400).json({
-          success: false,
-          error: "Geçersiz ilçe.",
-          pharmacies: []
-        });
-      }
-    }
-
-    /*
-      Tüm ilçeler seçildiğinde
-      12 ilçeyi ayrı ayrı sorguluyoruz.
-    */
-
-    const results =
-      await Promise.all(
-        districts.map(
-          district =>
-            getDistrictPharmacies(
-              district
-            )
-        )
-      );
-
-    let pharmacies = [];
-
-    results.forEach(list => {
-      pharmacies.push(...list);
-    });
-
-    /*
-      Aynı eczaneyi iki kez gösterme.
-    */
-
-    const seen =
-      new Set();
-
-    pharmacies =
-      pharmacies.filter(
-        pharmacy => {
-
-          const key =
-            (
-              pharmacy.name +
-              "|" +
+      pharmacies =
+        pharmacies.filter(
+          pharmacy =>
+            normalize(
               pharmacy.district
-            )
-              .toLowerCase()
-              .trim();
-
-          if (seen.has(key)) {
-            return false;
-          }
-
-          seen.add(key);
-
-          return true;
-        }
-      );
+            ) === wanted
+        );
+    }
 
     res.status(200).json({
 
@@ -288,7 +324,8 @@ export default async function handler(req, res) {
       city: "Kocaeli",
 
       district:
-        requestedDistrict || null,
+        requestedDistrict ||
+        null,
 
       count:
         pharmacies.length,
@@ -299,14 +336,14 @@ export default async function handler(req, res) {
       pharmacies,
 
       source:
-        "Nöbetçi Eczane API"
+        "Bugün Kocaeli"
 
     });
 
   } catch (error) {
 
     console.error(
-      "Nöbetçi eczane API hatası:",
+      "Nöbetçi eczane hatası:",
       error
     );
 
@@ -315,10 +352,11 @@ export default async function handler(req, res) {
       success: false,
 
       error:
-        "Nöbetçi eczane verileri alınamadı.",
+        "Güncel nöbetçi eczane verileri alınamadı.",
 
       pharmacies: []
 
     });
+
   }
 }
