@@ -14,7 +14,7 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #061a12;
-      color: #ffffff;
+      color: #fff;
       padding-bottom: 80px;
     }
 
@@ -36,7 +36,7 @@
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      color: white;
+      color: #fff;
       font-size: 28px;
       flex-shrink: 0;
     }
@@ -45,21 +45,14 @@
       width: 46px;
       height: 46px;
       border-radius: 12px;
-      background: #ffffff;
+      background: #fff;
       color: #006b3c;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
       font-weight: bold;
-      overflow: hidden;
       flex-shrink: 0;
-    }
-
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
     }
 
     .header-text {
@@ -83,7 +76,9 @@
       padding: 0 14px 20px;
     }
 
-    /* TRİBÜN HERO */
+    /* =========================
+       KOCAELİSPOR HERO
+    ========================== */
 
     .hero {
       position: relative;
@@ -91,7 +86,7 @@
       margin-left: -14px;
       height: 360px;
       overflow: hidden;
-      background: #071b13;
+      background: #020a06;
     }
 
     .hero-image {
@@ -101,6 +96,7 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
+      filter: saturate(1.35) contrast(1.12);
     }
 
     .hero-overlay {
@@ -109,48 +105,79 @@
       background:
         linear-gradient(
           to bottom,
-          rgba(0, 20, 12, 0.15) 0%,
-          rgba(0, 20, 12, 0.25) 35%,
-          rgba(0, 20, 12, 0.88) 100%
+          rgba(0, 0, 0, 0.08) 0%,
+          rgba(0, 20, 12, 0.18) 35%,
+          rgba(0, 8, 5, 0.92) 100%
         );
     }
 
     .hero-content {
       position: absolute;
-      left: 28px;
+      left: 26px;
       right: 20px;
       bottom: 30px;
     }
 
     .hero-title {
       margin: 0;
-      font-size: 36px;
-      line-height: 1.02;
-      font-weight: 900;
-      letter-spacing: -1px;
+      font-size: 40px;
+      line-height: 0.98;
+      font-weight: 950;
+      letter-spacing: -1.5px;
       text-transform: uppercase;
     }
 
-    .hero-title span {
-      color: #22d879;
+    .hero-title .kocaelispor {
+      display: block;
+      color: #19d879;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .hero-title .haberleri-wrap {
+      position: relative;
+      display: inline-block;
+      margin-top: 4px;
+      padding: 3px 13px 6px 8px;
+    }
+
+    .hero-title .haberleri-wrap::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -8px;
+      right: -14px;
+      top: 4px;
+      bottom: 0;
+      background: #19d879;
+      transform: skewX(-8deg);
+      border-radius: 3px;
+    }
+
+    .hero-title .haberleri {
+      color: #020805;
       display: block;
     }
 
     .hero-line {
       width: 65px;
       height: 4px;
-      background: #22d879;
-      margin: 18px 0 14px;
+      background: #19d879;
+      margin: 16px 0 13px;
       border-radius: 5px;
     }
 
     .hero-slogan {
       font-size: 14px;
       letter-spacing: 4px;
-      font-weight: 600;
-      color: #ffffff;
+      font-weight: 700;
+      color: #fff;
       text-transform: uppercase;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.7);
     }
+
+    /* =========================
+       HABERLER
+    ========================== */
 
     #status {
       text-align: center;
@@ -204,7 +231,7 @@
     .news-button {
       display: inline-block;
       background: #087f49;
-      color: white;
+      color: #fff;
       text-decoration: none;
       padding: 10px 14px;
       border-radius: 10px;
@@ -224,6 +251,10 @@
       border-radius: 14px;
       line-height: 1.5;
     }
+
+    /* =========================
+       ALT MENÜ
+    ========================== */
 
     .bottom-nav {
       position: fixed;
@@ -248,7 +279,7 @@
     }
 
     .bottom-nav a.active {
-      color: #22d879;
+      color: #19d879;
       font-weight: 700;
     }
 
@@ -261,7 +292,7 @@
     @media (max-width: 500px) {
 
       .hero {
-        height: 330px;
+        height: 340px;
       }
 
       .hero-content {
@@ -270,11 +301,11 @@
       }
 
       .hero-title {
-        font-size: 32px;
+        font-size: 34px;
       }
 
       .hero-slogan {
-        font-size: 12px;
+        font-size: 11px;
         letter-spacing: 3px;
       }
 
@@ -300,6 +331,7 @@
     </div>
 
     <div class="header-text">
+
       <div class="header-title">
         KOCAELİSPOR
       </div>
@@ -307,6 +339,7 @@
       <div class="header-subtitle">
         Kocaelispor'dan son haberler
       </div>
+
     </div>
 
   </header>
@@ -314,7 +347,7 @@
 
   <main class="container">
 
-    <!-- TRİBÜN BANNER -->
+    <!-- KOCAELİSPOR TRİBÜN HERO -->
 
     <section class="hero">
 
@@ -329,8 +362,17 @@
       <div class="hero-content">
 
         <h1 class="hero-title">
-          KOCAELİSPOR
-          <span>HABERLERİ</span>
+
+          <span class="kocaelispor">
+            KOCAELİSPOR
+          </span>
+
+          <span class="haberleri-wrap">
+            <span class="haberleri">
+              HABERLERİ
+            </span>
+          </span>
+
         </h1>
 
         <div class="hero-line"></div>
@@ -382,8 +424,12 @@
 
     async function kocaelisporHaberleriniGetir() {
 
-      const status = document.getElementById("status");
-      const newsDiv = document.getElementById("news");
+      const status =
+        document.getElementById("status");
+
+      const newsDiv =
+        document.getElementById("news");
+
 
       for (let attempt = 1; attempt <= 3; attempt++) {
 
@@ -406,11 +452,14 @@
 
 
           if (!response.ok) {
-            throw new Error("API bağlantısı başarısız");
+            throw new Error(
+              "API bağlantısı başarısız"
+            );
           }
 
 
-          const data = await response.json();
+          const data =
+            await response.json();
 
 
           if (
@@ -418,7 +467,9 @@
             !data.items ||
             data.items.length === 0
           ) {
-            throw new Error("Haber bulunamadı");
+            throw new Error(
+              "Haber bulunamadı"
+            );
           }
 
 
@@ -480,15 +531,18 @@
               "";
 
 
-            clean = clean
-              .replace(/\s+/g, " ")
-              .trim();
+            clean =
+              clean
+                .replace(/\s+/g, " ")
+                .trim();
 
 
             if (clean.length > 300) {
+
               clean =
                 clean.substring(0, 300) +
                 "...";
+
             }
 
 
@@ -543,6 +597,7 @@
 
 
                 return `
+
                   <article class="news-card">
 
                     ${imageHTML}
@@ -601,6 +656,7 @@
                     </div>
 
                   </article>
+
                 `;
 
               })
@@ -637,11 +693,16 @@
 
       status.style.display = "block";
 
+
       status.innerHTML = `
         <div class="error">
+
           ❌ Kocaelispor haberleri yüklenemedi.
+
           <br><br>
+
           Lütfen birkaç saniye sonra tekrar deneyin.
+
         </div>
       `;
 
