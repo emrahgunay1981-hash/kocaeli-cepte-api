@@ -173,63 +173,6 @@ select {
 
 <div class="container">
 
-  <select id="district">
-
-    <option value="">
-      Kocaeli - Tüm İlçeler
-    </option>
-
-    <option value="izmit">
-      İzmit
-    </option>
-
-    <option value="gebze">
-      Gebze
-    </option>
-
-    <option value="darica">
-      Darıca
-    </option>
-
-    <option value="korfez">
-      Körfez
-    </option>
-
-    <option value="basiskele">
-      Başiskele
-    </option>
-
-    <option value="kartepe">
-      Kartepe
-    </option>
-
-    <option value="golcuk">
-      Gölcük
-    </option>
-
-    <option value="derince">
-      Derince
-    </option>
-
-    <option value="cayirova">
-      Çayırova
-    </option>
-
-    <option value="dilovasi">
-      Dilovası
-    </option>
-
-    <option value="kandira">
-      Kandıra
-    </option>
-
-    <option value="karamursel">
-      Karamürsel
-    </option>
-
-  </select>
-
-
   <div class="info">
 
     📅 <strong id="today"></strong>
@@ -270,9 +213,6 @@ select {
 
 
 <script>
-
-const district =
-document.getElementById("district");
 
 const result =
 document.getElementById("result");
@@ -331,14 +271,6 @@ function loadWidget() {
   `;
 
 }
-
-
-// İLÇE DEĞİŞİNCE
-
-district.addEventListener(
-  "change",
-  loadWidget
-);
 
 
 // SAYFA AÇILINCA
