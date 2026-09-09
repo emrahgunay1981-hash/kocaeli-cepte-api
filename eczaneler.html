@@ -252,8 +252,8 @@ select {
 
   <div class="source">
 
-    Veri: <a href="https://eczaneadresi.com" target="_blank">
-      Eczane Adresi
+    Veri: <a href="https://www.kocaelieo.org.tr/" target="_blank">
+      Kocaeli Eczacı Odası
     </a>
 
     <br>
@@ -295,20 +295,14 @@ now.toLocaleDateString("tr-TR", {
 
 // ==========================================
 // DOĞRUDAN YÖNLENDİRME
-// (Widget yerine, eczaneadresi.com'un kendi
-// gerçek/canlı sayfasına link veriyoruz —
-// böylece veri her zaman doğru ve güncel olur)
+// (Kocaeli Eczacı Odası'nın resmi sitesi —
+// nöbet listesini belirleyen kurumun kendisi,
+// en güvenilir ve doğru kaynak)
 // ==========================================
 
 function loadWidget() {
 
-  let url;
-
-  if (district.value) {
-    url = "https://eczaneadresi.com/kocaeli/" + district.value + "-nobetci-eczane";
-  } else {
-    url = "https://eczaneadresi.com/kocaeli-nobetci-eczane";
-  }
+  const url = "https://www.kocaelieo.org.tr/";
 
   result.innerHTML = `
     <a
@@ -328,10 +322,11 @@ function loadWidget() {
         margin-top:8px;
       "
     >
-      💊 Nöbetçi Eczaneleri Görüntüle
+      💊 Kocaeli Eczacı Odası - Nöbetçi Eczaneler
     </a>
     <div style="text-align:center;color:#8a97a8;font-size:12px;margin-top:10px;">
-      eczaneadresi.com üzerinde açılır, güncel ve doğrulanmış veri gösterir
+      Resmi kaynak — nöbet listesini belirleyen kurumun kendi sitesi.
+      Tüm ilçelerin bugünkü nöbetçi eczaneleri tek sayfada listelenir.
     </div>
   `;
 
