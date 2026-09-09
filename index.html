@@ -814,7 +814,44 @@ button {
 
 }
 
+<!-- ========================================
+     KOCAELİ VALİLİĞİ
+========================================= -->
 
+<section class="valilik-section">
+
+  <div class="section-head">
+
+    <div class="section-title">
+
+      🏛️
+      <span>Kocaeli</span>
+      Valiliği
+
+    </div>
+
+  </div>
+
+
+  <div id="valilik-list">
+
+    <div class="valilik-loading">
+      🏛️ Valilik haberleri getiriliyor...
+    </div>
+
+  </div>
+
+
+  <a
+    class="valilik-more"
+    href="https://www.kocaeli.gov.tr/haberler"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Tüm Valilik Haberleri →
+  </a>
+
+</section>
 /* ==========================================
    KATEGORİLER
 ========================================== */
@@ -1054,6 +1091,92 @@ button {
 .emergency-arrow {
   font-size: 25px;
   color: #ff6b6b;
+  }/* ==========================================
+   KOCAELİ VALİLİĞİ
+========================================== */
+
+.valilik-section {
+  margin-top: 25px;
+}
+
+.valilik-card {
+  display: block;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: #0d241a;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 16px;
+  text-decoration: none;
+  color: white;
+}
+
+.valilik-card:active {
+  transform: scale(.985);
+}
+
+.valilik-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 7px;
+}
+
+.valilik-badge {
+  background: #12c95d;
+  color: #03150c;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 5px 7px;
+  border-radius: 6px;
+}
+
+.valilik-type {
+  color: #718b7f;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.valilik-title {
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.valilik-date {
+  margin-top: 7px;
+  color: #718a7e;
+  font-size: 10px;
+}
+
+.valilik-more {
+  display: block;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #102b20;
+  color: #12c95d;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.valilik-loading {
+  text-align: center;
+  padding: 25px 10px;
+  color: #7d9589;
+  background: #0d241a;
+  border-radius: 16px;
+  font-size: 13px;
+}
+
+.valilik-error {
+  background: #321817;
+  color: #ff9c95;
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  font-size: 12px;
   }
 </style>
 
@@ -2491,7 +2614,174 @@ setInterval(loadMiniFinance, 5 * 60 * 1000);
 /* ==========================================
    SAYFA AÇILINCA ÇALIŞTIR
 ========================================== */
+/* ==========================================
+   KOCAELİ VALİLİĞİ
+========================================== */
 
+async function loadValilik() {
+
+  const list =
+    document.getElementById("valilik-list");
+
+  if (!list) return;
+
+  list.innerHTML = `
+    <div class="valilik-loading">
+      🏛️ Valilik haberleri getiriliyor...
+    </div>
+  `;
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/valilik?cache=" + Date.now(),
+        {
+          cache: "no-store"
+        }
+      );
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Valilik API bağlantısı başarısız"
+      );
+
+    }
+
+    const data =
+      await response.json();
+
+    if (
+      !data.success ||
+      !Array.isArray(data.items) ||
+      !data.items.length
+    ) {
+
+      throw new Error(
+        "Valilik haberi bulunamadı"
+      );
+
+    }
+
+    const items =
+      data.items.slice(0, 6);
+
+
+    list.innerHTML =
+      items.map(item => {
+
+        let type =
+          "RESMÎ HABER";
+
+        if (item.type === "basin") {
+
+          type =
+            "BASIN AÇIKLAMASI";
+
+        }
+
+        else if (item.type === "duyuru") {
+
+          type =
+            "DUYURU";
+
+        }
+
+
+        let date =
+          item.date || "";
+
+        if (date) {
+
+          const parts =
+            date.split("-");
+
+          if (parts.length === 3) {
+
+            date =
+              parts[2] +
+              "." +
+              parts[1] +
+              "." +
+              parts[0];
+
+          }
+
+        }
+
+
+        return `
+
+          <a
+            class="valilik-card"
+            href="${escapeHtml(item.url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+
+            <div class="valilik-top">
+
+              <span class="valilik-badge">
+                RESMÎ
+              </span>
+
+              <span class="valilik-type">
+                ${escapeHtml(type)}
+              </span>
+
+            </div>
+
+
+            <div class="valilik-title">
+
+              ${escapeHtml(item.title)}
+
+            </div>
+
+
+            ${
+              date
+                ? `
+                  <div class="valilik-date">
+                    🗓️ ${escapeHtml(date)}
+                  </div>
+                `
+                : ""
+            }
+
+          </a>
+
+        `;
+
+      }).join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "Valilik haberleri yüklenemedi:",
+      error
+    );
+
+    list.innerHTML = `
+
+      <div class="valilik-error">
+
+        ⚠️ Valilik haberleri şu anda alınamadı.
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* VALİLİK HABERLERİNİ BAŞLAT */
+
+loadValilik();
 loadNews();
 
 loadMiniWeather();
