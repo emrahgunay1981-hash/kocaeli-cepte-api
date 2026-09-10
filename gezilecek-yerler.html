@@ -25,15 +25,15 @@ body {
   display: flex;
   align-items: center;
   padding: 0 16px;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255,255,255,.07);
 }
 
 .back {
   color: #fff;
   text-decoration: none;
-  font-size: 34px;
-  margin-right: 12px;
+  font-size: 36px;
   line-height: 1;
+  margin-right: 13px;
 }
 
 .logo {
@@ -55,7 +55,7 @@ body {
   color: #8ba197;
   font-size: 14px;
   line-height: 1.4;
-  margin-bottom: 18px;
+  margin-bottom: 17px;
 }
 
 /* FİLTRELER */
@@ -64,7 +64,7 @@ body {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding-bottom: 5px;
   margin-bottom: 17px;
 }
 
@@ -76,28 +76,23 @@ body {
   flex: 0 0 auto;
   border: 1px solid rgba(255,255,255,.08);
   background: #0c2419;
-  color: #9caf a5;
+  color: #a9b9b2;
   border-radius: 30px;
-  padding: 9px 14px;
+  padding: 9px 15px;
   font-size: 13px;
-  cursor: pointer;
 }
 
 .filter.active {
-  background: #12c95d;
-  color: #04130c;
-  border-color: #12c95d;
-  font-weight: 700;
+  background: #00d95a;
+  color: #03140d;
+  border-color: #00d95a;
+  font-weight: 800;
 }
 
 /* ÖNE ÇIKAN */
 
 .featured {
-  background: linear-gradient(
-    145deg,
-    #123d27,
-    #0b2419
-  );
+  background: #0a291b;
   border-radius: 21px;
   overflow: hidden;
   margin-bottom: 14px;
@@ -105,52 +100,59 @@ body {
 }
 
 .featured-photo {
-  height: 190px;
+  height: 200px;
   background:
     linear-gradient(
       180deg,
       rgba(0,0,0,.05),
-      rgba(0,0,0,.65)
+      rgba(0,0,0,.55)
     ),
-    url("https://www.kocaeli.bel.tr/webfiles/fotograf/haberler/ormanya.jpg")
+    url("https://commons.wikimedia.org/wiki/Special:FilePath/Ormanya%20%281%29%2001.jpg")
     center/cover no-repeat;
   display: flex;
   align-items: flex-end;
-  padding: 16px;
+  padding: 15px;
 }
 
-.featured-photo span {
-  background: rgba(0,0,0,.55);
-  padding: 7px 10px;
+.badge {
+  background: rgba(0,0,0,.58);
+  padding: 8px 11px;
   border-radius: 20px;
   font-size: 12px;
 }
 
 .featured-content {
-  padding: 15px;
+  padding: 16px;
 }
 
 .featured-title {
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 800;
   margin-bottom: 7px;
 }
 
+.featured-location {
+  color: #00d95a;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
 .featured-text {
-  color: #a8b8b0;
+  color: #aabbb3;
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .featured-button {
   display: inline-block;
-  margin-top: 13px;
-  background: #12c95d;
+  margin-top: 14px;
+  background: #00d95a;
   color: #03140d;
   text-decoration: none;
   font-weight: 800;
   font-size: 13px;
-  padding: 10px 14px;
+  padding: 11px 16px;
   border-radius: 12px;
 }
 
@@ -163,19 +165,22 @@ body {
 }
 
 .place-card {
-  background: #0c2419;
-  border: 1px solid rgba(255,255,255,.06);
+  background: #0a2418;
+  border: 1px solid rgba(255,255,255,.07);
   border-radius: 18px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .place-photo {
+  width: 100%;
   height: 125px;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  background-color: #12251d;
 }
 
 .place-content {
@@ -188,26 +193,27 @@ body {
 .place-name {
   font-size: 17px;
   font-weight: 800;
-  margin-bottom: 5px;
+  line-height: 1.2;
+  margin-bottom: 6px;
 }
 
 .place-location {
-  color: #12c95d;
+  color: #00d95a;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 7px;
 }
 
 .place-desc {
-  color: #83968d;
+  color: #879a91;
   font-size: 12px;
   line-height: 1.4;
-  margin-bottom: 12px;
+  margin-bottom: 13px;
 }
 
 .map-btn {
   margin-top: auto;
-  color: #12c95d;
+  color: #00d95a;
   text-decoration: none;
   font-size: 12px;
   font-weight: 800;
@@ -244,10 +250,8 @@ body {
 }
 
 .nav-item.active {
-  color: #12c95d;
+  color: #00d95a;
 }
-
-/* MOBİL */
 
 @media (max-width: 380px) {
 
@@ -283,7 +287,7 @@ body {
   <a href="index.html" class="back">‹</a>
 
   <div class="logo">
-    🌲 Kocaeli Cepte
+    🌲 Kocaeli Gezilecek Yerler
   </div>
 
 </header>
@@ -296,7 +300,7 @@ body {
   </div>
 
   <div class="page-desc">
-    Doğa, deniz, sahil ve ailece gezilecek en güzel yerler
+    Doğa, deniz, sahil ve ailece gezilecek güzel yerler
   </div>
 
 
@@ -323,13 +327,15 @@ body {
   </div>
 
 
-  <!-- ÖNE ÇIKAN ORMANYA -->
+  <!-- ORMANYA -->
 
   <section class="featured">
 
     <div class="featured-photo">
 
-      <span>⭐ Kocaeli'nin gözde rotası</span>
+      <span class="badge">
+        ⭐ Kocaeli'nin gözde rotası
+      </span>
 
     </div>
 
@@ -339,10 +345,15 @@ body {
         🌲 Ormanya
       </div>
 
+      <div class="featured-location">
+        📍 Kartepe
+      </div>
+
       <div class="featured-text">
         Doğal yaşam parkı, çocuk hayvanat bahçesi,
         yürüyüş ve bisiklet parkurları, kamp alanı
-        ve Ormanköy ile Kocaeli'nin en özel gezi noktalarından biri.
+        ve Ormanköy ile Kocaeli'nin en özel gezi
+        noktalarından biri.
       </div>
 
       <a
@@ -359,7 +370,7 @@ body {
   </section>
 
 
-  <!-- YERLER -->
+  <!-- DİĞER YERLER -->
 
   <section class="places">
 
@@ -370,7 +381,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/kuzuyayla.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kuzuyayla.jpg');"
       ></div>
 
       <div class="place-content">
@@ -384,14 +395,15 @@ body {
         </div>
 
         <div class="place-desc">
-          Sapanca Gölü manzarası, piknik, yürüyüş
-          ve doğayla baş başa vakit geçirmek için.
+          Dağ, orman ve Sapanca Gölü manzarasıyla
+          doğa ve piknik için güzel bir rota.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Kuzuyayla+Tabiat+Parkı+Kocaeli"
           target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -403,11 +415,11 @@ body {
 
     <!-- SEKAPARK -->
 
-    <article class="place-card" data-category="aile deniz">
+    <article class="place-card" data-category="deniz aile">
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/sekapark.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Sekapark%20İzmit%20Kocaeli%20%5E©Abdullah%20Kiyga%20-%20panoramio.jpg');"
       ></div>
 
       <div class="place-content">
@@ -421,14 +433,15 @@ body {
         </div>
 
         <div class="place-desc">
-          Sahil, yürüyüş, bisiklet, çocuk alanları,
-          müzeler ve şehir içinde keyifli vakit.
+          Sahil, yürüyüş, bisiklet ve ailece
+          vakit geçirmek için şehir içindeki güzel rota.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Sekapark+İzmit+Kocaeli"
           target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -444,7 +457,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/ballikayalar.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/BALLIKAYALAR.jpg');"
       ></div>
 
       <div class="place-content">
@@ -458,88 +471,15 @@ body {
         </div>
 
         <div class="place-desc">
-          Kanyon, kayalıklar, yürüyüş ve doğa
-          sporları için özel bir tabiat parkı.
+          Kanyon, yürüyüş, trekking, kamp ve
+          kaya tırmanışı için doğal bir alan.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Ballıkayalar+Tabiat+Parkı+Kocaeli"
           target="_blank"
-        >
-          📍 Yol Tarifi →
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- BEŞKAYALAR -->
-
-    <article class="place-card" data-category="doga">
-
-      <div
-        class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/beskayalar.jpg');"
-      ></div>
-
-      <div class="place-content">
-
-        <div class="place-name">
-          🌿 Beşkayalar
-        </div>
-
-        <div class="place-location">
-          📍 Başiskele
-        </div>
-
-        <div class="place-desc">
-          Vadiler, şelaleler, mağaralar ve yürüyüş
-          rotalarıyla doğal bir kaçış noktası.
-        </div>
-
-        <a
-          class="map-btn"
-          href="https://www.google.com/maps/search/?api=1&query=Beşkayalar+Tabiat+Parkı+Kocaeli"
-          target="_blank"
-        >
-          📍 Yol Tarifi →
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- ERİKLİTEPE -->
-
-    <article class="place-card" data-category="doga aile">
-
-      <div
-        class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/eriklitepe.jpg');"
-      ></div>
-
-      <div class="place-content">
-
-        <div class="place-name">
-          🌳 Eriklitepe
-        </div>
-
-        <div class="place-location">
-          📍 Gölcük
-        </div>
-
-        <div class="place-desc">
-          Orman, bungalovlar, yürüyüş parkurları,
-          seyir terası ve kamp alanı.
-        </div>
-
-        <a
-          class="map-btn"
-          href="https://www.google.com/maps/search/?api=1&query=Eriklitepe+Tabiat+Parkı+Kocaeli"
-          target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -551,11 +491,11 @@ body {
 
     <!-- SUADİYE -->
 
-    <article class="place-card" data-category="doga">
+    <article class="place-card" data-category="doga aile">
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/suadiye.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Suadİye%20Tabİat%20Parkı.jpg');"
       ></div>
 
       <div class="place-content">
@@ -569,14 +509,15 @@ body {
         </div>
 
         <div class="place-desc">
-          Piknik, yürüyüş, bisiklet ve seyir
-          terası için doğal bir rota.
+          Piknik, yürüyüş, bisiklet ve doğayla
+          baş başa kalmak için sakin bir rota.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Suadiye+Tabiat+Parkı+Kocaeli"
           target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -592,7 +533,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/kerpe.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kocaeli%20Kandıra%20Kerpe.jpg');"
       ></div>
 
       <div class="place-content">
@@ -606,7 +547,7 @@ body {
         </div>
 
         <div class="place-desc">
-          Deniz, plaj, sahil yürüyüşü ve gün batımı
+          Deniz, plaj, kayalıklar ve gün batımı
           için Kocaeli'nin sevilen sahil rotası.
         </div>
 
@@ -614,43 +555,7 @@ body {
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Kerpe+Kocaeli"
           target="_blank"
-        >
-          📍 Yol Tarifi →
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- KEFKEN -->
-
-    <article class="place-card" data-category="deniz">
-
-      <div
-        class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/kefken.jpg');"
-      ></div>
-
-      <div class="place-content">
-
-        <div class="place-name">
-          🌊 Kefken
-        </div>
-
-        <div class="place-location">
-          📍 Kandıra
-        </div>
-
-        <div class="place-desc">
-          Koylar, plajlar ve özellikle Pembe Kayalar
-          çevresindeki doğal güzellikler.
-        </div>
-
-        <a
-          class="map-btn"
-          href="https://www.google.com/maps/search/?api=1&query=Kefken+Kocaeli"
-          target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -666,7 +571,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/pembe-kayalar.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Pembe%20Kayalar.JPG');"
       ></div>
 
       <div class="place-content">
@@ -676,18 +581,19 @@ body {
         </div>
 
         <div class="place-location">
-          📍 Kandıra
+          📍 Kefken
         </div>
 
         <div class="place-desc">
-          Karadeniz kıyısındaki ilginç kaya oluşumları
-          ve fotoğraf noktaları.
+          Karadeniz kıyısındaki doğal kaya oluşumları
+          ve fotoğraf için etkileyici bir nokta.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Pembe+Kayalar+Kocaeli"
           target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -703,7 +609,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/bagirganli.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Bağırganlı%20Halk%20Plajı%2001.jpg');"
       ></div>
 
       <div class="place-content">
@@ -725,6 +631,7 @@ body {
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Bağırganlı+Kocaeli"
           target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -740,7 +647,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/faruk-yalcin.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Faruk%20Yalcin%20Zoo%20Kocaeli.JPG');"
       ></div>
 
       <div class="place-content">
@@ -755,13 +662,14 @@ body {
 
         <div class="place-desc">
           Hayvanat bahçesi ve botanik parkıyla
-          özellikle çocuklu aileler için güzel bir rota.
+          özellikle çocuklu aileler için güzel bir gezi.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Faruk+Yalçın+Hayvanat+Bahçesi+Kocaeli"
           target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -777,7 +685,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://www.kocaeli.bel.tr/webfiles/fotograf/yayinlar/darica-sahili.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kocaeli%20Darıca%20Sahil%20Dudayev%20Parkında%20Balık%20Tutan%20Bir%20Adam%20-%20panoramio.jpg');"
       ></div>
 
       <div class="place-content">
@@ -791,14 +699,15 @@ body {
         </div>
 
         <div class="place-desc">
-          Uzun sahil parkuru, yürüyüş, bisiklet
-          ve aile aktiviteleri için ideal.
+          Sahil yürüyüşü, deniz manzarası ve
+          ailece vakit geçirmek için güzel bir rota.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Darıca+Sahili+Kocaeli"
           target="_blank"
+          rel="noopener"
         >
           📍 Yol Tarifi →
         </a>
@@ -839,17 +748,13 @@ body {
 
 function filterPlaces(category, button) {
 
-  const buttons = document.querySelectorAll(".filter");
-
-  buttons.forEach(btn => {
+  document.querySelectorAll(".filter").forEach(function(btn) {
     btn.classList.remove("active");
   });
 
   button.classList.add("active");
 
-  const cards = document.querySelectorAll(".place-card");
-
-  cards.forEach(card => {
+  document.querySelectorAll(".place-card").forEach(function(card) {
 
     if (category === "all") {
       card.style.display = "flex";
