@@ -17,7 +17,7 @@ body {
   background: #061a12;
   color: #fff;
   font-family: Arial, sans-serif;
-  padding-bottom: 85px;
+  padding-bottom: 88px;
 }
 
 .topbar {
@@ -32,6 +32,7 @@ body {
   color: #fff;
   text-decoration: none;
   font-size: 36px;
+  line-height: 1;
   margin-right: 13px;
 }
 
@@ -53,7 +54,7 @@ body {
 .page-desc {
   color: #8ba197;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.45;
   margin-bottom: 18px;
 }
 
@@ -61,9 +62,9 @@ body {
 
 .categories {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2,1fr);
   gap: 9px;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .category-btn {
@@ -71,7 +72,7 @@ body {
   background: #0c2419;
   color: #b3c1bb;
   border-radius: 15px;
-  padding: 12px 8px;
+  padding: 12px 7px;
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -80,95 +81,29 @@ body {
 .category-btn.active {
   background: #00d95a;
   color: #03140d;
-}
-
-/* ÖNE ÇIKAN */
-
-.featured {
-  background: #0b291b;
-  border-radius: 21px;
-  overflow: hidden;
-  margin-bottom: 20px;
-  border: 1px solid rgba(255,255,255,.07);
-}
-
-.featured-photo {
-  height: 205px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0,0,0,.05),
-      rgba(0,0,0,.58)
-    ),
-    url("https://commons.wikimedia.org/wiki/Special:FilePath/Ormanya%20%281%29%2001.jpg")
-    center/cover no-repeat;
-  display: flex;
-  align-items: flex-end;
-  padding: 15px;
-}
-
-.badge {
-  background: rgba(0,0,0,.62);
-  padding: 8px 11px;
-  border-radius: 20px;
-  font-size: 12px;
-}
-
-.featured-content {
-  padding: 16px;
-}
-
-.featured-title {
-  font-size: 24px;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.featured-location {
-  color: #00d95a;
-  font-size: 12px;
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-
-.featured-text {
-  color: #aabbb3;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.featured-button {
-  display: inline-block;
-  margin-top: 14px;
-  background: #00d95a;
-  color: #03140d;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 13px;
-  padding: 11px 16px;
-  border-radius: 12px;
+  border-color: #00d95a;
 }
 
 /* BAŞLIKLAR */
 
 .section-title {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 800;
-  margin: 22px 0 11px;
+  margin: 22px 0 6px;
 }
 
 .section-subtitle {
   color: #7e9289;
   font-size: 12px;
-  margin-top: -6px;
-  margin-bottom: 12px;
+  margin-bottom: 13px;
+  line-height: 1.4;
 }
 
 /* KARTLAR */
 
 .places {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
+  grid-template-columns: repeat(2,minmax(0,1fr));
   gap: 11px;
 }
 
@@ -184,12 +119,11 @@ body {
 
 .place-photo {
   width: 100%;
-  height: 112px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  background: linear-gradient(145deg,#123b28,#071b12);
+  height: 125px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #10281d;
 }
 
 .place-content {
@@ -228,27 +162,44 @@ body {
   font-weight: 800;
 }
 
-/* KAYNAK */
+/* FOTOĞRAF KAYNAKLARI */
 
 .sources {
-  margin-top: 28px;
-  padding: 15px;
+  margin-top: 30px;
+  padding: 16px;
   background: #081f15;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 17px;
 }
 
 .sources-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-.sources p {
-  color: #82958d;
+.sources-intro {
+  color: #879a91;
   font-size: 11px;
   line-height: 1.5;
-  margin: 5px 0;
+  margin-bottom: 12px;
+}
+
+.source-item {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 9px 0;
+  color: #8b9d95;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.source-item strong {
+  color: #fff;
+}
+
+.source-item a {
+  color: #00d95a;
+  text-decoration: none;
 }
 
 /* ALT MENÜ */
@@ -291,6 +242,10 @@ body {
     gap: 8px;
   }
 
+  .place-photo {
+    height: 112px;
+  }
+
   .place-content {
     padding: 11px;
   }
@@ -328,7 +283,8 @@ body {
   </div>
 
   <div class="page-desc">
-    Doğadan denize, tarihten aile eğlencesine kadar Kocaeli'nin keşfedilecek yerleri.
+    Doğadan denize, tarihten aile eğlencesine kadar
+    Kocaeli'nin keşfedilecek yerleri.
   </div>
 
 
@@ -336,70 +292,32 @@ body {
 
   <div class="categories">
 
-    <button class="category-btn active" onclick="showCategory('all',this)">
+    <button class="category-btn active"
+            onclick="showCategory('all',this)">
       ✨ Tümü
     </button>
 
-    <button class="category-btn" onclick="showCategory('doga',this)">
+    <button class="category-btn"
+            onclick="showCategory('doga',this)">
       🌲 Doğa & Macera
     </button>
 
-    <button class="category-btn" onclick="showCategory('deniz',this)">
+    <button class="category-btn"
+            onclick="showCategory('deniz',this)">
       🌊 Deniz & Sahiller
     </button>
 
-    <button class="category-btn" onclick="showCategory('tarih',this)">
+    <button class="category-btn"
+            onclick="showCategory('tarih',this)">
       🏛️ Tarih & Kültür
     </button>
 
-    <button class="category-btn" onclick="showCategory('aile',this)">
+    <button class="category-btn"
+            onclick="showCategory('aile',this)">
       👨‍👩‍👧 Aile & Eğlence
     </button>
 
   </div>
-
-
-  <!-- ÖNE ÇIKAN -->
-
-  <section class="featured">
-
-    <div class="featured-photo">
-
-      <span class="badge">
-        ⭐ Editörün seçimi
-      </span>
-
-    </div>
-
-    <div class="featured-content">
-
-      <div class="featured-title">
-        🌲 Ormanya
-      </div>
-
-      <div class="featured-location">
-        📍 Kartepe
-      </div>
-
-      <div class="featured-text">
-        Doğal yaşam parkı, çocuk alanları,
-        yürüyüş ve bisiklet parkurları,
-        kamp alanı ve birçok aktiviteyi
-        bir arada sunan büyük bir doğa alanı.
-      </div>
-
-      <a
-        class="featured-button"
-        href="https://www.google.com/maps/search/?api=1&query=Ormanya+Kocaeli"
-        target="_blank"
-        rel="noopener"
-      >
-        📍 Yol Tarifi
-      </a>
-
-    </div>
-
-  </section>
 
 
   <!-- DOĞA -->
@@ -417,13 +335,47 @@ body {
     <div class="places">
 
 
+      <!-- ORMANYA -->
+
       <article class="place-card">
 
-        <div class="place-photo">🏔️</div>
+        <div class="place-photo"
+          style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ormanya%20%281%29%2001.jpg');">
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Kuzuyayla</div>
+          <div class="place-name">🌲 Ormanya</div>
+
+          <div class="place-location">📍 Kartepe</div>
+
+          <div class="place-desc">
+            Doğal yaşam parkı, yürüyüş parkurları,
+            çocuk alanları ve kamp imkânları.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Ormanya+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
+        </div>
+
+      </article>
+
+
+      <!-- KUZUYAYLA -->
+
+      <article class="place-card">
+
+        <div class="place-photo"
+          style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kuzuyayla.jpg');">
+        </div>
+
+        <div class="place-content">
+
+          <div class="place-name">🏔️ Kuzuyayla</div>
 
           <div class="place-location">📍 Kartepe</div>
 
@@ -432,9 +384,9 @@ body {
           </div>
 
           <a class="map-btn"
-             href="https://www.google.com/maps/search/?api=1&query=Kuzuyayla+Tabiat+Parkı+Kocaeli"
+             href="https://www.google.com/maps/search/?api=1&query=Kuzuyayla+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -442,49 +394,29 @@ body {
       </article>
 
 
+      <!-- BALLIKAYALAR -->
+
       <article class="place-card">
 
-        <div class="place-photo">🌿</div>
-
-        <div class="place-content">
-
-          <div class="place-name">Maşukiye</div>
-
-          <div class="place-location">📍 Kartepe</div>
-
-          <div class="place-desc">
-            Dereleri, doğası ve restoranlarıyla popüler gezi noktası.
-          </div>
-
-          <a class="map-btn"
-             href="https://www.google.com/maps/search/?api=1&query=Maşukiye+Kartepe+Kocaeli"
-             target="_blank">
-             📍 Yol Tarifi →
-          </a>
-
+        <div class="place-photo"
+          style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ball%C4%B1kayalar%20Kanyon.jpg');">
         </div>
 
-      </article>
-
-
-      <article class="place-card">
-
-        <div class="place-photo">🏞️</div>
-
         <div class="place-content">
 
-          <div class="place-name">Ballıkayalar</div>
+          <div class="place-name">🏞️ Ballıkayalar</div>
 
           <div class="place-location">📍 Gebze</div>
 
           <div class="place-desc">
-            Kanyon, yürüyüş ve doğa keşfi için.
+            Kanyon, yürüyüş ve doğa keşfi için
+            özel bir tabiat parkı.
           </div>
 
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=Ballıkayalar+Tabiat+Parkı+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -492,13 +424,17 @@ body {
       </article>
 
 
+      <!-- BEŞKAYALAR -->
+
       <article class="place-card">
 
-        <div class="place-photo">🌳</div>
+        <div class="place-photo"
+          style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Be%C5%9Fkayalar%20Tabiat%20Park%C4%B1%20-%20Ocak%202020%20DSC08558%20hamdigumus.jpg');">
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Beşkayalar</div>
+          <div class="place-name">🌿 Beşkayalar</div>
 
           <div class="place-location">📍 Başiskele</div>
 
@@ -509,7 +445,7 @@ body {
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=Beşkayalar+Tabiat+Parkı+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -517,24 +453,29 @@ body {
       </article>
 
 
+      <!-- ERİKLİTEPE -->
+
       <article class="place-card">
 
-        <div class="place-photo">🌲</div>
+        <div class="place-photo"
+          style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Eriklitepe%20Tabiat%20Park%C4%B1.jpg');">
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Eriklitepe</div>
+          <div class="place-name">🌳 Eriklitepe</div>
 
           <div class="place-location">📍 Gölcük</div>
 
           <div class="place-desc">
-            Orman, yürüyüş ve doğayla baş başa zaman.
+            Orman havası, yürüyüş ve doğayla
+            baş başa zaman geçirmek için.
           </div>
 
           <a class="map-btn"
-             href="https://www.google.com/maps/search/?api=1&query=Eriklitepe+Tabiat+Parkı+Kocaeli"
+             href="https://www.google.com/maps/search/?api=1&query=Eriklitepe+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -542,24 +483,29 @@ body {
       </article>
 
 
+      <!-- SUADİYE -->
+
       <article class="place-card">
 
-        <div class="place-photo">🌿</div>
+        <div class="place-photo"
+          style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Suad%C4%B0ye%20Tab%C4%B0at%20Park%C4%B1.jpg');">
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Suadiye Tabiat Parkı</div>
+          <div class="place-name">🌿 Suadiye</div>
 
           <div class="place-location">📍 Kartepe</div>
 
           <div class="place-desc">
-            Piknik ve doğa yürüyüşleri için.
+            Piknik, yürüyüş ve doğayla baş başa
+            kalmak için güzel bir rota.
           </div>
 
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=Suadiye+Tabiat+Parkı+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -567,13 +513,47 @@ body {
       </article>
 
 
+      <!-- MAŞUKİYE -->
+
       <article class="place-card">
 
-        <div class="place-photo">🌲</div>
+        <div class="place-photo">
+          🌿
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Kocaeli Kent Ormanı</div>
+          <div class="place-name">🌿 Maşukiye</div>
+
+          <div class="place-location">📍 Kartepe</div>
+
+          <div class="place-desc">
+            Dereleri, doğası ve restoranlarıyla
+            Kocaeli'nin popüler gezi noktalarından.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Maşukiye+Kartepe+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
+        </div>
+
+      </article>
+
+
+      <!-- KENT ORMANI -->
+
+      <article class="place-card">
+
+        <div class="place-photo">
+          🌲
+        </div>
+
+        <div class="place-content">
+
+          <div class="place-name">🌲 Kocaeli Kent Ormanı</div>
 
           <div class="place-location">📍 İzmit</div>
 
@@ -584,7 +564,7 @@ body {
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=Kocaeli+Kent+Ormanı"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -592,13 +572,17 @@ body {
       </article>
 
 
+      <!-- ÇINARLIDERE -->
+
       <article class="place-card">
 
-        <div class="place-photo">🌳</div>
+        <div class="place-photo">
+          🌳
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Çınarlıdere</div>
+          <div class="place-name">🌳 Çınarlıdere</div>
 
           <div class="place-location">📍 Derince</div>
 
@@ -609,7 +593,7 @@ body {
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=Çınarlıdere+Mesire+Alanı+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -617,13 +601,17 @@ body {
       </article>
 
 
+      <!-- İNÖNÜ -->
+
       <article class="place-card">
 
-        <div class="place-photo">⛰️</div>
+        <div class="place-photo">
+          ⛰️
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">İnönü Yaylası</div>
+          <div class="place-name">⛰️ İnönü Yaylası</div>
 
           <div class="place-location">📍 Kartepe</div>
 
@@ -634,7 +622,7 @@ body {
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=İnönü+Yaylası+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -642,13 +630,17 @@ body {
       </article>
 
 
+      <!-- NÜZHETİYE -->
+
       <article class="place-card">
 
-        <div class="place-photo">💦</div>
+        <div class="place-photo">
+          💦
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Nüzhetiye Şelalesi</div>
+          <div class="place-name">💦 Nüzhetiye Şelalesi</div>
 
           <div class="place-location">📍 Gölcük</div>
 
@@ -659,7 +651,7 @@ body {
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=Nüzhetiye+Şelalesi+Kocaeli"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -667,24 +659,28 @@ body {
       </article>
 
 
+      <!-- KARTEPE -->
+
       <article class="place-card">
 
-        <div class="place-photo">🏔️</div>
+        <div class="place-photo">
+          🏔️
+        </div>
 
         <div class="place-content">
 
-          <div class="place-name">Kartepe</div>
+          <div class="place-name">🏔️ Kartepe</div>
 
           <div class="place-location">📍 Kartepe</div>
 
           <div class="place-desc">
-            Kış sporları, doğa ve dağ manzarası.
+            Dağ manzarası, doğa ve kış sporları.
           </div>
 
           <a class="map-btn"
              href="https://www.google.com/maps/search/?api=1&query=Kartepe+Kayak+Merkezi"
              target="_blank">
-             📍 Yol Tarifi →
+            📍 Yol Tarifi →
           </a>
 
         </div>
@@ -712,122 +708,277 @@ body {
 
 
       <article class="place-card">
-        <div class="place-photo">🏖️</div>
+
+        <div class="place-photo">
+          🏖️
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Kerpe</div>
+
+          <div class="place-name">🏖️ Kerpe</div>
           <div class="place-location">📍 Kandıra</div>
-          <div class="place-desc">Plaj, deniz ve gün batımı.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Kerpe+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Plaj, deniz ve gün batımı.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Kerpe+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌊</div>
+
+        <div class="place-photo">
+          🌊
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Kefken</div>
+
+          <div class="place-name">🌊 Kefken</div>
           <div class="place-location">📍 Kandıra</div>
-          <div class="place-desc">Sahil, koylar ve Karadeniz manzarası.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Kefken+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Sahil, koylar ve Karadeniz manzarası.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Kefken+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🪨</div>
+
+        <div class="place-photo">
+          🪨
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Pembe Kayalar</div>
-          <div class="place-location">📍 Kandıra</div>
-          <div class="place-desc">Karadeniz'in dikkat çekici kaya oluşumları.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Pembe+Kayalar+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-name">🪨 Pembe Kayalar</div>
+          <div class="place-location">📍 Kefken</div>
+
+          <div class="place-desc">
+            Karadeniz kıyısındaki etkileyici
+            kaya oluşumları.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Pembe+Kayalar+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌅</div>
+
+        <div class="place-photo">
+          🌅
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Bağırganlı</div>
+
+          <div class="place-name">🌅 Bağırganlı</div>
           <div class="place-location">📍 Kandıra</div>
-          <div class="place-desc">Sakin sahil ve gün batımı.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Bağırganlı+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Sakin sahil ve gün batımı.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Bağırganlı+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🏖️</div>
+
+        <div class="place-photo">
+          🏖️
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Cebeci</div>
+
+          <div class="place-name">🏖️ Cebeci</div>
           <div class="place-location">📍 Kandıra</div>
-          <div class="place-desc">Uzun kumsalıyla sevilen sahil.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Cebeci+Kandıra+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Uzun kumsalıyla sevilen sahil.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Cebeci+Kandıra+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌊</div>
+
+        <div class="place-photo">
+          🌊
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Babalı</div>
+
+          <div class="place-name">🌊 Babalı</div>
           <div class="place-location">📍 Kandıra</div>
-          <div class="place-desc">Karadeniz kıyısında doğal sahil.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Babalı+Kandıra+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Karadeniz kıyısında doğal sahil.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Babalı+Kandıra+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌅</div>
+
+        <div class="place-photo">
+          🌅
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Darıca Sahili</div>
+
+          <div class="place-name">🌅 Darıca Sahili</div>
           <div class="place-location">📍 Darıca</div>
-          <div class="place-desc">Yürüyüş, bisiklet ve deniz manzarası.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Darıca+Sahili+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Yürüyüş, bisiklet ve deniz manzarası.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Darıca+Sahili+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌴</div>
+
+        <div class="place-photo">
+          🌴
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Harikalar Sahili</div>
+
+          <div class="place-name">🌴 Harikalar Sahili</div>
           <div class="place-location">📍 Derince</div>
-          <div class="place-desc">Aileler için sahil ve park alanı.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Harikalar+Sahili+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Aileler için sahil ve park alanı.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Harikalar+Sahili+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌊</div>
+
+        <div class="place-photo">
+          🌊
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Başiskele Sahili</div>
+
+          <div class="place-name">🌊 Başiskele Sahili</div>
           <div class="place-location">📍 Başiskele</div>
-          <div class="place-desc">Körfez manzarası ve sahil yürüyüşü.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Başiskele+Sahili+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Körfez manzarası ve sahil yürüyüşü.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Başiskele+Sahili+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌊</div>
+
+        <div class="place-photo">
+          🌊
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Değirmendere</div>
+
+          <div class="place-name">🌊 Değirmendere</div>
           <div class="place-location">📍 Gölcük</div>
-          <div class="place-desc">Sahil, yürüyüş ve deniz havası.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Değirmendere+Gölcük+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Sahil, yürüyüş ve deniz havası.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Değirmendere+Gölcük+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
 
       <article class="place-card">
-        <div class="place-photo">🌅</div>
+
+        <div class="place-photo">
+          🌅
+        </div>
+
         <div class="place-content">
-          <div class="place-name">Hereke Sahili</div>
+
+          <div class="place-name">🌅 Hereke Sahili</div>
           <div class="place-location">📍 Körfez</div>
-          <div class="place-desc">Sahil yürüyüşü ve körfez manzarası.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Hereke+Sahili+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Sahil yürüyüşü ve körfez manzarası.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Hereke+Sahili+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -854,10 +1005,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🏛️</div>
         <div class="place-content">
+
           <div class="place-name">Kasr-ı Hümayun</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Osmanlı döneminden kalan saray müze.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Kasr-ı+Hümayun+İzmit" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Osmanlı döneminden kalan tarihi saray müzesi.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Kasr-ı+Hümayun+İzmit"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -865,10 +1026,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🏺</div>
         <div class="place-content">
+
           <div class="place-name">Kocaeli Arkeoloji Müzesi</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Kocaeli ve çevresinin arkeolojik mirası.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Kocaeli+Arkeoloji+Müzesi" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Kocaeli ve çevresinin arkeolojik mirası.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Kocaeli+Arkeoloji+Müzesi"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -876,10 +1047,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🏛️</div>
         <div class="place-content">
+
           <div class="place-name">Atatürk Redif Müzesi</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Tarih ve etnografya koleksiyonları.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Atatürk+Redif+ve+Etnografya+Müzesi" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Tarih ve etnografya koleksiyonları.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Atatürk+Redif+ve+Etnografya+Müzesi"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -887,10 +1068,20 @@ body {
       <article class="place-card">
         <div class="place-photo">⚓</div>
         <div class="place-content">
+
           <div class="place-name">Gayret Gemi Müzesi</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Denizcilik tarihine farklı bir bakış.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Gayret+Gemi+Müzesi+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Denizcilik tarihine farklı bir bakış.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Gayret+Gemi+Müzesi+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -898,10 +1089,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🎨</div>
         <div class="place-content">
+
           <div class="place-name">Osman Hamdi Bey Evi</div>
           <div class="place-location">📍 Gebze</div>
-          <div class="place-desc">Ünlü ressamın Eskihisar'daki evi ve müzesi.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Osman+Hamdi+Bey+Evi+Müzesi" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Ünlü ressamın Eskihisar'daki evi ve müzesi.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Osman+Hamdi+Bey+Evi+Müzesi"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -909,10 +1110,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🏰</div>
         <div class="place-content">
+
           <div class="place-name">Eskihisar Kalesi</div>
           <div class="place-location">📍 Gebze</div>
-          <div class="place-desc">Tarihi kale ve körfez manzarası.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Eskihisar+Kalesi+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Tarihi kale ve körfez manzarası.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Eskihisar+Kalesi+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -920,10 +1131,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🧵</div>
         <div class="place-content">
+
           <div class="place-name">Hereke</div>
           <div class="place-location">📍 Körfez</div>
-          <div class="place-desc">Hereke halıları ve tarihiyle öne çıkan bölge.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Hereke+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Hereke halıları ve tarihiyle öne çıkan bölge.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Hereke+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -931,10 +1152,20 @@ body {
       <article class="place-card">
         <div class="place-photo">📜</div>
         <div class="place-content">
+
           <div class="place-name">Seka Kağıt Müzesi</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Kâğıt üretiminin tarihini keşfet.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Seka+Kağıt+Müzesi+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Kâğıt üretiminin tarihini keşfet.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Seka+Kağıt+Müzesi+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -942,10 +1173,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🕌</div>
         <div class="place-content">
+
           <div class="place-name">Orhan Camii</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">İzmit'in tarihi camilerinden biri.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Orhan+Camii+İzmit" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            İzmit'in tarihi camilerinden biri.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Orhan+Camii+İzmit"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -972,10 +1213,23 @@ body {
       <article class="place-card">
         <div class="place-photo">🦁</div>
         <div class="place-content">
-          <div class="place-name">Faruk Yalçın Hayvanat Bahçesi</div>
+
+          <div class="place-name">
+            Faruk Yalçın Hayvanat Bahçesi
+          </div>
+
           <div class="place-location">📍 Darıca</div>
-          <div class="place-desc">Hayvanlar ve botanik alanları.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Faruk+Yalçın+Hayvanat+Bahçesi" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Hayvanlar ve botanik alanları.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Faruk+Yalçın+Hayvanat+Bahçesi"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -983,10 +1237,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🌊</div>
         <div class="place-content">
+
           <div class="place-name">Sekapark</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Park, sahil, bisiklet ve çocuk alanları.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Sekapark+İzmit" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Park, sahil, bisiklet ve çocuk alanları.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Sekapark+İzmit"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -994,10 +1258,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🔬</div>
         <div class="place-content">
+
           <div class="place-name">Kocaeli Bilim Merkezi</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Çocuklar için bilim ve keşif alanları.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Kocaeli+Bilim+Merkezi" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Çocuklar için bilim ve keşif alanları.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Kocaeli+Bilim+Merkezi"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -1005,10 +1279,20 @@ body {
       <article class="place-card">
         <div class="place-photo">📜</div>
         <div class="place-content">
+
           <div class="place-name">Seka Kağıt Müzesi</div>
           <div class="place-location">📍 İzmit</div>
-          <div class="place-desc">Çocuklarla gezilebilecek interaktif müze.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Seka+Kağıt+Müzesi" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Çocuklarla gezilebilecek interaktif müze.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Seka+Kağıt+Müzesi"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -1016,10 +1300,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🌴</div>
         <div class="place-content">
+
           <div class="place-name">Harikalar Sahili</div>
           <div class="place-location">📍 Derince</div>
-          <div class="place-desc">Ailece yürüyüş ve açık hava keyfi.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Harikalar+Sahili+Derince" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Ailece yürüyüş ve açık hava keyfi.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Harikalar+Sahili+Derince"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -1027,10 +1321,20 @@ body {
       <article class="place-card">
         <div class="place-photo">🌲</div>
         <div class="place-content">
+
           <div class="place-name">Ormanya</div>
           <div class="place-location">📍 Kartepe</div>
-          <div class="place-desc">Çocuk alanları, hayvanlar ve doğa.</div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Ormanya+Kocaeli" target="_blank">📍 Yol Tarifi →</a>
+
+          <div class="place-desc">
+            Çocuk alanları, hayvanlar ve doğa.
+          </div>
+
+          <a class="map-btn"
+             href="https://www.google.com/maps/search/?api=1&query=Ormanya+Kocaeli"
+             target="_blank">
+            📍 Yol Tarifi →
+          </a>
+
         </div>
       </article>
 
@@ -1039,29 +1343,178 @@ body {
   </section>
 
 
-  <!-- KAYNAK -->
+  <!-- FOTOĞRAF KAYNAKLARI -->
 
   <section class="sources">
 
     <div class="sources-title">
-      ℹ️ Kocaeli Cepte
+      📷 Fotoğraf Kaynakları ve Lisanslar
     </div>
 
-    <p>
-      Gezi noktaları Kocaeli Büyükşehir Belediyesi ve
-      Kocaeli İl Kültür ve Turizm Müdürlüğü kaynakları
-      esas alınarak hazırlanmıştır.
-    </p>
+    <div class="sources-intro">
+      Bu bölümde kullanılan Wikimedia Commons görsellerinin
+      kaynak ve lisans bilgileri aşağıda belirtilmiştir.
+      Görseller ilgili Creative Commons lisanslarının şartlarına
+      uygun şekilde kullanılmaktadır.
+    </div>
 
-    <p>
-      📷 Fotoğraflı kartlarda kullanılan görsellerin
-      kaynak ve lisans bilgileri ilgili sayfada belirtilmiştir.
-    </p>
+
+    <div class="source-item">
+
+      <strong>Ormanya</strong><br>
+
+      Fotoğraf: Zafer<br>
+
+      Lisans: CC BY-SA 4.0<br>
+
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Ormanya_(1)_01.jpg"
+        target="_blank">
+        Wikimedia Commons kaynağı
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Kuzuyayla</strong><br>
+
+      Fotoğraf: Omerograf<br>
+
+      Lisans: CC BY-SA 4.0<br>
+
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Kuzuyayla.jpg"
+        target="_blank">
+        Wikimedia Commons kaynağı
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Ballıkayalar</strong><br>
+
+      Fotoğraf: Bya~trwiki<br>
+
+      Lisans: CC BY-SA 4.0<br>
+
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Ball%C4%B1kayalar_Kanyon.jpg"
+        target="_blank">
+        Wikimedia Commons kaynağı
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Beşkayalar</strong><br>
+
+      Fotoğraf: Hamdigumus<br>
+
+      Lisans: CC BY-SA 4.0<br>
+
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Be%C5%9Fkayalar_Tabiat_Park%C4%B1_-_Ocak_2020_DSC08558_hamdigumus.jpg"
+        target="_blank">
+        Wikimedia Commons kaynağı
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Eriklitepe</strong><br>
+
+      Lisans: CC BY-SA 4.0<br>
+
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Eriklitepe_Tabiat_Park%C4%B1.jpg"
+        target="_blank">
+        Wikimedia Commons kaynağı
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Suadiye Tabiat Parkı</strong><br>
+
+      Fotoğraf: Mmt44<br>
+
+      Lisans: CC BY-SA 4.0<br>
+
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Suad%C4%B0ye_Tab%C4%B0at_Park%C4%B1.jpg"
+        target="_blank">
+        Wikimedia Commons kaynağı
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Sekapark</strong><br>
+
+      Fotoğraf: Fatih Renkligil<br>
+
+      Lisans: CC BY-SA 4.0<br>
+
+      <a
+        href="https://commons.wikimedia.org/wiki/File:KOCAELI_IZMIT_SEKA_PARK.jpg"
+        target="_blank">
+        Wikimedia Commons kaynağı
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Darıca Sahili</strong><br>
+
+      Wikimedia Commons — Darıca kategorisi<br>
+
+      Kullanılan görselin lisansı için kaynak sayfası:
+      <a
+        href="https://commons.wikimedia.org/wiki/Category:Darıca"
+        target="_blank">
+        Wikimedia Commons
+      </a>
+
+    </div>
+
+
+    <div class="source-item">
+
+      <strong>Lisans</strong><br>
+
+      CC BY-SA 4.0:
+      Kaynak gösterme ve aynı/uyumlu lisans şartları uygulanır.
+
+      <br><br>
+
+      <a
+        href="https://creativecommons.org/licenses/by-sa/4.0/"
+        target="_blank">
+        Creative Commons BY-SA 4.0
+      </a>
+
+    </div>
 
   </section>
 
 </main>
 
+
+<!-- ALT MENÜ -->
 
 <nav class="bottom-nav">
 
@@ -1093,15 +1546,17 @@ function showCategory(category, button) {
 
   button.classList.add("active");
 
-  const sections = document.querySelectorAll(".category-section");
-
-  sections.forEach(function(section) {
+  document.querySelectorAll(".category-section").forEach(function(section) {
 
     if (category === "all") {
       section.style.display = "block";
-    } else if (section.dataset.section === category) {
+    }
+
+    else if (section.dataset.section === category) {
       section.style.display = "block";
-    } else {
+    }
+
+    else {
       section.style.display = "none";
     }
 
