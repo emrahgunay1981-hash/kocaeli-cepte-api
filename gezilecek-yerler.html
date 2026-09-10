@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kocaeli Gezilecek Yerler</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #061a12;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding-bottom: 90px;
+}
+
+.topbar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background: #061a12;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.back {
+  font-size: 30px;
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.container {
+  padding: 18px 15px 30px;
+}
+
+.page-title {
+  font-size: 27px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.page-desc {
+  color: #7f998e;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.places {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.place-card {
+  background: #0d241a;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 18px;
+  padding: 17px 14px;
+  min-height: 205px;
+  display: flex;
+  flex-direction: column;
+}
+
+.place-icon {
+  font-size: 35px;
+  margin-bottom: 12px;
+}
+
+.place-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.place-desc {
+  color: #789187;
+  font-size: 13px;
+  line-height: 1.35;
+  min-height: 38px;
+}
+
+.map-btn {
+  margin-top: auto;
+  padding-top: 13px;
+  color: #12c95d;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 82px;
+  background: #03140d;
+  border-top: 1px solid rgba(255,255,255,.08);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  z-index: 20;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: #71857d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 13px;
+}
+
+.nav-icon {
+  font-size: 25px;
+}
+
+.nav-item.active {
+  color: #12c95d;
+}
+
+@media (max-width: 380px) {
+
+  .places {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .place-card {
+    padding: 14px 12px;
+    min-height: 195px;
+  }
+
+  .place-name {
+    font-size: 16px;
+  }
+
+  .place-desc {
+    font-size: 12px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <a href="index.html" class="back">‹</a>
+
+  <div class="logo">
+    🌲 Kocaeli Gezilecek Yerler
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <div class="page-title">
+    Kocaeli'yi Keşfet
+  </div>
+
+  <div class="page-desc">
+    Doğa, deniz, mesire alanları ve ailece gezilecek yerler
+  </div>
+
+
+  <section class="places">
+
+
+    <!-- ORMANYA -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🌲</div>
+
+      <div class="place-name">
+        Ormanya
+      </div>
+
+      <div class="place-desc">
+        Doğa parkı, çocuk alanları, yürüyüş parkurları ve mesire alanı.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Ormanya+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- KUZUYAYLA -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🏔️</div>
+
+      <div class="place-name">
+        Kuzuyayla
+      </div>
+
+      <div class="place-desc">
+        Kartepe'de doğa, manzara, piknik ve yürüyüş için güzel bir rota.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Kuzuyayla+Tabiat+Parkı+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- SEKAPARK -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🌊</div>
+
+      <div class="place-name">
+        Sekapark
+      </div>
+
+      <div class="place-desc">
+        Sahil, yürüyüş, bisiklet, çocuk alanları ve şehir içinde keyifli vakit.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Sekapark+İzmit+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- BALLIKAYALAR -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🏞️</div>
+
+      <div class="place-name">
+        Ballıkayalar
+      </div>
+
+      <div class="place-desc">
+        Kanyon, kayalıklar, yürüyüş ve doğa keşfi için ideal.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Ballıkayalar+Tabiat+Parkı+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- KERPE -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🏖️</div>
+
+      <div class="place-name">
+        Kerpe
+      </div>
+
+      <div class="place-desc">
+        Deniz, plaj, sahil yürüyüşü ve gün batımı için popüler Kandıra rotası.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Kerpe+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- KEFKEN -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🌊</div>
+
+      <div class="place-name">
+        Kefken
+      </div>
+
+      <div class="place-desc">
+        Koylar, plajlar, Pembe Kayalar ve sahil rotaları.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Kefken+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- BAĞIRGANLI -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🌅</div>
+
+      <div class="place-name">
+        Bağırganlı
+      </div>
+
+      <div class="place-desc">
+        Sahil, doğa, kamp ve deniz manzarası için güzel bir Kandıra rotası.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Bağırganlı+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- ERİKLİTEPE -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🌳</div>
+
+      <div class="place-name">
+        Eriklitepe
+      </div>
+
+      <div class="place-desc">
+        Orman, temiz hava, piknik ve doğayla baş başa kalmak isteyenlere.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Eriklitepe+Tabiat+Parkı+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- SUADİYE -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🌿</div>
+
+      <div class="place-name">
+        Suadiye Tabiat Parkı
+      </div>
+
+      <div class="place-desc">
+        Doğa yürüyüşü, piknik ve sakin bir gün geçirmek için.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Suadiye+Tabiat+Parkı+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- FARUK YALÇIN -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🦁</div>
+
+      <div class="place-name">
+        Faruk Yalçın Hayvanat Bahçesi
+      </div>
+
+      <div class="place-desc">
+        Hayvanlar, botanik alanlar ve özellikle çocuklu aileler için güzel bir gezi.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Faruk+Yalçın+Hayvanat+Bahçesi+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- DARICA SAHİLİ -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🌅</div>
+
+      <div class="place-name">
+        Darıca Sahili
+      </div>
+
+      <div class="place-desc">
+        Deniz manzarası, yürüyüş ve ailece vakit geçirmek için sahil rotası.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Darıca+Sahili+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+    <!-- BEŞKAYALAR -->
+
+    <div class="place-card">
+
+      <div class="place-icon">🏕️</div>
+
+      <div class="place-name">
+        Beşkayalar
+      </div>
+
+      <div class="place-desc">
+        Orman, kanyon ve doğa yürüyüşleri için keşfedilecek doğal alan.
+      </div>
+
+      <a
+        class="map-btn"
+        href="https://www.google.com/maps/search/?api=1&query=Beşkayalar+Tabiat+Parkı+Kocaeli"
+        target="_blank"
+        rel="noopener"
+      >
+        📍 Yol Tarifi →
+      </a>
+
+    </div>
+
+
+  </section>
+
+</main>
+
+
+<nav class="bottom-nav">
+
+  <a href="index.html" class="nav-item active">
+    <div class="nav-icon">⌂</div>
+    Ana Sayfa
+  </a>
+
+  <a href="haberler.html" class="nav-item">
+    <div class="nav-icon">📰</div>
+    Haberler
+  </a>
+
+  <a href="sport.html" class="nav-item">
+    <div class="nav-icon">⚽</div>
+    Spor
+  </a>
+
+</nav>
+
+</body>
+</html>
