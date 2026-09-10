@@ -32,7 +32,6 @@ body {
   color: #fff;
   text-decoration: none;
   font-size: 36px;
-  line-height: 1;
   margin-right: 13px;
 }
 
@@ -100,22 +99,24 @@ body {
 }
 
 .featured-photo {
-  height: 200px;
-  background:
+  height: 210px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image:
     linear-gradient(
       180deg,
       rgba(0,0,0,.05),
       rgba(0,0,0,.55)
     ),
-    url("https://commons.wikimedia.org/wiki/Special:FilePath/Ormanya%20%281%29%2001.jpg")
-    center/cover no-repeat;
+    url("https://commons.wikimedia.org/wiki/Special:FilePath/Ormanya%20%281%29%2001.jpg");
   display: flex;
   align-items: flex-end;
   padding: 15px;
 }
 
 .badge {
-  background: rgba(0,0,0,.58);
+  background: rgba(0,0,0,.60);
   padding: 8px 11px;
   border-radius: 20px;
   font-size: 12px;
@@ -134,7 +135,7 @@ body {
 .featured-location {
   color: #00d95a;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 8px;
 }
 
@@ -217,6 +218,34 @@ body {
   text-decoration: none;
   font-size: 12px;
   font-weight: 800;
+}
+
+/* FOTOĞRAF KAYNAKLARI */
+
+.sources {
+  margin-top: 25px;
+  padding: 15px;
+  background: #081f15;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 16px;
+}
+
+.sources-title {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.sources p {
+  margin: 7px 0;
+  color: #899b93;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.sources a {
+  color: #00d95a;
+  text-decoration: none;
 }
 
 /* ALT MENÜ */
@@ -350,10 +379,10 @@ body {
       </div>
 
       <div class="featured-text">
-        Doğal yaşam parkı, çocuk hayvanat bahçesi,
-        yürüyüş ve bisiklet parkurları, kamp alanı
-        ve Ormanköy ile Kocaeli'nin en özel gezi
-        noktalarından biri.
+        Doğal yaşam parkı, çocuk alanları,
+        yürüyüş ve bisiklet parkurları,
+        kamp alanı ve doğayla iç içe
+        keyifli bir gezi noktası.
       </div>
 
       <a
@@ -370,8 +399,6 @@ body {
   </section>
 
 
-  <!-- DİĞER YERLER -->
-
   <section class="places">
 
 
@@ -381,7 +408,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kuzuyayla.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kuzuyayla%20Tabiat%20Park%C4%B1%20%282%29%2002.jpg');"
       ></div>
 
       <div class="place-content">
@@ -413,51 +440,13 @@ body {
     </article>
 
 
-    <!-- SEKAPARK -->
-
-    <article class="place-card" data-category="deniz aile">
-
-      <div
-        class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Sekapark%20İzmit%20Kocaeli%20%5E©Abdullah%20Kiyga%20-%20panoramio.jpg');"
-      ></div>
-
-      <div class="place-content">
-
-        <div class="place-name">
-          🌊 Sekapark
-        </div>
-
-        <div class="place-location">
-          📍 İzmit
-        </div>
-
-        <div class="place-desc">
-          Sahil, yürüyüş, bisiklet ve ailece
-          vakit geçirmek için şehir içindeki güzel rota.
-        </div>
-
-        <a
-          class="map-btn"
-          href="https://www.google.com/maps/search/?api=1&query=Sekapark+İzmit+Kocaeli"
-          target="_blank"
-          rel="noopener"
-        >
-          📍 Yol Tarifi →
-        </a>
-
-      </div>
-
-    </article>
-
-
     <!-- BALLIKAYALAR -->
 
     <article class="place-card" data-category="doga">
 
       <div
         class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/BALLIKAYALAR.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ball%C4%B1kayalar%20G%C3%B6l%20ve%20Piknik%20Alan%C4%B1.jpg');"
       ></div>
 
       <div class="place-content">
@@ -471,8 +460,8 @@ body {
         </div>
 
         <div class="place-desc">
-          Kanyon, yürüyüş, trekking, kamp ve
-          kaya tırmanışı için doğal bir alan.
+          Kanyon, yürüyüş, trekking ve doğa
+          keşfi için özel bir tabiat parkı.
         </div>
 
         <a
@@ -489,13 +478,51 @@ body {
     </article>
 
 
-    <!-- SUADİYE -->
+    <!-- SEKAPARK -->
 
-    <article class="place-card" data-category="doga aile">
+    <article class="place-card" data-category="deniz aile">
 
       <div
         class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Suadİye%20Tabİat%20Parkı.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Sekapark%27taki%20F-4%20Phantom%20II.jpg');"
+      ></div>
+
+      <div class="place-content">
+
+        <div class="place-name">
+          🌊 Sekapark
+        </div>
+
+        <div class="place-location">
+          📍 İzmit
+        </div>
+
+        <div class="place-desc">
+          Sahil, yürüyüş, bisiklet ve
+          şehir içinde ailece vakit geçirmek için.
+        </div>
+
+        <a
+          class="map-btn"
+          href="https://www.google.com/maps/search/?api=1&query=Sekapark+İzmit+Kocaeli"
+          target="_blank"
+          rel="noopener"
+        >
+          📍 Yol Tarifi →
+        </a>
+
+      </div>
+
+    </article>
+
+
+    <!-- SUADİYE -->
+
+    <article class="place-card" data-category="doga">
+
+      <div
+        class="place-photo"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Suad%C4%B0ye%20Tab%C4%B0at%20Park%C4%B1.jpg');"
       ></div>
 
       <div class="place-content">
@@ -509,13 +536,89 @@ body {
         </div>
 
         <div class="place-desc">
-          Piknik, yürüyüş, bisiklet ve doğayla
-          baş başa kalmak için sakin bir rota.
+          Piknik, yürüyüş ve doğayla baş başa
+          kalmak isteyenlere güzel bir rota.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Suadiye+Tabiat+Parkı+Kocaeli"
+          target="_blank"
+          rel="noopener"
+        >
+          📍 Yol Tarifi →
+        </a>
+
+      </div>
+
+    </article>
+
+
+    <!-- ERİKLİTEPE -->
+
+    <article class="place-card" data-category="doga aile">
+
+      <div
+        class="place-photo"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Eriklitepe%20Tabiat%20Park%C4%B1.jpg');"
+      ></div>
+
+      <div class="place-content">
+
+        <div class="place-name">
+          🌳 Eriklitepe
+        </div>
+
+        <div class="place-location">
+          📍 Gölcük
+        </div>
+
+        <div class="place-desc">
+          Orman havası, yürüyüş ve doğayla
+          sakin bir gün geçirmek için.
+        </div>
+
+        <a
+          class="map-btn"
+          href="https://www.google.com/maps/search/?api=1&query=Eriklitepe+Tabiat+Parkı+Kocaeli"
+          target="_blank"
+          rel="noopener"
+        >
+          📍 Yol Tarifi →
+        </a>
+
+      </div>
+
+    </article>
+
+
+    <!-- BEŞKAYALAR -->
+
+    <article class="place-card" data-category="doga">
+
+      <div
+        class="place-photo"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Be%C5%9Fkayalar%20Tabiat%20Park%C4%B1%20-%20Ocak%202020%20DSC08558%20hamdigumus.jpg');"
+      ></div>
+
+      <div class="place-content">
+
+        <div class="place-name">
+          🌿 Beşkayalar
+        </div>
+
+        <div class="place-location">
+          📍 Başiskele
+        </div>
+
+        <div class="place-desc">
+          Orman, vadi ve doğal güzellikleriyle
+          keşif ve yürüyüş için.
+        </div>
+
+        <a
+          class="map-btn"
+          href="https://www.google.com/maps/search/?api=1&query=Beşkayalar+Tabiat+Parkı+Kocaeli"
           target="_blank"
           rel="noopener"
         >
@@ -533,7 +636,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kocaeli%20Kandıra%20Kerpe.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kocaeli%20Kand%C4%B1ra%20Kerpe.jpg');"
       ></div>
 
       <div class="place-content">
@@ -548,7 +651,7 @@ body {
 
         <div class="place-desc">
           Deniz, plaj, kayalıklar ve gün batımı
-          için Kocaeli'nin sevilen sahil rotası.
+          için sevilen Karadeniz rotası.
         </div>
 
         <a
@@ -571,7 +674,7 @@ body {
 
       <div
         class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Pembe%20Kayalar.JPG');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Pembe%20kayalar%205%20DSC4959.jpg');"
       ></div>
 
       <div class="place-content">
@@ -585,51 +688,13 @@ body {
         </div>
 
         <div class="place-desc">
-          Karadeniz kıyısındaki doğal kaya oluşumları
-          ve fotoğraf için etkileyici bir nokta.
+          Karadeniz kıyısındaki etkileyici kaya
+          oluşumları ve fotoğraf noktaları.
         </div>
 
         <a
           class="map-btn"
           href="https://www.google.com/maps/search/?api=1&query=Pembe+Kayalar+Kocaeli"
-          target="_blank"
-          rel="noopener"
-        >
-          📍 Yol Tarifi →
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- BAĞIRGANLI -->
-
-    <article class="place-card" data-category="deniz">
-
-      <div
-        class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Bağırganlı%20Halk%20Plajı%2001.jpg');"
-      ></div>
-
-      <div class="place-content">
-
-        <div class="place-name">
-          🌅 Bağırganlı
-        </div>
-
-        <div class="place-location">
-          📍 Kandıra
-        </div>
-
-        <div class="place-desc">
-          Sahil, deniz ve gün batımı için
-          sakin Karadeniz rotalarından biri.
-        </div>
-
-        <a
-          class="map-btn"
-          href="https://www.google.com/maps/search/?api=1&query=Bağırganlı+Kocaeli"
           target="_blank"
           rel="noopener"
         >
@@ -661,8 +726,8 @@ body {
         </div>
 
         <div class="place-desc">
-          Hayvanat bahçesi ve botanik parkıyla
-          özellikle çocuklu aileler için güzel bir gezi.
+          Hayvanat bahçesi ve botanik alanlarıyla
+          çocuklu aileler için güzel bir gezi.
         </div>
 
         <a
@@ -679,13 +744,13 @@ body {
     </article>
 
 
-    <!-- DARICA -->
+    <!-- DARICA SAHİLİ -->
 
     <article class="place-card" data-category="deniz aile">
 
       <div
         class="place-photo"
-        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kocaeli%20Darıca%20Sahil%20Dudayev%20Parkında%20Balık%20Tutan%20Bir%20Adam%20-%20panoramio.jpg');"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kocaeli%20Dari%C3%A7a%20Sahil%20Dudayev%20Park%C4%B1nda%20Bal%C4%B1k%20Tutan%20Bir%20Adam%20-%20panoramio.jpg');"
       ></div>
 
       <div class="place-content">
@@ -700,7 +765,7 @@ body {
 
         <div class="place-desc">
           Sahil yürüyüşü, deniz manzarası ve
-          ailece vakit geçirmek için güzel bir rota.
+          ailece vakit geçirmek için.
         </div>
 
         <a
@@ -716,6 +781,213 @@ body {
 
     </article>
 
+
+    <!-- KEFKEN -->
+
+    <article class="place-card" data-category="deniz">
+
+      <div
+        class="place-photo"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Kefken%20Bal%C4%B1kcı%20Limanı.jpg');"
+      ></div>
+
+      <div class="place-content">
+
+        <div class="place-name">
+          🌊 Kefken
+        </div>
+
+        <div class="place-location">
+          📍 Kandıra
+        </div>
+
+        <div class="place-desc">
+          Karadeniz kıyısı, liman, sahil ve
+          çevredeki doğal güzellikler.
+        </div>
+
+        <a
+          class="map-btn"
+          href="https://www.google.com/maps/search/?api=1&query=Kefken+Kocaeli"
+          target="_blank"
+          rel="noopener"
+        >
+          📍 Yol Tarifi →
+        </a>
+
+      </div>
+
+    </article>
+
+
+    <!-- BAĞIRGANLI -->
+
+    <article class="place-card" data-category="deniz">
+
+      <div
+        class="place-photo"
+        style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ba%C4%9F%C4%B1rganl%C4%B1%20Halk%20Plaj%C4%B1%2001.jpg');"
+      ></div>
+
+      <div class="place-content">
+
+        <div class="place-name">
+          🌅 Bağırganlı
+        </div>
+
+        <div class="place-location">
+          📍 Kandıra
+        </div>
+
+        <div class="place-desc">
+          Deniz, sahil ve gün batımı için
+          sakin Karadeniz rotalarından biri.
+        </div>
+
+        <a
+          class="map-btn"
+          href="https://www.google.com/maps/search/?api=1&query=Bağırganlı+Kocaeli"
+          target="_blank"
+          rel="noopener"
+        >
+          📍 Yol Tarifi →
+        </a>
+
+      </div>
+
+    </article>
+
+
+  </section>
+
+
+  <!-- FOTOĞRAF KAYNAKLARI -->
+
+  <section class="sources">
+
+    <div class="sources-title">
+      📷 Fotoğraf Kaynakları
+    </div>
+
+    <p>
+      Ormanya — Zafer — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Ormanya_(1)_01.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Kuzuyayla — Kocaeligönüllüsü — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Kuzuyayla_Tabiat_Park%C4%B1_(2)_02.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Ballıkayalar — Thiazine — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Ball%C4%B1kayalar_G%C3%B6l_ve_Piknik_Alan%C4%B1.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Sekapark — Mehmeteefe — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Sekapark%27taki_F-4_Phantom_II.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Suadiye — Mmt44 — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Suad%C4%B0ye_Tab%C4%B0at_Park%C4%B1.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Eriklitepe — HekFeySul — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Eriklitepe_Tabiat_Park%C4%B1.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Beşkayalar — Hamdigumus — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Be%C5%9Fkayalar_Tabiat_Park%C4%B1_-_Ocak_2020_DSC08558_hamdigumus.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Kerpe — Kocaeli Kameraman Şadi Akdoğan — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Kocaeli_Kand%C4%B1ra_Kerpe.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Pembe Kayalar — Şadi Akdoğan — CC BY 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Pembe_kayalar_5_DSC4959.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Faruk Yalçın — Elelicht — CC BY-SA 3.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Faruk_Yalcin_Zoo_Kocaeli.JPG"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Darıca Sahili — HuSeYiN — CC BY-SA 3.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Kocaeli_Dar%C4%B1ca_Sahil_Dudayev_Park%C4%B1nda_Bal%C4%B1k_Tutan_Bir_Adam_-_panoramio.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
+
+    <p>
+      Kefken — Kocaeli Kameraman Şadi Akdoğan — CC BY-SA 4.0 —
+      <a
+        href="https://commons.wikimedia.org/wiki/File:Kefken_Bal%C4%B1kc%C4%B1_Liman%C4%B1.jpg"
+        target="_blank"
+      >
+        Wikimedia Commons
+      </a>
+    </p>
 
   </section>
 
@@ -748,32 +1020,4 @@ body {
 
 function filterPlaces(category, button) {
 
-  document.querySelectorAll(".filter").forEach(function(btn) {
-    btn.classList.remove("active");
-  });
-
-  button.classList.add("active");
-
-  document.querySelectorAll(".place-card").forEach(function(card) {
-
-    if (category === "all") {
-      card.style.display = "flex";
-      return;
-    }
-
-    const categories = card.dataset.category || "";
-
-    if (categories.includes(category)) {
-      card.style.display = "flex";
-    } else {
-      card.style.display = "none";
-    }
-
-  });
-
-}
-
-</script>
-
-</body>
-</html>
+  document.querySelectorA
