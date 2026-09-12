@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+  name="theme-color"
+  content="#002b1d"
+>
 
 <title>Kocaeli Cepte - Haberler</title>
 
+
 <style>
+
+/* =========================================================
+   KOCAELİ CEPTE
+   HABERLER - YEŞİL TEMA
+========================================================= */
 
 * {
   box-sizing: border-box;
@@ -14,90 +31,272 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  background: #0b1710;
-  color: #f2f5f2;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  background:
+    linear-gradient(
+      180deg,
+      #002b1d 0%,
+      #003c29 45%,
+      #002d20 100%
+    );
+
+  color: #f2f7f3;
+
   padding-bottom: 30px;
+
+  min-height: 100vh;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+
+  -webkit-tap-highlight-color:
+    transparent;
 }
 
-/* HEADER */
+
+/* =========================================================
+   ANA ALAN
+========================================================= */
+
+.header,
+.back,
+.page-title,
+.filters,
+.news {
+
+  width: 100%;
+
+  max-width: 800px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header {
-  padding: 20px 18px 14px;
+
+  padding:
+    20px 18px 17px;
+
   display: flex;
+
   align-items: center;
+
   gap: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #004b32 0%,
+      #00613e 55%,
+      #00774a 100%
+    );
+
+  border-radius:
+    0 0 24px 24px;
+
+  box-shadow:
+    0 8px 25px
+    rgba(0,0,0,.20);
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.header::after {
+
+  content: "";
+
+  position: absolute;
+
+  width: 170px;
+  height: 170px;
+
+  right: -70px;
+  top: -100px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,255,255,.07);
 }
 
 .logo {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  background: linear-gradient(160deg, #1e5631, #123a20);
+
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255,255,255,.13);
+
+  border:
+    1px solid
+    rgba(255,255,255,.16);
+
   display: flex;
+
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+
+  font-size: 23px;
+
+  position: relative;
+  z-index: 2;
+
+  box-shadow:
+    0 6px 16px
+    rgba(0,0,0,.15);
+}
+
+.header > div:last-child {
+
+  position: relative;
+
+  z-index: 2;
 }
 
 .brand {
-  font-size: 20px;
-  font-weight: 800;
+
+  font-size: 21px;
+
+  font-weight: 900;
+
+  letter-spacing: -.4px;
+
+  color: #ffffff;
 }
 
 .brand span {
-  color: #34c759;
+
+  color: #35e86b;
 }
 
 .subtitle {
-  color: #7f9b87;
-  font-size: 10px;
-  letter-spacing: 2px;
+
+  color:
+    rgba(255,255,255,.66);
+
+  font-size: 9px;
+
+  letter-spacing: 1.8px;
+
+  margin-top: 5px;
+
   text-transform: uppercase;
+
+  font-weight: 600;
 }
 
-/* BACK */
+
+/* =========================================================
+   GERİ
+========================================================= */
 
 .back {
-  margin: 0 16px 18px;
+
+  padding:
+    15px 18px 5px;
 }
 
 .back a {
-  color: #7fbf8f;
-  font-size: 13px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: #65d889;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  padding:
+    6px 0;
 }
 
-/* TITLE */
+.back a:active {
+
+  transform:
+    scale(.97);
+}
+
+
+/* =========================================================
+   BAŞLIK
+========================================================= */
 
 .page-title {
-  padding: 0 16px;
-  margin-bottom: 15px;
+
+  padding:
+    8px 18px 15px;
 }
 
 .page-title h1 {
-  font-size: 24px;
-  font-weight: 800;
+
+  font-size: 25px;
+
+  line-height: 1.2;
+
+  font-weight: 900;
+
+  color: #ffffff;
+
+  letter-spacing: -.5px;
 }
 
 .page-title p {
-  color: #7f9b87;
-  font-size: 12px;
-  margin-top: 4px;
+
+  color: #8db4a0;
+
+  font-size: 11px;
+
+  line-height: 1.45;
+
+  margin-top: 6px;
 }
 
-/* FILTERS */
+
+/* =========================================================
+   FİLTRELER
+========================================================= */
 
 .filters {
+
   display: flex;
+
   gap: 8px;
+
   overflow-x: auto;
-  padding: 0 16px 16px;
+
+  padding:
+    0 18px 17px;
+
   scrollbar-width: none;
 }
 
@@ -106,143 +305,419 @@ a {
 }
 
 .filter {
+
   flex-shrink: 0;
-  padding: 7px 12px;
+
+  padding:
+    8px 13px;
+
   border-radius: 20px;
-  background: #10241a;
-  border: 1px solid #1c3826;
-  color: #9fb8a8;
-  font-size: 11px;
+
+  background:
+    #063b29;
+
+  border:
+    1px solid
+    #15543b;
+
+  color: #9dbbab;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
   cursor: pointer;
+
+  transition: .2s;
+}
+
+.filter:active {
+
+  transform:
+    scale(.96);
 }
 
 .filter.active {
-  background: #34c759;
-  color: #06210f;
-  border-color: #34c759;
-  font-weight: 700;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00d95b,
+      #21ed68
+    );
+
+  color:
+    #002711;
+
+  border-color:
+    #21ed68;
+
+  font-weight: 900;
+
+  box-shadow:
+    0 5px 14px
+    rgba(0,220,80,.18);
 }
 
-/* NEWS */
+
+/* =========================================================
+   HABERLER
+========================================================= */
 
 .news {
-  padding: 0 16px;
+
+  padding:
+    0 18px;
 }
 
 .news-card {
+
   display: flex;
+
   gap: 12px;
-  background: #10241a;
-  border: 1px solid #1c3826;
-  border-radius: 14px;
-  padding: 11px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #063c2a,
+      #043323
+    );
+
+  border:
+    1px solid
+    #15523a;
+
+  border-radius: 17px;
+
+  padding: 10px;
+
   margin-bottom: 10px;
+
   overflow: hidden;
+
+  box-shadow:
+    0 6px 18px
+    rgba(0,0,0,.13);
+
+  transition:
+    transform .18s,
+    border-color .18s;
 }
 
 .news-card:active {
-  transform: scale(.99);
+
+  transform:
+    scale(.985);
+
+  border-color:
+    #23704d;
 }
 
-/* HABER RESMİ */
+
+/* =========================================================
+   HABER RESMİ
+========================================================= */
 
 .news-image {
-  width: 105px;
-  height: 85px;
+
+  width: 108px;
+
+  height: 88px;
+
   flex-shrink: 0;
-  border-radius: 10px;
+
+  border-radius: 12px;
+
   object-fit: cover;
+
   display: block;
-  background: #16301f;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0b4932,
+      #063523
+    );
 }
 
-/* RESİM YOKSA */
+
+/* =========================================================
+   RESİM YOKSA
+========================================================= */
 
 .news-image.no-image {
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
-  color: #52705e;
-  font-size: 24px;
+
+  color:
+    #47735b;
+
+  font-size: 25px;
 }
 
-/* HABER İÇERİĞİ */
+
+/* =========================================================
+   HABER İÇERİĞİ
+========================================================= */
 
 .news-content {
+
   min-width: 0;
+
   flex: 1;
+
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
 }
 
 .source {
+
   display: inline-block;
+
   width: fit-content;
-  color: #34c759;
+
+  color:
+    #32e86b;
+
   font-size: 9px;
-  font-weight: 700;
+
+  font-weight: 900;
+
   margin-bottom: 5px;
+
   text-transform: uppercase;
+
+  letter-spacing: .2px;
 }
 
 .news-title {
+
+  color:
+    #edf7f0;
+
   font-size: 13px;
-  line-height: 1.35;
-  font-weight: 700;
+
+  line-height: 1.38;
+
+  font-weight: 750;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
 }
 
 .news-time {
-  color: #7f9b87;
-  font-size: 10px;
+
+  color:
+    #7fa591;
+
+  font-size: 9px;
+
   margin-top: 6px;
 }
+
+
+/* =========================================================
+   YÜKLENİYOR / BOŞ / HATA
+========================================================= */
 
 .loading,
 .empty,
 .error {
+
   text-align: center;
-  padding: 45px 15px;
-  color: #7f9b87;
-  font-size: 13px;
+
+  padding:
+    45px 15px;
+
+  color:
+    #83a894;
+
+  font-size: 12px;
 }
 
 .loading-icon {
+
   font-size: 28px;
+
   margin-bottom: 8px;
 }
 
-/* DESKTOP */
 
-@media (min-width: 700px) {
+/* =========================================================
+   HATA BUTONU
+========================================================= */
 
-  .news {
-    max-width: 800px;
-    margin: auto;
-  }
+.error button {
 
-  .page-title,
-  .filters,
-  .header,
-  .back {
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  border: 0 !important;
 
+  background:
+    linear-gradient(
+      135deg,
+      #00d95b,
+      #21e967
+    ) !important;
+
+  color:
+    #002711 !important;
+
+  padding:
+    9px 15px !important;
+
+  border-radius:
+    10px !important;
+
+  font-weight:
+    900 !important;
+
+  cursor:
+    pointer;
+
+  box-shadow:
+    0 5px 15px
+    rgba(0,220,80,.16);
 }
 
-/* MOBİL */
+
+/* =========================================================
+   MOBİL
+========================================================= */
 
 @media (max-width: 420px) {
 
+  .header {
+
+    padding:
+      18px 16px 16px;
+  }
+
+  .back {
+
+    padding:
+      14px 16px 5px;
+  }
+
+  .page-title {
+
+    padding:
+      8px 16px 14px;
+  }
+
+  .page-title h1 {
+
+    font-size: 24px;
+  }
+
+  .filters {
+
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .news {
+
+    padding:
+      0 16px;
+  }
+
   .news-image {
+
     width: 105px;
+
     height: 85px;
   }
 
   .news-title {
+
     font-size: 13px;
+  }
+
+}
+
+
+/* =========================================================
+   KÜÇÜK TELEFON
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .news {
+
+    padding:
+      0 12px;
+  }
+
+  .filters {
+
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .news-image {
+
+    width: 96px;
+
+    height: 80px;
+  }
+
+  .news-title {
+
+    font-size: 12px;
+  }
+
+  .source {
+
+    font-size: 8px;
+  }
+
+}
+
+
+/* =========================================================
+   MASAÜSTÜ
+========================================================= */
+
+@media (min-width: 700px) {
+
+  body {
+
+    padding-bottom: 40px;
+  }
+
+  .header {
+
+    border-radius:
+      0 0 25px 25px;
+  }
+
+  .news-card {
+
+    padding:
+      12px;
+  }
+
+  .news-image {
+
+    width: 125px;
+
+    height: 95px;
+  }
+
+  .news-title {
+
+    font-size: 14px;
   }
 
 }
@@ -251,9 +726,13 @@ a {
 
 </head>
 
+
 <body>
 
-<!-- HEADER -->
+
+<!-- =======================================================
+     HEADER
+======================================================= -->
 
 <div class="header">
 
@@ -276,22 +755,30 @@ a {
 </div>
 
 
-<!-- GERİ -->
+<!-- =======================================================
+     GERİ
+======================================================= -->
 
 <div class="back">
 
   <a href="index.html">
+
     ← Ana Sayfaya Dön
+
   </a>
 
 </div>
 
 
-<!-- BAŞLIK -->
+<!-- =======================================================
+     BAŞLIK
+======================================================= -->
 
 <div class="page-title">
 
-  <h1>📰 Kocaeli Haberleri</h1>
+  <h1>
+    📰 Kocaeli Haberleri
+  </h1>
 
   <p>
     Kocaeli'nin farklı haber kaynaklarından güncel haberler
@@ -300,40 +787,65 @@ a {
 </div>
 
 
-<!-- FİLTRELER -->
+<!-- =======================================================
+     FİLTRELER
+======================================================= -->
 
 <div class="filters">
 
-  <div class="filter active" data-source="Tümü">
+  <div
+    class="filter active"
+    data-source="Tümü"
+  >
     Tümü
   </div>
 
-  <div class="filter" data-source="Kocaeli Gazetesi">
+  <div
+    class="filter"
+    data-source="Kocaeli Gazetesi"
+  >
     Kocaeli Gazetesi
   </div>
 
-  <div class="filter" data-source="Özgür Kocaeli">
+  <div
+    class="filter"
+    data-source="Özgür Kocaeli"
+  >
     Özgür Kocaeli
   </div>
 
-  <div class="filter" data-source="Ses Kocaeli">
+  <div
+    class="filter"
+    data-source="Ses Kocaeli"
+  >
     Ses Kocaeli
   </div>
 
-  <div class="filter" data-source="En Kocaeli">
+  <div
+    class="filter"
+    data-source="En Kocaeli"
+  >
     En Kocaeli
   </div>
 
-  <div class="filter" data-source="Kocaeli Gündem">
+  <div
+    class="filter"
+    data-source="Kocaeli Gündem"
+  >
     Kocaeli Gündem
   </div>
 
 </div>
 
 
-<!-- HABERLER -->
+<!-- =======================================================
+     HABERLER
+======================================================= -->
 
-<div class="news" id="news">
+<div
+  class="news"
+  id="news"
+>
 
   <div class="loading">
 
@@ -350,38 +862,60 @@ a {
 
 <script>
 
+/* =========================================================
+   HABERLER
+========================================================= */
+
 let allNews = [];
 
 
-/* HTML GÜVENLİĞİ */
+/* =========================================================
+   HTML GÜVENLİĞİ
+========================================================= */
 
 function escapeHtml(str) {
 
   if (!str) return "";
 
   return String(str)
+
     .replace(/&/g, "&amp;")
+
     .replace(/</g, "&lt;")
+
     .replace(/>/g, "&gt;")
+
     .replace(/"/g, "&quot;")
+
     .replace(/'/g, "&#039;");
 
 }
 
 
-/* HABERLERİ GÖSTER */
+/* =========================================================
+   HABERLERİ GÖSTER
+========================================================= */
 
 function renderNews(source = "Tümü") {
 
-  const container = document.getElementById("news");
+  const container =
+    document.getElementById("news");
 
-  let news = allNews;
+
+  let news =
+    allNews;
+
 
   if (source !== "Tümü") {
 
-    news = allNews.filter(item =>
-      String(item.source || "").trim() === source
-    );
+    news =
+      allNews.filter(item =>
+
+        String(
+          item.source || ""
+        ).trim() === source
+
+      );
 
   }
 
@@ -392,7 +926,9 @@ function renderNews(source = "Tümü") {
 
       <div class="empty">
 
-        📰<br><br>
+        📰
+
+        <br><br>
 
         Bu kaynakta şu anda haber bulunamadı.
 
@@ -405,97 +941,155 @@ function renderNews(source = "Tümü") {
   }
 
 
-  container.innerHTML = news.map(item => {
+  container.innerHTML =
 
-    const title = escapeHtml(item.title || "Başlıksız haber");
+    news.map(item => {
 
-    const sourceName =
-      escapeHtml(item.source || "Kocaeli");
-
-    const time =
-      escapeHtml(item.time || "");
-
-    const link =
-      escapeHtml(item.link || "#");
-
-    const image =
-      item.image
-        ? escapeHtml(String(item.image).trim())
-        : "";
+      const title =
+        escapeHtml(
+          item.title ||
+          "Başlıksız haber"
+        );
 
 
-    let imageHtml = "";
+      const sourceName =
+        escapeHtml(
+          item.source ||
+          "Kocaeli"
+        );
 
-    if (image) {
 
-      imageHtml = `
+      const time =
+        escapeHtml(
+          item.time ||
+          ""
+        );
 
-        <img
-          class="news-image"
-          src="${image}"
-          alt=""
-          loading="lazy"
-          referrerpolicy="no-referrer"
-          onerror="this.outerHTML='<div class=&quot;news-image no-image&quot;>📰</div>'"
+
+      const link =
+        escapeHtml(
+          item.link ||
+          "#"
+        );
+
+
+      const image =
+        item.image
+          ? escapeHtml(
+              String(
+                item.image
+              ).trim()
+            )
+          : "";
+
+
+      let imageHtml = "";
+
+
+      if (image) {
+
+        imageHtml = `
+
+          <img
+
+            class="news-image"
+
+            src="${image}"
+
+            alt=""
+
+            loading="lazy"
+
+            referrerpolicy="no-referrer"
+
+            onerror="
+              this.outerHTML=
+              '<div class=&quot;news-image no-image&quot;>📰</div>'
+            "
+
+          >
+
+        `;
+
+      }
+
+      else {
+
+        imageHtml = `
+
+          <div class="news-image no-image">
+
+            📰
+
+          </div>
+
+        `;
+
+      }
+
+
+      return `
+
+        <a
+
+          class="news-card"
+
+          href="${link}"
+
+          target="_blank"
+
+          rel="noopener noreferrer"
+
         >
 
+          ${imageHtml}
+
+
+          <div class="news-content">
+
+
+            <div class="source">
+
+              ${sourceName}
+
+            </div>
+
+
+            <div class="news-title">
+
+              ${title}
+
+            </div>
+
+
+            <div class="news-time">
+
+              ${time}
+
+            </div>
+
+
+          </div>
+
+        </a>
+
       `;
 
-    } else {
-
-      imageHtml = `
-
-        <div class="news-image no-image">
-          📰
-        </div>
-
-      `;
-
-    }
-
-
-    return `
-
-      <a
-        class="news-card"
-        href="${link}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-
-        ${imageHtml}
-
-        <div class="news-content">
-
-          <div class="source">
-            ${sourceName}
-          </div>
-
-          <div class="news-title">
-            ${title}
-          </div>
-
-          <div class="news-time">
-            ${time}
-          </div>
-
-        </div>
-
-      </a>
-
-    `;
-
-  }).join("");
+    }).join("");
 
 }
 
 
-/* API'DEN HABERLER */
+/* =========================================================
+   API'DEN HABERLER
+========================================================= */
 
 async function loadNews() {
 
   const container =
-    document.getElementById("news");
+    document.getElementById(
+      "news"
+    );
 
 
   container.innerHTML = `
@@ -516,12 +1110,17 @@ async function loadNews() {
   try {
 
     const response =
-      await fetch("/api/news?cache=" + Date.now());
+      await fetch(
+        "/api/news?cache=" +
+        Date.now()
+      );
 
 
     if (!response.ok) {
 
-      throw new Error("API hatası");
+      throw new Error(
+        "API hatası"
+      );
 
     }
 
@@ -532,15 +1131,21 @@ async function loadNews() {
 
     if (
       !data.ok ||
-      !Array.isArray(data.items)
+      !Array.isArray(
+        data.items
+      )
     ) {
 
-      throw new Error("Haber verisi yok");
+      throw new Error(
+        "Haber verisi yok"
+      );
 
     }
 
 
-    allNews = data.items;
+    allNews =
+      data.items;
+
 
     renderNews();
 
@@ -559,7 +1164,9 @@ async function loadNews() {
 
       <div class="error">
 
-        📰<br><br>
+        📰
+
+        <br><br>
 
         Haberler şu anda yüklenemiyor.
 
@@ -571,17 +1178,10 @@ async function loadNews() {
 
         <button
           onclick="loadNews()"
-          style="
-            border:0;
-            background:#34c759;
-            color:#06210f;
-            padding:9px 14px;
-            border-radius:10px;
-            font-weight:700;
-            cursor:pointer;
-          "
         >
+
           ↻ Tekrar Dene
+
         </button>
 
       </div>
@@ -593,38 +1193,54 @@ async function loadNews() {
 }
 
 
-/* KAYNAK FİLTRELERİ */
+/* =========================================================
+   KAYNAK FİLTRELERİ
+========================================================= */
 
 document
   .querySelectorAll(".filter")
   .forEach(button => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+      "click",
+      () => {
 
-      document
-        .querySelectorAll(".filter")
-        .forEach(btn =>
-          btn.classList.remove("active")
+        document
+          .querySelectorAll(
+            ".filter"
+          )
+          .forEach(btn =>
+
+            btn.classList.remove(
+              "active"
+            )
+
+          );
+
+
+        button.classList.add(
+          "active"
         );
 
 
-      button.classList.add("active");
+        renderNews(
+          button.dataset.source
+        );
 
-
-      renderNews(
-        button.dataset.source
-      );
-
-    });
+      }
+    );
 
   });
 
 
-/* SAYFA AÇILINCA */
+/* =========================================================
+   SAYFA AÇILINCA
+========================================================= */
 
 loadNews();
 
 </script>
 
 </body>
+
 </html>
