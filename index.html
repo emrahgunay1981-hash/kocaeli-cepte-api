@@ -12,7 +12,7 @@
 
 <meta
   name="theme-color"
-  content="#061a12"
+  content="#087f8c"
 >
 
 <title>Kocaeli Cepte</title>
@@ -20,20 +20,19 @@
 
 <style>
 
-/* ==========================================
-   GENEL
-========================================== */
+/* =========================================================
+   KOCAELİ CEPTE - PROFESYONEL MAVİ TASARIM
+========================================================= */
 
 * {
-
   box-sizing: border-box;
-
   margin: 0;
-
   padding: 0;
-
 }
 
+html {
+  scroll-behavior: smooth;
+}
 
 body {
 
@@ -44,21 +43,28 @@ body {
     Arial,
     sans-serif;
 
-  background: #061a12;
+  background:
+    linear-gradient(
+      180deg,
+      #eefbfc 0%,
+      #f7fbfc 42%,
+      #ffffff 100%
+    );
 
-  color: #f4f7f5;
+  color: #173b4a;
 
   padding-bottom: 90px;
 
+  min-height: 100vh;
 }
-
 
 button {
-
   font-family: inherit;
-
 }
 
+a {
+  -webkit-tap-highlight-color: transparent;
+}
 
 .container {
 
@@ -73,38 +79,96 @@ button {
 }
 
 
-/* ==========================================
+/* =========================================================
    ÜST BAR
-========================================== */
+========================================================= */
 
 .topbar {
 
-  padding: 22px 15px 16px;
+  position: relative;
+
+  padding: 22px 18px 20px;
 
   display: flex;
 
   align-items: center;
 
-  gap: 12px;
+  gap: 13px;
 
-  background: #071d14;
+  background:
+    linear-gradient(
+      135deg,
+      #066b82 0%,
+      #078f9d 55%,
+      #0ba9a5 100%
+    );
 
-  border-bottom:
-    1px solid
-    rgba(255,255,255,.06);
+  color: white;
 
+  border-radius: 0 0 26px 26px;
+
+  box-shadow:
+    0 8px 28px
+    rgba(0, 105, 125, .18);
+
+  overflow: hidden;
+}
+
+.topbar::after {
+
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: -65px;
+  top: -85px;
+
+  background:
+    rgba(255,255,255,.10);
+
+  border-radius: 50%;
+}
+
+.topbar::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  right: 55px;
+  bottom: -70px;
+
+  background:
+    rgba(255,255,255,.07);
+
+  border-radius: 50%;
 }
 
 
 .logo {
 
-  width: 54px;
+  position: relative;
 
-  height: 54px;
+  z-index: 2;
 
-  border-radius: 16px;
+  width: 55px;
 
-  background: #08783d;
+  height: 55px;
+
+  border-radius: 17px;
+
+  background:
+    rgba(255,255,255,.18);
+
+  border:
+    1px solid
+    rgba(255,255,255,.25);
 
   display: flex;
 
@@ -112,19 +176,23 @@ button {
 
   justify-content: center;
 
-  font-size: 27px;
+  font-size: 28px;
 
   box-shadow:
-    0 6px 20px
-    rgba(0,0,0,.25);
+    0 8px 20px
+    rgba(0,0,0,.10);
 
+  backdrop-filter: blur(8px);
 }
 
 
 .brand {
 
-  line-height: 1.05;
+  position: relative;
 
+  z-index: 2;
+
+  line-height: 1.05;
 }
 
 
@@ -132,49 +200,57 @@ button {
 
   font-size: 25px;
 
-  font-weight: 800;
+  font-weight: 900;
 
-  letter-spacing: -.5px;
-
+  letter-spacing: -.6px;
 }
 
 
 .brand-name span {
 
-  color: #12c95d;
-
+  color: #c9ffff;
 }
 
 
 .brand-tag {
 
-  color: #8ca79b;
+  color:
+    rgba(255,255,255,.82);
 
-  font-size: 11px;
+  font-size: 10px;
 
   letter-spacing: 2px;
 
-  margin-top: 6px;
+  margin-top: 7px;
 
+  font-weight: 600;
 }
 
 
-/* ==========================================
+/* =========================================================
    HAVA DURUMU
-========================================== */
+========================================================= */
 
 .mini-weather {
 
-  margin: 10px 0 12px;
+  margin: 14px 0 10px;
 
-  padding: 15px 14px;
+  padding: 13px 14px;
 
   min-height: 58px;
 
-  border-radius: 16px;
+  border-radius: 17px;
 
   background:
-    rgba(255,255,255,0.06);
+    rgba(255,255,255,.95);
+
+  border:
+    1px solid
+    #dceff2;
+
+  box-shadow:
+    0 5px 18px
+    rgba(24, 105, 120, .07);
 
   display: flex;
 
@@ -188,32 +264,29 @@ button {
 
   overflow: hidden;
 
-  font-size: 13px;
+  font-size: 12px;
 
   line-height: 1.4;
 
-  color: #aebfb7;
+  color: #6a8791;
 
   text-align: center;
-
 }
 
 
 .mini-weather strong {
 
-  color: #12c95d;
+  color: #087f8c;
 
-  font-size: 15px;
-
+  font-size: 14px;
 }
 
 
 .mini-weather b {
 
-  color: #fff;
+  color: #183f4e;
 
-  font-size: 21px;
-
+  font-size: 20px;
 }
 
 
@@ -222,58 +295,18 @@ button {
   font-size: 21px;
 
   flex-shrink: 0;
-
 }
 
 
 .mini-weather span {
 
   white-space: nowrap;
-
 }
 
 
-@media (max-width: 420px) {
-
-  .mini-weather {
-
-    margin: 10px 0 12px;
-
-    padding: 13px 9px;
-
-    gap: 5px;
-
-    font-size: 11px;
-
-  }
-
-
-  .mini-weather strong {
-
-    font-size: 13px;
-
-  }
-
-
-  .mini-weather b {
-
-    font-size: 19px;
-
-  }
-
-
-  .mini-weather #weather-icon {
-
-    font-size: 19px;
-
-  }
-
-}
-
-
-/* ==========================================
+/* =========================================================
    FİNANS
-========================================== */
+========================================================= */
 
 .mini-finance {
 
@@ -281,10 +314,18 @@ button {
 
   padding: 12px 10px;
 
-  border-radius: 16px;
+  border-radius: 17px;
 
   background:
-    rgba(255,255,255,0.06);
+    #ffffff;
+
+  border:
+    1px solid
+    #dceff2;
+
+  box-shadow:
+    0 5px 18px
+    rgba(24, 105, 120, .07);
 
   display: flex;
 
@@ -300,17 +341,14 @@ button {
 
   font-size: 11px;
 
-  color: #aebfb7;
+  color: #718d96;
 
   scrollbar-width: none;
-
 }
 
 
 .mini-finance::-webkit-scrollbar {
-
   display: none;
-
 }
 
 
@@ -325,84 +363,157 @@ button {
   flex-shrink: 0;
 
   white-space: nowrap;
-
 }
 
 
 .mini-finance .fin-name {
 
-  color: #12c95d;
+  color: #078897;
 
-  font-weight: 800;
-
+  font-weight: 900;
 }
 
 
 .mini-finance b {
 
-  color: #fff;
+  color: #214552;
 
-  font-size: 14px;
-
+  font-size: 13px;
 }
 
 
 .mini-finance .currency {
 
-  color: #aebfb7;
+  color: #829ba2;
 
-  font-size: 11px;
-
+  font-size: 10px;
 }
 
 
-@media (max-width: 420px) {
+/* =========================================================
+   ACİL DURUM
+========================================================= */
 
-  .mini-finance {
+.emergency-card {
 
-    font-size: 10px;
+  display: flex;
 
-    gap: 5px;
+  align-items: center;
 
-    padding: 10px 7px;
+  gap: 12px;
 
-  }
+  padding: 14px;
 
+  margin: 10px 0 15px;
 
-  .mini-finance b {
-
-    font-size: 12px;
-
-  }
-
-
-  .mini-finance .currency {
-
-    font-size: 10px;
-
-  }
-
-}
-
-
-/* ==========================================
-   MANŞET
-========================================== */
-
-.hero {
-
-  margin-top: 18px;
-
-  border-radius: 20px;
-
-  overflow: hidden;
-
-  background: #10261d;
+  background:
+    linear-gradient(
+      135deg,
+      #fff5f5,
+      #fffafa
+    );
 
   border:
     1px solid
-    rgba(255,255,255,.06);
+    #ffd8d8;
 
+  border-radius: 17px;
+
+  text-decoration: none;
+
+  color: #173b4a;
+
+  box-shadow:
+    0 5px 18px
+    rgba(150, 50, 50, .06);
+
+  transition: .2s;
+}
+
+
+.emergency-card:active {
+  transform: scale(.985);
+}
+
+
+.emergency-icon {
+
+  width: 43px;
+
+  height: 43px;
+
+  border-radius: 13px;
+
+  background:
+    #ffe4e4;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+
+  flex-shrink: 0;
+}
+
+
+.emergency-info {
+  flex: 1;
+}
+
+
+.emergency-title {
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  color: #d84a4a;
+}
+
+
+.emergency-desc {
+
+  margin-top: 3px;
+
+  color: #9b7777;
+
+  font-size: 11px;
+}
+
+
+.emergency-arrow {
+
+  font-size: 25px;
+
+  color: #df6262;
+}
+
+
+/* =========================================================
+   MANŞET
+========================================================= */
+
+.hero {
+
+  margin-top: 17px;
+
+  border-radius: 21px;
+
+  overflow: hidden;
+
+  background:
+    #ffffff;
+
+  border:
+    1px solid
+    #dceff2;
+
+  box-shadow:
+    0 10px 30px
+    rgba(20, 100, 120, .11);
 }
 
 
@@ -410,21 +521,26 @@ button {
 
   width: 100%;
 
-  height: 230px;
+  height: 235px;
 
   object-fit: cover;
 
   display: block;
 
-  background: #12251e;
-
+  background:
+    linear-gradient(
+      135deg,
+      #dff6f7,
+      #b9e6eb
+    );
 }
 
 
 .hero-content {
 
-  padding: 16px;
+  padding: 17px 17px 18px;
 
+  background: white;
 }
 
 
@@ -432,31 +548,40 @@ button {
 
   display: inline-block;
 
-  background: #12b957;
+  background:
+    linear-gradient(
+      135deg,
+      #087f8c,
+      #0ba7a6
+    );
 
-  color: #03150c;
+  color: white;
 
-  font-weight: 800;
+  font-weight: 900;
 
-  font-size: 11px;
+  font-size: 10px;
 
-  padding: 6px 9px;
+  padding: 6px 10px;
 
   border-radius: 7px;
 
   margin-bottom: 9px;
 
+  box-shadow:
+    0 4px 10px
+    rgba(8,127,140,.16);
 }
 
 
 .hero-title {
 
+  color: #163e4c;
+
   font-size: 21px;
 
-  line-height: 1.25;
+  line-height: 1.28;
 
-  font-weight: 800;
-
+  font-weight: 900;
 }
 
 
@@ -464,21 +589,18 @@ button {
 
   margin-top: 10px;
 
-  color: #91a79d;
+  color: #78919a;
 
-  font-size: 12px;
-
+  font-size: 11px;
 }
 
 
-/* ==========================================
+/* =========================================================
    SECTIONS
-========================================== */
+========================================================= */
 
 .section {
-
   margin-top: 25px;
-
 }
 
 
@@ -491,23 +613,21 @@ button {
   align-items: center;
 
   margin-bottom: 13px;
-
 }
 
 
 .section-title {
 
+  color: #173f4e;
+
   font-size: 19px;
 
-  font-weight: 800;
-
+  font-weight: 900;
 }
 
 
 .section-title span {
-
-  color: #12c95d;
-
+  color: #078897;
 }
 
 
@@ -515,24 +635,26 @@ button {
 
   border: 0;
 
-  background: #102b20;
+  background:
+    #e6f6f7;
 
-  color: #a9c2b5;
+  color: #087f8c;
 
-  border-radius: 10px;
+  border-radius: 11px;
 
   padding: 8px 11px;
 
-  font-size: 13px;
+  font-size: 12px;
+
+  font-weight: 800;
 
   cursor: pointer;
-
 }
 
 
-/* ==========================================
+/* =========================================================
    HABERLER
-========================================== */
+========================================================= */
 
 .news-list {
 
@@ -540,8 +662,7 @@ button {
 
   flex-direction: column;
 
-  gap: 12px;
-
+  gap: 11px;
 }
 
 
@@ -553,27 +674,29 @@ button {
 
   padding: 11px;
 
-  background: #0d241a;
+  background:
+    #ffffff;
 
   border:
     1px solid
-    rgba(255,255,255,.055);
+    #dfedf0;
 
-  border-radius: 16px;
+  border-radius: 17px;
 
   text-decoration: none;
 
   color: inherit;
 
-  transition: .2s;
+  box-shadow:
+    0 5px 18px
+    rgba(24, 105, 120, .06);
 
+  transition: .2s;
 }
 
 
 .news-card:active {
-
   transform: scale(.985);
-
 }
 
 
@@ -587,10 +710,14 @@ button {
 
   object-fit: cover;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
-  background: #183127;
-
+  background:
+    linear-gradient(
+      135deg,
+      #dff4f5,
+      #c7e9ec
+    );
 }
 
 
@@ -601,17 +728,18 @@ button {
   display: flex;
 
   flex-direction: column;
-
 }
 
 
 .news-title {
 
-  font-size: 15px;
+  color: #244957;
 
-  line-height: 1.32;
+  font-size: 14px;
 
-  font-weight: 700;
+  line-height: 1.34;
+
+  font-weight: 750;
 
   display: -webkit-box;
 
@@ -620,7 +748,6 @@ button {
   -webkit-box-orient: vertical;
 
   overflow: hidden;
-
 }
 
 
@@ -635,35 +762,32 @@ button {
   justify-content: space-between;
 
   gap: 5px;
-
 }
 
 
 .source {
 
-  color: #16c85c;
+  color: #078897;
 
-  font-size: 11px;
+  font-size: 10px;
 
-  font-weight: 700;
-
+  font-weight: 900;
 }
 
 
 .time {
 
-  color: #718a7e;
+  color: #91a4aa;
 
-  font-size: 11px;
+  font-size: 10px;
 
   white-space: nowrap;
-
 }
 
 
-/* ==========================================
+/* =========================================================
    LOADING
-========================================== */
+========================================================= */
 
 .loading {
 
@@ -671,8 +795,9 @@ button {
 
   padding: 35px 10px;
 
-  color: #7d9589;
+  color: #76929b;
 
+  font-size: 13px;
 }
 
 
@@ -684,10 +809,10 @@ button {
 
   border:
     3px solid
-    #1b3b2d;
+    #d8eef1;
 
   border-top-color:
-    #12c95d;
+    #078897;
 
   border-radius: 50%;
 
@@ -695,16 +820,13 @@ button {
 
   animation:
     spin .8s linear infinite;
-
 }
 
 
 @keyframes spin {
 
   to {
-
     transform: rotate(360deg);
-
   }
 
 }
@@ -712,24 +834,305 @@ button {
 
 .error {
 
-  background: #321817;
+  background:
+    #fff1f1;
 
-  color: #ff9c95;
+  color: #c65b5b;
 
-  border-radius: 14px;
+  border:
+    1px solid
+    #ffdada;
+
+  border-radius: 15px;
 
   padding: 16px;
 
   text-align: center;
 
   font-size: 13px;
-
 }
 
 
-/* ==========================================
-   TRAFİK
-========================================== */
+/* =========================================================
+   KATEGORİLER
+========================================================= */
+
+.category-row {
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr)) !important;
+
+  gap: 11px !important;
+}
+
+
+.category {
+
+  width: auto !important;
+
+  min-width: 0 !important;
+
+  box-sizing: border-box !important;
+
+  display: block;
+
+  padding: 17px 15px;
+
+  min-height: 126px;
+
+  border-radius: 18px;
+
+  background:
+    #ffffff;
+
+  border:
+    1px solid
+    #dfedf0;
+
+  box-shadow:
+    0 6px 20px
+    rgba(24, 105, 120, .065);
+
+  text-decoration: none;
+
+  color: #173f4e;
+
+  transition: .2s;
+}
+
+
+.category:active {
+
+  transform:
+    translateY(1px)
+    scale(.985);
+}
+
+
+.category-icon {
+
+  width: 43px;
+
+  height: 43px;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e4f8f8,
+      #d4f0f2
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+
+  margin-bottom: 10px;
+}
+
+
+.category-name {
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  color: #214957;
+}
+
+
+.category-desc {
+
+  color: #7c969e;
+
+  font-size: 10px;
+
+  line-height: 1.35;
+
+  margin-top: 5px;
+}
+
+
+/* =========================================================
+   VALİLİK
+========================================================= */
+
+.valilik-section {
+  margin-top: 25px;
+}
+
+
+.valilik-section + .section {
+  margin-top: 10px;
+}
+
+
+.valilik-card {
+
+  display: block;
+
+  padding: 15px;
+
+  margin-bottom: 10px;
+
+  background:
+    #ffffff;
+
+  border:
+    1px solid
+    #dfedf0;
+
+  border-radius: 17px;
+
+  text-decoration: none;
+
+  color: #173f4e;
+
+  box-shadow:
+    0 5px 18px
+    rgba(24, 105, 120, .06);
+}
+
+
+.valilik-card:active {
+  transform: scale(.985);
+}
+
+
+.valilik-top {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 7px;
+}
+
+
+.valilik-badge {
+
+  background:
+    #dff5f5;
+
+  color:
+    #087f8c;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  padding: 5px 7px;
+
+  border-radius: 6px;
+}
+
+
+.valilik-type {
+
+  color: #78929a;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+
+.valilik-title {
+
+  font-size: 14px;
+
+  line-height: 1.35;
+
+  font-weight: 750;
+}
+
+
+.valilik-date {
+
+  margin-top: 7px;
+
+  color: #8ba0a7;
+
+  font-size: 10px;
+}
+
+
+.valilik-more {
+
+  display: block;
+
+  margin-top: 10px;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  background:
+    #e6f7f8;
+
+  color:
+    #087f8c;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  font-size: 12px;
+
+  font-weight: 900;
+}
+
+
+.valilik-loading {
+
+  text-align: center;
+
+  padding: 25px 10px;
+
+  color: #7d969d;
+
+  background: white;
+
+  border:
+    1px solid
+    #dfedf0;
+
+  border-radius: 17px;
+
+  font-size: 13px;
+}
+
+
+.valilik-error {
+
+  background:
+    #fff1f1;
+
+  color:
+    #c65b5b;
+
+  border-radius: 14px;
+
+  padding: 15px;
+
+  text-align: center;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TRAFİK / BELEDİYE / NAVİGASYON
+========================================================= */
 
 .traffic-card {
 
@@ -739,32 +1142,50 @@ button {
 
   gap: 12px;
 
-  padding: 13px;
+  padding: 14px;
 
-  background: #0d241a;
+  background:
+    #ffffff;
 
   border:
     1px solid
-    rgba(255,255,255,.06);
+    #dfedf0;
 
-  border-radius: 15px;
+  border-radius: 17px;
 
   text-decoration: none;
 
-  color: white;
+  color: #173f4e;
 
+  box-shadow:
+    0 5px 18px
+    rgba(24, 105, 120, .06);
+
+  transition: .2s;
+}
+
+
+.traffic-card:active {
+
+  transform:
+    scale(.985);
 }
 
 
 .traffic-icon {
 
-  width: 42px;
+  width: 44px;
 
-  height: 42px;
+  height: 44px;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
-  background: #123a29;
+  background:
+    linear-gradient(
+      135deg,
+      #e4f8f8,
+      #d5f0f2
+    );
 
   display: flex;
 
@@ -775,14 +1196,11 @@ button {
   font-size: 22px;
 
   flex-shrink: 0;
-
 }
 
 
 .traffic-info {
-
   flex: 1;
-
 }
 
 
@@ -790,8 +1208,9 @@ button {
 
   font-size: 14px;
 
-  font-weight: 800;
+  font-weight: 900;
 
+  color: #244b59;
 }
 
 
@@ -799,10 +1218,9 @@ button {
 
   margin-top: 3px;
 
-  color: #718b7f;
+  color: #7d969e;
 
-  font-size: 11px;
-
+  font-size: 10px;
 }
 
 
@@ -810,83 +1228,15 @@ button {
 
   font-size: 25px;
 
-  color: #12c95d;
+  color: #078897;
 
-}
-
-<!-- ========================================
-
-/* ==========================================
-   KATEGORİLER
-========================================== */
-
-.category-row {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 1fr);
-
-  gap: 11px;
-
+  line-height: 1;
 }
 
 
-.category {
-
-  display: block;
-
-  padding: 17px 15px;
-
-  border-radius: 16px;
-
-  background: #0d241a;
-
-  border:
-    1px solid
-    rgba(255,255,255,.05);
-
-  text-decoration: none;
-
-  color: white;
-
-}
-
-
-.category-icon {
-
-  font-size: 24px;
-
-  margin-bottom: 8px;
-
-}
-
-
-.category-name {
-
-  font-size: 14px;
-
-  font-weight: 800;
-
-  color: white;
-
-}
-
-
-.category-desc {
-
-  color: #718b7f;
-
-  font-size: 11px;
-
-  margin-top: 4px;
-
-}
-
-
-/* ==========================================
+/* =========================================================
    ALT MENÜ
-========================================== */
+========================================================= */
 
 .bottom-nav {
 
@@ -898,14 +1248,14 @@ button {
 
   right: 0;
 
-  height: 72px;
+  height: 74px;
 
   background:
-    rgba(5,20,14,.97);
+    rgba(255,255,255,.96);
 
   border-top:
     1px solid
-    rgba(255,255,255,.08);
+    #dcecef;
 
   display: flex;
 
@@ -913,8 +1263,12 @@ button {
 
   z-index: 100;
 
-  backdrop-filter: blur(12px);
+  backdrop-filter:
+    blur(14px);
 
+  box-shadow:
+    0 -5px 25px
+    rgba(20, 90, 110, .09);
 }
 
 
@@ -928,7 +1282,6 @@ button {
 
   grid-template-columns:
     repeat(3,1fr);
-
 }
 
 
@@ -938,7 +1291,7 @@ button {
 
   background: transparent;
 
-  color: #668074;
+  color: #8aa0a7;
 
   display: flex;
 
@@ -950,10 +1303,11 @@ button {
 
   gap: 4px;
 
-  font-size: 11px;
+  font-size: 10px;
+
+  font-weight: 700;
 
   cursor: pointer;
-
 }
 
 
@@ -961,33 +1315,116 @@ button {
 
   font-size: 21px;
 
+  line-height: 1;
 }
 
 
 .nav-item.active {
 
-  color: #19ce62;
-
+  color: #078897;
 }
 
 
-/* ==========================================
+.nav-item.active .nav-icon {
+
+  transform:
+    translateY(-1px);
+}
+
+
+/* =========================================================
    MOBİL
-========================================== */
+========================================================= */
 
 @media (max-width: 420px) {
 
+  .topbar {
+
+    padding:
+      20px 15px 18px;
+
+    border-radius:
+      0 0 23px 23px;
+  }
+
+
+  .logo {
+
+    width: 51px;
+
+    height: 51px;
+
+    border-radius: 15px;
+
+    font-size: 25px;
+  }
+
+
+  .brand-name {
+    font-size: 23px;
+  }
+
+
+  .brand-tag {
+
+    font-size: 9px;
+
+    letter-spacing: 1.7px;
+  }
+
+
+  .mini-weather {
+
+    padding: 12px 8px;
+
+    gap: 5px;
+
+    font-size: 10px;
+  }
+
+
+  .mini-weather strong {
+    font-size: 12px;
+  }
+
+
+  .mini-weather b {
+    font-size: 18px;
+  }
+
+
+  .mini-weather #weather-icon {
+    font-size: 18px;
+  }
+
+
+  .mini-finance {
+
+    font-size: 9px;
+
+    gap: 5px;
+
+    padding: 10px 7px;
+  }
+
+
+  .mini-finance b {
+    font-size: 11px;
+  }
+
+
+  .mini-finance .currency {
+    font-size: 9px;
+  }
+
+
   .hero-image {
-
     height: 205px;
-
   }
 
 
   .hero-title {
-
     font-size: 19px;
-
   }
 
 
@@ -996,171 +1433,52 @@ button {
     width: 105px;
 
     height: 85px;
-
   }
 
 
   .news-title {
+    font-size: 13px;
+  }
 
-    font-size: 14px;
 
+  .category {
+    min-height: 120px;
+
+    padding:
+      15px 13px;
+  }
+
+
+  .category-name {
+    font-size: 13px;
+  }
+
+
+  .category-desc {
+    font-size: 10px;
   }
 
 }
-/* ==========================================
-   ACİL DURUM KARTI
-========================================== */
 
-.emergency-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px;
-  background: linear-gradient(135deg, #3a1414, #2a0d0d);
-  border: 1px solid rgba(255,100,100,.25);
-  border-radius: 15px;
-  text-decoration: none;
-  color: white;
-  margin: 10px 0;
-}
 
-.emergency-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #5c1a1a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
+/* =========================================================
+   TABLET / GENİŞ EKRAN
+========================================================= */
 
-.emergency-info {
-  flex: 1;
-}
+@media (min-width: 701px) {
 
-.emergency-title {
-  font-size: 14px;
-  font-weight: 800;
-  color: #ff8787;
-}
+  .topbar {
 
-.emergency-desc {
-  margin-top: 3px;
-  color: #d9a3a3;
-  font-size: 11px;
-}
+    max-width: 700px;
 
-.emergency-arrow {
-  font-size: 25px;
-  color: #ff6b6b;
-  }/* ==========================================
-   KOCAELİ VALİLİĞİ
-========================================== */
+    margin: auto;
 
-.valilik-section {
-  margin-top: 25px;
-}
-
-.valilik-section + .section {
-  margin-top: 10px;
-}
-
-.valilik-card {
-  display: block;
-  padding: 15px;
-  margin-bottom: 10px;
-  background: #0d241a;
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 16px;
-  text-decoration: none;
-  color: white;
-}
-
-.valilik-card:active {
-  transform: scale(.985);
-}
-
-.valilik-top {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-bottom: 7px;
-}
-
-.valilik-badge {
-  background: #12c95d;
-  color: #03150c;
-  font-size: 9px;
-  font-weight: 800;
-  padding: 5px 7px;
-  border-radius: 6px;
-}
-
-.valilik-type {
-  color: #718b7f;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.valilik-title {
-  font-size: 14px;
-  line-height: 1.35;
-  font-weight: 700;
-}
-
-.valilik-date {
-  margin-top: 7px;
-  color: #718a7e;
-  font-size: 10px;
-}
-
-.valilik-more {
-  display: block;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 12px;
-  background: #102b20;
-  color: #12c95d;
-  text-align: center;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.valilik-loading {
-  text-align: center;
-  padding: 25px 10px;
-  color: #7d9589;
-  background: #0d241a;
-  border-radius: 16px;
-  font-size: 13px;
-}
-
-.valilik-error {
-  background: #321817;
-  color: #ff9c95;
-  border-radius: 14px;
-  padding: 15px;
-  text-align: center;
-  font-size: 12px;
+    border-radius:
+      0 0 28px 28px;
   }
-  /* ==========================================
-   KATEGORİ KARTLARI - 2'Lİ DÜZEN
-========================================== */
 
-.category-row {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 11px !important;
 }
 
-.category {
-  width: auto !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-}
 </style>
 
 </head>
@@ -1169,16 +1487,14 @@ button {
 <body>
 
 
-<!-- ========================================
+<!-- ======================================================
      ÜST BAR
-========================================= -->
+====================================================== -->
 
 <header class="topbar">
 
   <div class="logo">
-
     🏙️
-
   </div>
 
 
@@ -1205,9 +1521,9 @@ button {
 <main class="container">
 
 
-<!-- ========================================
+<!-- ======================================================
      HAVA DURUMU
-========================================= -->
+====================================================== -->
 
 <div
   class="mini-weather"
@@ -1266,9 +1582,9 @@ button {
 </div>
 
 
-<!-- ========================================
+<!-- ======================================================
      FİNANS
-========================================= -->
+====================================================== -->
 
 <div
   class="mini-finance"
@@ -1277,9 +1593,7 @@ button {
 
   <div class="fin-item">
 
-    <span>
-      💵
-    </span>
+    <span>💵</span>
 
     <span class="fin-name">
       USD
@@ -1296,16 +1610,12 @@ button {
   </div>
 
 
-  <span>
-    •
-  </span>
+  <span>•</span>
 
 
   <div class="fin-item">
 
-    <span>
-      💶
-    </span>
+    <span>💶</span>
 
     <span class="fin-name">
       EUR
@@ -1322,16 +1632,12 @@ button {
   </div>
 
 
-  <span>
-    •
-  </span>
+  <span>•</span>
 
 
   <div class="fin-item">
 
-    <span>
-      🥇
-    </span>
+    <span>🥇</span>
 
     <span class="fin-name">
       GRAM
@@ -1348,16 +1654,12 @@ button {
   </div>
 
 
-  <span>
-    •
-  </span>
+  <span>•</span>
 
 
   <div class="fin-item">
 
-    <span>
-      ₿
-    </span>
+    <span>₿</span>
 
     <span class="fin-name">
       BTC
@@ -1374,6 +1676,12 @@ button {
   </div>
 
 </div>
+
+
+<!-- ======================================================
+     ACİL DURUM
+====================================================== -->
+
 <a
   class="emergency-card"
   href="acil-durum.html"
@@ -1401,9 +1709,10 @@ button {
 
 </a>
 
-<!-- ========================================
+
+<!-- ======================================================
      MANŞET
-========================================= -->
+====================================================== -->
 
 <section id="hero-area">
 
@@ -1418,9 +1727,9 @@ button {
 </section>
 
 
-<!-- ========================================
+<!-- ======================================================
      SON HABERLER
-========================================= -->
+====================================================== -->
 
 <section class="section">
 
@@ -1465,9 +1774,9 @@ button {
 </section>
 
 
-<!-- ========================================
+<!-- ======================================================
      KATEGORİLER
-========================================= -->
+====================================================== -->
 
 <section class="section">
 
@@ -1476,8 +1785,6 @@ button {
     style="margin-top:13px;"
   >
 
-
-    <!-- TÜM HABERLER -->
 
     <a
       class="category"
@@ -1499,8 +1806,6 @@ button {
     </a>
 
 
-    <!-- SPOR -->
-
     <a
       class="category"
       href="sport.html"
@@ -1520,8 +1825,6 @@ button {
 
     </a>
 
-
-    <!-- ETKİNLİKLER -->
 
     <a
       class="category"
@@ -1543,8 +1846,6 @@ button {
     </a>
 
 
-    <!-- NÖBETÇİ ECZANELER -->
-
     <a
       class="category"
       href="eczaneler.html"
@@ -1564,8 +1865,6 @@ button {
 
     </a>
 
-
-    <!-- RESTORANLAR -->
 
     <a
       class="category"
@@ -1587,8 +1886,6 @@ button {
     </a>
 
 
-    <!-- ESNAF -->
-
     <a
       class="category"
       href="esnaf.html"
@@ -1607,50 +1904,55 @@ button {
       </div>
 
     </a>
-<a
-  class="category"
-  href="ulasim.html"
->
 
-  <div class="category-icon">
-    🚌
+
+    <a
+      class="category"
+      href="ulasim.html"
+    >
+
+      <div class="category-icon">
+        🚌
+      </div>
+
+      <div class="category-name">
+        Ulaşım
+      </div>
+
+      <div class="category-desc">
+        Otobüs, vapur ve toplu taşıma
+      </div>
+
+    </a>
+
+
+    <a
+      class="category"
+      href="gezilecek-yerler.html"
+    >
+
+      <div class="category-icon">
+        🌲
+      </div>
+
+      <div class="category-name">
+        Gezilecek Yerler
+      </div>
+
+      <div class="category-desc">
+        Mesire alanları, doğa, keşif
+      </div>
+
+    </a>
+
   </div>
 
-  <div class="category-name">
-    Ulaşım
-  </div>
-
-  <div class="category-desc">
-    Otobüs, vapur ve toplu taşıma
-  </div>
-
-</a>
-
-
-<!-- GEZİLECEK YERLER -->
-
-<a
-  class="category"
-  href="gezilecek-yerler.html"
->
-
-  <div class="category-icon">
-    🌲
-  </div>
-
-  <div class="category-name">
-    Gezilecek Yerler
-  </div>
-
-  <div class="category-desc">
-    Mesire alanları, doğa, keşif
-  </div>
-
-</a>
 </section>
-<!-- ========================================
+
+
+<!-- ======================================================
      KOCAELİ VALİLİĞİ
-========================================= -->
+====================================================== -->
 
 <section class="section">
 
@@ -1684,7 +1986,13 @@ button {
   </a>
 
 </section>
-  <section class="section">
+
+
+<!-- ======================================================
+     BELEDİYELER
+====================================================== -->
+
+<section class="section">
 
   <a
     class="traffic-card"
@@ -1713,12 +2021,17 @@ button {
 
   </a>
 
-  </section>
-<!-- ========================================
-     KOCAELİ TRAFİK
-========================================= -->
+</section>
 
-<section class="section" style="margin-top:10px;">
+
+<!-- ======================================================
+     KOCAELİ TRAFİK
+====================================================== -->
+
+<section
+  class="section"
+  style="margin-top:10px;"
+>
 
   <a
     class="traffic-card"
@@ -1731,13 +2044,11 @@ button {
       🚦
     </div>
 
-
     <div class="traffic-info">
 
       <div class="traffic-title">
         Kocaeli Trafik
       </div>
-
 
       <div class="traffic-desc">
         Canlı trafik yoğunluğunu görüntüle
@@ -1745,49 +2056,54 @@ button {
 
     </div>
 
+    <div class="traffic-arrow">
+      ›
+    </div>
+
+  </a>
+
+
+  <!-- NAVİGASYON -->
+
+  <a
+    class="traffic-card"
+    href="https://yandex.com/maps/?ll=29.9192,40.7654&z=12"
+    target="_blank"
+    rel="noopener noreferrer"
+    style="margin-top:10px;"
+  >
+
+    <div class="traffic-icon">
+      🧭
+    </div>
+
+    <div class="traffic-info">
+
+      <div class="traffic-title">
+        Navigasyon
+      </div>
+
+      <div class="traffic-desc">
+        Yandex ile yol tarifi al
+      </div>
+
+    </div>
 
     <div class="traffic-arrow">
       ›
     </div>
 
   </a>
-<a
-  class="traffic-card"
-  href="https://yandex.com/maps/?ll=29.9192,40.7654&z=12"
-  target="_blank"
-  rel="noopener noreferrer"
-  style="margin-top: 10px;"
->
 
-  <div class="traffic-icon">
-    🧭
-  </div>
-
-  <div class="traffic-info">
-
-    <div class="traffic-title">
-      Navigasyon
-    </div>
-
-    <div class="traffic-desc">
-      Yandex ile yol tarifi al
-    </div>
-
-  </div>
-
-  <div class="traffic-arrow">
-    ›
-  </div>
-
-</a>
 </section>
+
 
 </main>
 
 
-<!-- ========================================
+<!-- ======================================================
      ALT MENÜ
-========================================= -->
+====================================================== -->
 
 <nav class="bottom-nav">
 
@@ -1851,52 +2167,42 @@ button {
 
 <script>
 
-
-/* ==========================================
+/* =========================================================
    HABERLER
-========================================== */
+========================================================= */
 
 let allNews = [];
 
 
-/* ==========================================
+/* =========================================================
    HTML GÜVENLİĞİ
-========================================== */
+========================================================= */
 
 function escapeHtml(text) {
 
   if (!text) {
-
     return "";
-
   }
-
 
   return String(text)
 
     .replace(/&/g, "&amp;")
-
     .replace(/</g, "&lt;")
-
     .replace(/>/g, "&gt;")
-
     .replace(/"/g, "&quot;")
-
     .replace(/'/g, "&#039;");
 
 }
 
 
-/* ==========================================
+/* =========================================================
    HABER SAATİ
-========================================== */
+========================================================= */
 
 function getTime(item) {
 
   if (item.time) {
-
     return item.time;
-
   }
 
   return "";
@@ -1904,9 +2210,9 @@ function getTime(item) {
 }
 
 
-/* ==========================================
+/* =========================================================
    SON DAKİKA KONTROLÜ
-========================================== */
+========================================================= */
 
 function isBreakingNews(item) {
 
@@ -1917,13 +2223,9 @@ function isBreakingNews(item) {
 
 
   if (!time) {
-
     return false;
-
   }
 
-
-  /* Az önce */
 
   if (
     time.includes("az önce") ||
@@ -1934,8 +2236,6 @@ function isBreakingNews(item) {
 
   }
 
-
-  /* Dakika */
 
   const minuteMatch =
     time.match(
@@ -1951,13 +2251,10 @@ function isBreakingNews(item) {
         10
       );
 
-
     return minutes <= 60;
 
   }
 
-
-  /* Saat */
 
   const hourMatch =
     time.match(
@@ -1973,7 +2270,6 @@ function isBreakingNews(item) {
         10
       );
 
-
     return hours < 1;
 
   }
@@ -1984,9 +2280,9 @@ function isBreakingNews(item) {
 }
 
 
-/* ==========================================
+/* =========================================================
    HABERLERİ GETİR
-========================================== */
+========================================================= */
 
 async function loadNews() {
 
@@ -2067,9 +2363,7 @@ async function loadNews() {
       data.items;
 
 
-    /* ======================================
-       MANŞET
-    ====================================== */
+    /* MANŞET */
 
     const first =
       allNews[0];
@@ -2154,9 +2448,7 @@ async function loadNews() {
     `;
 
 
-    /* ======================================
-       SON HABERLER
-    ====================================== */
+    /* SON HABERLER */
 
     const list =
       allNews.slice(1, 11);
@@ -2280,9 +2572,9 @@ async function loadNews() {
 }
 
 
-/* ==========================================
+/* =========================================================
    HAVA DURUMU
-========================================== */
+========================================================= */
 
 async function loadMiniWeather() {
 
@@ -2510,9 +2802,9 @@ async function loadMiniWeather() {
 }
 
 
-/* ==========================================
+/* =========================================================
    FİNANS FORMATLAMA
-========================================== */
+========================================================= */
 
 function formatFinance(value) {
 
@@ -2532,13 +2824,6 @@ function formatFinance(value) {
       .trim();
 
 
-  /*
-     Para sembollerini temizle
-     Örnek:
-     $79,591.00
-     ₺48,45
-  */
-
   text =
     text.replace(
       /[$₺€£]/g,
@@ -2546,13 +2831,6 @@ function formatFinance(value) {
     )
     .trim();
 
-
-  /*
-     Türkçe sayı formatı
-
-     6.974,15
-     → 6974.15
-  */
 
   if (
     text.includes(",") &&
@@ -2570,11 +2848,6 @@ function formatFinance(value) {
   else if (
     text.includes(",")
   ) {
-
-    /*
-       Eğer virgül varsa
-       ondalık kabul et
-    */
 
     text =
       text.replace(",", ".");
@@ -2606,26 +2879,46 @@ function formatFinance(value) {
 }
 
 
-/* ==========================================
-   MİNİ FİNANS (Dolar/Euro/Altın/BTC)
-========================================== */
+/* =========================================================
+   MİNİ FİNANS
+========================================================= */
 
 function formatFinansSayi(raw) {
 
-  if (raw === null || raw === undefined || raw === "") {
+  if (
+    raw === null ||
+    raw === undefined ||
+    raw === ""
+  ) {
+
     return null;
+
   }
 
-  const num = parseFloat(String(raw).replace(",", "."));
 
-  if (isNaN(num)) {
+  const num =
+    parseFloat(
+      String(raw)
+        .replace(",", ".")
+    );
+
+
+  if (
+    isNaN(num)
+  ) {
+
     return null;
+
   }
 
-  return num.toLocaleString("tr-TR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
+
+  return num.toLocaleString(
+    "tr-TR",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }
+  );
 
 }
 
@@ -2634,80 +2927,152 @@ async function loadMiniFinance() {
 
   try {
 
-    const response = await fetch(
-      "https://kocaeli-cepte-api.vercel.app/api/finans"
-    );
+    const response =
+      await fetch(
+        "https://kocaeli-cepte-api.vercel.app/api/finans"
+      );
+
 
     if (!response.ok) {
-      throw new Error("Finans API bağlantısı başarısız");
+
+      throw new Error(
+        "Finans API bağlantısı başarısız"
+      );
+
     }
 
-    const result = await response.json();
+
+    const result =
+      await response.json();
+
 
     if (!result.success) {
-      throw new Error(result.error || "Bilinmeyen hata");
+
+      throw new Error(
+        result.error ||
+        "Bilinmeyen hata"
+      );
+
     }
 
-    const data = result.data || {};
 
-    const usd = formatFinansSayi(data.usd);
-    const eur = formatFinansSayi(data.eur);
-    const gold = formatFinansSayi(data.gold);
-    const btc = formatFinansSayi(data.btc);
+    const data =
+      result.data || {};
+
+
+    const usd =
+      formatFinansSayi(data.usd);
+
+
+    const eur =
+      formatFinansSayi(data.eur);
+
+
+    const gold =
+      formatFinansSayi(data.gold);
+
+
+    const btc =
+      formatFinansSayi(data.btc);
+
 
     if (usd) {
-      document.getElementById("usd-value").textContent = usd;
+
+      document.getElementById(
+        "usd-value"
+      ).textContent =
+        usd;
+
     }
+
 
     if (eur) {
-      document.getElementById("eur-value").textContent = eur;
+
+      document.getElementById(
+        "eur-value"
+      ).textContent =
+        eur;
+
     }
+
 
     if (gold) {
-      document.getElementById("gold-value").textContent = gold;
+
+      document.getElementById(
+        "gold-value"
+      ).textContent =
+        gold;
+
     }
+
 
     if (btc) {
-      document.getElementById("btc-value").textContent = btc;
+
+      document.getElementById(
+        "btc-value"
+      ).textContent =
+        btc;
+
     }
 
-  } catch (error) {
-    console.error("Finans verisi alınamadı:", error);
+  }
+
+
+  catch (error) {
+
+    console.error(
+      "Finans verisi alınamadı:",
+      error
+    );
+
   }
 
 }
 
 
-setInterval(loadMiniFinance, 5 * 60 * 1000);
-/* ==========================================
-   SAYFA AÇILINCA ÇALIŞTIR
-========================================== */
-/* ==========================================
+setInterval(
+  loadMiniFinance,
+  5 * 60 * 1000
+);
+
+
+/* =========================================================
    KOCAELİ VALİLİĞİ
-========================================== */
+========================================================= */
 
 async function loadValilik() {
 
   const list =
-    document.getElementById("valilik-list");
+    document.getElementById(
+      "valilik-list"
+    );
+
 
   if (!list) return;
 
+
   list.innerHTML = `
+
     <div class="valilik-loading">
+
       🏛️ Valilik haberleri getiriliyor...
+
     </div>
+
   `;
+
 
   try {
 
     const response =
       await fetch(
-        "/api/valilik?cache=" + Date.now(),
+        "/api/valilik?cache=" +
+        Date.now(),
         {
           cache: "no-store"
         }
       );
+
 
     if (!response.ok) {
 
@@ -2717,8 +3082,10 @@ async function loadValilik() {
 
     }
 
+
     const data =
       await response.json();
+
 
     if (
       !data.success ||
@@ -2732,6 +3099,7 @@ async function loadValilik() {
 
     }
 
+
     const items =
       data.items.slice(0, 6);
 
@@ -2742,14 +3110,20 @@ async function loadValilik() {
         let type =
           "RESMÎ HABER";
 
-        if (item.type === "basin") {
+
+        if (
+          item.type === "basin"
+        ) {
 
           type =
             "BASIN AÇIKLAMASI";
 
         }
 
-        else if (item.type === "duyuru") {
+
+        else if (
+          item.type === "duyuru"
+        ) {
 
           type =
             "DUYURU";
@@ -2760,12 +3134,16 @@ async function loadValilik() {
         let date =
           item.date || "";
 
+
         if (date) {
 
           const parts =
             date.split("-");
 
-          if (parts.length === 3) {
+
+          if (
+            parts.length === 3
+          ) {
 
             date =
               parts[2] +
@@ -2825,12 +3203,16 @@ async function loadValilik() {
       }).join("");
 
 
-  } catch (error) {
+  }
+
+
+  catch (error) {
 
     console.error(
       "Valilik haberleri yüklenemedi:",
       error
     );
+
 
     list.innerHTML = `
 
@@ -2847,15 +3229,17 @@ async function loadValilik() {
 }
 
 
-/* VALİLİK HABERLERİNİ BAŞLAT */
+/* =========================================================
+   SAYFA AÇILINCA ÇALIŞTIR
+========================================================= */
 
 loadValilik();
+
 loadNews();
 
 loadMiniWeather();
 
 loadMiniFinance();
-
 
 </script>
 
