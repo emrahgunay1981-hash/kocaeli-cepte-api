@@ -1,1 +1,632 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Kocaeli Belediyeleri | Kocaeli Cepte</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #061a12;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  padding-bottom: 85px;
+}
+
+.topbar {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.back {
+  color: white;
+  text-decoration: none;
+  font-size: 36px;
+  margin-right: 13px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.container {
+  padding: 18px 14px 30px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.desc {
+  color: #8da198;
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 20px;
+}
+
+/* BÜYÜKŞEHİR */
+
+.metro-card {
+  background: linear-gradient(135deg,#063b25,#087a43);
+  border: 1px solid rgba(0,217,90,.35);
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.18);
+}
+
+.metro-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.metro-title {
+  font-size: 21px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.metro-text {
+  color: #d2e7dc;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.metro-btn {
+  display: block;
+  text-align: center;
+  background: #00d95a;
+  color: #03140d;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* BAŞLIK */
+
+.section-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 8px 0 13px;
+}
+
+/* BELEDİYE KARTLARI */
+
+.belediye-list {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 11px;
+}
+
+.belediye-card {
+  background: #0a2418;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 17px;
+  padding: 14px;
+  min-width: 0;
+}
+
+.belediye-icon {
+  font-size: 25px;
+  margin-bottom: 9px;
+}
+
+.belediye-name {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+  min-height: 38px;
+}
+
+.belediye-location {
+  color: #00d95a;
+  font-size: 10px;
+  font-weight: 700;
+  margin: 5px 0 13px;
+}
+
+.belediye-btn {
+  display: block;
+  text-align: center;
+  background: #102f21;
+  border: 1px solid rgba(0,217,90,.18);
+  color: #00d95a;
+  text-decoration: none;
+  padding: 9px 5px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* BİLGİ */
+
+.info {
+  margin-top: 22px;
+  padding: 15px;
+  border-radius: 16px;
+  background: #081f15;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.info-title {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.info-text {
+  color: #82958c;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ALT MENÜ */
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 82px;
+  background: #03140d;
+  border-top: 1px solid rgba(255,255,255,.08);
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  z-index: 50;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: #71857d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.nav-icon {
+  font-size: 23px;
+}
+
+.nav-item.active {
+  color: #00d95a;
+}
+
+@media(max-width:380px) {
+
+  .belediye-list {
+    gap: 8px;
+  }
+
+  .belediye-card {
+    padding: 12px;
+  }
+
+  .belediye-name {
+    font-size: 14px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <a href="index.html" class="back">‹</a>
+
+  <div class="logo">
+    🏛️ Kocaeli Belediyeleri
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <div class="title">
+    Belediyeler
+  </div>
+
+  <div class="desc">
+    Kocaeli Büyükşehir Belediyesi ve 12 ilçe
+    belediyesinin resmî internet sitelerine hızlı erişim.
+  </div>
+
+
+  <!-- BÜYÜKŞEHİR -->
+
+  <div class="metro-card">
+
+    <div class="metro-icon">🏙️</div>
+
+    <div class="metro-title">
+      Kocaeli Büyükşehir Belediyesi
+    </div>
+
+    <div class="metro-text">
+      Büyükşehir belediyesi haberleri, duyurular,
+      e-Belediye hizmetleri, ulaşım, imar ve diğer
+      resmî hizmetlere ulaşabilirsiniz.
+    </div>
+
+    <a
+      class="metro-btn"
+      href="https://www.kocaeli.bel.tr/"
+      target="_blank"
+      rel="noopener">
+      🌐 Resmî Web Sitesi →
+    </a>
+
+  </div>
+
+
+  <div class="section-title">
+    🏘️ İlçe Belediyeleri
+  </div>
+
+
+  <div class="belediye-list">
+
+
+    <!-- BAŞİSKELE -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Başiskele Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Başiskele
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.basiskele.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- ÇAYIROVA -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Çayırova Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Çayırova
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.cayirova.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- DARICA -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Darıca Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Darıca
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.darica.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- DERİNCE -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Derince Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Derince
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.derince.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- DİLOVASI -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Dilovası Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Dilovası
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.dilovasi.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- GEBZE -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Gebze Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Gebze
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.gebze.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- GÖLCÜK -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Gölcük Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Gölcük
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.golcuk.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- İZMİT -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        İzmit Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 İzmit
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.izmit.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- KANDIRA -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Kandıra Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Kandıra
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.kandira.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- KARAMÜRSEL -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Karamürsel Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Karamürsel
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.karamursel.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- KARTEPE -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Kartepe Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Kartepe
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.kartepe.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+
+    <!-- KÖRFEZ -->
+
+    <div class="belediye-card">
+
+      <div class="belediye-icon">🏛️</div>
+
+      <div class="belediye-name">
+        Körfez Belediyesi
+      </div>
+
+      <div class="belediye-location">
+        📍 Körfez
+      </div>
+
+      <a
+        class="belediye-btn"
+        href="https://www.korfez.bel.tr/"
+        target="_blank"
+        rel="noopener">
+        Web Sitesi →
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="info">
+
+    <div class="info-title">
+      ℹ️ Resmî bağlantılar
+    </div>
+
+    <div class="info-text">
+      Kocaeli Cepte'deki belediye bağlantıları,
+      ilgili belediyelerin resmî internet adreslerine
+      yönlendirir. Belediye sitelerindeki hizmet,
+      duyuru ve içeriklerden ilgili kurumlar sorumludur.
+    </div>
+
+  </div>
+
+</main>
+
+
+<nav class="bottom-nav">
+
+  <a href="index.html" class="nav-item active">
+    <div class="nav-icon">⌂</div>
+    Ana Sayfa
+  </a>
+
+  <a href="haberler.html" class="nav-item">
+    <div class="nav-icon">📰</div>
+    Haberler
+  </a>
+
+  <a href="sport.html" class="nav-item">
+    <div class="nav-icon">⚽</div>
+    Spor
+  </a>
+
+</nav>
+
+</body>
+        </html>
