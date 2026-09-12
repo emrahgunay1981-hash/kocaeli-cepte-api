@@ -3,25 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#002b1d">
   <title>Kocaelispor Haberleri | Kocaeli Cepte</title>
 
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: #001f15;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #061a12;
-      color: #fff;
-      padding-bottom: 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, #06452f 0%, #002f20 38%, #001f15 100%);
+      color: #f2f7f4;
+      padding-bottom: 85px;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 760px;
       margin: auto;
-      padding: 0 14px 20px;
+      padding: 0 14px 25px;
     }
 
     /* =========================
@@ -32,9 +46,12 @@
       position: relative;
       width: calc(100% + 28px);
       margin-left: -14px;
-      height: 600px;
+      height: 560px;
       overflow: hidden;
-      background: #020805;
+      background: #00150d;
+      border-bottom-left-radius: 26px;
+      border-bottom-right-radius: 26px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.35);
     }
 
     .hero-image {
@@ -44,7 +61,7 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      filter: saturate(1.35) contrast(1.12);
+      filter: saturate(1.3) contrast(1.1);
     }
 
     .hero-overlay {
@@ -53,63 +70,88 @@
       background:
         linear-gradient(
           to bottom,
-          rgba(0,0,0,0.05) 0%,
-          rgba(0,10,5,0.12) 40%,
-          rgba(0,8,5,0.90) 100%
+          rgba(0,0,0,0.08) 0%,
+          rgba(0,15,9,0.12) 35%,
+          rgba(0,18,11,0.48) 58%,
+          rgba(0,15,9,0.96) 100%
         );
+    }
+
+    /* ÜST ROZET */
+
+    .hero-badge {
+      position: absolute;
+      top: 20px;
+      right: 18px;
+      z-index: 10;
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: rgba(0,55,36,0.82);
+      border: 1px solid rgba(53,232,107,0.35);
+      backdrop-filter: blur(8px);
+      color: #bfffd2;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     /* GERİ BUTONU */
 
     .back-button {
       position: absolute;
-      top: 22px;
-      left: 22px;
-      width: 52px;
-      height: 52px;
-      border-radius: 15px;
-      background: rgba(0,70,42,0.85);
-      border: 1px solid rgba(25,216,121,0.35);
+      top: 20px;
+      left: 18px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(0,55,36,0.84);
+      border: 1px solid rgba(53,232,107,0.38);
       color: #fff;
       text-decoration: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 34px;
+      font-size: 31px;
       line-height: 1;
       z-index: 10;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .back-button:active {
+      transform: scale(0.95);
     }
 
     .hero-content {
       position: absolute;
-      left: 26px;
+      left: 24px;
       right: 20px;
-      bottom: 38px;
+      bottom: 34px;
+      z-index: 5;
     }
 
     .hero-title {
       margin: 0;
-      font-size: 40px;
+      font-size: 39px;
       line-height: 0.98;
       font-weight: 900;
       letter-spacing: -1.5px;
       text-transform: uppercase;
     }
 
-    /* KOCAELİSPOR YEŞİL */
-
     .hero-title .kocaelispor {
       display: block;
-      color: #19d879;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+      color: #35e86b;
+      text-shadow:
+        0 2px 8px rgba(0,0,0,0.85),
+        0 0 18px rgba(53,232,107,0.18);
     }
-
-    /* HABERLERİ YEŞİL FIRÇA ÜZERİNDE SİYAH */
 
     .hero-title .haberleri-wrap {
       position: relative;
       display: inline-block;
-      margin-top: 5px;
+      margin-top: 7px;
       padding: 5px 18px 8px 10px;
       z-index: 1;
     }
@@ -122,111 +164,148 @@
       right: -20px;
       top: 2px;
       bottom: 0;
-      background: #19d879;
+      background: linear-gradient(
+        135deg,
+        #16d95d,
+        #35e86b
+      );
       transform: skewX(-8deg);
-      border-radius: 4px;
+      border-radius: 5px;
       box-shadow:
-        -8px 5px 0 rgba(25,216,121,0.65),
-        7px -3px 0 rgba(25,216,121,0.35);
+        -7px 5px 0 rgba(53,232,107,0.45),
+        7px -3px 0 rgba(53,232,107,0.22);
     }
 
     .hero-title .haberleri {
       display: block;
-      color: #020805;
+      color: #00170d;
       position: relative;
       z-index: 2;
       text-shadow: none;
     }
 
     .hero-line {
-      width: 65px;
+      width: 58px;
       height: 4px;
-      background: #19d879;
-      margin: 17px 0 13px;
+      background: #35e86b;
+      margin: 18px 0 13px;
       border-radius: 5px;
+      box-shadow: 0 0 12px rgba(53,232,107,0.35);
     }
 
     .hero-slogan {
-      font-size: 14px;
-      letter-spacing: 4px;
-      font-weight: 700;
-      color: #fff;
+      font-size: 13px;
+      letter-spacing: 3.5px;
+      font-weight: 800;
+      color: #f2fff6;
       text-transform: uppercase;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+      text-shadow: 0 2px 7px rgba(0,0,0,0.85);
     }
 
     /* =========================
-       HABERLER
+       DURUM
     ========================== */
 
     #status {
       text-align: center;
-      padding: 25px 10px;
-      color: #9bc8b1;
-      font-size: 14px;
+      padding: 28px 10px;
+      color: #9fc8b0;
+      font-size: 13px;
+    }
+
+    /* =========================
+       HABER KARTLARI
+    ========================== */
+
+    #news {
+      margin-top: 4px;
     }
 
     .news-card {
-      background: #0b2419;
-      border: 1px solid #174b35;
-      border-radius: 16px;
-      margin-bottom: 16px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(6,60,42,0.96),
+          rgba(3,43,30,0.98)
+        );
+      border: 1px solid #17583d;
+      border-radius: 17px;
+      margin-bottom: 14px;
       overflow: hidden;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.18);
+      box-shadow:
+        0 8px 24px rgba(0,0,0,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.025);
+    }
+
+    .news-card:active {
+      transform: scale(0.992);
     }
 
     .news-image {
       width: 100%;
-      height: 210px;
+      height: 205px;
       object-fit: cover;
       display: block;
-      background: #102d21;
+      background: #0b3022;
     }
 
     .news-content {
-      padding: 15px;
+      padding: 16px;
     }
 
     .news-title {
+      color: #f4fff7;
       font-size: 18px;
       font-weight: 800;
       line-height: 1.35;
-      margin-bottom: 9px;
+      margin-bottom: 10px;
     }
 
     .news-date,
     .news-source {
-      color: #8dbba3;
-      font-size: 12px;
+      color: #86b99d;
+      font-size: 11px;
       margin-bottom: 8px;
     }
 
     .news-description {
-      color: #c8d9d0;
-      font-size: 14px;
-      line-height: 1.5;
-      margin: 8px 0 12px;
+      color: #c5d9cd;
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 9px 0 13px;
     }
 
     .news-button {
-      display: inline-block;
-      background: #087f49;
-      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        linear-gradient(
+          135deg,
+          #0cc953,
+          #35e86b
+        );
+      color: #01200f;
       text-decoration: none;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
+      padding: 10px 15px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 5px 14px rgba(20,210,91,0.16);
     }
 
     .news-button:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
 
+    /* =========================
+       HATA
+    ========================== */
+
     .error {
-      background: #351818;
-      border: 1px solid #6b2c2c;
-      color: #ffb3b3;
+      background: rgba(72,25,25,0.8);
+      border: 1px solid #783737;
+      color: #ffbcbc;
       padding: 18px;
       border-radius: 14px;
       line-height: 1.5;
@@ -241,43 +320,85 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 68px;
-      background: #071b13;
-      border-top: 1px solid #173c2c;
+      height: 70px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(3,38,26,0.98),
+          rgba(1,27,18,0.99)
+        );
+      border-top: 1px solid #174932;
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 1000;
+      box-shadow: 0 -8px 25px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
     }
 
     .bottom-nav a {
       text-decoration: none;
-      color: #8dbba3;
-      font-size: 11px;
+      color: #82aa95;
+      font-size: 10px;
       text-align: center;
       min-width: 65px;
+      transition: 0.2s ease;
     }
 
     .bottom-nav a.active {
-      color: #19d879;
-      font-weight: 700;
+      color: #35e86b;
+      font-weight: 800;
     }
 
     .nav-icon {
       display: block;
       font-size: 21px;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
+      line-height: 1;
     }
+
+    .bottom-nav a.active .nav-icon {
+      filter: drop-shadow(0 0 6px rgba(53,232,107,0.35));
+    }
+
+    /* =========================
+       TABLET / DESKTOP
+    ========================== */
+
+    @media (min-width: 700px) {
+
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero {
+        width: calc(100% + 40px);
+        margin-left: -20px;
+        border-radius: 0 0 28px 28px;
+      }
+
+      #news {
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* =========================
+       MOBİL
+    ========================== */
 
     @media (max-width: 500px) {
 
       .hero {
-        height: 600px;
+        height: 550px;
       }
 
       .hero-content {
-        left: 22px;
-        bottom: 32px;
+        left: 21px;
+        right: 16px;
+        bottom: 31px;
       }
 
       .hero-title {
@@ -285,8 +406,14 @@
       }
 
       .hero-slogan {
-        font-size: 11px;
-        letter-spacing: 3px;
+        font-size: 10px;
+        letter-spacing: 2.7px;
+      }
+
+      .hero-badge {
+        top: 20px;
+        right: 16px;
+        font-size: 9px;
       }
 
       .news-image {
@@ -295,6 +422,35 @@
 
       .news-title {
         font-size: 17px;
+      }
+
+      .news-description {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 360px) {
+
+      .hero {
+        height: 520px;
+      }
+
+      .hero-title {
+        font-size: 30px;
+      }
+
+      .hero-slogan {
+        font-size: 9px;
+        letter-spacing: 2px;
+      }
+
+      .back-button {
+        width: 44px;
+        height: 44px;
+      }
+
+      .hero-badge {
+        padding: 7px 9px;
       }
     }
   </style>
@@ -321,6 +477,12 @@
       <a class="back-button" href="index.html">
         ‹
       </a>
+
+      <!-- ÜST ROZET -->
+
+      <div class="hero-badge">
+        KOCAELİSPOR
+      </div>
 
       <!-- BAŞLIK -->
 
@@ -351,9 +513,13 @@
     </section>
 
 
+    <!-- HABER DURUMU -->
+
     <div id="status">
       Haberler yükleniyor...
     </div>
+
+    <!-- HABERLER -->
 
     <div id="news"></div>
 
