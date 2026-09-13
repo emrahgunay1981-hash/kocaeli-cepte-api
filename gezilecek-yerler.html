@@ -12,20 +12,36 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  background: #061a12;
-  color: #fff;
+  background:
+    radial-gradient(circle at top right, rgba(0,207,232,.12), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(56,232,245,.08), transparent 35%),
+    #061B35;
+  color: #F5FAFF;
   font-family: Arial, sans-serif;
   padding-bottom: 88px;
 }
+
+/* =========================
+   TOPBAR
+========================= */
 
 .topbar {
   height: 68px;
   display: flex;
   align-items: center;
   padding: 0 16px;
-  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: linear-gradient(135deg, #078897, #006B87);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 4px 18px rgba(0,0,0,.28);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
 .back {
@@ -34,72 +50,113 @@ body {
   font-size: 36px;
   line-height: 1;
   margin-right: 13px;
+  transition: .2s;
+}
+
+.back:hover {
+  color: #38E8F5;
 }
 
 .logo {
   font-size: 19px;
-  font-weight: 800;
+  font-weight: 900;
+  letter-spacing: .2px;
 }
 
+/* =========================
+   CONTAINER
+========================= */
+
 .container {
-  padding: 18px 14px 30px;
+  padding: 19px 14px 30px;
+  max-width: 900px;
+  margin: auto;
 }
+
+/* =========================
+   PAGE TITLE
+========================= */
 
 .page-title {
   font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 6px;
+  font-weight: 900;
+  margin-bottom: 7px;
+  letter-spacing: -.3px;
 }
 
 .page-desc {
-  color: #8ba197;
+  color: #9DB7CC;
   font-size: 14px;
-  line-height: 1.45;
-  margin-bottom: 18px;
+  line-height: 1.5;
+  margin-bottom: 19px;
 }
 
-/* KATEGORİLER */
+/* =========================
+   KATEGORİLER
+========================= */
 
 .categories {
   display: grid;
   grid-template-columns: repeat(2,1fr);
   gap: 9px;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .category-btn {
-  border: 1px solid rgba(255,255,255,.07);
-  background: #0c2419;
-  color: #b3c1bb;
+  border: 1px solid rgba(56,232,245,.12);
+  background: linear-gradient(
+    145deg,
+    rgba(13,53,88,.98),
+    rgba(10,41,72,.98)
+  );
+  color: #B7CAD9;
   border-radius: 15px;
-  padding: 12px 7px;
+  padding: 13px 7px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease;
+}
+
+.category-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(56,232,245,.35);
+}
+
+.category-btn:active {
+  transform: scale(.98);
 }
 
 .category-btn.active {
-  background: #00d95a;
-  color: #03140d;
-  border-color: #00d95a;
+  background: linear-gradient(135deg, #00CFE8, #078897);
+  color: #031827;
+  border-color: #38E8F5;
+  box-shadow: 0 5px 16px rgba(0,207,232,.20);
 }
 
-/* BAŞLIKLAR */
+/* =========================
+   BÖLÜM BAŞLIKLARI
+========================= */
 
 .section-title {
   font-size: 21px;
-  font-weight: 800;
-  margin: 22px 0 6px;
+  font-weight: 900;
+  margin: 23px 0 6px;
 }
 
 .section-subtitle {
-  color: #7e9289;
+  color: #8FA9BD;
   font-size: 12px;
-  margin-bottom: 13px;
-  line-height: 1.4;
+  margin-bottom: 14px;
+  line-height: 1.45;
 }
 
-/* KARTLAR */
+/* =========================
+   YER KARTLARI
+========================= */
 
 .places {
   display: grid;
@@ -108,23 +165,51 @@ body {
 }
 
 .place-card {
-  background: #0a2418;
-  border: 1px solid rgba(255,255,255,.07);
+  background: linear-gradient(
+    145deg,
+    rgba(13,53,88,.98),
+    rgba(10,41,72,.98)
+  );
+  border: 1px solid rgba(56,232,245,.11);
   border-radius: 18px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  box-shadow: 0 7px 20px rgba(0,0,0,.18);
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
 }
+
+.place-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56,232,245,.30);
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
+
+/* =========================
+   FOTOĞRAFLAR
+========================= */
 
 .place-photo {
   width: 100%;
-  height: 125px;
+  height: 135px;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  background-color: #10281d;
+  background-color: #0D3558;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
 }
+
+/* =========================
+   KART İÇERİĞİ
+========================= */
 
 .place-content {
   padding: 13px;
@@ -135,74 +220,93 @@ body {
 
 .place-name {
   font-size: 16px;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 5px;
+  font-weight: 900;
+  line-height: 1.25;
+  margin-bottom: 6px;
 }
 
 .place-location {
-  color: #00d95a;
+  color: #38E8F5;
   font-size: 11px;
-  font-weight: 800;
-  margin-bottom: 7px;
+  font-weight: 900;
+  margin-bottom: 8px;
 }
 
 .place-desc {
-  color: #879a91;
+  color: #9DB7CC;
   font-size: 12px;
-  line-height: 1.4;
-  margin-bottom: 12px;
+  line-height: 1.45;
+  margin-bottom: 13px;
 }
 
 .map-btn {
   margin-top: auto;
-  color: #00d95a;
+  color: #00CFE8;
   text-decoration: none;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
+  padding-top: 4px;
 }
 
-/* FOTOĞRAF KAYNAKLARI */
+.map-btn:hover {
+  color: #38E8F5;
+}
+
+/* =========================
+   FOTOĞRAF KAYNAKLARI
+========================= */
 
 .sources {
-  margin-top: 30px;
-  padding: 16px;
-  background: #081f15;
-  border: 1px solid rgba(255,255,255,.07);
+  margin-top: 32px;
+  padding: 17px;
+  background: linear-gradient(
+    145deg,
+    rgba(13,53,88,.95),
+    rgba(10,41,72,.95)
+  );
+  border: 1px solid rgba(56,232,245,.12);
   border-radius: 17px;
+  box-shadow: 0 7px 20px rgba(0,0,0,.16);
 }
 
 .sources-title {
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 900;
   margin-bottom: 10px;
 }
 
 .sources-intro {
-  color: #879a91;
+  color: #9DB7CC;
   font-size: 11px;
-  line-height: 1.5;
-  margin-bottom: 12px;
+  line-height: 1.55;
+  margin-bottom: 13px;
 }
 
 .source-item {
-  border-top: 1px solid rgba(255,255,255,.06);
-  padding: 9px 0;
-  color: #8b9d95;
+  border-top: 1px solid rgba(255,255,255,.07);
+  padding: 10px 0;
+  color: #9DB7CC;
   font-size: 11px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .source-item strong {
-  color: #fff;
+  color: #F5FAFF;
 }
 
 .source-item a {
-  color: #00d95a;
+  color: #00CFE8;
   text-decoration: none;
+  font-weight: 700;
 }
 
-/* ALT MENÜ */
+.source-item a:hover {
+  color: #38E8F5;
+}
+
+/* =========================
+   ALT MENÜ
+========================= */
 
 .bottom-nav {
   position: fixed;
@@ -210,22 +314,26 @@ body {
   right: 0;
   bottom: 0;
   height: 82px;
-  background: #03140d;
-  border-top: 1px solid rgba(255,255,255,.08);
+  background: rgba(3,20,39,.97);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(56,232,245,.10);
   display: grid;
   grid-template-columns: repeat(3,1fr);
   z-index: 50;
+  box-shadow: 0 -5px 20px rgba(0,0,0,.25);
 }
 
 .nav-item {
   text-decoration: none;
-  color: #71857d;
+  color: #718DA2;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
   font-size: 12px;
+  font-weight: 700;
+  transition: .2s;
 }
 
 .nav-icon {
@@ -233,10 +341,19 @@ body {
 }
 
 .nav-item.active {
-  color: #00d95a;
+  color: #00CFE8;
 }
 
+/* =========================
+   MOBİL
+========================= */
+
 @media (max-width:380px) {
+
+  .container {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
 
   .places {
     gap: 8px;
@@ -255,6 +372,10 @@ body {
   }
 
   .place-desc {
+    font-size: 11px;
+  }
+
+  .category-btn {
     font-size: 11px;
   }
 
@@ -333,7 +454,6 @@ body {
     </div>
 
     <div class="places">
-
 
       <!-- ORMANYA -->
 
@@ -706,7 +826,6 @@ body {
 
     <div class="places">
 
-
       <article class="place-card">
 
         <div class="place-photo">
@@ -1001,7 +1120,6 @@ body {
 
     <div class="places">
 
-
       <article class="place-card">
         <div class="place-photo">🏛️</div>
         <div class="place-content">
@@ -1208,7 +1326,6 @@ body {
     </div>
 
     <div class="places">
-
 
       <article class="place-card">
         <div class="place-photo">🦁</div>
@@ -1483,6 +1600,7 @@ body {
       Wikimedia Commons — Darıca kategorisi<br>
 
       Kullanılan görselin lisansı için kaynak sayfası:
+
       <a
         href="https://commons.wikimedia.org/wiki/Category:Darıca"
         target="_blank">
