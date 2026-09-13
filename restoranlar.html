@@ -4,97 +4,146 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<meta name="theme-color" content="#078897">
+
 <title>Kocaeli Cepte - Restoranlar</title>
 
 <style>
+
 * {
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #07111f;
-    color: white;
+    background:
+        radial-gradient(circle at top right, rgba(0,207,232,.12), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(0,207,232,.07), transparent 35%),
+        #061B35;
+    color: #F5FAFF;
+    min-height: 100vh;
 }
+
+/* =========================
+   HEADER
+========================= */
 
 .header {
     position: sticky;
     top: 0;
     z-index: 10;
-    background: #0d241a;
-    padding: 16px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    background:
+        linear-gradient(135deg, #087F91, #00AFC3);
+    padding: 17px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,.20);
 }
 
 .header h1 {
     margin: 0;
     font-size: 22px;
+    font-weight: 800;
+    letter-spacing: .2px;
 }
 
 .back {
     display: inline-block;
     margin-top: 8px;
-    color: #fff;
+    color: rgba(255,255,255,.88);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 600;
 }
 
+/* =========================
+   CONTAINER
+========================= */
+
 .container {
-    padding: 16px;
+    padding: 15px;
     max-width: 800px;
     margin: auto;
 }
 
+/* =========================
+   DISTRICT SELECT
+========================= */
+
 select {
     width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.08);
-    background: #0d241a;
-    color: white;
+    padding: 14px 15px;
+    border-radius: 14px;
+    border: 1px solid rgba(56,232,245,.16);
+    background: #0A2948;
+    color: #F5FAFF;
     font-size: 15px;
     margin-bottom: 16px;
+    outline: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
 }
+
+select:focus {
+    border-color: #00CFE8;
+}
+
+/* =========================
+   STATUS
+========================= */
 
 .status {
     text-align: center;
-    padding: 25px 10px;
-    color: #bbb;
+    padding: 28px 10px;
+    color: #9DB7CC;
 }
 
+/* =========================
+   RESTAURANT CARD
+========================= */
+
 .card {
-    background: #102033;
-    border: 1px solid #1d354d;
-    border-radius: 16px;
+    background:
+        linear-gradient(145deg, #0A2948, #08243F);
+    border: 1px solid rgba(56,232,245,.12);
+    border-radius: 18px;
     overflow: hidden;
     margin-bottom: 16px;
+    box-shadow: 0 9px 28px rgba(0,0,0,.20);
 }
 
 .card img {
     width: 100%;
-    height: 160px;
+    height: 175px;
     object-fit: cover;
     display: block;
-    background: #1d354d;
+    background: #0D3558;
 }
 
 .card-body {
-    padding: 14px 16px;
+    padding: 15px 16px;
 }
 
 .card-name {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
-    margin-bottom: 6px;
+    margin-bottom: 7px;
+    color: #F5FAFF;
 }
 
 .card-address {
-    color: #aeb8c4;
+    color: #AFC3D2;
     font-size: 13px;
-    margin-bottom: 10px;
-    line-height: 1.4;
+    margin-bottom: 11px;
+    line-height: 1.5;
 }
+
+/* =========================
+   BADGES
+========================= */
 
 .badges {
     display: flex;
@@ -104,82 +153,144 @@ select {
 }
 
 .badge {
-    padding: 4px 10px;
+    padding: 5px 10px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
 }
 
 .badge-google {
-    background: #1a3a2a;
-    color: #4ade80;
+    background: rgba(0,207,232,.12);
+    color: #38E8F5;
+    border: 1px solid rgba(56,232,245,.10);
 }
 
 .badge-open {
-    background: #1a3a2a;
-    color: #4ade80;
+    background: rgba(0,207,232,.12);
+    color: #38E8F5;
+    border: 1px solid rgba(56,232,245,.10);
 }
 
 .badge-closed {
-    background: #3a1a1a;
-    color: #f87171;
+    background: rgba(248,113,113,.10);
+    color: #FF9A9A;
+    border: 1px solid rgba(248,113,113,.10);
 }
 
 .badge-price {
-    background: #1d354d;
-    color: #9cc4ff;
+    background: #123A5D;
+    color: #9CCFFF;
+    border: 1px solid rgba(156,207,255,.08);
 }
 
+/* =========================
+   KOCAELİ CEPTE RATING
+========================= */
+
 .our-rating {
-    border-top: 1px solid #1d354d;
-    padding-top: 10px;
-    margin-top: 4px;
+    border-top: 1px solid rgba(56,232,245,.10);
+    padding-top: 12px;
+    margin-top: 3px;
 }
 
 .our-rating-label {
     font-size: 12px;
-    color: #8a97a8;
-    margin-bottom: 6px;
+    color: #8FA9BC;
+    margin-bottom: 7px;
 }
 
 .stars {
     display: flex;
-    gap: 4px;
-    font-size: 24px;
+    gap: 5px;
+    font-size: 25px;
     cursor: pointer;
     user-select: none;
 }
 
 .star {
-    color: #3a4a5c;
+    color: #28425A;
+    transition: .15s ease;
 }
 
 .star.filled {
-    color: #ffc107;
+    color: #FFD166;
 }
 
-.error {
-    background: #32151a;
-    color: #ffb4b4;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 13px;
-    line-height: 1.5;
+.star:hover {
+    transform: scale(1.12);
 }
+
+/* =========================
+   ERROR
+========================= */
+
+.error {
+    background:
+        linear-gradient(135deg, #32151A, #421B22);
+    color: #FFB4B4;
+    padding: 15px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    border: 1px solid rgba(255,100,100,.15);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+    .header {
+        padding: 16px 15px;
+    }
+
+    .header h1 {
+        font-size: 21px;
+    }
+
+    .container {
+        padding: 13px;
+    }
+
+    .card img {
+        height: 165px;
+    }
+
+    .card-body {
+        padding: 14px;
+    }
+
+    .stars {
+        font-size: 24px;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="header">
+
     <h1>🍽️ Kocaeli Restoranları</h1>
-    <a class="back" href="index.html">← Kocaeli Cepte'ye Dön</a>
+
+    <a class="back" href="index.html">
+        ← Kocaeli Cepte'ye Dön
+    </a>
+
 </div>
+
 
 <div class="container">
 
     <select id="district">
-        <option value="Kocaeli">Kocaeli - Tüm İlçeler</option>
+
+        <option value="Kocaeli">
+            Kocaeli - Tüm İlçeler
+        </option>
+
         <option value="İzmit">İzmit</option>
         <option value="Gebze">Gebze</option>
         <option value="Darıca">Darıca</option>
@@ -192,49 +303,91 @@ select {
         <option value="Dilovası">Dilovası</option>
         <option value="Kandıra">Kandıra</option>
         <option value="Karamürsel">Karamürsel</option>
+
     </select>
+
 
     <div id="status" class="status">
         Restoranlar yükleniyor...
     </div>
 
+
     <div id="restaurants"></div>
 
 </div>
 
+
 <script>
 
-const district = document.getElementById("district");
-const status = document.getElementById("status");
-const restaurantsDiv = document.getElementById("restaurants");
+const district =
+    document.getElementById("district");
+
+const status =
+    document.getElementById("status");
+
+const restaurantsDiv =
+    document.getElementById("restaurants");
+
 
 const priceLevelMap = {
-    "PRICE_LEVEL_FREE": "Ücretsiz",
-    "PRICE_LEVEL_INEXPENSIVE": "₺",
-    "PRICE_LEVEL_MODERATE": "₺₺",
-    "PRICE_LEVEL_EXPENSIVE": "₺₺₺",
-    "PRICE_LEVEL_VERY_EXPENSIVE": "₺₺₺₺"
+
+    "PRICE_LEVEL_FREE":
+        "Ücretsiz",
+
+    "PRICE_LEVEL_INEXPENSIVE":
+        "₺",
+
+    "PRICE_LEVEL_MODERATE":
+        "₺₺",
+
+    "PRICE_LEVEL_EXPENSIVE":
+        "₺₺₺",
+
+    "PRICE_LEVEL_VERY_EXPENSIVE":
+        "₺₺₺₺"
+
 };
+
 
 function starsHtml(placeId, currentRating) {
 
-    let html = '<div class="stars" data-place-id="' + placeId + '">';
+    let html =
+        '<div class="stars" data-place-id="' +
+        placeId +
+        '">';
 
     for (let i = 1; i <= 5; i++) {
-        const filled = i <= currentRating ? "filled" : "";
-        html += '<span class="star ' + filled + '" data-value="' + i + '">★</span>';
+
+        const filled =
+            i <= currentRating
+                ? "filled"
+                : "";
+
+        html +=
+            '<span class="star ' +
+            filled +
+            '" data-value="' +
+            i +
+            '">★</span>';
+
     }
 
     html += '</div>';
 
     return html;
+
 }
+
 
 async function restoranlariGetir() {
 
     status.style.display = "block";
-    status.textContent = "Restoranlar yükleniyor...";
+
+    status.textContent =
+        "Restoranlar yükleniyor...";
+
     restaurantsDiv.innerHTML = "";
+
 
     try {
 
@@ -243,111 +396,281 @@ async function restoranlariGetir() {
             encodeURIComponent(district.value)
         );
 
+
         if (!response.ok) {
-            const errBody = await response.text();
+
+            const errBody =
+                await response.text();
+
             throw new Error(
-                "HTTP " + response.status + " — " + errBody.slice(0, 500)
+                "HTTP " +
+                response.status +
+                " — " +
+                errBody.slice(0, 500)
             );
+
         }
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         if (!data.success) {
-            throw new Error(data.error || "Bilinmeyen hata");
+
+            throw new Error(
+                data.error ||
+                "Bilinmeyen hata"
+            );
+
         }
+
 
         status.style.display = "none";
 
-        if (!data.restaurants || data.restaurants.length === 0) {
-            restaurantsDiv.innerHTML = '<div class="status">Bu bölgede restoran bulunamadı.</div>';
+
+        if (
+            !data.restaurants ||
+            data.restaurants.length === 0
+        ) {
+
+            restaurantsDiv.innerHTML =
+                '<div class="status">' +
+                'Bu bölgede restoran bulunamadı.' +
+                '</div>';
+
             return;
+
         }
 
-        restaurantsDiv.innerHTML = data.restaurants.map(r => {
 
-            const priceText = r.priceLevel ? priceLevelMap[r.priceLevel] || "" : "";
+        restaurantsDiv.innerHTML =
+            data.restaurants.map(r => {
 
-            const openBadge = r.openNow === true
-                ? '<span class="badge badge-open">Açık</span>'
-                : r.openNow === false
-                ? '<span class="badge badge-closed">Kapalı</span>'
-                : '';
+                const priceText =
+                    r.priceLevel
+                        ? priceLevelMap[r.priceLevel] || ""
+                        : "";
 
-            const ratingBadge = r.rating
-                ? '<span class="badge badge-google">⭐ ' + r.rating + ' (' + r.ratingCount + ')</span>'
-                : '';
 
-            const priceBadge = priceText
-                ? '<span class="badge badge-price">' + priceText + '</span>'
-                : '';
+                const openBadge =
+                    r.openNow === true
 
-            const mapsUrl = "https://www.google.com/maps/search/?api=1&query=" +
-                encodeURIComponent(r.name + " " + r.address) +
-                "&query_place_id=" + r.id;
+                        ? '<span class="badge badge-open">Açık</span>'
 
-            const imgHtml = r.photoUrl
-                ? '<img src="' + r.photoUrl + '" alt="' + r.name + '">'
-                : '';
+                        : r.openNow === false
 
-            return `
-                <div class="card">
-                    <a href="${mapsUrl}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
-                        ${imgHtml}
-                        <div class="card-body">
-                            <div class="card-name">${r.name}</div>
-                            <div class="card-address">📍 ${r.address}</div>
-                            <div class="badges">
-                                ${ratingBadge}
-                                ${priceBadge}
-                                ${openBadge}
+                        ? '<span class="badge badge-closed">Kapalı</span>'
+
+                        : '';
+
+
+                const ratingBadge =
+                    r.rating
+
+                        ? '<span class="badge badge-google">⭐ ' +
+                          r.rating +
+                          ' (' +
+                          r.ratingCount +
+                          ')</span>'
+
+                        : '';
+
+
+                const priceBadge =
+                    priceText
+
+                        ? '<span class="badge badge-price">' +
+                          priceText +
+                          '</span>'
+
+                        : '';
+
+
+                const mapsUrl =
+                    "https://www.google.com/maps/search/?api=1&query=" +
+                    encodeURIComponent(
+                        r.name + " " + r.address
+                    ) +
+                    "&query_place_id=" +
+                    r.id;
+
+
+                const imgHtml =
+                    r.photoUrl
+
+                        ? '<img src="' +
+                          r.photoUrl +
+                          '" alt="' +
+                          r.name +
+                          '">'
+
+                        : '';
+
+
+                return `
+
+                    <div class="card">
+
+                        <a
+                            href="${mapsUrl}"
+                            target="_blank"
+                            rel="noopener"
+                            style="
+                                text-decoration:none;
+                                color:inherit;
+                            "
+                        >
+
+                            ${imgHtml}
+
+                            <div class="card-body">
+
+                                <div class="card-name">
+                                    ${r.name}
+                                </div>
+
+                                <div class="card-address">
+                                    📍 ${r.address}
+                                </div>
+
+                                <div class="badges">
+
+                                    ${ratingBadge}
+
+                                    ${priceBadge}
+
+                                    ${openBadge}
+
+                                </div>
+
                             </div>
+
+                        </a>
+
+
+                        <div
+                            class="card-body"
+                            style="padding-top:0;"
+                        >
+
+                            <div class="our-rating">
+
+                                <div
+                                    class="our-rating-label"
+                                    data-label-for="${r.id}"
+                                >
+                                    Kocaeli Cepte Puanı
+                                </div>
+
+                                ${starsHtml(r.id, 0)}
+
+                            </div>
+
                         </div>
-                    </a>
-                    <div class="card-body" style="padding-top:0;">
-                        <div class="our-rating">
-                            <div class="our-rating-label" data-label-for="${r.id}">Kocaeli Cepte Puanı</div>
-                            ${starsHtml(r.id, 0)}
-                        </div>
+
                     </div>
-                </div>
-            `;
 
-        }).join("");
+                `;
 
-        // Kayıtlı puanları çek ve göster
+            }).join("");
+
+
+        // ==========================================
+        // KAYITLI PUANLARI GETİR
+        // ==========================================
+
         try {
 
-            const placeIds = data.restaurants.map(r => r.id).join(",");
+            const placeIds =
+                data.restaurants
+                    .map(r => r.id)
+                    .join(",");
 
-            const ratingsResponse = await fetch(
-                "https://kocaeli-cepte-api.vercel.app/api/puan?placeIds=" +
-                encodeURIComponent(placeIds)
-            );
+
+            const ratingsResponse =
+                await fetch(
+                    "https://kocaeli-cepte-api.vercel.app/api/puan?placeIds=" +
+                    encodeURIComponent(placeIds)
+                );
+
 
             if (ratingsResponse.ok) {
 
-                const ratingsData = await ratingsResponse.json();
+                const ratingsData =
+                    await ratingsResponse.json();
+
 
                 if (ratingsData.success) {
 
-                    Object.keys(ratingsData.ratings).forEach(placeId => {
+                    Object.keys(
+                        ratingsData.ratings
+                    ).forEach(placeId => {
 
-                        const info = ratingsData.ratings[placeId];
-                        const label = document.querySelector('[data-label-for="' + placeId + '"]');
-                        const starGroup = document.querySelector('.stars[data-place-id="' + placeId + '"]');
+                        const info =
+                            ratingsData.ratings[placeId];
+
+
+                        const label =
+                            document.querySelector(
+                                '[data-label-for="' +
+                                placeId +
+                                '"]'
+                            );
+
+
+                        const starGroup =
+                            document.querySelector(
+                                '.stars[data-place-id="' +
+                                placeId +
+                                '"]'
+                            );
+
 
                         if (label) {
-                            label.textContent = info.count > 0
-                                ? "Kocaeli Cepte Puanı: " + info.average + " (" + info.count + " oy)"
-                                : "Kocaeli Cepte Puanı (henüz oy yok)";
+
+                            label.textContent =
+                                info.count > 0
+
+                                    ? "Kocaeli Cepte Puanı: " +
+                                      info.average +
+                                      " (" +
+                                      info.count +
+                                      " oy)"
+
+                                    : "Kocaeli Cepte Puanı (henüz oy yok)";
+
                         }
 
-                        if (starGroup && info.count > 0) {
-                            const stars = starGroup.querySelectorAll(".star");
-                            const rounded = Math.round(info.average);
-                            stars.forEach((star, index) => {
-                                star.classList.toggle("filled", index < rounded);
-                            });
+
+                        if (
+                            starGroup &&
+                            info.count > 0
+                        ) {
+
+                            const stars =
+                                starGroup.querySelectorAll(
+                                    ".star"
+                                );
+
+
+                            const rounded =
+                                Math.round(
+                                    info.average
+                                );
+
+
+                            stars.forEach(
+                                (star, index) => {
+
+                                    star.classList.toggle(
+                                        "filled",
+                                        index < rounded
+                                    );
+
+                                }
+                            );
+
                         }
 
                     });
@@ -357,113 +680,274 @@ async function restoranlariGetir() {
             }
 
         } catch (ratingError) {
-            console.error("Puanlar getirilemedi:", ratingError);
+
+            console.error(
+                "Puanlar getirilemedi:",
+                ratingError
+            );
+
         }
 
-        // Yıldızlara tıklama etkileşimi - artık gerçekten kaydediyor
-        // ve cihaz başına (localStorage) sadece 1 kez oy vermeye izin veriyor
-        document.querySelectorAll(".stars").forEach(starGroup => {
 
-            const placeId = starGroup.dataset.placeId;
-            const votedKey = "oy_verildi_" + placeId;
-            const label = document.querySelector('[data-label-for="' + placeId + '"]');
+        // ==========================================
+        // YILDIZ OYLAMA
+        // ==========================================
 
-            // Sayfa yüklenirken, daha önce oy verilmişse göster
-            const previousVote = localStorage.getItem(votedKey);
+        document
+            .querySelectorAll(".stars")
+            .forEach(starGroup => {
 
-            if (previousVote) {
+                const placeId =
+                    starGroup.dataset.placeId;
 
-                const stars = starGroup.querySelectorAll(".star");
-                stars.forEach((star, index) => {
-                    star.classList.toggle("filled", index < parseInt(previousVote));
-                });
 
-                starGroup.style.opacity = "0.6";
-                starGroup.style.pointerEvents = "none";
+                const votedKey =
+                    "oy_verildi_" +
+                    placeId;
 
-                if (label) {
-                    const currentText = label.textContent;
-                    label.textContent = currentText + " (Bu restorana oy verdiniz)";
-                }
 
-            }
+                const label =
+                    document.querySelector(
+                        '[data-label-for="' +
+                        placeId +
+                        '"]'
+                    );
 
-            starGroup.addEventListener("click", async (e) => {
-                if (!e.target.classList.contains("star")) return;
 
-                // Zaten oy verilmişse hiçbir şey yapma
-                if (localStorage.getItem(votedKey)) return;
+                // Daha önce oy verildiyse göster
 
-                const value = parseInt(e.target.dataset.value);
-                const stars = starGroup.querySelectorAll(".star");
+                const previousVote =
+                    localStorage.getItem(
+                        votedKey
+                    );
 
-                // Önce görsel olarak göster
-                stars.forEach((star, index) => {
-                    star.classList.toggle("filled", index < value);
-                });
 
-                if (label) {
-                    label.textContent = "Kaydediliyor...";
-                }
+                if (previousVote) {
 
-                try {
+                    const stars =
+                        starGroup.querySelectorAll(
+                            ".star"
+                        );
 
-                    const saveResponse = await fetch(
-                        "https://kocaeli-cepte-api.vercel.app/api/puan",
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ placeId, rating: value })
+
+                    stars.forEach(
+                        (star, index) => {
+
+                            star.classList.toggle(
+                                "filled",
+                                index <
+                                parseInt(previousVote)
+                            );
+
                         }
                     );
 
-                    const saveData = await saveResponse.json();
 
-                    if (saveData.success && label) {
+                    starGroup.style.opacity =
+                        "0.6";
 
-                        // Bu cihazın bu restorana oy verdiğini kaydet
-                        localStorage.setItem(votedKey, value);
+                    starGroup.style.pointerEvents =
+                        "none";
+
+
+                    if (label) {
+
+                        const currentText =
+                            label.textContent;
 
                         label.textContent =
-                            "Kocaeli Cepte Puanı: " + saveData.average +
-                            " (" + saveData.count + " oy) — Teşekkürler!";
+                            currentText +
+                            " (Bu restorana oy verdiniz)";
 
-                        starGroup.style.opacity = "0.6";
-                        starGroup.style.pointerEvents = "none";
-
-                    } else if (label) {
-                        label.textContent = "Puan kaydedilemedi, tekrar deneyin.";
                     }
 
-                } catch (err) {
-                    console.error("Puan kaydetme hatası:", err);
-                    if (label) {
-                        label.textContent = "Puan kaydedilemedi, tekrar deneyin.";
-                    }
                 }
 
+
+                // Oy verme
+
+                starGroup.addEventListener(
+                    "click",
+                    async (e) => {
+
+                        if (
+                            !e.target.classList.contains(
+                                "star"
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        // Daha önce oy verilmişse
+
+                        if (
+                            localStorage.getItem(
+                                votedKey
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        const value =
+                            parseInt(
+                                e.target.dataset.value
+                            );
+
+
+                        const stars =
+                            starGroup.querySelectorAll(
+                                ".star"
+                            );
+
+
+                        // Görsel olarak göster
+
+                        stars.forEach(
+                            (star, index) => {
+
+                                star.classList.toggle(
+                                    "filled",
+                                    index < value
+                                );
+
+                            }
+                        );
+
+
+                        if (label) {
+
+                            label.textContent =
+                                "Kaydediliyor...";
+
+                        }
+
+
+                        try {
+
+                            const saveResponse =
+                                await fetch(
+                                    "https://kocaeli-cepte-api.vercel.app/api/puan",
+                                    {
+                                        method: "POST",
+
+                                        headers: {
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+                                                placeId,
+                                                rating: value
+                                            })
+                                    }
+                                );
+
+
+                            const saveData =
+                                await saveResponse.json();
+
+
+                            if (
+                                saveData.success &&
+                                label
+                            ) {
+
+                                // Bu cihazın
+                                // oy verdiğini kaydet
+
+                                localStorage.setItem(
+                                    votedKey,
+                                    value
+                                );
+
+
+                                label.textContent =
+                                    "Kocaeli Cepte Puanı: " +
+                                    saveData.average +
+                                    " (" +
+                                    saveData.count +
+                                    " oy) — Teşekkürler!";
+
+
+                                starGroup.style.opacity =
+                                    "0.6";
+
+
+                                starGroup.style.pointerEvents =
+                                    "none";
+
+                            }
+
+                            else if (label) {
+
+                                label.textContent =
+                                    "Puan kaydedilemedi, tekrar deneyin.";
+
+                            }
+
+                        } catch (err) {
+
+                            console.error(
+                                "Puan kaydetme hatası:",
+                                err
+                            );
+
+
+                            if (label) {
+
+                                label.textContent =
+                                    "Puan kaydedilemedi, tekrar deneyin.";
+
+                            }
+
+                        }
+
+                    }
+                );
+
             });
-        });
+
 
     } catch (error) {
 
-        console.error("RESTORAN API HATASI:", error);
+        console.error(
+            "RESTORAN API HATASI:",
+            error
+        );
 
-        status.style.display = "block";
+
+        status.style.display =
+            "block";
+
 
         status.innerHTML = `
+
             <div class="error">
+
                 ❌ Restoranlar yüklenemedi.
+
                 <br><br>
-                <strong>Hata:</strong> ${error.message || error}
+
+                <strong>Hata:</strong>
+                ${error.message || error}
+
             </div>
+
         `;
 
     }
 
 }
 
-district.addEventListener("change", restoranlariGetir);
+
+district.addEventListener(
+    "change",
+    restoranlariGetir
+);
+
 
 restoranlariGetir();
 
