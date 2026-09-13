@@ -1,378 +1,547 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="theme-color" content="#078897">
+<meta name="theme-color" content="#061B35">
 
-  <title>Kocaeli Trafik | Kocaeli Cepte</title>
+<title>Kocaeli Trafik | Kocaeli Cepte</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(0,207,232,.12), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(7,142,157,.15), transparent 35%),
-        linear-gradient(180deg, #061B35 0%, #071F3A 100%);
-      color: #F5FAFF;
-      min-height: 100vh;
-    }
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#061B35;
+  color:#F5FAFF;
+  min-height:100vh;
+}
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 15px 18px;
-      background: linear-gradient(
-        135deg,
-        #056d83,
-        #078e9d,
-        #0aa6a4
-      );
-      box-shadow: 0 8px 25px rgba(0,0,0,.25);
-    }
+a{
+  text-decoration:none;
+  color:inherit;
+}
 
-    .back-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.25);
-      background: rgba(255,255,255,.12);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
+/* TOPBAR */
+.topbar{
+  height:64px;
+  display:flex;
+  align-items:center;
+  padding:0 16px;
+  background:#082441;
+  border-bottom:1px solid rgba(56,232,245,.15);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
 
-    .brand {
-      min-width: 0;
-    }
+.back{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#0D3558;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  margin-right:12px;
+}
 
-    .brand-name {
-      font-size: 19px;
-      font-weight: 900;
-      letter-spacing: .4px;
-    }
+.brand{
+  font-weight:800;
+  font-size:17px;
+  letter-spacing:.3px;
+}
 
-    .brand-name span {
-      color: #d9ffff;
-    }
+.brand span{
+  display:block;
+  color:#38E8F5;
+  font-size:11px;
+  margin-top:3px;
+  font-weight:600;
+}
 
-    .brand-tag {
-      margin-top: 3px;
-      font-size: 11px;
-      opacity: .88;
-      letter-spacing: .7px;
-    }
+/* MAIN */
+.container{
+  max-width:720px;
+  margin:auto;
+  padding:18px 14px 40px;
+}
 
-    .container {
-      width: min(100% - 28px, 900px);
-      margin: 0 auto;
-      padding: 28px 0 45px;
-    }
+/* HERO */
+.hero{
+  background:linear-gradient(135deg,#0A2948,#0D3558);
+  border:1px solid rgba(56,232,245,.18);
+  border-radius:24px;
+  padding:22px 18px;
+  margin-bottom:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+}
 
-    .hero {
-      text-align: center;
-      padding: 22px 5px 25px;
-    }
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 12px;
+  border-radius:20px;
+  background:rgba(0,207,232,.12);
+  color:#38E8F5;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.7px;
+  margin-bottom:12px;
+}
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 15px;
-      border-radius: 999px;
-      background: rgba(0,207,232,.12);
-      border: 1px solid rgba(0,207,232,.35);
-      color: #38E8F5;
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 15px;
-    }
+.badge-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#38E8F5;
+  box-shadow:0 0 10px #38E8F5;
+}
 
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #00CFE8;
-      box-shadow: 0 0 10px rgba(0,207,232,.8);
-    }
+.hero h1{
+  font-size:28px;
+  line-height:1.15;
+  margin-bottom:8px;
+}
 
-    h1 {
-      font-size: clamp(30px, 8vw, 48px);
-      line-height: 1.08;
-      margin-bottom: 10px;
-      font-weight: 900;
-    }
+.hero p{
+  color:#9DB7CC;
+  line-height:1.5;
+  font-size:14px;
+}
 
-    .subtitle {
-      color: #9DB7CC;
-      font-size: 15px;
-      line-height: 1.5;
-      max-width: 600px;
-      margin: auto;
-    }
+/* SECTION */
+.section-title{
+  font-size:15px;
+  font-weight:800;
+  margin:22px 4px 10px;
+}
 
-    .traffic-card {
-      background:
-        linear-gradient(
-          145deg,
-          rgba(10,41,72,.98),
-          rgba(13,53,88,.96)
-        );
-      border: 1px solid rgba(56,232,245,.18);
-      border-radius: 25px;
-      padding: 22px;
-      box-shadow: 0 18px 45px rgba(0,0,0,.28);
-      margin-top: 10px;
-    }
+/* CARDS */
+.card{
+  background:#0A2948;
+  border:1px solid rgba(56,232,245,.13);
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:12px;
+  transition:.2s;
+}
 
-    .traffic-icon {
-      width: 72px;
-      height: 72px;
-      margin: 0 auto 18px;
-      border-radius: 22px;
-      background: rgba(0,207,232,.12);
-      border: 1px solid rgba(0,207,232,.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 39px;
-    }
+.card:active{
+  transform:scale(.985);
+}
 
-    .traffic-card h2 {
-      text-align: center;
-      font-size: 23px;
-      margin-bottom: 9px;
-    }
+.card-head{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
 
-    .traffic-card p {
-      text-align: center;
-      color: #9DB7CC;
-      line-height: 1.55;
-      font-size: 14px;
-    }
+.icon{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  background:#0D3558;
+}
 
-    .open-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      width: 100%;
-      margin-top: 21px;
-      padding: 15px 18px;
-      border-radius: 16px;
-      background: linear-gradient(135deg,#00CFE8,#078897);
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 900;
-      box-shadow: 0 10px 25px rgba(0,207,232,.2);
-    }
+.card h2{
+  font-size:16px;
+  margin-bottom:5px;
+}
 
-    .open-button:active {
-      transform: scale(.98);
-    }
+.card p{
+  color:#9DB7CC;
+  font-size:12px;
+  line-height:1.45;
+}
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 18px;
-    }
+.arrow{
+  margin-left:auto;
+  color:#38E8F5;
+  font-size:22px;
+}
 
-    .info-box {
-      background: rgba(10,41,72,.75);
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 18px;
-      padding: 17px 14px;
-      text-align: center;
-    }
+/* SOURCE LABEL */
+.source{
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 8px;
+  border-radius:8px;
+  background:rgba(0,207,232,.08);
+  color:#38E8F5;
+  font-size:10px;
+  font-weight:700;
+}
 
-    .info-box .icon {
-      font-size: 25px;
-      margin-bottom: 8px;
-    }
+/* OFFICIAL */
+.official{
+  border-color:rgba(0,207,232,.28);
+}
 
-    .info-box strong {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
+/* INFO GRID */
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
 
-    .info-box span {
-      color: #9DB7CC;
-      font-size: 12px;
-      line-height: 1.4;
-    }
+.info{
+  background:#0A2948;
+  border:1px solid rgba(56,232,245,.10);
+  border-radius:17px;
+  padding:15px;
+}
 
-    .notice {
-      margin-top: 18px;
-      padding: 15px 17px;
-      border-radius: 17px;
-      background: rgba(0,207,232,.07);
-      border: 1px solid rgba(0,207,232,.16);
-      color: #b8d0df;
-      font-size: 12px;
-      line-height: 1.55;
-      text-align: center;
-    }
+.info-icon{
+  font-size:22px;
+  margin-bottom:8px;
+}
 
-    .footer {
-      text-align: center;
-      color: #6f8da5;
-      font-size: 11px;
-      margin-top: 30px;
-    }
+.info h3{
+  font-size:13px;
+  margin-bottom:5px;
+}
 
-    @media (max-width: 420px) {
-      .container {
-        width: min(100% - 20px, 900px);
-      }
+.info p{
+  color:#9DB7CC;
+  font-size:11px;
+  line-height:1.4;
+}
 
-      .traffic-card {
-        padding: 18px;
-      }
+/* NOTICE */
+.notice{
+  margin-top:18px;
+  background:rgba(0,207,232,.06);
+  border:1px solid rgba(0,207,232,.16);
+  border-radius:17px;
+  padding:14px;
+  color:#9DB7CC;
+  font-size:11px;
+  line-height:1.5;
+}
 
-      .info-grid {
-        gap: 9px;
-      }
-    }
-  </style>
+.notice strong{
+  color:#F5FAFF;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  color:#6F8CA3;
+  font-size:10px;
+  padding:25px 10px 10px;
+}
+
+/* MOBILE */
+@media(max-width:430px){
+  .hero h1{
+    font-size:25px;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header class="topbar">
+<header class="topbar">
+  <a href="index.html" class="back">‹</a>
 
-    <a href="index.html" class="back-btn" aria-label="Geri">
-      ‹
-    </a>
+  <div class="brand">
+    KOCAELİ CEPTE
+    <span>TRAFİK MERKEZİ</span>
+  </div>
+</header>
 
-    <div class="brand">
-      <div class="brand-name">
-        KOCAELİ <span>CEPTE</span>
-      </div>
 
-      <div class="brand-tag">
-        ŞEHRİN CEBİNDEKİ HALİ
-      </div>
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="badge">
+      <span class="badge-dot"></span>
+      CANLI TRAFİK
     </div>
 
-  </header>
+    <h1>Kocaeli Trafik</h1>
+
+    <p>
+      Kocaeli'deki trafik yoğunluğunu, yol durumunu ve
+      şehir kameralarını farklı kaynaklardan takip edin.
+    </p>
+
+  </section>
 
 
-  <main class="container">
-
-    <section class="hero">
-
-      <div class="badge">
-        <span class="badge-dot"></span>
-        CANLI TRAFİK
-      </div>
-
-      <h1>
-        Kocaeli Trafik
-      </h1>
-
-      <p class="subtitle">
-        Kocaeli yollarındaki anlık trafik yoğunluğunu
-        ve canlı trafik haritasını görüntüleyin.
-      </p>
-
-    </section>
+  <!-- TRAFFIC -->
+  <div class="section-title">
+    🚦 Trafik Haritaları
+  </div>
 
 
-    <section class="traffic-card">
-
-      <div class="traffic-icon">
-        🚦
-      </div>
-
-      <h2>
-        Canlı Trafik Haritası
-      </h2>
-
-      <p>
-        Kocaeli Akıllı Şehir platformundaki
-        canlı trafik haritasına ulaşabilirsiniz.
-      </p>
-
-      <a
-    class="open-button"
-    href="https://akillisehirkocaeli.com/#traffic-map"
+  <!-- YANDEX -->
+  <a
+    class="card"
+    href="https://yandex.com.tr/maps/trafik/"
     target="_blank"
     rel="noopener noreferrer"
->
-    🚦 Canlı Trafik Haritasını Aç
-      </a>
+  >
 
-    </section>
+    <div class="card-head">
 
+      <div class="icon">🚦</div>
 
-    <section class="info-grid">
+      <div>
+        <h2>Yandex Canlı Trafik</h2>
 
-      <div class="info-box">
-        <div class="icon">🚗</div>
-        <strong>Trafik Yoğunluğu</strong>
-        <span>
-          Kocaeli yollarındaki güncel trafik durumunu görüntüleyin.
+        <p>
+          Güncel trafik yoğunluğunu ve yol durumunu
+          harita üzerinden görüntüleyin.
+        </p>
+
+        <span class="source">
+          CANLI TRAFİK
         </span>
       </div>
 
-      <div class="info-box">
-        <div class="icon">📍</div>
-        <strong>Kocaeli Haritası</strong>
-        <span>
-          Şehir genelindeki yolları ve trafik durumunu inceleyin.
+      <div class="arrow">›</div>
+
+    </div>
+
+  </a>
+
+
+  <!-- KOCAELI TRAFIK -->
+  <a
+    class="card"
+    href="https://kocaeli.yogunlukharitasi.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    <div class="card-head">
+
+      <div class="icon">🗺️</div>
+
+      <div>
+        <h2>Kocaeli Trafik Yoğunluk Haritası</h2>
+
+        <p>
+          Kocaeli'ye özel trafik yoğunluk haritasını
+          görüntüleyin.
+        </p>
+
+        <span class="source">
+          KOCAELİ ODAKLI
         </span>
       </div>
 
-      <div class="info-box">
-        <div class="icon">🅿️</div>
-        <strong>Otopark</strong>
-        <span>
-          Şehirdeki ulaşım ve otopark bilgilerine erişin.
+      <div class="arrow">›</div>
+
+    </div>
+
+  </a>
+
+
+  <!-- WAZE -->
+  <a
+    class="card"
+    href="https://www.waze.com/live-map?ll=29.9408%2C40.7654&z=12"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    <div class="card-head">
+
+      <div class="icon">🚗</div>
+
+      <div>
+        <h2>Waze Canlı Harita</h2>
+
+        <p>
+          Sürücülerin oluşturduğu canlı yol ve trafik
+          bilgilerini inceleyin.
+        </p>
+
+        <span class="source">
+          WAZE LIVE MAP
         </span>
       </div>
 
-      <div class="info-box">
-        <div class="icon">📡</div>
-        <strong>Canlı Veriler</strong>
-        <span>
-          Akıllı şehir sistemlerinden sağlanan güncel verileri takip edin.
+      <div class="arrow">›</div>
+
+    </div>
+
+  </a>
+
+
+  <!-- CAMERAS -->
+  <div class="section-title">
+    📹 Kocaeli Şehir Kameraları
+  </div>
+
+
+  <a
+    class="card official"
+    href="https://www.kocaeliyiseyret.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    <div class="card-head">
+
+      <div class="icon">📹</div>
+
+      <div>
+        <h2>Kocaeli'yi Seyret</h2>
+
+        <p>
+          Kocaeli'nin farklı noktalarındaki şehir
+          kameralarını canlı olarak izleyin.
+        </p>
+
+        <span class="source">
+          RESMÎ KOCAELİ BÜYÜKŞEHİR BELEDİYESİ
         </span>
       </div>
 
-    </section>
+      <div class="arrow">›</div>
+
+    </div>
+
+  </a>
 
 
-    <div class="notice">
-      ℹ️ Trafik haritasındaki veriler Kocaeli Akıllı Şehir
-      platformu üzerinden sağlanmaktadır. Trafik yoğunluğu
-      ve yol bilgileri anlık olarak değişebilir.
+  <!-- OFFICIAL TRAFFIC -->
+  <div class="section-title">
+    🏛️ Resmî Kaynak
+  </div>
+
+
+  <a
+    class="card official"
+    href="https://akillisehirkocaeli.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    <div class="card-head">
+
+      <div class="icon">🏙️</div>
+
+      <div>
+        <h2>Akıllı Şehir Kocaeli</h2>
+
+        <p>
+          Kocaeli Büyükşehir Belediyesi'nin akıllı şehir
+          ve ulaşım hizmetlerine ulaşın.
+        </p>
+
+        <span class="source">
+          RESMÎ KAYNAK
+        </span>
+      </div>
+
+      <div class="arrow">›</div>
+
+    </div>
+
+  </a>
+
+
+  <!-- INFORMATION -->
+  <div class="section-title">
+    ℹ️ Trafik Bilgileri
+  </div>
+
+
+  <div class="info-grid">
+
+    <div class="info">
+      <div class="info-icon">🚦</div>
+
+      <h3>Trafik Yoğunluğu</h3>
+
+      <p>
+        Haritalardaki renkler yol üzerindeki
+        trafik durumunu gösterir.
+      </p>
     </div>
 
 
-    <div class="footer">
-      Kocaeli Cepte • Şehrin Cebindeki Hali
+    <div class="info">
+      <div class="info-icon">📍</div>
+
+      <h3>Kocaeli Haritası</h3>
+
+      <p>
+        İzmit ve ilçelerdeki yolları
+        harita üzerinden takip edin.
+      </p>
     </div>
 
-  </main>
+
+    <div class="info">
+      <div class="info-icon">📹</div>
+
+      <h3>Şehir Kameraları</h3>
+
+      <p>
+        Kentin çeşitli noktalarındaki
+        canlı kamera yayınlarını izleyin.
+      </p>
+    </div>
+
+
+    <div class="info">
+      <div class="info-icon">📊</div>
+
+      <h3>Farklı Kaynaklar</h3>
+
+      <p>
+        Trafiği birden fazla kaynaktan
+        karşılaştırabilirsiniz.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- NOTICE -->
+  <div class="notice">
+
+    <strong>💡 Bilgi:</strong>
+
+    Kocaeli Cepte trafik verisini kendisi üretmez.
+    Trafik haritaları ve kamera yayınları ilgili
+    hizmet sağlayıcıların kendi verilerinden alınır.
+    Bu nedenle kaynaklar arasında yoğunluk veya yol
+    durumu farklılıkları görülebilir.
+
+  </div>
+
+
+  <div class="footer">
+    KOCAELİ CEPTE • ŞEHRİN CEPTEKİ HALİ
+  </div>
+
+</main>
 
 </body>
 </html>
