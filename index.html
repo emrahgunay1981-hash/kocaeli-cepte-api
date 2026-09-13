@@ -931,7 +931,36 @@ a {
 
   flex-shrink: 0;
 }
+.traffic-icon {
+    width: 40px;
+    height: 40px;
+    ...
+    display: flex;
+    ...
+    flex-shrink: 0;
+}
 
+.traffic-content{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.traffic-content strong{
+    display:block;
+    font-size:16px;
+    line-height:1.25;
+    margin-bottom:4px;
+}
+
+.traffic-content span{
+    display:block;
+    font-size:12px;
+    line-height:1.35;
+    color:#7F969F;
+}
 .traffic-info {
   flex: 1;
 }
