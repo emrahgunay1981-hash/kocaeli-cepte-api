@@ -12,7 +12,7 @@
 
 <meta
   name="theme-color"
-  content="#002b1d"
+  content="#078897"
 >
 
 <title>Kocaeli Cepte - Haberler</title>
@@ -22,7 +22,7 @@
 
 /* =========================================================
    KOCAELİ CEPTE
-   HABERLER - YEŞİL TEMA
+   HABERLER - MAVİ / TURKUAZ TEMA
 ========================================================= */
 
 * {
@@ -33,6 +33,7 @@
 
 html {
   scroll-behavior: smooth;
+  background: #061B35;
 }
 
 body {
@@ -45,14 +46,15 @@ body {
     sans-serif;
 
   background:
-    linear-gradient(
-      180deg,
-      #002b1d 0%,
-      #003c29 45%,
-      #002d20 100%
+    radial-gradient(
+      circle at top,
+      #0b4665 0%,
+      #082f50 35%,
+      #061B35 75%,
+      #04152a 100%
     );
 
-  color: #f2f7f3;
+  color: #f5faff;
 
   padding-bottom: 30px;
 
@@ -106,9 +108,9 @@ a {
   background:
     linear-gradient(
       135deg,
-      #004b32 0%,
-      #00613e 55%,
-      #00774a 100%
+      #075c73 0%,
+      #08788b 55%,
+      #078897 100%
     );
 
   border-radius:
@@ -116,7 +118,7 @@ a {
 
   box-shadow:
     0 8px 25px
-    rgba(0,0,0,.20);
+    rgba(0,0,0,.24);
 
   position: relative;
 
@@ -138,7 +140,25 @@ a {
   border-radius: 50%;
 
   background:
-    rgba(255,255,255,.07);
+    rgba(255,255,255,.08);
+}
+
+.header::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 90px;
+  height: 90px;
+
+  left: -45px;
+  bottom: -55px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(56,232,245,.08);
 }
 
 .logo {
@@ -151,11 +171,15 @@ a {
   border-radius: 14px;
 
   background:
-    rgba(255,255,255,.13);
+    linear-gradient(
+      145deg,
+      #00cfe8,
+      #078897
+    );
 
   border:
     1px solid
-    rgba(255,255,255,.16);
+    rgba(255,255,255,.20);
 
   display: flex;
 
@@ -169,7 +193,7 @@ a {
 
   box-shadow:
     0 6px 16px
-    rgba(0,0,0,.15);
+    rgba(0,0,0,.18);
 }
 
 .header > div:last-child {
@@ -192,13 +216,13 @@ a {
 
 .brand span {
 
-  color: #35e86b;
+  color: #63edf5;
 }
 
 .subtitle {
 
   color:
-    rgba(255,255,255,.66);
+    rgba(255,255,255,.70);
 
   font-size: 9px;
 
@@ -230,7 +254,7 @@ a {
 
   gap: 5px;
 
-  color: #65d889;
+  color: #62dce8;
 
   font-size: 12px;
 
@@ -238,12 +262,15 @@ a {
 
   padding:
     6px 0;
+
+  transition:
+    .2s ease;
 }
 
 .back a:active {
 
   transform:
-    scale(.97);
+    translateX(-3px);
 }
 
 
@@ -272,7 +299,7 @@ a {
 
 .page-title p {
 
-  color: #8db4a0;
+  color: #9db7cc;
 
   font-size: 11px;
 
@@ -314,13 +341,14 @@ a {
   border-radius: 20px;
 
   background:
-    #063b29;
+    #0a2948;
 
   border:
     1px solid
-    #15543b;
+    #174566;
 
-  color: #9dbbab;
+  color:
+    #9db7cc;
 
   font-size: 10px;
 
@@ -342,21 +370,21 @@ a {
   background:
     linear-gradient(
       135deg,
-      #00d95b,
-      #21ed68
+      #00cfe8,
+      #078897
     );
 
   color:
-    #002711;
+    #021b2c;
 
   border-color:
-    #21ed68;
+    #38e8f5;
 
   font-weight: 900;
 
   box-shadow:
-    0 5px 14px
-    rgba(0,220,80,.18);
+    0 5px 15px
+    rgba(0,207,232,.20);
 }
 
 
@@ -379,13 +407,13 @@ a {
   background:
     linear-gradient(
       145deg,
-      #063c2a,
-      #043323
+      #0a2948,
+      #072039
     );
 
   border:
     1px solid
-    #15523a;
+    #174566;
 
   border-radius: 17px;
 
@@ -396,8 +424,8 @@ a {
   overflow: hidden;
 
   box-shadow:
-    0 6px 18px
-    rgba(0,0,0,.13);
+    0 6px 20px
+    rgba(0,0,0,.18);
 
   transition:
     transform .18s,
@@ -410,7 +438,7 @@ a {
     scale(.985);
 
   border-color:
-    #23704d;
+    #27829a;
 }
 
 
@@ -435,9 +463,13 @@ a {
   background:
     linear-gradient(
       135deg,
-      #0b4932,
-      #063523
+      #0d4664,
+      #092b49
     );
+
+  border:
+    1px solid
+    rgba(56,232,245,.08);
 }
 
 
@@ -454,7 +486,7 @@ a {
   justify-content: center;
 
   color:
-    #47735b;
+    #4f8098;
 
   font-size: 25px;
 }
@@ -484,7 +516,7 @@ a {
   width: fit-content;
 
   color:
-    #32e86b;
+    #4ee5ef;
 
   font-size: 9px;
 
@@ -500,7 +532,7 @@ a {
 .news-title {
 
   color:
-    #edf7f0;
+    #edf8fc;
 
   font-size: 13px;
 
@@ -520,7 +552,7 @@ a {
 .news-time {
 
   color:
-    #7fa591;
+    #7f9fb5;
 
   font-size: 9px;
 
@@ -542,7 +574,7 @@ a {
     45px 15px;
 
   color:
-    #83a894;
+    #8eacbf;
 
   font-size: 12px;
 }
@@ -552,6 +584,20 @@ a {
   font-size: 28px;
 
   margin-bottom: 8px;
+}
+
+
+/* =========================================================
+   YÜKLENİYOR İKONU
+========================================================= */
+
+.loading-icon {
+
+  filter:
+    drop-shadow(
+      0 0 8px
+      rgba(56,232,245,.20)
+    );
 }
 
 
@@ -566,12 +612,12 @@ a {
   background:
     linear-gradient(
       135deg,
-      #00d95b,
-      #21e967
+      #00cfe8,
+      #078897
     ) !important;
 
   color:
-    #002711 !important;
+    #021b2c !important;
 
   padding:
     9px 15px !important;
@@ -587,7 +633,7 @@ a {
 
   box-shadow:
     0 5px 15px
-    rgba(0,220,80,.16);
+    rgba(0,207,232,.18);
 }
 
 
