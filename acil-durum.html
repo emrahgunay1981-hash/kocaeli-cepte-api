@@ -14,35 +14,37 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #07111f;
-    color: white;
+    background:
+        radial-gradient(circle at top right, rgba(0,207,232,.10), transparent 35%),
+        #061B35;
+    color: #F5FAFF;
 }
 
 .header {
     position: sticky;
     top: 0;
     z-index: 10;
-    background: #2a0d0d;
+    background: linear-gradient(135deg, #078897, #056477);
     padding: 16px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    box-shadow: 0 4px 18px rgba(0,0,0,.25);
 }
 
 .header h1 {
     margin: 0;
     font-size: 22px;
-    color: #ff8787;
+    color: #fff;
 }
 
 .back {
     display: inline-block;
     margin-top: 8px;
-    color: #fff;
+    color: rgba(255,255,255,.9);
     text-decoration: none;
     font-size: 14px;
 }
 
 .container {
-    padding: 16px;
+    padding: 18px 16px;
     max-width: 800px;
     margin: auto;
 }
@@ -51,7 +53,7 @@ body {
     font-size: 16px;
     font-weight: 800;
     margin: 24px 0 12px;
-    color: #12c95d;
+    color: #38E8F5;
 }
 
 .section-title:first-child {
@@ -69,47 +71,49 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #3a1414;
-    border: 1px solid rgba(255,100,100,.3);
-    border-radius: 14px;
+    background: #0A2948;
+    border: 1px solid rgba(255,100,100,.22);
+    border-radius: 16px;
     padding: 16px 8px;
     text-decoration: none;
     color: white;
+    box-shadow: 0 5px 16px rgba(0,0,0,.15);
 }
 
 .call-number {
     font-size: 26px;
     font-weight: 900;
-    color: #ff8787;
+    color: #FF7777;
 }
 
 .call-label {
-    margin-top: 4px;
+    margin-top: 5px;
     font-size: 12px;
-    color: #d9a3a3;
+    color: #B5CAD9;
     text-align: center;
 }
 
 .quake-status {
     text-align: center;
     padding: 20px 10px;
-    color: #8a97a8;
+    color: #9DB7CC;
     font-size: 13px;
 }
 
 .quake-card {
-    background: #102033;
-    border: 1px solid #1d354d;
-    border-radius: 14px;
+    background: #0A2948;
+    border: 1px solid rgba(56,232,245,.10);
+    border-radius: 15px;
     padding: 14px;
     margin-bottom: 10px;
+    box-shadow: 0 5px 16px rgba(0,0,0,.14);
 }
 
 .quake-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 7px;
 }
 
 .quake-mag {
@@ -117,42 +121,44 @@ body {
     font-weight: 900;
     padding: 4px 12px;
     border-radius: 10px;
-    background: #1a3a2a;
-    color: #4ade80;
+    background: #083D43;
+    color: #38E8F5;
 }
 
 .quake-mag.orange {
-    background: #3a2a14;
-    color: #ffb84d;
+    background: #3D3218;
+    color: #FFB84D;
 }
 
 .quake-mag.red {
-    background: #3a1414;
-    color: #ff6b6b;
+    background: #421B20;
+    color: #FF7777;
 }
 
 .quake-time {
-    color: #718b7f;
+    color: #7895AA;
     font-size: 12px;
 }
 
 .quake-place {
     font-size: 14px;
-    color: #d5dde0;
+    color: #D5E4ED;
 }
 
 .info-card {
-    background: #102033;
-    border: 1px solid #1d354d;
-    border-radius: 14px;
+    background: #0A2948;
+    border: 1px solid rgba(56,232,245,.10);
+    border-radius: 15px;
     padding: 16px;
     margin-bottom: 12px;
     line-height: 1.6;
     font-size: 14px;
-    color: #d5dde0;
+    color: #D5E4ED;
+    box-shadow: 0 5px 16px rgba(0,0,0,.14);
 }
 
-.info-card ul, .info-card ol {
+.info-card ul,
+.info-card ol {
     margin: 8px 0 0;
     padding-left: 20px;
 }
@@ -164,22 +170,35 @@ body {
 .afad-link {
     display: block;
     text-align: center;
-    background: #123a29;
-    color: #4ade80;
+    background: linear-gradient(135deg, #00CFE8, #078897);
+    color: #fff;
     text-decoration: none;
     padding: 14px;
-    border-radius: 14px;
-    font-weight: 700;
+    border-radius: 15px;
+    font-weight: 800;
     margin-top: 8px;
+    box-shadow: 0 6px 18px rgba(0,207,232,.18);
 }
 
 .error {
-    background: #32151a;
-    color: #ffb4b4;
+    background: #35191D;
+    border: 1px solid rgba(255,100,100,.20);
+    color: #FFB4B4;
     padding: 14px;
     border-radius: 12px;
     font-size: 13px;
     line-height: 1.5;
+}
+
+@media (max-width:380px) {
+    .container {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .call-btn {
+        padding: 14px 6px;
+    }
 }
 </style>
 </head>
@@ -219,7 +238,6 @@ body {
 
     </div>
 
-
     <div class="section-title">🌍 Kocaeli Çevresindeki Son Depremler</div>
 
     <div id="quake-status" class="quake-status">
@@ -227,7 +245,6 @@ body {
     </div>
 
     <div id="quake-list"></div>
-
 
     <div class="section-title">⚠️ Deprem Anında Ne Yapmalı?</div>
 
@@ -247,7 +264,6 @@ body {
         </ul>
     </div>
 
-
     <div class="section-title">🎒 Deprem Çantası Kontrol Listesi</div>
 
     <div class="info-card">
@@ -264,7 +280,6 @@ body {
             <li>Islak mendil ve hijyen malzemeleri</li>
         </ul>
     </div>
-
 
     <a
         class="afad-link"
@@ -374,4 +389,3 @@ depremleriGetir();
 
 </body>
 </html>
-
