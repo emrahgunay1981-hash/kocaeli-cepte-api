@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#002b1d">
+<meta name="theme-color" content="#078897">
 
 <title>Kocaeli Cepte - Etkinlikler</title>
 
@@ -16,19 +16,22 @@
 }
 
 html {
-    background: #001f15;
+    background: #061B35;
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
     background:
         radial-gradient(
             circle at top,
-            #06452f 0%,
-            #002f20 38%,
-            #001f15 100%
+            #0b4665 0%,
+            #082f50 35%,
+            #061B35 75%,
+            #04152a 100%
         );
-    color: #f2f7f4;
+
+    color: #f5faff;
     min-height: 100vh;
     padding-bottom: 30px;
 }
@@ -51,18 +54,18 @@ a {
     background:
         linear-gradient(
             135deg,
-            rgba(0,75,50,0.98),
-            rgba(0,52,35,0.98)
+            rgba(7,92,115,0.98),
+            rgba(5,54,82,0.98)
         );
 
     padding: 17px 16px 15px;
 
-    border-bottom: 1px solid rgba(53,232,107,0.16);
+    border-bottom: 1px solid rgba(56,232,245,0.18);
 
     box-shadow:
-        0 6px 20px rgba(0,0,0,0.25);
+        0 6px 22px rgba(0,0,0,0.28);
 
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
 }
 
 .header-inner {
@@ -89,16 +92,16 @@ a {
     background:
         linear-gradient(
             145deg,
-            #0aa954,
-            #08733f
+            #00cfe8,
+            #078897
         );
 
-    border: 1px solid rgba(53,232,107,0.25);
+    border: 1px solid rgba(56,232,245,0.35);
 
     font-size: 21px;
 
     box-shadow:
-        0 5px 14px rgba(0,0,0,0.2);
+        0 5px 16px rgba(0,0,0,0.22);
 }
 
 .header h1 {
@@ -108,7 +111,7 @@ a {
 }
 
 .header-subtitle {
-    color: #8fbea5;
+    color: #9dd5df;
     font-size: 10px;
     margin-top: 4px;
     letter-spacing: 1.4px;
@@ -121,7 +124,7 @@ a {
 
     margin-top: 12px;
 
-    color: #a7d5b8;
+    color: #a9dce5;
 
     font-size: 12px;
     font-weight: 600;
@@ -161,11 +164,11 @@ a {
     background:
         linear-gradient(
             135deg,
-            #075d3b,
-            #03442c
+            #0b6380,
+            #07506d
         );
 
-    border: 1px solid #176b48;
+    border: 1px solid rgba(56,232,245,0.24);
 
     border-radius: 17px;
 
@@ -176,7 +179,7 @@ a {
     color: white;
 
     box-shadow:
-        0 7px 22px rgba(0,0,0,0.22);
+        0 7px 24px rgba(0,0,0,0.25);
 
     transition:
         transform 0.18s ease,
@@ -188,15 +191,33 @@ a {
 
     position: absolute;
 
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
 
-    right: -35px;
-    top: -35px;
+    right: -40px;
+    top: -40px;
 
     border-radius: 50%;
 
-    background: rgba(53,232,107,0.08);
+    background:
+        rgba(56,232,245,0.10);
+}
+
+.theatre-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 45px;
+    height: 45px;
+
+    left: -22px;
+    bottom: -22px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.035);
 }
 
 .theatre-card:active {
@@ -218,7 +239,7 @@ a {
 
 .theatre-card-sub {
     font-size: 11px;
-    color: #a8d7bb;
+    color: #b6e1e8;
     line-height: 1.4;
 }
 
@@ -237,9 +258,12 @@ a {
 
     margin-left: 12px;
 
-    background: rgba(0,0,0,0.14);
+    background:
+        rgba(0,207,232,0.12);
 
-    color: #63ef8a;
+    border: 1px solid rgba(56,232,245,0.12);
+
+    color: #50e8f3;
 
     font-size: 18px;
     font-weight: 700;
@@ -258,7 +282,7 @@ a {
 
     margin: 24px 2px 13px;
 
-    color: #d9f5e3;
+    color: #e2f8fc;
 
     font-size: 13px;
     font-weight: 800;
@@ -272,10 +296,15 @@ a {
 
     border-radius: 5px;
 
-    background: #35e86b;
+    background:
+        linear-gradient(
+            180deg,
+            #38e8f5,
+            #00bcd4
+        );
 
     box-shadow:
-        0 0 9px rgba(53,232,107,0.3);
+        0 0 10px rgba(56,232,245,0.35);
 }
 
 
@@ -288,7 +317,7 @@ a {
 
     padding: 28px 10px;
 
-    color: #91b9a1;
+    color: #9db7cc;
 
     font-size: 13px;
 }
@@ -305,11 +334,11 @@ a {
     background:
         linear-gradient(
             145deg,
-            rgba(6,60,42,0.97),
-            rgba(3,43,30,0.98)
+            rgba(10,41,72,0.98),
+            rgba(7,32,57,0.99)
         );
 
-    border: 1px solid #17583d;
+    border: 1px solid #174566;
 
     border-radius: 17px;
 
@@ -318,7 +347,7 @@ a {
     margin-bottom: 12px;
 
     box-shadow:
-        0 7px 22px rgba(0,0,0,0.23),
+        0 7px 24px rgba(0,0,0,0.25),
 
         inset 0 1px 0
         rgba(255,255,255,0.025);
@@ -328,7 +357,7 @@ a {
 
     margin: 0 0 11px;
 
-    color: #f2fff6;
+    color: #f5fbff;
 
     font-size: 17px;
 
@@ -341,7 +370,7 @@ a {
 
     margin: 8px 0;
 
-    color: #bdd5c7;
+    color: #b8ccda;
 
     font-size: 12px;
 
@@ -349,7 +378,7 @@ a {
 }
 
 .event p:first-of-type {
-    color: #9fe6b5;
+    color: #71dce8;
     font-weight: 600;
 }
 
@@ -367,11 +396,11 @@ a {
     background:
         linear-gradient(
             135deg,
-            #0bc855,
-            #35e86b
+            #00cfe8,
+            #078897
         );
 
-    color: #01200f;
+    color: #021b2c;
 
     text-decoration: none;
 
@@ -382,8 +411,8 @@ a {
     font-weight: 800;
 
     box-shadow:
-        0 5px 14px
-        rgba(20,210,91,0.14);
+        0 5px 16px
+        rgba(0,207,232,0.18);
 }
 
 .event a:active {
@@ -401,15 +430,15 @@ a {
 
     padding: 45px 15px;
 
-    color: #88ad98;
+    color: #8eacbf;
 
     font-size: 13px;
 
     background:
-        rgba(4,43,30,0.55);
+        rgba(7,35,61,0.65);
 
     border:
-        1px solid #154b35;
+        1px solid #17435f;
 
     border-radius: 16px;
 }
@@ -421,13 +450,13 @@ a {
 
 .api-error {
 
-    color: #ffbebe;
+    color: #ffc1c1;
 
     background:
-        rgba(73,27,27,0.82);
+        rgba(73,27,35,0.82);
 
     border:
-        1px solid #783737;
+        1px solid #783742;
 
     border-radius: 15px;
 
@@ -437,7 +466,7 @@ a {
 }
 
 .api-error strong {
-    color: #ffd0d0;
+    color: #ffd4d4;
 }
 
 
