@@ -14,8 +14,8 @@
 
 body {
   margin: 0;
-  background: #061a12;
-  color: #fff;
+  background: #061B35;
+  color: #F5FAFF;
   font-family: Arial, sans-serif;
   padding-bottom: 85px;
 }
@@ -25,19 +25,22 @@ body {
   display: flex;
   align-items: center;
   padding: 0 16px;
-  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: #071F3A;
+  border-bottom: 1px solid rgba(56,232,245,.12);
 }
 
 .back {
-  color: white;
+  color: #F5FAFF;
   text-decoration: none;
   font-size: 36px;
+  line-height: 1;
   margin-right: 13px;
 }
 
 .logo {
   font-size: 18px;
   font-weight: 800;
+  color: #F5FAFF;
 }
 
 .container {
@@ -48,24 +51,34 @@ body {
   font-size: 28px;
   font-weight: 800;
   margin-bottom: 7px;
+  color: #F5FAFF;
 }
 
 .desc {
-  color: #8da198;
+  color: #9DB7CC;
   font-size: 14px;
   line-height: 1.45;
   margin-bottom: 20px;
 }
 
-/* BÜYÜKŞEHİR */
+/* ================================
+   BÜYÜKŞEHİR
+================================ */
 
 .metro-card {
-  background: linear-gradient(135deg,#063b25,#087a43);
-  border: 1px solid rgba(0,217,90,.35);
+  background: linear-gradient(
+    135deg,
+    #0A2948,
+    #0D5F78
+  );
+
+  border: 1px solid rgba(0,207,232,.45);
   border-radius: 20px;
   padding: 18px;
   margin-bottom: 22px;
-  box-shadow: 0 8px 25px rgba(0,0,0,.18);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.22);
 }
 
 .metro-icon {
@@ -77,36 +90,48 @@ body {
   font-size: 21px;
   font-weight: 800;
   margin-bottom: 6px;
+  color: #F5FAFF;
 }
 
 .metro-text {
-  color: #d2e7dc;
+  color: #D7F4F8;
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.5;
   margin-bottom: 15px;
 }
 
 .metro-btn {
   display: block;
   text-align: center;
-  background: #00d95a;
-  color: #03140d;
+
+  background: #00CFE8;
+  color: #052033;
+
   text-decoration: none;
   padding: 12px;
+
   border-radius: 12px;
+
   font-size: 13px;
   font-weight: 800;
+
+  box-shadow: 0 5px 15px rgba(0,207,232,.18);
 }
 
-/* BAŞLIK */
+/* ================================
+   BAŞLIK
+================================ */
 
 .section-title {
   font-size: 20px;
   font-weight: 800;
   margin: 8px 0 13px;
+  color: #F5FAFF;
 }
 
-/* BELEDİYE KARTLARI */
+/* ================================
+   BELEDİYE KARTLARI
+================================ */
 
 .belediye-list {
   display: grid;
@@ -115,11 +140,17 @@ body {
 }
 
 .belediye-card {
-  background: #0a2418;
-  border: 1px solid rgba(255,255,255,.07);
+  background: #0A2948;
+
+  border: 1px solid rgba(56,232,245,.13);
+
   border-radius: 17px;
   padding: 14px;
+
   min-width: 0;
+
+  box-shadow:
+    0 5px 18px rgba(0,0,0,.14);
 }
 
 .belediye-icon {
@@ -131,74 +162,117 @@ body {
   font-size: 15px;
   font-weight: 800;
   line-height: 1.25;
+
   min-height: 38px;
+
+  color: #F5FAFF;
 }
 
 .belediye-location {
-  color: #00d95a;
+  color: #38E8F5;
+
   font-size: 10px;
   font-weight: 700;
+
   margin: 5px 0 13px;
 }
 
 .belediye-btn {
   display: block;
   text-align: center;
-  background: #102f21;
-  border: 1px solid rgba(0,217,90,.18);
-  color: #00d95a;
+
+  background: #0D3558;
+
+  border: 1px solid rgba(0,207,232,.25);
+
+  color: #38E8F5;
+
   text-decoration: none;
+
   padding: 9px 5px;
+
   border-radius: 10px;
+
   font-size: 11px;
   font-weight: 800;
+
+  transition: .2s;
 }
 
-/* BİLGİ */
+.belediye-btn:active {
+  transform: scale(.97);
+  background: #12436B;
+}
+
+/* ================================
+   BİLGİ
+================================ */
 
 .info {
   margin-top: 22px;
+
   padding: 15px;
+
   border-radius: 16px;
-  background: #081f15;
-  border: 1px solid rgba(255,255,255,.06);
+
+  background: #0A2948;
+
+  border: 1px solid rgba(56,232,245,.10);
 }
 
 .info-title {
   font-size: 14px;
   font-weight: 800;
+
   margin-bottom: 6px;
+
+  color: #F5FAFF;
 }
 
 .info-text {
-  color: #82958c;
+  color: #8FAABD;
+
   font-size: 11px;
   line-height: 1.5;
 }
 
-/* ALT MENÜ */
+/* ================================
+   ALT MENÜ
+================================ */
 
 .bottom-nav {
   position: fixed;
+
   left: 0;
   right: 0;
   bottom: 0;
+
   height: 82px;
-  background: #03140d;
-  border-top: 1px solid rgba(255,255,255,.08);
+
+  background: #071F3A;
+
+  border-top: 1px solid rgba(56,232,245,.12);
+
   display: grid;
   grid-template-columns: repeat(3,1fr);
+
   z-index: 50;
 }
 
 .nav-item {
   text-decoration: none;
-  color: #71857d;
+
+  color: #7F9AAA;
+
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
   align-items: center;
+
   gap: 5px;
+
   font-size: 12px;
 }
 
@@ -207,8 +281,12 @@ body {
 }
 
 .nav-item.active {
-  color: #00d95a;
+  color: #00CFE8;
 }
+
+/* ================================
+   KÜÇÜK EKRAN
+================================ */
 
 @media(max-width:380px) {
 
@@ -629,4 +707,4 @@ body {
 </nav>
 
 </body>
-        </html>
+</html>
