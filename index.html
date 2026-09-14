@@ -1294,7 +1294,7 @@ a {
 
 }
 /* =========================================
-   SU • DOĞALGAZ • ELEKTRİK
+   SU • DOĞALGAZ • ELEKTRİK AÇILIR KART
    ========================================= */
 
 .utility-card {
@@ -1302,9 +1302,24 @@ a {
   background: #ffffff;
   border: 1px solid #dfeff0;
   border-radius: 18px;
-  padding: 14px;
   margin: 8px 0;
+  overflow: hidden;
   box-shadow: 0 4px 14px rgba(0,0,0,.04);
+}
+
+/* KART BAŞLIĞI */
+
+.utility-card summary {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.utility-card summary::-webkit-details-marker {
+  display: none;
 }
 
 .utility-card .traffic-icon {
@@ -1322,6 +1337,7 @@ a {
 .utility-card .traffic-content {
   margin-left: 12px;
   flex: 1;
+  min-width: 0;
 }
 
 .utility-card .traffic-content strong {
@@ -1340,42 +1356,51 @@ a {
   line-height: 1.35;
 }
 
-/* 3 BUTON */
+.utility-arrow {
+  color: #008b98;
+  font-size: 30px;
+  margin-left: 8px;
+  transition: transform .2s;
+}
+
+/* AÇILINCA OK DÖNSÜN */
+
+.utility-card[open] .utility-arrow {
+  transform: rotate(90deg);
+}
+
+/* İÇERİDEKİ BUTONLAR */
 
 .utility-buttons {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  margin-top: 12px;
+  padding: 0 14px 14px;
 }
 
 .utility-buttons a {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
+  min-height: 46px;
   background: #e3f9fa;
   border: 1px solid #d2f1f2;
-  border-radius: 13px;
+  border-radius: 12px;
   color: #008b98;
   text-decoration: none;
   font-size: 12px;
   font-weight: 800;
-  line-height: 1.1;
-  text-align: center;
-  transition: .2s;
 }
 
 .utility-buttons a:active {
   transform: scale(.97);
-  background: #d5f5f7;
 }
 
-/* KÜÇÜK TELEFONLAR */
+/* KÜÇÜK TELEFON */
 
 @media (max-width: 380px) {
 
-  .utility-card {
+  .utility-card summary {
     padding: 12px;
   }
 
@@ -1394,15 +1419,15 @@ a {
   }
 
   .utility-buttons {
+    padding: 0 12px 12px;
     gap: 6px;
   }
 
   .utility-buttons a {
     font-size: 11px;
-    min-height: 46px;
   }
 
-}
+  }
 </style>
 
 </head>
@@ -1984,18 +2009,23 @@ a {
 </a>
 <!-- SU • DOĞALGAZ • ELEKTRİK -->
 
-<div class="traffic-card utility-card">
+<details class="utility-card">
 
-  <div style="display:flex;align-items:center;">
+  <summary>
 
-    <div class="traffic-icon">💧</div>
+    <div class="traffic-icon">
+      💧
+    </div>
 
     <div class="traffic-content">
       <strong>Su • Doğalgaz • Elektrik</strong>
       <span>İSU, İZGAZ ve SEDAŞ işlemlerine hızlı erişim</span>
     </div>
 
-  </div>
+    <div class="utility-arrow">›</div>
+
+  </summary>
+
 
   <div class="utility-buttons">
 
@@ -2003,26 +2033,26 @@ a {
       href="https://www.isu.gov.tr/"
       target="_blank"
       rel="noopener noreferrer">
-      💧<br>İSU
+      💧 İSU
     </a>
 
     <a
       href="https://www.izgaz.com.tr/"
       target="_blank"
       rel="noopener noreferrer">
-      🔥<br>İZGAZ
+      🔥 İZGAZ
     </a>
 
     <a
       href="https://www.sedas.com/"
       target="_blank"
       rel="noopener noreferrer">
-      ⚡<br>SEDAŞ
+      ⚡ SEDAŞ
     </a>
 
   </div>
 
-</div>
+</details>
 <!-- KOCAELİ'Yİ SEYRET -->
 
 <a
