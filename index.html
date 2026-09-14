@@ -1293,7 +1293,111 @@ a {
   }
 
 }
+/* =========================================
+   SU • DOĞALGAZ • ELEKTRİK KARTI
+   ========================================= */
 
+.utility-card {
+  background: #ffffff;
+  border: 1px solid #dcecef;
+  border-radius: 22px;
+  padding: 14px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(0,80,100,.06);
+}
+
+.utility-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.utility-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  background: #dff8fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  flex-shrink: 0;
+}
+
+.utility-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.utility-title {
+  color: #164b59;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.utility-desc {
+  color: #8ba0a6;
+  font-size: 13px;
+  margin-top: 5px;
+  line-height: 1.35;
+}
+
+/* BUTONLAR KARTIN İÇİNDE */
+.utility-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.utility-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  border-radius: 16px;
+  background: #e1f9fa;
+  color: #008b98;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.utility-btn:active {
+  transform: scale(.97);
+}
+
+@media (max-width: 380px) {
+  .utility-card {
+    padding: 12px;
+  }
+
+  .utility-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+  }
+
+  .utility-title {
+    font-size: 18px;
+  }
+
+  .utility-desc {
+    font-size: 12px;
+  }
+
+  .utility-buttons {
+    gap: 7px;
+  }
+
+  .utility-btn {
+    min-height: 52px;
+    font-size: 12px;
+  }
+  }
 </style>
 
 </head>
@@ -1874,7 +1978,6 @@ a {
   <div class="traffic-arrow">›</div>
 </a>
 <!-- SU • DOĞALGAZ • ELEKTRİK -->
-
 <div
   style="
     display:block;
@@ -1969,51 +2072,45 @@ a {
         font-size:12px;
         font-weight:800;
       "
-    >
-      💧<br>
-      İSU
-    </a>
+    <!-- SU • DOĞALGAZ • ELEKTRİK -->
 
+<div class="utility-card">
+
+  <div class="utility-header">
+
+    <div class="utility-icon">💧</div>
+
+    <div class="utility-info">
+      <strong>Su • Doğalgaz • Elektrik</strong>
+      <span>İSU, İZGAZ ve SEDAŞ işlemleri</span>
+    </div>
+
+  </div>
+
+  <div class="utility-buttons">
+
+    <a
+      href="https://www.isu.gov.tr/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      💧 İSU
+    </a>
 
     <a
       href="https://www.izgaz.com.tr/"
       target="_blank"
       rel="noopener noreferrer"
-      style="
-        display:block;
-        text-align:center;
-        text-decoration:none;
-        background:#e5f9fb;
-        color:#078897;
-        border-radius:12px;
-        padding:11px 4px;
-        font-size:12px;
-        font-weight:800;
-      "
     >
-      🔥<br>
-      İZGAZ
+      🔥 İZGAZ
     </a>
-
 
     <a
       href="https://www.sedas.com/"
       target="_blank"
       rel="noopener noreferrer"
-      style="
-        display:block;
-        text-align:center;
-        text-decoration:none;
-        background:#e5f9fb;
-        color:#078897;
-        border-radius:12px;
-        padding:11px 4px;
-        font-size:12px;
-        font-weight:800;
-      "
     >
-      ⚡<br>
-      SEDAŞ
+      ⚡ SEDAŞ
     </a>
 
   </div>
