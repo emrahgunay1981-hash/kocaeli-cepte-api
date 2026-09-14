@@ -1294,110 +1294,115 @@ a {
 
 }
 /* =========================================
-   SU • DOĞALGAZ • ELEKTRİK KARTI
+   SU • DOĞALGAZ • ELEKTRİK
    ========================================= */
 
 .utility-card {
+  width: 100%;
   background: #ffffff;
-  border: 1px solid #dcecef;
-  border-radius: 22px;
-  padding: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 14px rgba(0,80,100,.06);
-}
-
-.utility-head {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 12px;
-}
-
-.utility-icon {
-  width: 68px;
-  height: 68px;
+  border: 1px solid #dfeff0;
   border-radius: 18px;
+  padding: 14px;
+  margin: 8px 0;
+  box-shadow: 0 4px 14px rgba(0,0,0,.04);
+}
+
+.utility-card .traffic-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
   background: #dff8fa;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 34px;
+  font-size: 28px;
   flex-shrink: 0;
 }
 
-.utility-info {
+.utility-card .traffic-content {
+  margin-left: 12px;
   flex: 1;
-  min-width: 0;
 }
 
-.utility-title {
-  color: #164b59;
-  font-size: 20px;
+.utility-card .traffic-content strong {
+  display: block;
+  color: #124b59;
+  font-size: 18px;
   font-weight: 800;
   line-height: 1.2;
 }
 
-.utility-desc {
-  color: #8ba0a6;
-  font-size: 13px;
-  margin-top: 5px;
+.utility-card .traffic-content span {
+  display: block;
+  color: #8aa0a5;
+  font-size: 12px;
+  margin-top: 4px;
   line-height: 1.35;
 }
 
-/* BUTONLAR KARTIN İÇİNDE */
+/* 3 BUTON */
+
 .utility-buttons {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-.utility-btn {
+.utility-buttons a {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 58px;
-  border-radius: 16px;
-  background: #e1f9fa;
+  min-height: 48px;
+  background: #e3f9fa;
+  border: 1px solid #d2f1f2;
+  border-radius: 13px;
   color: #008b98;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
+  line-height: 1.1;
   text-align: center;
+  transition: .2s;
 }
 
-.utility-btn:active {
+.utility-buttons a:active {
   transform: scale(.97);
+  background: #d5f5f7;
 }
+
+/* KÜÇÜK TELEFONLAR */
 
 @media (max-width: 380px) {
+
   .utility-card {
     padding: 12px;
   }
 
-  .utility-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 30px;
+  .utility-card .traffic-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 25px;
   }
 
-  .utility-title {
-    font-size: 18px;
+  .utility-card .traffic-content strong {
+    font-size: 16px;
   }
 
-  .utility-desc {
-    font-size: 12px;
+  .utility-card .traffic-content span {
+    font-size: 11px;
   }
 
   .utility-buttons {
-    gap: 7px;
+    gap: 6px;
   }
 
-  .utility-btn {
-    min-height: 52px;
-    font-size: 12px;
+  .utility-buttons a {
+    font-size: 11px;
+    min-height: 46px;
   }
-  }
+
+}
 </style>
 
 </head>
@@ -1978,111 +1983,53 @@ a {
   <div class="traffic-arrow">›</div>
 </a>
 <!-- SU • DOĞALGAZ • ELEKTRİK -->
-<div
-  style="
-    display:block;
-    width:100%;
-    background:#ffffff;
-    border:1px solid #dfeff0;
-    border-radius:18px;
-    padding:14px;
-    margin:8px 0;
-  "
->
 
-  <!-- BAŞLIK -->
+<div class="traffic-card utility-card">
 
-  <div
-    style="
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:12px;
-    "
-  >
+  <div class="traffic-icon">💧</div>
 
-    <div
-      style="
-        width:70px;
-        height:70px;
-        border-radius:16px;
-        background:#dff8fa;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:32px;
-        flex-shrink:0;
-      "
-    >
-      💧
-    </div>
-
-    <div style="min-width:0;">
-
-      <div
-        style="
-          color:#174b56;
-          font-size:18px;
-          font-weight:800;
-          line-height:1.25;
-        "
-      >
-        Su • Doğalgaz • Elektrik
-      </div>
-
-      <div
-        style="
-          color:#8aa0a5;
-          font-size:12px;
-          margin-top:5px;
-          line-height:1.4;
-        "
-      >
-        İSU, İZGAZ ve SEDAŞ işlemlerine hızlı erişim
-      </div>
-
-    </div>
-
+  <div class="traffic-content">
+    <strong>Su • Doğalgaz • Elektrik</strong>
+    <span>İSU, İZGAZ ve SEDAŞ işlemlerine hızlı erişim</span>
   </div>
 
-
-  <!-- BUTONLAR -->
-
-  <div
-    style="
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:8px;
-      width:100%;
-    "
-  >
+  <div class="utility-buttons">
 
     <a
       href="https://www.isu.gov.tr/"
       target="_blank"
-      rel="noopener noreferrer"
-      style="
-        display:block;
-        text-align:center;
-        text-decoration:none;
-        background:#e5f9fb;
-        color:#078897;
-        border-radius:12px;
-        padding:11px 4px;
-        font-size:12px;
-        font-weight:800;
-      "
-    <!-- SU • DOĞALGAZ • ELEKTRİK -->
+      rel="noopener noreferrer">
+      💧<br>İSU
+    </a>
 
-<div class="utility-card">
+    <a
+      href="https://www.izgaz.com.tr/"
+      target="_blank"
+      rel="noopener noreferrer">
+      🔥<br>İZGAZ
+    </a>
 
-  <div class="utility-header">
+    <a
+      href="https://www.sedas.com/"
+      target="_blank"
+      rel="noopener noreferrer">
+      ⚡<br>SEDAŞ
+    </a>
 
-    <div class="utility-icon">💧</div>
+  </div>
 
-    <div class="utility-info">
+</div>
+<!-- SU • DOĞALGAZ • ELEKTRİK -->
+
+<div class="traffic-card utility-card">
+
+  <div style="display:flex;align-items:center;">
+
+    <div class="traffic-icon">💧</div>
+
+    <div class="traffic-content">
       <strong>Su • Doğalgaz • Elektrik</strong>
-      <span>İSU, İZGAZ ve SEDAŞ işlemleri</span>
+      <span>İSU, İZGAZ ve SEDAŞ işlemlerine hızlı erişim</span>
     </div>
 
   </div>
@@ -2092,31 +2039,27 @@ a {
     <a
       href="https://www.isu.gov.tr/"
       target="_blank"
-      rel="noopener noreferrer"
-    >
-      💧 İSU
+      rel="noopener noreferrer">
+      💧<br>İSU
     </a>
 
     <a
       href="https://www.izgaz.com.tr/"
       target="_blank"
-      rel="noopener noreferrer"
-    >
-      🔥 İZGAZ
+      rel="noopener noreferrer">
+      🔥<br>İZGAZ
     </a>
 
     <a
       href="https://www.sedas.com/"
       target="_blank"
-      rel="noopener noreferrer"
-    >
-      ⚡ SEDAŞ
+      rel="noopener noreferrer">
+      ⚡<br>SEDAŞ
     </a>
 
   </div>
 
 </div>
-
 <!-- KOCAELİ'Yİ SEYRET -->
 
 <a
