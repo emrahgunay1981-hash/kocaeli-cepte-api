@@ -17,6 +17,8 @@ function cleanText(str) {
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&#039;/g, "'")
+    .replace(/&#x27;/gi, "'")
     .replace(/&apos;/g, "'")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
