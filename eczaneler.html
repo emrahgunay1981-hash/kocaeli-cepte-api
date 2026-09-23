@@ -1,3 +1,6 @@
+
+
+Eczaneler · HTML
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -13,6 +16,10 @@ body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(ci
 .header-sub { margin-top: 5px; color: rgba(255,255,255,.82); font-size: 12px; }
 .container { padding: 15px; max-width: 700px; margin: auto; }
 .info { background: linear-gradient(135deg, #0A2948, #0D3558); border: 1px solid rgba(56,232,245,.16); border-radius: 16px; padding: 14px; margin-bottom: 14px; color: #B8CBD9; font-size: 12px; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,.15); }
+.filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 6px; -webkit-overflow-scrolling: touch; }
+.filters::-webkit-scrollbar { display: none; }
+.chip { flex: none; padding: 8px 14px; border-radius: 20px; background: #0A2948; border: 1px solid rgba(56,232,245,.18); color: #B8CBD9; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.chip.active { background: linear-gradient(135deg, #00CFE8, #00AFC3); color: #03202A; border-color: transparent; }
 #result { margin-top: 4px; }
 .loading { text-align: center; padding: 35px 20px; color: #9DB7CC; background: #0A2948; border-radius: 16px; border: 1px solid rgba(255,255,255,.06); }
 .card { background: linear-gradient(145deg, #0A2948, #08243F); border: 1px solid rgba(56,232,245,.12); border-radius: 17px; padding: 16px; margin-bottom: 13px; box-shadow: 0 8px 25px rgba(0,0,0,.18); }
@@ -20,7 +27,7 @@ body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(ci
 .address { color: #AFC3D2; font-size: 13px; line-height: 1.55; }
 .phone { display: block; color: #38E8F5; font-weight: 700; margin-top: 10px; text-decoration: none; }
 .buttons { display: flex; gap: 8px; margin-top: 14px; }
-.btn { flex: 1; text-align: center; padding: 12px 8px; border-radius: 11px; text-decoration: none; font-weight: 700; font-size: 13px; transition: .2s ease; }
+.btn { flex: 1; text-align: center; padding: 12px 8px; border-radius: 11px; text-decoration: none; font-weight: 700; font-size: 13px; transition: .2s ease; border: none; cursor: pointer; }
 .btn:active { transform: scale(.97); }
 .call { background: linear-gradient(135deg, #00CFE8, #00AFC3); color: #03202A; box-shadow: 0 5px 15px rgba(0,207,232,.15); }
 .map { background: #123A5D; color: #F5FAFF; border: 1px solid rgba(56,232,245,.12); }
@@ -30,16 +37,18 @@ body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(ci
 </style>
 </head>
 <body>
-
+ 
 <div class="header">
  <div class="header-title">Nöbetçi Eczaneler</div>
  <div class="header-sub">Kocaeli Güncel Listesi</div>
 </div>
-
+ 
 <div class="container">
  <div class="info">
  Veriler her gün otomatik olarak güncellenir. Kaynak: Kocaeli Eczacı Odası verileri üzerinden derlenmiştir.
  </div>
+ 
+ <div class="filters" id="filters"></div>
  
  <div id="result">
  <div class="loading">Eczaneler yükleniyor...</div>
@@ -49,155 +58,98 @@ body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(ci
  Veri kaynağı: <a href="https://www.bugunkocaeli.com.tr/kocaeli-nobetci-eczaneler" target="_blank">Bugün Kocaeli</a>
  </div>
 </div>
-
+ 
 <script>
-const SOURCE_URL = "https://www.bugunkocaeli.com.tr/kocaeli-nobetci-eczaneler";
-// Proxy kullanarak CORS sorununu aşıyoruz
-const PROXY_URL = "https://api.allorigins.win/get?url=" + encodeURIComponent(SOURCE_URL);
-
+const API_URL = "/api/eczane";
+ 
 const DISTRICTS = [
- "Başiskele", "Çayırova", "Darıca", "Derince", "Dilovası",
- "Gebze", "Gölcük", "İzmit", "Kandıra", "Karamürsel", "Kartepe", "Körfez"
+  "Başiskele", "Çayırova", "Darıca", "Derince", "Dilovası",
+  "Gebze", "Gölcük", "İzmit", "Kandıra", "Karamürsel", "Kartepe", "Körfez"
 ];
-
-function cleanText(text) {
- if (!text) return "";
- return String(text)
- .replace(/<script[\s\S]*?<\/script>/gi, "")
- .replace(/<style[\s\S]*?<\/style>/gi, "")
- .replace(/<[^>]+>/g, " ")
- .replace(/&nbsp;/gi, " ")
- .replace(/&amp;/gi, "&")
- .replace(/&quot;/gi, '"')
- .replace(/&#39;/gi, "'")
- .replace(/&#x27;/gi, "'")
- .replace(/&apos;/gi, "'")
- .replace(/&lt;/gi, "<")
- .replace(/&gt;/gi, ">")
- .replace(/\s+/g, " ")
- .trim();
-}
-
-function normalize(text) {
- return String(text || "").toLocaleLowerCase("tr-TR")
- .replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u")
- .replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c")
- .trim();
-}
-
-function getDistrict(text) {
- const normalized = normalize(text);
- for (const district of DISTRICTS) {
- if (normalized.includes(normalize(district))) return district;
- }
- return "";
-}
-
-function getPhone(text) {
- const match = String(text).match(/0?\s*$?262$?[\s.-]*\d{3}[\s.-]*\d{2}[\s.-]*\d{2}/);
- return match ? match.replace(/\s+/g, " ").trim() : "";
-}
-
-function getMapLink(address) {
- return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address + ", Kocaeli");
-}
-
-function parsePharmacies(html) {
- const pharmacies = ;
- // Site yapısı değişmiş olabilir, h4 yerine başka etiketler de kontrol edilebilir
- const headingRegex = /<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi;
- const headings = ;
- let match;
-
- while ((match = headingRegex.exec(html)) !== null) {
- const name = cleanText(match); [1]
- if (!name) continue;
- if (/eczane/i.test(name) && !/nöbetçi eczane/i.test(name)) {
- headings.push({ name, start: match.index, end: headingRegex.lastIndex });
- }
- }
-
- for (let i = 0; i < headings.length; i++) {
- const current = headings[i];
- const next = headings[i + 1];
- const block = html.slice(current.end, next ? next.start : undefined);
- const text = cleanText(block);
- const district = getDistrict(text);
- if (!district) continue;
-
- const phone = getPhone(text);
- let address = text;
- if (phone) address = address.replace(phone, "");
- address = address.replace(/Yol Tarifi Al/gi, "").replace(/Haritada Göster/gi, "").replace(/Ara/gi, "").replace(/\*/g, " ").replace(/\s+/g, " ").trim();
  
- address = address.replace(/Her eczane gece boyunca açık olmayabilir[\s\S]*\$/i, "").trim();
-
- pharmacies.push({
- name: current.name,
- district,
- address: address || district + ", Kocaeli",
- phone,
- map: getMapLink(address || district),
- source: "Bugün Kocaeli"
- });
- }
-
- const seen = new Set();
- return pharmacies.filter(pharmacy => {
- const key = normalize(pharmacy.name) + "|" + normalize(pharmacy.district);
- if (seen.has(key)) return false;
- seen.add(key);
- return true;
- });
+let allPharmacies = [];
+let activeDistrict = "";
+ 
+function renderFilters() {
+  const filtersDiv = document.getElementById('filters');
+  const chips = ["Tümü", ...DISTRICTS];
+  filtersDiv.innerHTML = chips.map(label => {
+    const isAll = label === "Tümü";
+    const value = isAll ? "" : label;
+    const isActive = activeDistrict === value;
+    return `<button class="chip${isActive ? ' active' : ''}" data-district="${value}">${label}</button>`;
+  }).join('');
+ 
+  filtersDiv.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      activeDistrict = chip.getAttribute('data-district');
+      renderFilters();
+      renderPharmacies();
+    });
+  });
 }
-
+ 
+function renderPharmacies() {
+  const resultDiv = document.getElementById('result');
+  const list = activeDistrict
+    ? allPharmacies.filter(p => p.district === activeDistrict)
+    : allPharmacies;
+ 
+  if (list.length === 0) {
+    resultDiv.innerHTML = '<div class="error">Bu ilçede nöbetçi eczane bulunamadı.</div>';
+    return;
+  }
+ 
+  resultDiv.innerHTML = '';
+  list.forEach(pharmacy => {
+    const card = document.createElement('div');
+    card.className = 'card';
+ 
+    const phoneHtml = pharmacy.phone ? `<a href="tel:${pharmacy.phone}" class="phone">${pharmacy.phone}</a>` : '';
+    const mapHtml = pharmacy.map ? `<a href="${pharmacy.map}" target="_blank" class="btn map">Haritada Göster</a>` : '';
+    const callHtml = pharmacy.phone ? `<a href="tel:${pharmacy.phone}" class="btn call">Ara</a>` : '';
+ 
+    card.innerHTML = `
+      <div class="name">${pharmacy.name}</div>
+      <div class="address">${pharmacy.district} • ${pharmacy.address}</div>
+      ${phoneHtml}
+      <div class="buttons">
+        ${callHtml}
+        ${mapHtml}
+      </div>
+    `;
+    resultDiv.appendChild(card);
+  });
+}
+ 
 async function loadPharmacies() {
- const resultDiv = document.getElementById('result');
-
- try {
- const response = await fetch(PROXY_URL);
- const json = await response.json();
+  const resultDiv = document.getElementById('result');
  
- if (!json.contents) throw new Error("Veri alınamadı");
-
- let pharmacies = parsePharmacies(json.contents);
-
- if (pharmacies.length === 0) {
- resultDiv.innerHTML = '<div class="error">Hiçbir eczane bulunamadı. Site yapısı değişmiş olabilir.</div>';
- console.log("Parse edilen HTML:", json.contents.substring(0, 500)); // Debug için
- return;
- }
-
- resultDiv.innerHTML = '';
+  try {
+    const response = await fetch(API_URL);
+    const json = await response.json();
  
- pharmacies.forEach(pharmacy => {
- const card = document.createElement('div');
- card.className = 'card';
+    if (!json.success) throw new Error(json.error || "Veri alınamadı");
  
- const phoneHtml = pharmacy.phone ? `<a href="tel:\${pharmacy.phone}" class="phone">\${pharmacy.phone}</a>` : '';
- const mapHtml = pharmacy.map ? `<a href="\${pharmacy.map}" target="_blank" class="btn map">Haritada Göster</a>` : '';
- const callHtml = pharmacy.phone ? `<a href="tel:\${pharmacy.phone}" class="btn call">Ara</a>` : '';
-
- card.innerHTML = `
- <div class="name">\${pharmacy.name}</div>
- <div class="address">\${pharmacy.district} • \${pharmacy.address}</div>
- \${phoneHtml}
- <div class="buttons">
- \${callHtml}
- \${mapHtml}
- </div>
- `;
- resultDiv.appendChild(card);
- });
-
- } catch (err) {
- console.error(err);
- resultDiv.innerHTML = '<div class="error">Bir bağlantı hatası oluştu. Lütfen sayfanızı yenileyin.</div>';
- }
+    allPharmacies = json.data || [];
+ 
+    if (allPharmacies.length === 0) {
+      resultDiv.innerHTML = '<div class="error">Hiçbir eczane bulunamadı. Site yapısı değişmiş olabilir.</div>';
+      return;
+    }
+ 
+    renderFilters();
+    renderPharmacies();
+ 
+  } catch (err) {
+    console.error(err);
+    resultDiv.innerHTML = '<div class="error">Bir bağlantı hatası oluştu. Lütfen sayfanızı yenileyin.</div>';
+  }
 }
-
+ 
 document.addEventListener('DOMContentLoaded', loadPharmacies);
 </script>
-
+ 
 </body>
 </html>
+ 
