@@ -1,6 +1,8 @@
-// pages/api/eczane.js (veya app/api/eczane/route.js - framework'e göre ayarla)
+// api/eczaneler.js
 
 const SOURCE_URL = "https://www.bugunkocaeli.com.tr/kocaeli-nobetci-eczaneler";
+// Kaynak site Vercel'in IP aralığını 403 ile engelliyor; bu yüzden bir proxy üzerinden istek atıyoruz.
+const PROXY_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(SOURCE_URL);
 
 const DISTRICTS = [
   "Başiskele", "Çayırova", "Darıca", "Derince", "Dilovası",
@@ -101,14 +103,11 @@ export default async function handler(req, res) {
   try {
     const requestedDistrict = typeof req.query?.district === "string" ? req.query.district.trim() : "";
 
-    const response = await fetch(SOURCE_URL, {
+    const response = await fetch(PROXY_URL, {
       method: "GET",
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Referer": "https://www.google.com/",
-        "Cache-Control": "no-cache"
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       },
       redirect: "follow",
       cache: "no-store"
@@ -121,7 +120,6 @@ export default async function handler(req, res) {
 
     let pharmacies = parsePharmacies(html);
 
-    // İlçe filtresi
     if (requestedDistrict) {
       pharmacies = pharmacies.filter(p => normalize(p.district) === normalize(requestedDistrict));
     }
