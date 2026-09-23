@@ -409,13 +409,207 @@ now.toLocaleDateString("tr-TR", {
 });
 
 
+<script>
+
+const result = document.getElementById("result");
+const today = document.getElementById("today");
+
 // ==========================================
-// DOĞRUDAN YÖNLENDİRME
-//
-// Kocaeli Eczacı Odası'nın resmi sitesi.
-// Nöbetçi eczane listesinin en güvenilir
-// ve güncel kaynağı.
+// BUGÜNÜN TARİHİ
 // ==========================================
+
+const now = new Date();
+
+today.textContent = now.toLocaleDateString("tr-TR", {
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+
+
+// ==========================================
+// ECZANELERİ API'DEN ÇEK
+// ==========================================
+
+async function loadPharmacies() {
+
+  result.innerHTML = `
+    <div class="loading">
+      💊 Nöbetçi eczaneler yükleniyor...
+    </div>
+  `;
+
+  try {
+
+    const response = await fetch("/api/eczaneler", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("API bağlantı hatası");
+    }
+
+    const data = await response.json();
+
+    if (
+      !data.success ||
+      !Array.isArray(data.pharmacies) ||
+      data.pharmacies.length === 0
+    ) {
+
+      result.innerHTML = `
+        <div class="error">
+          ⚠️ Bugünkü nöbetçi eczane bilgileri şu anda alınamadı.
+          <br><br>
+          Lütfen kısa süre sonra tekrar deneyin.
+        </div>
+      `;
+
+      return;
+    }
+
+
+    // ==========================================
+    // ECZANELERİ GÖSTER
+    // ==========================================
+
+    result.innerHTML = `
+
+      <div style="
+        margin-bottom:14px;
+        color:#AFC3D2;
+        font-size:13px;
+      ">
+        💊 Bugün Kocaeli genelinde
+        <span class="count">
+          ${data.pharmacies.length}
+        </span>
+        nöbetçi eczane bulundu.
+      </div>
+
+      ${data.pharmacies.map(pharmacy => `
+
+        <div class="card">
+
+          <div class="name">
+            💊 ${escapeHtml(pharmacy.name)}
+          </div>
+
+          <div style="
+            color:#38E8F5;
+            font-size:12px;
+            font-weight:700;
+            margin-bottom:7px;
+          ">
+            📍 ${escapeHtml(pharmacy.district)}
+          </div>
+
+          <div class="address">
+            ${escapeHtml(pharmacy.address)}
+          </div>
+
+          ${
+            pharmacy.phone
+              ? `
+                <a
+                  class="phone"
+                  href="tel:${pharmacy.phone.replace(/[^0-9+]/g, "")}"
+                >
+                  📞 ${escapeHtml(pharmacy.phone)}
+                </a>
+              `
+              : ""
+          }
+
+          <div class="buttons">
+
+            ${
+              pharmacy.phone
+                ? `
+                  <a
+                    class="btn call"
+                    href="tel:${pharmacy.phone.replace(/[^0-9+]/g, "")}"
+                  >
+                    📞 Ara
+                  </a>
+                `
+                : ""
+            }
+
+            <a
+              class="btn map"
+              href="${pharmacy.map}"
+              target="_blank"
+              rel="noopener"
+            >
+              🗺️ Yol Tarifi
+            </a>
+
+          </div>
+
+        </div>
+
+      `).join("")}
+
+      <a
+        href="https://www.kocaelieo.org.tr/"
+        target="_blank"
+        rel="noopener"
+        class="official-link"
+      >
+        💊 Kocaeli Eczacı Odası
+        <br>
+        <span style="
+          font-size:13px;
+          opacity:.8;
+          font-weight:700;
+        ">
+          Resmi kaynağı görüntüle
+        </span>
+      </a>
+
+    `;
+
+  } catch (error) {
+
+    console.error(
+      "Eczane yükleme hatası:",
+      error
+    );
+
+    result.innerHTML = `
+      <div class="error">
+        ⚠️ Nöbetçi eczaneler şu anda yüklenemiyor.
+        <br><br>
+        Lütfen birkaç dakika sonra tekrar deneyin.
+      </div>
+    `;
+  }
+}
+
+
+// ==========================================
+// GÜVENLİ HTML
+// ==========================================
+
+function escapeHtml(value) {
+
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+// ==========================================
+// SAYFA AÇILINCA
+// ==========================================
+
+loadPharmacies();
+
+</script>
 
 function loadWidget() {
 
