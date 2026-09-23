@@ -1,6 +1,3 @@
-
-
-Eczaneler · HTML
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -37,39 +34,39 @@ body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(ci
 </style>
 </head>
 <body>
- 
+
 <div class="header">
  <div class="header-title">Nöbetçi Eczaneler</div>
  <div class="header-sub">Kocaeli Güncel Listesi</div>
 </div>
- 
+
 <div class="container">
  <div class="info">
  Veriler her gün otomatik olarak güncellenir. Kaynak: Kocaeli Eczacı Odası verileri üzerinden derlenmiştir.
  </div>
- 
+
  <div class="filters" id="filters"></div>
- 
+
  <div id="result">
  <div class="loading">Eczaneler yükleniyor...</div>
  </div>
- 
+
  <div class="source">
  Veri kaynağı: <a href="https://www.bugunkocaeli.com.tr/kocaeli-nobetci-eczaneler" target="_blank">Bugün Kocaeli</a>
  </div>
 </div>
- 
+
 <script>
-const API_URL = "/api/eczane";
- 
+const API_URL = "/api/eczaneler";
+
 const DISTRICTS = [
   "Başiskele", "Çayırova", "Darıca", "Derince", "Dilovası",
   "Gebze", "Gölcük", "İzmit", "Kandıra", "Karamürsel", "Kartepe", "Körfez"
 ];
- 
+
 let allPharmacies = [];
 let activeDistrict = "";
- 
+
 function renderFilters() {
   const filtersDiv = document.getElementById('filters');
   const chips = ["Tümü", ...DISTRICTS];
@@ -79,7 +76,7 @@ function renderFilters() {
     const isActive = activeDistrict === value;
     return `<button class="chip${isActive ? ' active' : ''}" data-district="${value}">${label}</button>`;
   }).join('');
- 
+
   filtersDiv.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
       activeDistrict = chip.getAttribute('data-district');
@@ -88,27 +85,27 @@ function renderFilters() {
     });
   });
 }
- 
+
 function renderPharmacies() {
   const resultDiv = document.getElementById('result');
   const list = activeDistrict
     ? allPharmacies.filter(p => p.district === activeDistrict)
     : allPharmacies;
- 
+
   if (list.length === 0) {
     resultDiv.innerHTML = '<div class="error">Bu ilçede nöbetçi eczane bulunamadı.</div>';
     return;
   }
- 
+
   resultDiv.innerHTML = '';
   list.forEach(pharmacy => {
     const card = document.createElement('div');
     card.className = 'card';
- 
+
     const phoneHtml = pharmacy.phone ? `<a href="tel:${pharmacy.phone}" class="phone">${pharmacy.phone}</a>` : '';
     const mapHtml = pharmacy.map ? `<a href="${pharmacy.map}" target="_blank" class="btn map">Haritada Göster</a>` : '';
     const callHtml = pharmacy.phone ? `<a href="tel:${pharmacy.phone}" class="btn call">Ara</a>` : '';
- 
+
     card.innerHTML = `
       <div class="name">${pharmacy.name}</div>
       <div class="address">${pharmacy.district} • ${pharmacy.address}</div>
@@ -121,35 +118,34 @@ function renderPharmacies() {
     resultDiv.appendChild(card);
   });
 }
- 
+
 async function loadPharmacies() {
   const resultDiv = document.getElementById('result');
- 
+
   try {
     const response = await fetch(API_URL);
     const json = await response.json();
- 
+
     if (!json.success) throw new Error(json.error || "Veri alınamadı");
- 
+
     allPharmacies = json.data || [];
- 
+
     if (allPharmacies.length === 0) {
       resultDiv.innerHTML = '<div class="error">Hiçbir eczane bulunamadı. Site yapısı değişmiş olabilir.</div>';
       return;
     }
- 
+
     renderFilters();
     renderPharmacies();
- 
+
   } catch (err) {
     console.error(err);
     resultDiv.innerHTML = '<div class="error">Bir bağlantı hatası oluştu. Lütfen sayfanızı yenileyin.</div>';
   }
 }
- 
+
 document.addEventListener('DOMContentLoaded', loadPharmacies);
 </script>
- 
+
 </body>
 </html>
- 
