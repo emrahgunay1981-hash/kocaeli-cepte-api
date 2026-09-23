@@ -82,17 +82,12 @@ function parsePharmacies(html) {
   const pharmacies = [];
 
   /*
-    Bugün Kocaeli sayfasındaki yapı:
-
-    <h4>Eczane Adı</h4>
-    İlçe
-    Adres
-    Yol Tarifi Al
-    Telefon
+    Bugün Kocaeli sayfasındaki eczane
+    başlıklarını buluyoruz.
   */
 
   const headingRegex =
-    /<h4[^>]*>([\s\S]*?)<\/h4>/gi;
+    /<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi;
 
   const headings = [];
 
@@ -103,7 +98,17 @@ function parsePharmacies(html) {
 
     if (!name) continue;
 
+    /*
+      Eczane kelimesi olmayan başlıkları geç.
+    */
+
     if (!/eczane/i.test(name)) continue;
+
+    /*
+      "Nöbetçi Eczaneler" gibi genel başlıkları geç.
+    */
+
+    if (/nöbetçi eczane/i.test(name)) continue;
 
     headings.push({
       name,
@@ -113,7 +118,9 @@ function parsePharmacies(html) {
   }
 
   for (let i = 0; i < headings.length; i++) {
+
     const current = headings[i];
+
     const next = headings[i + 1];
 
     const block = html.slice(
@@ -125,62 +132,78 @@ function parsePharmacies(html) {
 
     if (!text) continue;
 
+    /*
+      İlçeyi bul.
+    */
+
     const district = getDistrict(text);
 
     if (!district) continue;
 
+    /*
+      Telefonu bul.
+    */
+
     const phone = getPhone(text);
 
     /*
-      "Yol Tarifi Al" ifadesinden önceki bölüm:
-      ilçe + adres
+      "Yol Tarifi Al" kısmından önceki
+      bölüm adres bilgilerini içeriyor.
     */
 
-    let beforeMap = text;
+    let address = text;
 
-    const mapIndex = normalize(text).indexOf(
+    const mapIndex = normalize(address).indexOf(
       normalize("Yol Tarifi Al")
     );
 
     if (mapIndex !== -1) {
-      beforeMap = text.slice(0, mapIndex);
+      address = address.slice(0, mapIndex);
     }
 
     /*
-      İlçeyi başlangıçtan çıkarıyoruz.
-    */
-
-    let address = beforeMap;
-
-    const districtIndex =
-      normalize(address).indexOf(
-        normalize(district)
-      );
-
-    if (districtIndex !== -1) {
-      address = address.slice(
-        districtIndex + district.length
-      );
-    }
-
-    address = address
-      .replace(/\*/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    /*
-      Telefon adresin içine kaldıysa çıkar.
+      Telefonu çıkar.
     */
 
     if (phone) {
-      address = address
-        .replace(phone, "")
-        .replace(/\s+/g, " ")
-        .trim();
+      address = address.replace(phone, "");
     }
 
+    /*
+      İlçe adını adresin başından çıkar.
+    */
+
+    const normalizedAddress =
+      normalize(address);
+
+    const normalizedDistrict =
+      normalize(district);
+
+    if (
+      normalizedAddress.startsWith(
+        normalizedDistrict
+      )
+    ) {
+      address = address.slice(
+        district.length
+      );
+    }
+
+    /*
+      Temizlik
+    */
+
+    address = address
+      .replace(/Adres\s*:/gi, "")
+      .replace(/Telefon\s*:/gi, "")
+      .replace(/Yol Tarifi Al/gi, "")
+      .replace(/Haritada Göster/gi, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
     if (!address) {
-      address = district + ", Kocaeli";
+      address =
+        district + ", Kocaeli";
     }
 
     pharmacies.push({
@@ -194,12 +217,14 @@ function parsePharmacies(html) {
   }
 
   /*
-    Aynı eczanenin tekrar gelmesini engelle.
+    Aynı eczanenin iki kez
+    gelmesini engelle.
   */
 
   const seen = new Set();
 
   return pharmacies.filter(pharmacy => {
+
     const key =
       normalize(pharmacy.name) +
       "|" +
@@ -216,11 +241,17 @@ function parsePharmacies(html) {
 }
 
 export default async function handler(req, res) {
+
   try {
+
     const requestedDistrict =
       typeof req.query?.district === "string"
         ? req.query.district.trim()
         : "";
+
+    /*
+      Kaynak siteye bağlan.
+    */
 
     const response = await fetch(
       SOURCE_URL,
@@ -245,52 +276,110 @@ export default async function handler(req, res) {
         },
 
         redirect: "follow",
+
         cache: "no-store"
       }
     );
 
+    /*
+      HTTP hatası
+    */
+
     if (!response.ok) {
+
       throw new Error(
-        "Kaynak sayfaya ulaşılamadı: " +
-        response.status
+        "Kaynak site HTTP hatası: " +
+        response.status +
+        " " +
+        response.statusText
       );
     }
 
-    const html = await response.text();
+    /*
+      HTML'i al.
+    */
 
-    if (!html || html.length < 1000) {
+    const html =
+      await response.text();
+
+    /*
+      Boş cevap kontrolü
+    */
+
+    if (
+      !html ||
+      html.length < 1000
+    ) {
+
       throw new Error(
-        "Kaynak sayfa boş veya eksik geldi."
+        "Kaynak site boş veya eksik HTML gönderdi. Gelen veri: " +
+        html.length +
+        " karakter"
       );
     }
+
+    /*
+      Eczaneleri çözümle.
+    */
 
     let pharmacies =
       parsePharmacies(html);
+
+    /*
+      Hiç eczane bulunamazsa
+      gerçek teşhis bilgisini döndür.
+    */
+
+    if (pharmacies.length === 0) {
+
+      throw new Error(
+        "Kaynak sayfaya ulaşıldı ancak eczane bulunamadı. HTML uzunluğu: " +
+        html.length +
+        " karakter"
+      );
+    }
 
     /*
       İlçe filtresi
     */
 
     if (requestedDistrict) {
-      pharmacies = pharmacies.filter(
-        pharmacy =>
-          normalize(pharmacy.district) ===
-          normalize(requestedDistrict)
-      );
+
+      pharmacies =
+        pharmacies.filter(
+          pharmacy =>
+            normalize(
+              pharmacy.district
+            ) ===
+            normalize(
+              requestedDistrict
+            )
+        );
     }
 
     /*
-      Sonuç
+      Başarılı cevap
     */
 
     res.status(200).json({
+
       success: true,
+
       city: "Kocaeli",
-      district: requestedDistrict || null,
-      count: pharmacies.length,
-      updatedAt: new Date().toISOString(),
+
+      district:
+        requestedDistrict || null,
+
+      count:
+        pharmacies.length,
+
+      updatedAt:
+        new Date().toISOString(),
+
       pharmacies,
-      source: "Bugün Kocaeli"
+
+      source:
+        "Bugün Kocaeli"
     });
 
   } catch (error) {
@@ -300,10 +389,18 @@ export default async function handler(req, res) {
       error
     );
 
+    /*
+      GERÇEK HATAYI GÖSTER
+    */
+
     res.status(500).json({
+
       success: false,
+
       error:
-        "Güncel nöbetçi eczane verileri alınamadı.",
+        error?.message ||
+        String(error),
+
       pharmacies: []
     });
   }
