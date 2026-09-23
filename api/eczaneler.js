@@ -19,7 +19,7 @@ const DISTRICTS = [
 function cleanText(text) {
   if (!text) return "";
 
-  return text
+  return String(text)
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<[^>]+>/g, " ")
@@ -28,6 +28,9 @@ function cleanText(text) {
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
     .replace(/&#x27;/gi, "'")
+    .replace(/&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -57,7 +60,7 @@ function getDistrict(text) {
 }
 
 function getPhone(text) {
-  const match = text.match(
+  const match = String(text).match(
     /0?\s*\(?262\)?[\s.-]*\d{3}[\s.-]*\d{2}[\s.-]*\d{2}/
   );
 
@@ -78,33 +81,8 @@ function parsePharmacies(html) {
   const pharmacies = [];
 
   /*
-    Güncel liste bölümünü bul.
-  */
-
-  const startMatch = html.match(
-    /Kocaeli\s+\d{1,2}\s+[A-Za-zÇĞİÖŞÜçğıöşü]+\s+2026[\s\S]{0,500}?nöbetçi eczane adres/i
-  );
-
-  let section = html;
-
-  if (startMatch) {
-    section = html.slice(startMatch.index);
-  }
-
-  /*
-    Listenin bittiği yer.
-  */
-
-  const endMatch = section.match(
-    /Her eczane gece boyunca açık olmayabilir/i
-  );
-
-  if (endMatch) {
-    section = section.slice(0, endMatch.index);
-  }
-
-  /*
-    Eczane başlıklarını yakala.
+    Sayfadaki eczane başlıkları:
+    <h4>...</h4>
   */
 
   const headingRegex =
@@ -114,12 +92,16 @@ function parsePharmacies(html) {
 
   let match;
 
-  while ((match = headingRegex.exec(section)) !== null) {
+  while ((match = headingRegex.exec(html)) !== null) {
 
-    const name =
-      cleanText(match[1]);
+    const name = cleanText(match[1]);
 
     if (!name) continue;
+
+    /*
+      Sadece içinde "Eczanesi" veya "Eczane"
+      geçen başlıkları al.
+    */
 
     if (
       /eczane/i.test(name) &&
@@ -135,123 +117,97 @@ function parsePharmacies(html) {
     }
   }
 
+  /*
+    Her eczanenin sonraki başlığa kadar olan
+    bölümünü oku.
+  */
+
   for (let i = 0; i < headings.length; i++) {
 
     const current = headings[i];
 
     const next = headings[i + 1];
 
-    const block =
-      section.slice(
-        current.end,
-        next ? next.start : undefined
-      );
+    const block = html.slice(
+      current.end,
+      next ? next.start : undefined
+    );
 
-    const text =
-      cleanText(block);
+    const text = cleanText(block);
 
-    const district =
-      getDistrict(text);
+    const district = getDistrict(text);
 
     if (!district) continue;
 
-    const phone =
-      getPhone(text);
+    const phone = getPhone(text);
 
-    let address =
-      text;
+    let address = text;
 
     if (phone) {
-      address =
-        address.replace(phone, "");
+      address = address.replace(phone, "");
     }
 
-    /*
-      Gereksiz ifadeleri temizle.
-    */
-
-    address =
-      address
-        .replace(/Yol Tarifi Al/gi, "")
-        .replace(/Haritada Göster/gi, "")
-        .replace(/Ara/gi, "")
-        .replace(/\s+/g, " ")
-        .trim();
+    address = address
+      .replace(/Yol Tarifi Al/gi, "")
+      .replace(/Haritada Göster/gi, "")
+      .replace(/Ara/gi, "")
+      .replace(/\*/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
 
     /*
-      Bazı sayfalarda önce ilçe,
-      sonra adres geliyor.
-      İlçe bilgisini adresten çıkar.
+      Adresin sonunda açıklama veya sonraki
+      bölüm varsa temizlemeye çalış.
     */
 
-    address =
-      address
-        .replace(
-          new RegExp(
-            "^" +
-            district.replace(
-              /[.*+?^${}()|[\]\\]/g,
-              "\\$&"
-            ) +
-            "\\s*",
-            "i"
-          ),
-          ""
-        )
-        .trim();
+    address = address
+      .replace(
+        /Her eczane gece boyunca açık olmayabilir[\s\S]*$/i,
+        ""
+      )
+      .trim();
 
     pharmacies.push({
 
-      name:
-        current.name,
+      name: current.name,
 
       district,
 
       address:
-        address ||
-        district + ", Kocaeli",
+        address || district + ", Kocaeli",
 
       phone,
 
-      map:
-        getMapLink(
-          address ||
-          district
-        ),
+      map: getMapLink(
+        address || district
+      ),
 
       source:
-        "Bugün Kocaeli / Kocaeli Eczacı Odası verileri"
-
+        "Bugün Kocaeli"
     });
   }
 
   /*
-    Tekrarları temizle.
+    Aynı eczaneyi iki kez gösterme.
   */
 
   const seen = new Set();
 
-  return pharmacies.filter(
-    pharmacy => {
+  return pharmacies.filter(pharmacy => {
 
-      const key =
-        normalize(
-          pharmacy.name
-        ) +
-        "|" +
-        normalize(
-          pharmacy.district
-        );
+    const key =
+      normalize(pharmacy.name) +
+      "|" +
+      normalize(pharmacy.district);
 
-      if (seen.has(key)) {
-        return false;
-      }
-
-      seen.add(key);
-
-      return true;
+    if (seen.has(key)) {
+      return false;
     }
-  );
+
+    seen.add(key);
+
+    return true;
+  });
 }
 
 
@@ -264,19 +220,38 @@ export default async function handler(req, res) {
         ? req.query.district.trim()
         : "";
 
-    const response =
-      await fetch(
-        SOURCE_URL,
-        {
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 KocaeliCepte/1.0",
-            "Accept":
-              "text/html,application/xhtml+xml"
-          },
-          cache: "no-store"
-        }
-      );
+    /*
+      Kaynak siteye gerçek tarayıcıya
+      daha yakın başlıklarla istek gönder.
+    */
+
+    const response = await fetch(
+      SOURCE_URL,
+      {
+        method: "GET",
+
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
+
+          "Accept":
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+
+          "Accept-Language":
+            "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+
+          "Referer":
+            "https://www.google.com/",
+
+          "Cache-Control":
+            "no-cache"
+        },
+
+        redirect: "follow",
+
+        cache: "no-store"
+      }
+    );
 
     if (!response.ok) {
 
@@ -286,34 +261,41 @@ export default async function handler(req, res) {
       );
     }
 
-    const html =
-      await response.text();
+    const html = await response.text();
+
+    if (!html || html.length < 1000) {
+
+      throw new Error(
+        "Kaynak sayfa boş veya eksik geldi."
+      );
+    }
 
     let pharmacies =
       parsePharmacies(html);
 
     /*
-      İlçe seçilmişse filtrele.
+      İlçe filtresi.
     */
 
     if (requestedDistrict) {
 
+      const district =
+        DISTRICTS.find(
+          item =>
+            normalize(item) ===
+            normalize(requestedDistrict)
+        );
+
       const wanted =
         normalize(
-          DISTRICTS.find(
-            district =>
-              normalize(district) ===
-              normalize(requestedDistrict)
-          ) ||
-          requestedDistrict
+          district || requestedDistrict
         );
 
       pharmacies =
         pharmacies.filter(
           pharmacy =>
-            normalize(
-              pharmacy.district
-            ) === wanted
+            normalize(pharmacy.district) ===
+            wanted
         );
     }
 
@@ -324,8 +306,7 @@ export default async function handler(req, res) {
       city: "Kocaeli",
 
       district:
-        requestedDistrict ||
-        null,
+        requestedDistrict || null,
 
       count:
         pharmacies.length,
@@ -337,7 +318,6 @@ export default async function handler(req, res) {
 
       source:
         "Bugün Kocaeli"
-
     });
 
   } catch (error) {
@@ -355,8 +335,6 @@ export default async function handler(req, res) {
         "Güncel nöbetçi eczane verileri alınamadı.",
 
       pharmacies: []
-
     });
-
   }
 }
