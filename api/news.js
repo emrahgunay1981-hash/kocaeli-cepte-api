@@ -41,7 +41,8 @@ function cleanText(str) {
 
 function timeAgo(pubDate) {
 
-  const then = new Date(pubDate).getTime();
+  const then =
+    new Date(pubDate).getTime();
 
   if (isNaN(then)) return "";
 
@@ -82,6 +83,116 @@ const RSS_URL =
 
 
 // ==========================================
+// GÖRSEL BUL
+// ==========================================
+
+function extractImage(block) {
+
+  let image = null;
+
+
+  // 1 — media:content
+
+  let match =
+    block.match(
+      /<media:content[^>]+url=["']([^"']+)["']/i
+    );
+
+  if (match) {
+    image = match[1];
+  }
+
+
+  // 2 — media:thumbnail
+
+  if (!image) {
+
+    match =
+      block.match(
+        /<media:thumbnail[^>]+url=["']([^"']+)["']/i
+      );
+
+    if (match) {
+      image = match[1];
+    }
+
+  }
+
+
+  // 3 — enclosure
+
+  if (!image) {
+
+    match =
+      block.match(
+        /<enclosure[^>]+url=["']([^"']+)["']/i
+      );
+
+    if (match) {
+      image = match[1];
+    }
+
+  }
+
+
+  // 4 — description içindeki img
+
+  if (!image) {
+
+    const description =
+      extract(
+        /<description>([\s\S]*?)<\/description>/i,
+        block
+      );
+
+    if (description) {
+
+      match =
+        description.match(
+          /<img[^>]+src=["']([^"']+)["']/i
+        );
+
+      if (match) {
+        image = match[1];
+      }
+
+    }
+
+  }
+
+
+  // 5 — description içinde data-src
+
+  if (!image) {
+
+    const description =
+      extract(
+        /<description>([\s\S]*?)<\/description>/i,
+        block
+      );
+
+    if (description) {
+
+      match =
+        description.match(
+          /data-src=["']([^"']+)["']/i
+        );
+
+      if (match) {
+        image = match[1];
+      }
+
+    }
+
+  }
+
+
+  return image || null;
+
+}
+
+
+// ==========================================
 // HABERLERİ AL
 // ==========================================
 
@@ -89,21 +200,24 @@ async function getNews() {
 
   try {
 
-    const response = await fetch(RSS_URL, {
+    const response =
+      await fetch(
+        RSS_URL,
+        {
+          headers: {
 
-      headers: {
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
 
-        "User-Agent":
-          "Mozilla/5.0 KocaeliCepte/1.0",
+            "Accept":
+              "application/rss+xml, application/xml, text/xml"
 
-        "Accept":
-          "application/rss+xml, application/xml, text/xml"
+          },
 
-      },
+          cache: "no-store"
 
-      cache: "no-store"
-
-    });
+        }
+      );
 
 
     if (!response.ok) {
@@ -118,8 +232,6 @@ async function getNews() {
     const xml =
       await response.text();
 
-
-    // RSS item'larını bul
 
     const itemBlocks =
       xml.match(
@@ -184,13 +296,20 @@ async function getNews() {
       }
 
 
-      // Google News başlıklarında bazen
-      // "Haber başlığı - Kaynak"
-      // şeklinde kaynak bulunur.
+      // ====================================
+      // GÖRSEL
+      // ====================================
+
+      const image =
+        extractImage(block);
+
+
+      // ====================================
+      // BAŞLIK / KAYNAK
+      // ====================================
 
       let finalTitle =
         title;
-
 
       let finalSource =
         source || "Google News";
@@ -204,11 +323,13 @@ async function getNews() {
         const parts =
           title.split(" - ");
 
+
         if (parts.length >= 2) {
 
           finalSource =
             parts[parts.length - 1]
               .trim();
+
 
           finalTitle =
             parts
@@ -217,24 +338,6 @@ async function getNews() {
               .trim();
 
         }
-
-      }
-
-
-      // Description içerisindeki ilk resmi bul
-
-      let image = null;
-
-      const imageMatch =
-        block.match(
-          /<img[^>]+src=["']([^"']+)["']/i
-        );
-
-
-      if (imageMatch) {
-
-        image =
-          imageMatch[1];
 
       }
 
@@ -324,9 +427,7 @@ export default async function handler(
 
 
         if (seen.has(key)) {
-
           return false;
-
         }
 
 
@@ -378,7 +479,8 @@ export default async function handler(
     balanced.forEach(item => {
 
       const source =
-        item.source || "Bilinmiyor";
+        item.source ||
+        "Bilinmiyor";
 
 
       sourceCount[source] =
