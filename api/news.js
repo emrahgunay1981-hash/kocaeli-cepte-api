@@ -1,6 +1,6 @@
 // ==========================================
 // KOCAELİ CEPTE
-// GOOGLE NEWS RSS HABER SİSTEMİ
+// GOOGLE NEWS + GERÇEK HABER GÖRSELLERİ
 // ==========================================
 
 function extract(regex, str) {
@@ -83,117 +83,331 @@ const RSS_URL =
 
 
 // ==========================================
-// GÖRSEL BUL
+// GÖRSEL URL'SİNİ TEMİZLE
 // ==========================================
 
-function extractImage(block) {
+function normalizeImage(url) {
 
-  let image = null;
+  if (!url) return null;
 
+  url = url.trim();
 
-  // 1 — media:content
-
-  let match =
-    block.match(
-      /<media:content[^>]+url=["']([^"']+)["']/i
-    );
-
-  if (match) {
-    image = match[1];
+  if (
+    url.startsWith("//")
+  ) {
+    return "https:" + url;
   }
 
-
-  // 2 — media:thumbnail
-
-  if (!image) {
-
-    match =
-      block.match(
-        /<media:thumbnail[^>]+url=["']([^"']+)["']/i
-      );
-
-    if (match) {
-      image = match[1];
-    }
-
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://")
+  ) {
+    return url;
   }
 
-
-  // 3 — enclosure
-
-  if (!image) {
-
-    match =
-      block.match(
-        /<enclosure[^>]+url=["']([^"']+)["']/i
-      );
-
-    if (match) {
-      image = match[1];
-    }
-
-  }
-
-
-  // 4 — description içindeki img
-
-  if (!image) {
-
-    const description =
-      extract(
-        /<description>([\s\S]*?)<\/description>/i,
-        block
-      );
-
-    if (description) {
-
-      match =
-        description.match(
-          /<img[^>]+src=["']([^"']+)["']/i
-        );
-
-      if (match) {
-        image = match[1];
-      }
-
-    }
-
-  }
-
-
-  // 5 — description içinde data-src
-
-  if (!image) {
-
-    const description =
-      extract(
-        /<description>([\s\S]*?)<\/description>/i,
-        block
-      );
-
-    if (description) {
-
-      match =
-        description.match(
-          /data-src=["']([^"']+)["']/i
-        );
-
-      if (match) {
-        image = match[1];
-      }
-
-    }
-
-  }
-
-
-  return image || null;
+  return null;
 
 }
 
 
 // ==========================================
-// HABERLERİ AL
+// META TAG'DEN GÖRSEL BUL
+// ==========================================
+
+function findMetaImage(html, type) {
+
+  let match;
+
+
+  // property="og:image" content="..."
+
+  match = html.match(
+    new RegExp(
+      `<meta[^>]+property=["']${type}["'][^>]+content=["']([^"']+)["']`,
+      "i"
+    )
+  );
+
+  if (match) {
+    return normalizeImage(match[1]);
+  }
+
+
+  // content="..." property="og:image"
+
+  match = html.match(
+    new RegExp(
+      `<meta[^>]+content=["']([^"']+)["'][^>]+property=["']${type}["']`,
+      "i"
+    )
+  );
+
+  if (match) {
+    return normalizeImage(match[1]);
+  }
+
+
+  return null;
+
+}
+
+
+// ==========================================
+// GERÇEK HABER SAYFASINDAN GÖRSEL AL
+// ==========================================
+
+async function getArticleImage(url) {
+
+  if (!url) return null;
+
+
+  try {
+
+    const controller =
+      new AbortController();
+
+
+    const timeout =
+      setTimeout(
+        () => controller.abort(),
+        2500
+      );
+
+
+    const response =
+      await fetch(
+        url,
+        {
+          redirect: "follow",
+
+          headers: {
+
+            "User-Agent":
+              "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36",
+
+            "Accept":
+              "text/html,application/xhtml+xml"
+
+          },
+
+          signal:
+            controller.signal,
+
+          cache:
+            "no-store"
+
+        }
+      );
+
+
+    clearTimeout(timeout);
+
+
+    if (!response.ok) {
+      return null;
+    }
+
+
+    const html =
+      await response.text();
+
+
+    // 1 — Open Graph
+
+    let image =
+      findMetaImage(
+        html,
+        "og:image"
+      );
+
+
+    if (image) {
+      return image;
+    }
+
+
+    // 2 — Twitter
+
+    image =
+      findMetaImage(
+        html,
+        "twitter:image"
+      );
+
+
+    if (image) {
+      return image;
+    }
+
+
+    // 3 — itemprop=image
+
+    let match =
+      html.match(
+        /<meta[^>]+itemprop=["']image["'][^>]+content=["']([^"']+)["']/i
+      );
+
+
+    if (match) {
+      image =
+        normalizeImage(
+          match[1]
+        );
+
+      if (image) {
+        return image;
+      }
+    }
+
+
+    // content önce gelirse
+
+    match =
+      html.match(
+        /<meta[^>]+content=["']([^"']+)["'][^>]+itemprop=["']image["']/i
+      );
+
+
+    if (match) {
+
+      image =
+        normalizeImage(
+          match[1]
+        );
+
+      if (image) {
+        return image;
+      }
+
+    }
+
+
+    // 4 — JSON-LD image
+
+    match =
+      html.match(
+        /"image"\s*:\s*"([^"]+)"/i
+      );
+
+
+    if (match) {
+
+      image =
+        normalizeImage(
+          match[1]
+        );
+
+      if (image) {
+        return image;
+      }
+
+    }
+
+
+    return null;
+
+
+  } catch (error) {
+
+    return null;
+
+  }
+
+}
+
+
+// ==========================================
+// RSS İÇİNDEN GÖRSEL BUL
+// ==========================================
+
+function getRSSImage(block) {
+
+  let match;
+
+
+  // media:content
+
+  match =
+    block.match(
+      /<media:content[^>]+url=["']([^"']+)["']/i
+    );
+
+  if (match) {
+
+    return normalizeImage(
+      match[1]
+    );
+
+  }
+
+
+  // media:thumbnail
+
+  match =
+    block.match(
+      /<media:thumbnail[^>]+url=["']([^"']+)["']/i
+    );
+
+  if (match) {
+
+    return normalizeImage(
+      match[1]
+    );
+
+  }
+
+
+  // enclosure
+
+  match =
+    block.match(
+      /<enclosure[^>]+url=["']([^"']+)["']/i
+    );
+
+  if (match) {
+
+    return normalizeImage(
+      match[1]
+    );
+
+  }
+
+
+  // description içindeki img
+
+  const description =
+    extract(
+      /<description>([\s\S]*?)<\/description>/i,
+      block
+    );
+
+
+  if (description) {
+
+    match =
+      description.match(
+        /<img[^>]+src=["']([^"']+)["']/i
+      );
+
+
+    if (match) {
+
+      return normalizeImage(
+        match[1]
+      );
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+
+// ==========================================
+// GOOGLE NEWS HABERLERİNİ AL
 // ==========================================
 
 async function getNews() {
@@ -207,14 +421,15 @@ async function getNews() {
           headers: {
 
             "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+              "Mozilla/5.0 KocaeliCepte/1.0",
 
             "Accept":
               "application/rss+xml, application/xml, text/xml"
 
           },
 
-          cache: "no-store"
+          cache:
+            "no-store"
 
         }
       );
@@ -243,7 +458,7 @@ async function getNews() {
 
 
     for (
-      const block of itemBlocks
+      const block of itemBlocks.slice(0, 20)
     ) {
 
       const title =
@@ -282,31 +497,10 @@ async function getNews() {
         );
 
 
-      const description =
-        cleanText(
-          extract(
-            /<description>([\s\S]*?)<\/description>/i,
-            block
-          )
-        );
-
-
       if (!title || !link) {
         continue;
       }
 
-
-      // ====================================
-      // GÖRSEL
-      // ====================================
-
-      const image =
-        extractImage(block);
-
-
-      // ====================================
-      // BAŞLIK / KAYNAK
-      // ====================================
 
       let finalTitle =
         title;
@@ -314,6 +508,8 @@ async function getNews() {
       let finalSource =
         source || "Google News";
 
+
+      // Başlıkta kaynak varsa ayır
 
       if (
         !source &&
@@ -342,6 +538,12 @@ async function getNews() {
       }
 
 
+      // Önce RSS görselini kontrol et
+
+      let image =
+        getRSSImage(block);
+
+
       items.push({
 
         title:
@@ -367,6 +569,42 @@ async function getNews() {
       });
 
     }
+
+
+    // ======================================
+    // GERÇEK SAYFALARDAN GÖRSEL AL
+    // ======================================
+
+    await Promise.all(
+
+      items.map(
+        async item => {
+
+          // RSS'te zaten görsel varsa
+          // tekrar siteye gitme
+
+          if (item.image) {
+            return;
+          }
+
+
+          const image =
+            await getArticleImage(
+              item.link
+            );
+
+
+          if (image) {
+
+            item.image =
+              image;
+
+          }
+
+        }
+      )
+
+    );
 
 
     return items;
@@ -402,7 +640,7 @@ export default async function handler(
 
 
     // ======================================
-    // AYNI HABERLERİ TEMİZLE
+    // TEKRARLAYAN HABERLERİ TEMİZLE
     // ======================================
 
     const seen =
@@ -462,7 +700,7 @@ export default async function handler(
 
 
     // ======================================
-    // İLK 20 HABER
+    // 20 HABER
     // ======================================
 
     const balanced =
@@ -502,6 +740,11 @@ export default async function handler(
 
       count:
         balanced.length,
+
+      imageCount:
+        balanced.filter(
+          item => !!item.image
+        ).length,
 
       sources:
         Object.keys(sourceCount),
