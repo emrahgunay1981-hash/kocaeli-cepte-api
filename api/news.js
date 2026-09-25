@@ -3,15 +3,16 @@
 // GOOGLE NEWS + GERÇEK HABER GÖRSELLERİ
 // ==========================================
 
+
+// ==========================================
+// YARDIMCI FONKSİYONLAR
+// ==========================================
+
 function extract(regex, str) {
   const m = str.match(regex);
   return m ? m[1].trim() : null;
 }
 
-
-// ==========================================
-// METİN TEMİZLEME
-// ==========================================
 
 function cleanText(str) {
 
@@ -35,9 +36,35 @@ function cleanText(str) {
 }
 
 
-// ==========================================
-// TARİH
-// ==========================================
+function normalizeImage(url) {
+
+  if (!url) return null;
+
+  url = url.trim();
+
+  if (url.startsWith("//")) {
+    url = "https:" + url;
+  }
+
+  if (
+    !url.startsWith("http://") &&
+    !url.startsWith("https://")
+  ) {
+    return null;
+  }
+
+  // Google News'in varsayılan görsellerini kullanma
+  if (
+    url.includes("news.google.com") ||
+    url.includes("googleusercontent.com")
+  ) {
+    return null;
+  }
+
+  return url;
+
+}
+
 
 function timeAgo(pubDate) {
 
@@ -83,67 +110,167 @@ const RSS_URL =
 
 
 // ==========================================
-// GÖRSEL URL'SİNİ TEMİZLE
+// META GÖRSELİ BUL
 // ==========================================
 
-function normalizeImage(url) {
-
-  if (!url) return null;
-
-  url = url.trim();
-
-  if (
-    url.startsWith("//")
-  ) {
-    return "https:" + url;
-  }
-
-  if (
-    url.startsWith("http://") ||
-    url.startsWith("https://")
-  ) {
-    return url;
-  }
-
-  return null;
-
-}
-
-
-// ==========================================
-// META TAG'DEN GÖRSEL BUL
-// ==========================================
-
-function findMetaImage(html, type) {
+function findMetaImage(html) {
 
   let match;
 
 
-  // property="og:image" content="..."
+  // ----------------------------------------
+  // og:image
+  // ----------------------------------------
 
-  match = html.match(
-    new RegExp(
-      `<meta[^>]+property=["']${type}["'][^>]+content=["']([^"']+)["']`,
-      "i"
-    )
-  );
+  match =
+    html.match(
+      /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i
+    );
 
   if (match) {
-    return normalizeImage(match[1]);
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
   }
 
 
-  // content="..." property="og:image"
-
-  match = html.match(
-    new RegExp(
-      `<meta[^>]+content=["']([^"']+)["'][^>]+property=["']${type}["']`,
-      "i"
-    )
-  );
+  match =
+    html.match(
+      /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i
+    );
 
   if (match) {
-    return normalizeImage(match[1]);
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
+  }
+
+
+  // ----------------------------------------
+  // twitter:image
+  // ----------------------------------------
+
+  match =
+    html.match(
+      /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i
+    );
+
+  if (match) {
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
+  }
+
+
+  match =
+    html.match(
+      /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i
+    );
+
+  if (match) {
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
+  }
+
+
+  // ----------------------------------------
+  // itemprop=image
+  // ----------------------------------------
+
+  match =
+    html.match(
+      /<meta[^>]+itemprop=["']image["'][^>]+content=["']([^"']+)["']/i
+    );
+
+  if (match) {
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
+  }
+
+
+  match =
+    html.match(
+      /<meta[^>]+content=["']([^"']+)["'][^>]+itemprop=["']image["']/i
+    );
+
+  if (match) {
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
+  }
+
+
+  // ----------------------------------------
+  // JSON-LD image
+  // ----------------------------------------
+
+  match =
+    html.match(
+      /"image"\s*:\s*"([^"]+)"/i
+    );
+
+  if (match) {
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
+  }
+
+
+  // ----------------------------------------
+  // image_src
+  // ----------------------------------------
+
+  match =
+    html.match(
+      /<link[^>]+rel=["']image_src["'][^>]+href=["']([^"']+)["']/i
+    );
+
+  if (match) {
+
+    const image =
+      normalizeImage(match[1]);
+
+    if (image) {
+      return image;
+    }
+
   }
 
 
@@ -153,7 +280,7 @@ function findMetaImage(html, type) {
 
 
 // ==========================================
-// GERÇEK HABER SAYFASINDAN GÖRSEL AL
+// GERÇEK HABER SAYFASINI AÇ
 // ==========================================
 
 async function getArticleImage(url) {
@@ -170,7 +297,7 @@ async function getArticleImage(url) {
     const timeout =
       setTimeout(
         () => controller.abort(),
-        2500
+        7000
       );
 
 
@@ -208,103 +335,30 @@ async function getArticleImage(url) {
     }
 
 
+    // Google yönlendirmesinden sonra
+    // ulaşılan gerçek adres
+
+    const finalUrl =
+      response.url || url;
+
+
+    // Hâlâ Google News'teysek
+    // görsel arama yapma
+
+    if (
+      finalUrl.includes(
+        "news.google.com"
+      )
+    ) {
+      return null;
+    }
+
+
     const html =
       await response.text();
 
 
-    // 1 — Open Graph
-
-    let image =
-      findMetaImage(
-        html,
-        "og:image"
-      );
-
-
-    if (image) {
-      return image;
-    }
-
-
-    // 2 — Twitter
-
-    image =
-      findMetaImage(
-        html,
-        "twitter:image"
-      );
-
-
-    if (image) {
-      return image;
-    }
-
-
-    // 3 — itemprop=image
-
-    let match =
-      html.match(
-        /<meta[^>]+itemprop=["']image["'][^>]+content=["']([^"']+)["']/i
-      );
-
-
-    if (match) {
-      image =
-        normalizeImage(
-          match[1]
-        );
-
-      if (image) {
-        return image;
-      }
-    }
-
-
-    // content önce gelirse
-
-    match =
-      html.match(
-        /<meta[^>]+content=["']([^"']+)["'][^>]+itemprop=["']image["']/i
-      );
-
-
-    if (match) {
-
-      image =
-        normalizeImage(
-          match[1]
-        );
-
-      if (image) {
-        return image;
-      }
-
-    }
-
-
-    // 4 — JSON-LD image
-
-    match =
-      html.match(
-        /"image"\s*:\s*"([^"]+)"/i
-      );
-
-
-    if (match) {
-
-      image =
-        normalizeImage(
-          match[1]
-        );
-
-      if (image) {
-        return image;
-      }
-
-    }
-
-
-    return null;
+    return findMetaImage(html);
 
 
   } catch (error) {
@@ -317,97 +371,7 @@ async function getArticleImage(url) {
 
 
 // ==========================================
-// RSS İÇİNDEN GÖRSEL BUL
-// ==========================================
-
-function getRSSImage(block) {
-
-  let match;
-
-
-  // media:content
-
-  match =
-    block.match(
-      /<media:content[^>]+url=["']([^"']+)["']/i
-    );
-
-  if (match) {
-
-    return normalizeImage(
-      match[1]
-    );
-
-  }
-
-
-  // media:thumbnail
-
-  match =
-    block.match(
-      /<media:thumbnail[^>]+url=["']([^"']+)["']/i
-    );
-
-  if (match) {
-
-    return normalizeImage(
-      match[1]
-    );
-
-  }
-
-
-  // enclosure
-
-  match =
-    block.match(
-      /<enclosure[^>]+url=["']([^"']+)["']/i
-    );
-
-  if (match) {
-
-    return normalizeImage(
-      match[1]
-    );
-
-  }
-
-
-  // description içindeki img
-
-  const description =
-    extract(
-      /<description>([\s\S]*?)<\/description>/i,
-      block
-    );
-
-
-  if (description) {
-
-    match =
-      description.match(
-        /<img[^>]+src=["']([^"']+)["']/i
-      );
-
-
-    if (match) {
-
-      return normalizeImage(
-        match[1]
-      );
-
-    }
-
-  }
-
-
-  return null;
-
-}
-
-
-// ==========================================
-// GOOGLE NEWS HABERLERİNİ AL
+// HABERLERİ AL
 // ==========================================
 
 async function getNews() {
@@ -457,6 +421,8 @@ async function getNews() {
     const items = [];
 
 
+    // İlk 20 haber
+
     for (
       const block of itemBlocks.slice(0, 20)
     ) {
@@ -505,6 +471,7 @@ async function getNews() {
       let finalTitle =
         title;
 
+
       let finalSource =
         source || "Google News";
 
@@ -538,12 +505,6 @@ async function getNews() {
       }
 
 
-      // Önce RSS görselini kontrol et
-
-      let image =
-        getRSSImage(block);
-
-
       items.push({
 
         title:
@@ -554,7 +515,12 @@ async function getNews() {
         category:
           "Kocaeli",
 
-        image,
+        // Şimdilik boş.
+        // Gerçek haber sayfasından
+        // doldurulacak.
+
+        image:
+          null,
 
         time:
           pubDate
@@ -572,39 +538,41 @@ async function getNews() {
 
 
     // ======================================
-    // GERÇEK SAYFALARDAN GÖRSEL AL
+    // GERÇEK HABER GÖRSELLERİ
     // ======================================
 
-    await Promise.all(
+    // Aynı anda en fazla 5 haber
+    // işleniyor.
 
-      items.map(
-        async item => {
+    for (
+      let i = 0;
+      i < items.length;
+      i += 5
+    ) {
 
-          // RSS'te zaten görsel varsa
-          // tekrar siteye gitme
-
-          if (item.image) {
-            return;
-          }
-
-
-          const image =
-            await getArticleImage(
-              item.link
-            );
+      const batch =
+        items.slice(
+          i,
+          i + 5
+        );
 
 
-          if (image) {
+      await Promise.all(
+
+        batch.map(
+          async item => {
 
             item.image =
-              image;
+              await getArticleImage(
+                item.link
+              );
 
           }
+        )
 
-        }
-      )
+      );
 
-    );
+    }
 
 
     return items;
@@ -640,7 +608,7 @@ export default async function handler(
 
 
     // ======================================
-    // TEKRARLAYAN HABERLERİ TEMİZLE
+    // AYNI HABERLERİ TEMİZLE
     // ======================================
 
     const seen =
@@ -700,7 +668,7 @@ export default async function handler(
 
 
     // ======================================
-    // 20 HABER
+    // İLK 20
     // ======================================
 
     const balanced =
@@ -728,12 +696,23 @@ export default async function handler(
 
 
     // ======================================
+    // GÖRSEL SAYISI
+    // ======================================
+
+    const imageCount =
+      balanced.filter(
+        item => !!item.image
+      ).length;
+
+
+    // ======================================
     // CEVAP
     // ======================================
 
     res.status(200).json({
 
-      ok: true,
+      ok:
+        true,
 
       updated:
         new Date().toISOString(),
@@ -742,14 +721,17 @@ export default async function handler(
         balanced.length,
 
       imageCount:
-        balanced.filter(
-          item => !!item.image
-        ).length,
+
+        imageCount,
 
       sources:
-        Object.keys(sourceCount),
+        Object.keys(
+          sourceCount
+        ),
 
-      sourceCount,
+      sourceCount:
+
+        sourceCount,
 
       items:
         balanced
@@ -767,12 +749,20 @@ export default async function handler(
 
     res.status(500).json({
 
-      ok: false,
+      ok:
+        false,
 
       error:
         "Kocaeli haberleri alınamadı",
 
-      items: []
+      count:
+        0,
+
+      imageCount:
+        0,
+
+      items:
+        []
 
     });
 
