@@ -77,8 +77,6 @@
         );
     }
 
-    /* ÜST ROZET */
-
     .hero-badge {
       position: absolute;
       top: 20px;
@@ -95,8 +93,6 @@
       letter-spacing: 1px;
       text-transform: uppercase;
     }
-
-    /* GERİ BUTONU */
 
     .back-button {
       position: absolute;
@@ -625,7 +621,7 @@
 
 
           if (
-            !data.success ||
+            !data.ok ||
             !data.items ||
             data.items.length === 0
           ) {
@@ -687,44 +683,6 @@
           }
 
 
-          function cleanDescription(text) {
-
-            if (!text) return "";
-
-
-            const temp =
-              document.createElement("div");
-
-
-            temp.innerHTML = text;
-
-
-            let clean =
-              temp.textContent ||
-              temp.innerText ||
-              "";
-
-
-            clean =
-              clean
-                .replace(/\s+/g, " ")
-                .trim();
-
-
-            if (clean.length > 300) {
-
-              clean =
-                clean.substring(0, 300) +
-                "...";
-
-            }
-
-
-            return escapeHTML(clean);
-
-          }
-
-
           newsDiv.innerHTML =
 
             data.items
@@ -738,16 +696,10 @@
                   );
 
 
-                const description =
-                  cleanDescription(
-                    item.description
-                  );
-
-
                 const date =
-                  formatDate(
-                    item.date
-                  );
+                  item.time
+                    ? escapeHTML(item.time)
+                    : formatDate(item.pubDate);
 
 
                 const source =
@@ -758,6 +710,12 @@
 
                 const image =
                   item.image || "";
+
+
+                const link =
+                  item.realUrl ||
+                  item.link ||
+                  "";
 
 
                 const imageHTML =
@@ -803,17 +761,6 @@
 
 
                       ${
-                        description
-                          ? `
-                            <div class="news-description">
-                              ${description}
-                            </div>
-                          `
-                          : ""
-                      }
-
-
-                      ${
                         source
                           ? `
                             <div class="news-source">
@@ -825,11 +772,11 @@
 
 
                       ${
-                        item.url
+                        link
                           ? `
                             <a
                               class="news-button"
-                              href="${escapeHTML(item.url)}"
+                              href="${escapeHTML(link)}"
                               target="_blank"
                               rel="noopener noreferrer"
                             >
