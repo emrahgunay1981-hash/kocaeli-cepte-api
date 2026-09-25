@@ -1,635 +1,368 @@
+// ==========================================
 // KOCAELİ CEPTE
-// Kocaelispor özel haber sistemi
-// 5 Kocaeli haber kaynağından beslenir.
+// GOOGLE NEWS + GERÇEK HABER GÖRSELLERİ
+// ==========================================
+
+// ==========================================
+// YARDIMCI FONKSİYONLAR
+// ==========================================
 
 function extract(regex, str) {
-    const m = str.match(regex);
-    return m ? m[1].trim() : "";
+  const m = str.match(regex);
+  return m ? m[1].trim() : null;
 }
 
 function cleanText(str) {
-    if (!str) return "";
+  if (!str) return null;
+  return str
+    .replace(/<!\[CDATA\[/g, "")
+    .replace(/\]\]>/g, "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#039;/g, "'")
+    .replace(/&#x27;/gi, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .trim();
+}
 
-    return str
-        .replace(/<!\[CDATA\[/gi, "")
-        .replace(/\]\]>/gi, "")
-        .replace(/<[^>]*>/g, "")
-        .replace(/&amp;/gi, "&")
-        .replace(/&quot;/gi, '"')
-        .replace(/&#39;/gi, "'")
-        .replace(/&apos;/gi, "'")
-        .replace(/&lt;/gi, "<")
-        .replace(/&gt;/gi, ">")
-        .replace(/&nbsp;/gi, " ")
-        .replace(/\s+/g, " ")
-        .trim();
+function normalizeImage(url) {
+  if (!url) return null;
+  url = url.trim();
+  if (url.startsWith("//")) url = "https:" + url;
+  if (!url.startsWith("http://") && !url.startsWith("https://")) return null;
+  if (url.includes("news.google.com") || url.includes("googleusercontent.com")) return null;
+  return url;
 }
 
 function timeAgo(pubDate) {
-    const then = new Date(pubDate).getTime();
-
-    if (isNaN(then)) return "";
-
-    const diffMin =
-        Math.floor((Date.now() - then) / 60000);
-
-    if (diffMin < 1) return "az önce";
-
-    if (diffMin < 60) {
-        return `${diffMin} dakika önce`;
-    }
-
-    const diffHour =
-        Math.floor(diffMin / 60);
-
-    if (diffHour < 24) {
-        return `${diffHour} saat önce`;
-    }
-
-    const diffDay =
-        Math.floor(diffHour / 24);
-
-    return `${diffDay} gün önce`;
+  const then = new Date(pubDate).getTime();
+  if (isNaN(then)) return "";
+  const diffMin = Math.floor((Date.now() - then) / 60000);
+  if (diffMin < 1) return "az önce";
+  if (diffMin < 60) return `${diffMin} dakika önce`;
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return `${diffHour} saat önce`;
+  const diffDay = Math.floor(diffHour / 24);
+  return `${diffDay} gün önce`;
 }
 
-
 // ==========================================
-// KAYNAKLAR
-// ==========================================
-
-const SOURCES = [
-
-    {
-        name: "Kocaeli Gazetesi",
-        url: "https://www.kocaeligazetesi.com.tr/rss/kategori/kocaelispor"
-    },
-
-    {
-        name: "Özgür Kocaeli",
-        url: "https://www.ozgurkocaeli.com.tr/rss/kategori/kocaelispor-haberleri"
-    },
-
-    {
-        name: "Ses Kocaeli",
-        url: "https://www.seskocaeli.com/rss/kategori/kocaeli-spor-haberleri"
-    },
-
-    {
-        name: "En Kocaeli",
-        url: "https://www.enkocaeli.com/rss/kategori/kocaeli-spor-haberleri"
-    },
-
-    {
-        name: "Kocaeli Gündem",
-        url: "https://kocaeligundem.com/rss/kategori/spor"
-    }
-
-];
-
-
-// ==========================================
-// KOCAELİSPOR ANAHTAR KELİMELERİ
+// GOOGLE NEWS RSS
 // ==========================================
 
-const KEYWORDS = [
+const RSS_URL = "https://news.google.com/rss/search?q=Kocaelispor&hl=tr&gl=TR&ceid=TR%3Atr";
 
-    "kocaelispor",
-    "kocaeli spor",
-    "körfez ekibi",
-    "körfez temsilcisi",
-    "yeşil-siyahlı",
-    "yeşil siyahlı",
-    "yeşil-siyah",
-    "yeşil siyah",
-    "hodri meydan",
-    "turka kocaeli stadyumu"
-
-];
-
+const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36";
 
 // ==========================================
-// HABERİN KOCAELİSPOR İLE İLGİSİ
+// META GÖRSELİ BUL
 // ==========================================
 
-function isKocaelisporNews(item) {
+function findMetaImage(html) {
+  let match;
 
-    const text = [
-        item.title || "",
-        item.description || "",
-        item.category || ""
-    ]
-        .join(" ")
-        .toLocaleLowerCase("tr-TR");
+  match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
 
-    return KEYWORDS.some(keyword =>
-        text.includes(
-            keyword.toLocaleLowerCase("tr-TR")
-        )
-    );
+  match = html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
+
+  match = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
+
+  match = html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
+
+  match = html.match(/<meta[^>]+itemprop=["']image["'][^>]+content=["']([^"']+)["']/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
+
+  match = html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+itemprop=["']image["']/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
+
+  match = html.match(/"image"\s*:\s*"([^"]+)"/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
+
+  match = html.match(/<link[^>]+rel=["']image_src["'][^>]+href=["']([^"']+)["']/i);
+  if (match) { const image = normalizeImage(match[1]); if (image) return image; }
+
+  return null;
 }
 
-
 // ==========================================
-// GÖRSEL BUL
+// GOOGLE NEWS LİNKİNİ GERÇEK ADRESE ÇÖZ
 // ==========================================
+// Google News RSS linkleri artık doğrudan yönlendirme yapmıyor.
+// Google'ın dahili "batchexecute" servisine sorup gerçek adresi almak gerekiyor.
 
-function getImage(block, rawDescription) {
+async function getSignatureParams(googleNewsUrl) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
 
-    let image = null;
+    const response = await fetch(googleNewsUrl, {
+      redirect: "follow",
+      headers: { "User-Agent": UA, "Accept": "text/html" },
+      signal: controller.signal,
+      cache: "no-store"
+    });
 
+    clearTimeout(timeout);
+    if (!response.ok) return null;
 
-    // enclosure
+    const html = await response.text();
 
-    const enclosure =
-        block.match(
-            /<enclosure[^>]+url=["']([^"']+)["']/i
-        );
+    const idMatch = html.match(/data-n-a-id="([^"]+)"/);
+    const sgMatch = html.match(/data-n-a-sg="([^"]+)"/);
+    const tsMatch = html.match(/data-n-a-ts="([^"]+)"/);
 
-    if (enclosure) {
-        image = enclosure[1];
-    }
+    if (!idMatch || !sgMatch || !tsMatch) return null;
 
-
-    // media:content
-
-    if (!image) {
-
-        const media =
-            block.match(
-                /<media:content[^>]+url=["']([^"']+)["']/i
-            );
-
-        if (media) {
-            image = media[1];
-        }
-
-    }
-
-
-    // media:thumbnail
-
-    if (!image) {
-
-        const thumbnail =
-            block.match(
-                /<media:thumbnail[^>]+url=["']([^"']+)["']/i
-            );
-
-        if (thumbnail) {
-            image = thumbnail[1];
-        }
-
-    }
-
-
-    // description içindeki img
-
-    if (!image && rawDescription) {
-
-        const img =
-            rawDescription.match(
-                /<img[^>]+src=["']([^"']+)["']/i
-            );
-
-        if (img) {
-            image = img[1];
-        }
-
-    }
-
-
-    return image
-        ? image.trim()
-        : null;
+    return { articleId: idMatch[1], signature: sgMatch[1], timestamp: tsMatch[1] };
+  } catch (error) {
+    return null;
+  }
 }
 
+async function decodeGoogleNewsUrls(paramsList) {
+  // paramsList: [{articleId, signature, timestamp}, ...] - sırayla
+  const reqs = paramsList.map(p => [
+    "Fbv4je",
+    JSON.stringify([
+      "garturlreq",
+      [["X", "X", ["X", "X"], null, null, 1, 1, "US:en", null, 1, null, null, null, null, null, 0, 1], "X", "X", 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0],
+      p.articleId,
+      Number(p.timestamp),
+      p.signature
+    ])
+  ]);
 
-// ==========================================
-// KAYNAK HABERLERİNİ AL
-// ==========================================
+  const body = "f.req=" + encodeURIComponent(JSON.stringify([reqs]));
 
-async function getSource(source) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
-    try {
+    const response = await fetch("https://news.google.com/_/DotsSplashUi/data/batchexecute", {
+      method: "POST",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "User-Agent": UA
+      },
+      body,
+      signal: controller.signal,
+      cache: "no-store"
+    });
 
-        const response =
-            await fetch(source.url, {
+    clearTimeout(timeout);
+    if (!response.ok) return [];
 
-                headers: {
-                    "User-Agent":
-                        "KocaeliCepte/1.0",
-                    "Accept":
-                        "application/rss+xml, application/xml, text/xml, */*"
-                },
+    const text = await response.text();
+    const parts = text.split("\n\n");
+    if (parts.length < 2) return [];
 
-                cache: "no-store"
+    const parsed = JSON.parse(parts[1]);
+    const urls = [];
 
-            });
-
-
-        if (!response.ok) {
-
-            console.log(
-                "RSS hata:",
-                source.name,
-                response.status
-            );
-
-            return [];
-
-        }
-
-
-        const xml =
-            await response.text();
-
-
-        const blocks =
-            xml.match(
-                /<item[\s\S]*?<\/item>/gi
-            ) || [];
-
-
-        const items = [];
-
-
-        for (
-            const block of blocks.slice(0, 30)
-        ) {
-
-            const title =
-                cleanText(
-                    extract(
-                        /<title>([\s\S]*?)<\/title>/i,
-                        block
-                    )
-                );
-
-
-            const link =
-                cleanText(
-                    extract(
-                        /<link>([\s\S]*?)<\/link>/i,
-                        block
-                    )
-                );
-
-
-            const pubDate =
-                cleanText(
-                    extract(
-                        /<pubDate>([\s\S]*?)<\/pubDate>/i,
-                        block
-                    )
-                );
-
-
-            const category =
-                cleanText(
-                    extract(
-                        /<category[^>]*>([\s\S]*?)<\/category>/i,
-                        block
-                    )
-                );
-
-
-            const rawDescription =
-                extract(
-                    /<description>([\s\S]*?)<\/description>/i,
-                    block
-                ) || "";
-
-
-            const description =
-                cleanText(
-                    rawDescription
-                );
-
-
-            const image =
-                getImage(
-                    block,
-                    rawDescription
-                );
-
-
-            const item = {
-
-                title,
-                link,
-                category,
-                description,
-                image,
-                pubDate,
-
-                time:
-                    pubDate
-                        ? timeAgo(pubDate)
-                        : "",
-
-                source:
-                    source.name
-
-            };
-
-
-            if (
-                item.title &&
-                item.link &&
-                isKocaelisporNews(item)
-            ) {
-
-                items.push(item);
-
-            }
-
-        }
-
-
-        return items;
-
-
-    } catch (error) {
-
-        console.log(
-            "RSS alınamadı:",
-            source.name,
-            error.message
-        );
-
-        return [];
-
+    for (const row of parsed) {
+      if (!Array.isArray(row) || row[0] !== "wrb.fr" || typeof row[2] !== "string") continue;
+      try {
+        const inner = JSON.parse(row[2]);
+        urls.push(inner[1] || null);
+      } catch (e) {
+        urls.push(null);
+      }
     }
 
+    return urls;
+  } catch (error) {
+    return [];
+  }
 }
 
+// ==========================================
+// GERÇEK HABER SAYFASINDAN GÖRSEL AL
+// ==========================================
+
+async function getImageFromUrl(url) {
+  if (!url) return null;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
+
+    const response = await fetch(url, {
+      redirect: "follow",
+      headers: { "User-Agent": UA, "Accept": "text/html,application/xhtml+xml" },
+      signal: controller.signal,
+      cache: "no-store"
+    });
+
+    clearTimeout(timeout);
+    if (!response.ok) return null;
+
+    const html = await response.text();
+    return findMetaImage(html);
+  } catch (error) {
+    return null;
+  }
+}
+
+// ==========================================
+// HABERLERİ AL
+// ==========================================
+
+async function getNews() {
+  try {
+    const response = await fetch(RSS_URL, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 KocaeliCepte/1.0",
+        "Accept": "application/rss+xml, application/xml, text/xml"
+      },
+      cache: "no-store"
+    });
+
+    if (!response.ok) throw new Error(`Google News HTTP ${response.status}`);
+
+    const xml = await response.text();
+    const itemBlocks = xml.match(/<item[\s\S]*?<\/item>/gi) || [];
+    const items = [];
+
+    for (const block of itemBlocks.slice(0, 20)) {
+      const title = cleanText(extract(/<title>([\s\S]*?)<\/title>/i, block));
+      const link = cleanText(extract(/<link>([\s\S]*?)<\/link>/i, block));
+      const pubDate = cleanText(extract(/<pubDate>([\s\S]*?)<\/pubDate>/i, block));
+      const source = cleanText(extract(/<source[^>]*>([\s\S]*?)<\/source>/i, block));
+
+      if (!title || !link) continue;
+
+      let finalTitle = title;
+      let finalSource = source || "Google News";
+
+      if (!source && title.includes(" - ")) {
+        const parts = title.split(" - ");
+        if (parts.length >= 2) {
+          finalSource = parts[parts.length - 1].trim();
+          finalTitle = parts.slice(0, -1).join(" - ").trim();
+        }
+      }
+
+      items.push({
+        title: finalTitle,
+        link,
+        category: "Kocaeli",
+        image: null,
+        time: pubDate ? timeAgo(pubDate) : "",
+        pubDate,
+        source: finalSource
+      });
+    }
+
+    // ======================================
+    // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
+    // ======================================
+
+    const paramsList = [];
+    for (let i = 0; i < items.length; i += 5) {
+      const batch = items.slice(i, i + 5);
+      const results = await Promise.all(batch.map(item => getSignatureParams(item.link)));
+      results.forEach((params, idx) => { paramsList[i + idx] = params; });
+    }
+
+    const validIndexes = [];
+    const validParams = [];
+    paramsList.forEach((params, idx) => {
+      if (params) {
+        validIndexes.push(idx);
+        validParams.push(params);
+      }
+    });
+
+    if (validParams.length > 0) {
+      const decodedUrls = await decodeGoogleNewsUrls(validParams);
+      decodedUrls.forEach((realUrl, i) => {
+        const itemIndex = validIndexes[i];
+        if (itemIndex !== undefined && realUrl) {
+          items[itemIndex].realUrl = realUrl;
+        }
+      });
+    }
+
+    // ======================================
+    // GERÇEK HABER SAYFALARINDAN GÖRSEL ÇEK
+    // ======================================
+
+    for (let i = 0; i < items.length; i += 5) {
+      const batch = items.slice(i, i + 5);
+      await Promise.all(
+        batch.map(async item => {
+          if (item.realUrl) {
+            item.image = await getImageFromUrl(item.realUrl);
+          }
+        })
+      );
+    }
+
+    return items;
+  } catch (error) {
+    console.log("Google News alınamadı:", error.message);
+    return [];
+  }
+}
 
 // ==========================================
 // API
 // ==========================================
 
 export default async function handler(req, res) {
-
-
-    // CORS
-
-    res.setHeader(
-        "Access-Control-Allow-Origin",
-        "*"
-    );
-
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, OPTIONS"
-    );
-
-    res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type"
-    );
-
-
-    if (req.method === "OPTIONS") {
-        return res.status(200).end();
-    }
-
-
-    try {
-
-
-        // 5 kaynağı aynı anda çek
-
-        const results =
-            await Promise.all(
-                SOURCES.map(source =>
-                    getSource(source)
-                )
-            );
-
-
-        let items = [];
-
-
-        results.forEach(sourceItems => {
-
-            items.push(
-                ...sourceItems
-            );
-
-        });
-
-
-        // ==================================
-        // AYNI HABERLERİ TEMİZLE
-        // ==================================
-
-        const seen =
-            new Set();
-
-
-        items =
-            items.filter(item => {
-
-                const key =
-                    item.title
-                        .toLocaleLowerCase("tr-TR")
-                        .replace(
-                            /[^a-z0-9çğıöşü\s]/gi,
-                            ""
-                        )
-                        .replace(
-                            /\s+/g,
-                            " "
-                        )
-                        .trim();
-
-
-                if (seen.has(key)) {
-                    return false;
-                }
-
-
-                seen.add(key);
-
-                return true;
-
-            });
-
-
-        // ==================================
-        // TARİHE GÖRE SIRALA
-        // ==================================
-
-        items.sort((a, b) => {
-
-            const dateA =
-                new Date(
-                    a.pubDate || 0
-                ).getTime();
-
-
-            const dateB =
-                new Date(
-                    b.pubDate || 0
-                ).getTime();
-
-
-            return dateB - dateA;
-
-        });
-
-
-        // ==================================
-        // KAYNAK BAŞINA MAKSİMUM 8
-        // ==================================
-
-        const sourceCount = {};
-
-        const balanced = [];
-
-
-        for (const item of items) {
-
-            const source =
-                item.source;
-
-
-            if (!sourceCount[source]) {
-                sourceCount[source] = 0;
-            }
-
-
-            if (
-                sourceCount[source] >= 8
-            ) {
-                continue;
-            }
-
-
-            sourceCount[source]++;
-
-            balanced.push(item);
-
-
-            if (
-                balanced.length >= 30
-            ) {
-                break;
-            }
-
-        }
-
-
-        // ==================================
-        // TEKRAR TARİHE GÖRE SIRALA
-        // ==================================
-
-        balanced.sort((a, b) => {
-
-            const dateA =
-                new Date(
-                    a.pubDate || 0
-                ).getTime();
-
-
-            const dateB =
-                new Date(
-                    b.pubDate || 0
-                ).getTime();
-
-
-            return dateB - dateA;
-
-        });
-
-
-        // ==================================
-        // SPORT.HTML FORMAT
-        // ==================================
-
-        const formatted =
-            balanced.map(item => ({
-
-                title:
-                    item.title,
-
-                description:
-                    item.description,
-
-                url:
-                    item.link,
-
-                date:
-                    item.pubDate,
-
-                time:
-                    item.time,
-
-                image:
-                    item.image,
-
-                source:
-                    item.source
-
-            }));
-
-
-        // ==================================
-        // CEVAP
-        // ==================================
-
-        return res.status(200).json({
-
-            success: true,
-
-            source:
-                "5 Kocaeli haber kaynağı",
-
-            count:
-                formatted.length,
-
-            sources:
-                SOURCES.map(
-                    source =>
-                        source.name
-                ),
-
-            sourceCount,
-
-            items:
-                formatted,
-
-            updatedAt:
-                new Date().toISOString()
-
-        });
-
-
-    } catch (error) {
-
-        console.error(
-            "Kocaelispor API hatası:",
-            error
-        );
-
-
-        return res.status(500).json({
-
-            success: false,
-
-            items: [],
-
-            error:
-                "Kocaelispor haberleri alınamadı.",
-
-            details:
-                error.message,
-
-            updatedAt:
-                new Date().toISOString()
-
-        });
-
-    }
-
+  try {
+    const items = await getNews();
+
+    const seen = new Set();
+    const unique = items.filter(item => {
+      const key = item.title.toLowerCase().replace(/[^a-z0-9çğıöşü\s]/gi, "").replace(/\s+/g, " ").trim();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    unique.sort((a, b) => {
+      const dateA = new Date(a.pubDate || 0).getTime();
+      const dateB = new Date(b.pubDate || 0).getTime();
+      return dateB - dateA;
+    });
+
+    const balanced = unique.slice(0, 20);
+
+    const sourceCount = {};
+    balanced.forEach(item => {
+      const source = item.source || "Bilinmiyor";
+      sourceCount[source] = (sourceCount[source] || 0) + 1;
+    });
+
+    const imageCount = balanced.filter(item => !!item.image).length;
+
+    res.status(200).json({
+      ok: true,
+      updated: new Date().toISOString(),
+      count: balanced.length,
+      imageCount,
+      sources: Object.keys(sourceCount),
+      sourceCount,
+      items: balanced
+    });
+  } catch (error) {
+    console.log("NEWS API ERROR:", error.message);
+    res.status(500).json({
+      ok: false,
+      error: "Kocaeli haberleri alınamadı",
+      count: 0,
+      imageCount: 0,
+      items: []
+    });
+  }
 }
