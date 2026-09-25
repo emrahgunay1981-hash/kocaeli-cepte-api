@@ -1,13 +1,20 @@
+// ==========================================
 // KOCAELİ CEPTE
-// Çoklu Kocaeli haber sistemi
-// Öncü Haber KULLANILMIYOR.
+// GOOGLE NEWS RSS HABER SİSTEMİ
+// ==========================================
 
 function extract(regex, str) {
   const m = str.match(regex);
   return m ? m[1].trim() : null;
 }
 
+
+// ==========================================
+// METİN TEMİZLEME
+// ==========================================
+
 function cleanText(str) {
+
   if (!str) return null;
 
   return str
@@ -22,178 +29,241 @@ function cleanText(str) {
     .replace(/&apos;/g, "'")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
     .trim();
+
 }
 
+
+// ==========================================
+// TARİH
+// ==========================================
+
 function timeAgo(pubDate) {
+
   const then = new Date(pubDate).getTime();
 
   if (isNaN(then)) return "";
 
-  const diffMin = Math.floor((Date.now() - then) / 60000);
+  const diffMin =
+    Math.floor(
+      (Date.now() - then) / 60000
+    );
 
-  if (diffMin < 1) return "az önce";
+  if (diffMin < 1) {
+    return "az önce";
+  }
 
   if (diffMin < 60) {
     return `${diffMin} dakika önce`;
   }
 
-  const diffHour = Math.floor(diffMin / 60);
+  const diffHour =
+    Math.floor(diffMin / 60);
 
   if (diffHour < 24) {
     return `${diffHour} saat önce`;
   }
 
-  const diffDay = Math.floor(diffHour / 24);
+  const diffDay =
+    Math.floor(diffHour / 24);
 
   return `${diffDay} gün önce`;
+
 }
 
 
 // ==========================================
-// KOCAELİ HABER KAYNAKLARI
+// GOOGLE NEWS RSS
 // ==========================================
 
-const SOURCES = [
-
-  {
-    name: "Kocaeli Gazetesi",
-    url: "https://www.kocaeligazetesi.com.tr/rss/haber"
-  },
-
-  {
-    name: "Özgür Kocaeli",
-    url: "https://www.ozgurkocaeli.com.tr/rss/haber"
-  },
-
-  {
-    name: "Ses Kocaeli",
-    url: "https://www.seskocaeli.com/rss/haber"
-  },
-
-  {
-    name: "En Kocaeli",
-    url: "https://www.enkocaeli.com/rss/haber"
-  },
-
-  {
-    name: "Kocaeli Gündem",
-    url: "https://kocaeligundem.com/rss/haber"
-  }
-
-];
+const RSS_URL =
+  "https://news.google.com/rss/search?q=Kocaeli&hl=tr&gl=TR&ceid=TR%3Atr";
 
 
 // ==========================================
-// TEK KAYNAKTAN HABERLERİ AL
+// HABERLERİ AL
 // ==========================================
 
-async function getSource(source) {
+async function getNews() {
 
   try {
 
-    const response = await fetch(source.url, {
+    const response = await fetch(RSS_URL, {
+
       headers: {
-        "User-Agent": "KocaeliCepte/1.0"
-      }
+
+        "User-Agent":
+          "Mozilla/5.0 KocaeliCepte/1.0",
+
+        "Accept":
+          "application/rss+xml, application/xml, text/xml"
+
+      },
+
+      cache: "no-store"
+
     });
 
+
     if (!response.ok) {
-      return [];
+
+      throw new Error(
+        `Google News HTTP ${response.status}`
+      );
+
     }
 
-    const xml = await response.text();
+
+    const xml =
+      await response.text();
+
+
+    // RSS item'larını bul
 
     const itemBlocks =
-      xml.match(/<item[\s\S]*?<\/item>/gi) || [];
+      xml.match(
+        /<item[\s\S]*?<\/item>/gi
+      ) || [];
 
 
-    const items = itemBlocks
-      .slice(0, 5)
-      .map(block => {
+    const items = [];
 
-        const title = cleanText(
+
+    for (
+      const block of itemBlocks
+    ) {
+
+      const title =
+        cleanText(
           extract(
             /<title>([\s\S]*?)<\/title>/i,
             block
           )
         );
 
-        const link = cleanText(
+
+      const link =
+        cleanText(
           extract(
             /<link>([\s\S]*?)<\/link>/i,
             block
           )
         );
 
-        const pubDate = cleanText(
+
+      const pubDate =
+        cleanText(
           extract(
             /<pubDate>([\s\S]*?)<\/pubDate>/i,
             block
           )
         );
 
-        const category = cleanText(
+
+      const source =
+        cleanText(
           extract(
-            /<category[^>]*>([\s\S]*?)<\/category>/i,
+            /<source[^>]*>([\s\S]*?)<\/source>/i,
             block
           )
         );
 
 
-        // Haber resmi
-        let image = null;
+      const description =
+        cleanText(
+          extract(
+            /<description>([\s\S]*?)<\/description>/i,
+            block
+          )
+        );
 
-        const enclosure =
-          block.match(
-            /<enclosure[^>]+url=["']([^"']+)["']/i
-          );
 
-        if (enclosure) {
-          image = enclosure[1];
+      if (!title || !link) {
+        continue;
+      }
+
+
+      // Google News başlıklarında bazen
+      // "Haber başlığı - Kaynak"
+      // şeklinde kaynak bulunur.
+
+      let finalTitle =
+        title;
+
+
+      let finalSource =
+        source || "Google News";
+
+
+      if (
+        !source &&
+        title.includes(" - ")
+      ) {
+
+        const parts =
+          title.split(" - ");
+
+        if (parts.length >= 2) {
+
+          finalSource =
+            parts[parts.length - 1]
+              .trim();
+
+          finalTitle =
+            parts
+              .slice(0, -1)
+              .join(" - ")
+              .trim();
+
         }
 
-
-        // Media RSS resmi
-        if (!image) {
-
-          const mediaContent =
-            block.match(
-              /<media:content[^>]+url=["']([^"']+)["']/i
-            );
-
-          if (mediaContent) {
-            image = mediaContent[1];
-          }
-
-        }
+      }
 
 
-        return {
+      // Description içerisindeki ilk resmi bul
 
-          title,
+      let image = null;
 
-          link,
+      const imageMatch =
+        block.match(
+          /<img[^>]+src=["']([^"']+)["']/i
+        );
 
-          category,
 
-          image,
+      if (imageMatch) {
 
-          time: pubDate
+        image =
+          imageMatch[1];
+
+      }
+
+
+      items.push({
+
+        title:
+          finalTitle,
+
+        link,
+
+        category:
+          "Kocaeli",
+
+        image,
+
+        time:
+          pubDate
             ? timeAgo(pubDate)
             : "",
 
-          pubDate,
+        pubDate,
 
-          source: source.name
+        source:
+          finalSource
 
-        };
+      });
 
-      })
-      .filter(item =>
-        item.title &&
-        item.link
-      );
+    }
 
 
     return items;
@@ -202,8 +272,7 @@ async function getSource(source) {
   } catch (error) {
 
     console.log(
-      "RSS alınamadı:",
-      source.name,
+      "Google News alınamadı:",
       error.message
     );
 
@@ -218,76 +287,67 @@ async function getSource(source) {
 // API
 // ==========================================
 
-export default async function handler(req, res) {
+export default async function handler(
+  req,
+  res
+) {
 
   try {
 
-    // Bütün kaynakları aynı anda çekiyoruz.
-
-    const results =
-      await Promise.all(
-        SOURCES.map(source =>
-          getSource(source)
-        )
-      );
-
-
-    // Kaynakları birleştir.
-
-    let items = [];
-
-
-    results.forEach(sourceItems => {
-
-      items.push(...sourceItems);
-
-    });
+    const items =
+      await getNews();
 
 
     // ======================================
     // AYNI HABERLERİ TEMİZLE
     // ======================================
 
-    const seen = new Set();
-
-    items = items.filter(item => {
-
-      const key =
-        item.title
-          .toLowerCase()
-          .replace(
-            /[^a-z0-9çğıöşü\s]/gi,
-            ""
-          )
-          .replace(
-            /\s+/g,
-            " "
-          )
-          .trim();
+    const seen =
+      new Set();
 
 
-      if (seen.has(key)) {
-        return false;
-      }
+    const unique =
+      items.filter(item => {
+
+        const key =
+          item.title
+            .toLowerCase()
+            .replace(
+              /[^a-z0-9çğıöşü\s]/gi,
+              ""
+            )
+            .replace(
+              /\s+/g,
+              " "
+            )
+            .trim();
 
 
-      seen.add(key);
+        if (seen.has(key)) {
 
-      return true;
+          return false;
 
-    });
+        }
+
+
+        seen.add(key);
+
+        return true;
+
+      });
 
 
     // ======================================
     // TARİHE GÖRE SIRALA
     // ======================================
 
-    items.sort((a, b) => {
+    unique.sort((a, b) => {
 
       const dateA =
         new Date(
           a.pubDate || 0
         ).getTime();
+
 
       const dateB =
         new Date(
@@ -301,64 +361,28 @@ export default async function handler(req, res) {
 
 
     // ======================================
-    // KAYNAK DENGESİ
+    // İLK 20 HABER
     // ======================================
 
-    // Her kaynaktan maksimum 5 haber.
-    // Böylece tek bir site ana sayfayı
-    // tamamen kaplayamaz.
+    const balanced =
+      unique.slice(0, 20);
+
+
+    // ======================================
+    // KAYNAK SAYILARI
+    // ======================================
 
     const sourceCount = {};
 
-    const balanced = [];
 
-
-    for (const item of items) {
+    balanced.forEach(item => {
 
       const source =
-        item.source;
+        item.source || "Bilinmiyor";
 
 
-      if (!sourceCount[source]) {
-        sourceCount[source] = 0;
-      }
-
-
-      if (sourceCount[source] >= 5) {
-        continue;
-      }
-
-
-      sourceCount[source]++;
-
-      balanced.push(item);
-
-
-      if (balanced.length >= 20) {
-        break;
-      }
-
-    }
-
-
-    // ======================================
-    // SON SIRALAMA
-    // ======================================
-
-    balanced.sort((a, b) => {
-
-      const dateA =
-        new Date(
-          a.pubDate || 0
-        ).getTime();
-
-      const dateB =
-        new Date(
-          b.pubDate || 0
-        ).getTime();
-
-
-      return dateB - dateA;
+      sourceCount[source] =
+        (sourceCount[source] || 0) + 1;
 
     });
 
@@ -378,9 +402,7 @@ export default async function handler(req, res) {
         balanced.length,
 
       sources:
-        SOURCES.map(
-          source => source.name
-        ),
+        Object.keys(sourceCount),
 
       sourceCount,
 
@@ -392,12 +414,20 @@ export default async function handler(req, res) {
 
   } catch (error) {
 
+    console.log(
+      "NEWS API ERROR:",
+      error.message
+    );
+
+
     res.status(500).json({
 
       ok: false,
 
       error:
-        "Kocaeli haberleri alınamadı"
+        "Kocaeli haberleri alınamadı",
+
+      items: []
 
     });
 
