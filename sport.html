@@ -378,6 +378,22 @@
       border-radius: 7px;
     }
 
+    .hero-slide-badge-inline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .hero-slide-badge-inline span {
+      color: #35e86b;
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(53,232,107,.12);
+      padding: 5px 9px;
+      border-radius: 7px;
+    }
+
     .hero-slide-share {
       position: absolute;
       top: 12px;
@@ -948,18 +964,39 @@
                     rel="noopener noreferrer"
                   >
 
-                    <div class="hero-slide-badge">🟢 KOCAELİSPOR</div>
-
-                    <button
-                      class="hero-slide-share"
-                      data-title="${title}"
-                      data-url="${escapeHTML(link)}"
-                      onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
-                    >📤</button>
+                    ${
+                      image
+                        ? `
+                          <div class="hero-slide-badge">🟢 KOCAELİSPOR</div>
+                          <button
+                            class="hero-slide-share"
+                            data-title="${title}"
+                            data-url="${escapeHTML(link)}"
+                            onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
+                          >📤</button>
+                        `
+                        : ""
+                    }
 
                     ${imageHTML}
 
                     <div class="news-content">
+
+                      ${
+                        !image
+                          ? `
+                            <div class="hero-slide-badge-inline">
+                              <span>🟢 KOCAELİSPOR</span>
+                              <button
+                                class="share-btn"
+                                data-title="${title}"
+                                data-url="${escapeHTML(link)}"
+                                onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
+                              >📤</button>
+                            </div>
+                          `
+                          : ""
+                      }
 
                       <div class="news-title">
                         ${title}
