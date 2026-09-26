@@ -1,4 +1,3 @@
-cat > /home/claude/index.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -1546,7 +1545,7 @@ a {
 >
 
   <span id="weather-icon">
-    🌤
+    🌤️
   </span>
 
   <strong>
@@ -1878,7 +1877,7 @@ a {
     >
 
       <div class="category-icon">
-        🍽
+        🍽️
       </div>
 
       <div class="category-name">
@@ -1966,7 +1965,7 @@ a {
   justify-content:center;
   margin:10px 0 16px;
 ">
-  🏛 Kamu & Hizmetler
+  🏛️ Kamu & Hizmetler
 </div>
 
 
@@ -1978,7 +1977,7 @@ a {
   target="_blank"
   rel="noopener noreferrer"
 >
-  <div class="traffic-icon">🏛</div>
+  <div class="traffic-icon">🏛️</div>
 
   <div class="traffic-content">
     <strong>Kocaeli Valiliği</strong>
@@ -2027,7 +2026,7 @@ a {
   class="traffic-card"
   href="belediyeler.html"
 >
-  <div class="traffic-icon">🏛</div>
+  <div class="traffic-icon">🏛️</div>
 
   <div class="traffic-content">
     <strong>Kocaeli Belediyeleri</strong>
@@ -2062,7 +2061,7 @@ a {
   target="_blank"
   rel="noopener noreferrer"
 >
-  <div class="traffic-icon">⚖</div>
+  <div class="traffic-icon">⚖️</div>
 
   <div class="traffic-content">
     <strong>Kocaeli Adliyesi</strong>
@@ -2688,7 +2687,7 @@ async function loadNews() {
 
       <div class="error">
 
-        ⚠ Haberler şu anda yüklenemedi.
+        ⚠️ Haberler şu anda yüklenemedi.
 
         <br><br>
 
@@ -2793,7 +2792,7 @@ async function loadMiniWeather() {
 
 
     let icon =
-      "🌤";
+      "🌤️";
 
 
     let description =
@@ -2804,7 +2803,7 @@ async function loadMiniWeather() {
       weather.weather_code === 0
     ) {
 
-      icon = "☀";
+      icon = "☀️";
 
       description =
         "Açık";
@@ -2816,7 +2815,7 @@ async function loadMiniWeather() {
       weather.weather_code <= 3
     ) {
 
-      icon = "🌤";
+      icon = "🌤️";
 
       description =
         "Parçalı bulutlu";
@@ -2828,7 +2827,7 @@ async function loadMiniWeather() {
       weather.weather_code <= 48
     ) {
 
-      icon = "🌫";
+      icon = "🌫️";
 
       description =
         "Sisli";
@@ -2840,7 +2839,7 @@ async function loadMiniWeather() {
       weather.weather_code <= 67
     ) {
 
-      icon = "🌧";
+      icon = "🌧️";
 
       description =
         "Yağmurlu";
@@ -2852,7 +2851,7 @@ async function loadMiniWeather() {
       weather.weather_code <= 77
     ) {
 
-      icon = "🌨";
+      icon = "🌨️";
 
       description =
         "Karlı";
@@ -2864,7 +2863,7 @@ async function loadMiniWeather() {
       weather.weather_code <= 82
     ) {
 
-      icon = "🌧";
+      icon = "🌧️";
 
       description =
         "Sağanak";
@@ -2874,7 +2873,7 @@ async function loadMiniWeather() {
 
     else {
 
-      icon = "⛈";
+      icon = "⛈️";
 
       description =
         "Fırtınalı";
@@ -3204,7 +3203,7 @@ async function loadValilik() {
 
     <div class="valilik-loading">
 
-      🏛 Valilik haberleri getiriliyor...
+      🏛️ Valilik haberleri getiriliyor...
 
     </div>
 
@@ -3339,7 +3338,7 @@ async function loadValilik() {
               date
                 ? `
                   <div class="valilik-date">
-                    🗓 ${escapeHtml(date)}
+                    🗓️ ${escapeHtml(date)}
                   </div>
                 `
                 : ""
@@ -3367,7 +3366,7 @@ async function loadValilik() {
 
       <div class="valilik-error">
 
-        ⚠ Valilik haberleri şu anda alınamadı.
+        ⚠️ Valilik haberleri şu anda alınamadı.
 
       </div>
 
@@ -3420,7 +3419,3 @@ if ('serviceWorker' in navigator) {
 </body>
 
 </html>
-HTMLEOF
-wc -l /home/claude/index.html
-cp /home/claude/index.html /mnt/user-data/outputs/index.html
-echo copied
