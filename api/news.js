@@ -64,7 +64,8 @@ const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile
 let cachedResult = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 dakika
-const IMAGE_RESOLVE_LIMIT = 8; // sadece ilk 8 haber için görsel çözülür
+const IMAGE_RESOLVE_LIMIT = 5; // sadece ilk 5 Google News haberi için görsel çözülür
+const LOCAL_IMAGE_RESOLVE_LIMIT = 6; // yerel kaynaklardan görseli olmayan ilk 6 haber için
 
 // ==========================================
 // META GÖRSELİ BUL
@@ -276,7 +277,7 @@ async function getLocalSourceNews(source) {
         redirect: "follow",
         cache: "no-store"
       },
-      6000
+      5000
     );
 
     if (!response.ok) return [];
@@ -285,7 +286,7 @@ async function getLocalSourceNews(source) {
     const itemBlocks = xml.match(/<item[\s\S]*?<\/item>/gi) || [];
     const items = [];
 
-    for (const block of itemBlocks.slice(0, 10)) {
+    for (const block of itemBlocks.slice(0, 8)) {
       const title = cleanText(extract(/<title>([\s\S]*?)<\/title>/i, block));
       const link = cleanText(extract(/<link>([\s\S]*?)<\/link>/i, block));
       const pubDate = cleanText(extract(/<pubDate>([\s\S]*?)<\/pubDate>/i, block));
@@ -426,6 +427,21 @@ async function getNews() {
       })
     );
   }
+
+  // ======================================
+  // YEREL HABERLERDE GÖRSEL EKSİKSE
+  // KENDİ SAYFASINDAN ÇEK (RSS'de enclosure yoksa)
+  // ======================================
+
+  const localMissingImage = localItems
+    .filter(item => !item.image)
+    .slice(0, LOCAL_IMAGE_RESOLVE_LIMIT);
+
+  await Promise.all(
+    localMissingImage.map(async item => {
+      item.image = await getImageFromUrl(item.link);
+    })
+  );
 
   return [...localItems, ...googleItems];
 }
