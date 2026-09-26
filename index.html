@@ -492,6 +492,8 @@ a {
 
 .hero {
 
+  position: relative;
+
   margin-top: 14px;
 
   border-radius: 18px;
@@ -733,7 +735,71 @@ a {
 
   justify-content: space-between;
 
+  align-items: center;
+
   gap: 4px;
+}
+
+.share-btn {
+
+  border: 0;
+
+  background: #e5f6f7;
+
+  color: #087f8c;
+
+  width: 26px;
+
+  height: 26px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+
+  line-height: 1;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  cursor: pointer;
+}
+
+.hero-share-btn {
+
+  position: absolute;
+
+  top: 12px;
+
+  right: 12px;
+
+  z-index: 3;
+
+  border: 0;
+
+  background: rgba(0,0,0,.45);
+
+  color: #ffffff;
+
+  width: 34px;
+
+  height: 34px;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
 }
 
 .source {
@@ -2292,6 +2358,29 @@ a {
 
 
 /* =========================================================
+   PAYLAŞ
+========================================================= */
+
+function shareItem(title, url) {
+
+  if (navigator.share) {
+
+    navigator.share({ title: title, url: url }).catch(() => {});
+
+  } else {
+
+    const waUrl =
+      "https://wa.me/?text=" +
+      encodeURIComponent(title + " " + url);
+
+    window.open(waUrl, "_blank");
+
+  }
+
+}
+
+
+/* =========================================================
    HABERLER
 ========================================================= */
 
@@ -2528,6 +2617,13 @@ async function loadNews() {
         "
       >
 
+        <button
+          class="hero-share-btn"
+          data-title="${escapeHtml(first.title)}"
+          data-url="${escapeHtml(first.link)}"
+          onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
+        >📤</button>
+
         ${
           first.image
           ? `
@@ -2660,6 +2756,14 @@ async function loadNews() {
                 )}
 
               </span>
+
+
+              <button
+                class="share-btn"
+                data-title="${escapeHtml(item.title)}"
+                data-url="${escapeHtml(item.link)}"
+                onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
+              >📤</button>
 
             </div>
 
