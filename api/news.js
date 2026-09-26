@@ -63,7 +63,7 @@ const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile
 // tekrar tekrar aynı ağır işi yapmasın diye birkaç dakika sonucu tutar.
 let cachedResult = null;
 let cachedAt = 0;
-const CACHE_TTL_MS = 3 * 60 * 1000; // 3 dakika
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15 dakika
 const IMAGE_RESOLVE_LIMIT = 8; // sadece ilk 8 haber için görsel çözülür
 
 // ==========================================
