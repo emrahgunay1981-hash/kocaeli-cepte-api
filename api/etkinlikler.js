@@ -61,6 +61,12 @@ async function fetchWithTimeout(url, options, timeoutMs) {
 
 }
 
+// Basit bellek-içi önbellek: fonksiyon "ısınmış" haldeyken
+// art arda gelen istekler iki siteyi yeniden taramasın diye
+// birkaç dakika sonucu tutar.
+let cachedResult = null;
+let cachedAt = 0;
+const CACHE_TTL_MS = 3 * 60 * 1000; // 3 dakika
 
 // ==========================================
 // KAYNAK 1: BELEDİYE RESMİ RSS
@@ -305,6 +311,10 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
+  if (cachedResult && (Date.now() - cachedAt) < CACHE_TTL_MS) {
+    return res.status(200).json(cachedResult);
+  }
+
   try {
 
     // Promise.allSettled: bir kaynak zaman aşımına uğrasa
@@ -344,7 +354,7 @@ export default async function handler(req, res) {
 
     });
 
-    return res.status(200).json({
+    const payload = {
       success: true,
       count: events.length,
       events,
@@ -353,7 +363,12 @@ export default async function handler(req, res) {
         "Kocaeli Seyret"
       ],
       updatedAt: new Date().toISOString()
-    });
+    };
+
+    cachedResult = payload;
+    cachedAt = Date.now();
+
+    return res.status(200).json(payload);
 
   } catch (error) {
 
