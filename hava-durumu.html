@@ -1,1 +1,332 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#078897">
+<title>Hava Durumu | Kocaeli Cepte</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #eefafb 0%, #f7fcfd 45%, #ffffff 100%);
+  color: #214957;
+  padding-bottom: 30px;
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+
+.topbar {
+  padding: 18px 17px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #056d83 0%, #078e9d 55%, #0aa6a4 100%);
+  color: #ffffff;
+  border-radius: 0 0 23px 23px;
+  box-shadow: 0 7px 25px rgba(0,105,125,.17);
+}
+
+.back-link {
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.topbar h1 { font-size: 19px; font-weight: 900; }
+.topbar p { margin-top: 3px; font-size: 11px; color: rgba(255,255,255,.85); }
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 18px 16px 0;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #dceff2;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 15px rgba(24,105,120,.06);
+}
+
+/* ŞU AN */
+
+.now-icon { font-size: 46px; text-align: center; }
+
+.now-temp {
+  text-align: center;
+  font-size: 46px;
+  font-weight: 900;
+  color: #087f8c;
+  line-height: 1;
+  margin: 4px 0 2px;
+}
+
+.now-desc {
+  text-align: center;
+  color: #4a6b76;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.now-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  border-top: 1px solid #eaf5f6;
+  padding-top: 12px;
+}
+
+.now-detail { text-align: center; }
+
+.now-detail .label { font-size: 10px; color: #829ba2; margin-bottom: 3px; }
+.now-detail .value { font-size: 14px; font-weight: 800; color: #214957; }
+
+/* BÖLÜM BAŞLIK */
+
+.section-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: #173f4e;
+  margin: 0 0 10px 2px;
+}
+
+/* SAATLİK */
+
+.hourly-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.hourly-scroll::-webkit-scrollbar { display: none; }
+
+.hour-card {
+  flex: none;
+  width: 62px;
+  text-align: center;
+  background: #f3fbfc;
+  border: 1px solid #e2f3f4;
+  border-radius: 13px;
+  padding: 10px 4px;
+}
+
+.hour-card .time { font-size: 10.5px; color: #6d8a92; font-weight: 700; margin-bottom: 6px; }
+.hour-card .icon { font-size: 20px; margin-bottom: 6px; }
+.hour-card .temp { font-size: 13px; font-weight: 900; color: #214957; }
+.hour-card .rain { font-size: 9px; color: #0aa6a4; margin-top: 3px; }
+
+/* GÜNLÜK */
+
+.day-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 4px;
+  border-bottom: 1px solid #eef7f8;
+}
+
+.day-row:last-child { border-bottom: none; }
+
+.day-name {
+  width: 78px;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #244957;
+}
+
+.day-icon { font-size: 20px; width: 30px; text-align: center; flex-shrink: 0; }
+
+.day-rain {
+  flex: 1;
+  font-size: 11px;
+  color: #0aa6a4;
+  font-weight: 700;
+}
+
+.day-temps {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #214957;
+  white-space: nowrap;
+}
+
+.day-temps .min { color: #92a9b0; font-weight: 600; }
+
+.loading, .error {
+  text-align: center;
+  padding: 40px 15px;
+  color: #76929b;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <a class="back-link" href="index.html">←</a>
+  <div>
+    <h1>🌤️ Hava Durumu</h1>
+    <p>İzmit, Kocaeli</p>
+  </div>
+</div>
+
+<main class="container">
+  <div id="content" class="loading">Hava durumu yükleniyor...</div>
+</main>
+
+<script>
+
+const LAT = 40.7654;
+const LNG = 29.9408;
+
+function weatherInfo(code) {
+  if (code === 0) return { icon: "☀️", desc: "Açık" };
+  if (code <= 3) return { icon: "🌤️", desc: "Parçalı bulutlu" };
+  if (code <= 48) return { icon: "🌫️", desc: "Sisli" };
+  if (code <= 67) return { icon: "🌧️", desc: "Yağmurlu" };
+  if (code <= 77) return { icon: "🌨️", desc: "Karlı" };
+  if (code <= 82) return { icon: "🌧️", desc: "Sağanak" };
+  return { icon: "⛈️", desc: "Fırtınalı" };
+}
+
+const DAY_NAMES = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
+
+function dayLabel(dateStr, index) {
+  if (index === 0) return "Bugün";
+  if (index === 1) return "Yarın";
+  const date = new Date(dateStr + "T00:00:00");
+  return DAY_NAMES[date.getDay()];
+}
+
+async function loadWeather() {
+  const content = document.getElementById("content");
+
+  try {
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      "?latitude=" + LAT +
+      "&longitude=" + LNG +
+      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
+      "&hourly=temperature_2m,weather_code,precipitation_probability" +
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
+      "&timezone=Europe%2FIstanbul" +
+      "&forecast_days=7";
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Hava durumu alınamadı");
+
+    const data = await response.json();
+    if (!data.current || !data.hourly || !data.daily) throw new Error("Eksik veri");
+
+    const current = data.current;
+    const info = weatherInfo(current.weather_code);
+
+    // ŞU AN
+    let html = `
+      <div class="card">
+        <div class="now-icon">${info.icon}</div>
+        <div class="now-temp">${Math.round(current.temperature_2m)}°</div>
+        <div class="now-desc">${info.desc}</div>
+        <div class="now-details">
+          <div class="now-detail">
+            <div class="label">Hissedilen</div>
+            <div class="value">${Math.round(current.apparent_temperature)}°</div>
+          </div>
+          <div class="now-detail">
+            <div class="label">Nem</div>
+            <div class="value">💧 ${Math.round(current.relative_humidity_2m)}%</div>
+          </div>
+          <div class="now-detail">
+            <div class="label">Rüzgar</div>
+            <div class="value">💨 ${Math.round(current.wind_speed_10m)} km/sa</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // SAATLİK (önümüzdeki 24 saat, şu andan itibaren)
+    const now = new Date();
+    const hourlyTimes = data.hourly.time;
+    let startIndex = hourlyTimes.findIndex(t => new Date(t) >= now);
+    if (startIndex === -1) startIndex = 0;
+
+    const hourCards = [];
+    for (let i = startIndex; i < startIndex + 24 && i < hourlyTimes.length; i++) {
+      const time = new Date(hourlyTimes[i]);
+      const hourInfo = weatherInfo(data.hourly.weather_code[i]);
+      const temp = Math.round(data.hourly.temperature_2m[i]);
+      const rain = data.hourly.precipitation_probability[i];
+      const label = i === startIndex ? "Şimdi" : time.getHours() + ":00";
+
+      hourCards.push(`
+        <div class="hour-card">
+          <div class="time">${label}</div>
+          <div class="icon">${hourInfo.icon}</div>
+          <div class="temp">${temp}°</div>
+          ${rain > 20 ? `<div class="rain">💧${rain}%</div>` : ""}
+        </div>
+      `);
+    }
+
+    html += `
+      <div class="section-title">Saatlik Tahmin</div>
+      <div class="card">
+        <div class="hourly-scroll">
+          ${hourCards.join("")}
+        </div>
+      </div>
+    `;
+
+    // 7 GÜNLÜK
+    const dayRows = data.daily.time.map((dateStr, index) => {
+      const dInfo = weatherInfo(data.daily.weather_code[index]);
+      const max = Math.round(data.daily.temperature_2m_max[index]);
+      const min = Math.round(data.daily.temperature_2m_min[index]);
+      const rain = data.daily.precipitation_probability_max[index];
+
+      return `
+        <div class="day-row">
+          <div class="day-name">${dayLabel(dateStr, index)}</div>
+          <div class="day-icon">${dInfo.icon}</div>
+          <div class="day-rain">${rain > 20 ? "💧 " + rain + "%" : ""}</div>
+          <div class="day-temps"><span class="min">${min}°</span> / ${max}°</div>
+        </div>
+      `;
+    }).join("");
+
+    html += `
+      <div class="section-title">7 Günlük Tahmin</div>
+      <div class="card">
+        ${dayRows}
+      </div>
+    `;
+
+    content.innerHTML = html;
+    content.classList.remove("loading");
+
+  } catch (error) {
+    console.error("Hava durumu hatası:", error);
+    content.className = "error";
+    content.textContent = "Hava durumu şu anda yüklenemedi. Lütfen tekrar deneyin.";
+  }
+}
+
+loadWeather();
+</script>
+
+</body>
+</html>
 
