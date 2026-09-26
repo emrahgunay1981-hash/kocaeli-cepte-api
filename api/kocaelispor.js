@@ -59,6 +59,13 @@ const RSS_URL = "https://news.google.com/rss/search?q=Kocaelispor&hl=tr&gl=TR&ce
 
 const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36";
 
+// Basit bellek-içi önbellek: aynı fonksiyon "ısınmış" haldeyken
+// tekrar tekrar aynı ağır işi yapmasın diye birkaç dakika sonucu tutar.
+let cachedResult = null;
+let cachedAt = 0;
+const CACHE_TTL_MS = 3 * 60 * 1000; // 3 dakika
+const IMAGE_RESOLVE_LIMIT = 8; // sadece ilk 8 haber için görsel çözülür
+
 // ==========================================
 // META GÖRSELİ BUL
 // ==========================================
@@ -266,9 +273,11 @@ async function getNews() {
     // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
     // ======================================
 
+    const itemsForImages = items.slice(0, IMAGE_RESOLVE_LIMIT);
+
     const paramsList = [];
-    for (let i = 0; i < items.length; i += 5) {
-      const batch = items.slice(i, i + 5);
+    for (let i = 0; i < itemsForImages.length; i += 5) {
+      const batch = itemsForImages.slice(i, i + 5);
       const results = await Promise.all(batch.map(item => getSignatureParams(item.link)));
       results.forEach((params, idx) => { paramsList[i + idx] = params; });
     }
@@ -296,8 +305,8 @@ async function getNews() {
     // GERÇEK HABER SAYFALARINDAN GÖRSEL ÇEK
     // ======================================
 
-    for (let i = 0; i < items.length; i += 5) {
-      const batch = items.slice(i, i + 5);
+    for (let i = 0; i < itemsForImages.length; i += 5) {
+      const batch = itemsForImages.slice(i, i + 5);
       await Promise.all(
         batch.map(async item => {
           if (item.realUrl) {
@@ -320,6 +329,12 @@ async function getNews() {
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
+
+  if (cachedResult && (Date.now() - cachedAt) < CACHE_TTL_MS) {
+    res.status(200).json(cachedResult);
+    return;
+  }
+
   try {
     const items = await getNews();
 
@@ -347,7 +362,7 @@ export default async function handler(req, res) {
 
     const imageCount = balanced.filter(item => !!item.image).length;
 
-    res.status(200).json({
+    const payload = {
       ok: true,
       updated: new Date().toISOString(),
       count: balanced.length,
@@ -355,7 +370,12 @@ export default async function handler(req, res) {
       sources: Object.keys(sourceCount),
       sourceCount,
       items: balanced
-    });
+    };
+
+    cachedResult = payload;
+    cachedAt = Date.now();
+
+    res.status(200).json(payload);
   } catch (error) {
     console.log("NEWS API ERROR:", error.message);
     res.status(500).json({
