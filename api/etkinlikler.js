@@ -66,7 +66,7 @@ async function fetchWithTimeout(url, options, timeoutMs) {
 // birkaç dakika sonucu tutar.
 let cachedResult = null;
 let cachedAt = 0;
-const CACHE_TTL_MS = 3 * 60 * 1000; // 3 dakika
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15 dakika
 
 // ==========================================
 // KAYNAK 1: BELEDİYE RESMİ RSS
