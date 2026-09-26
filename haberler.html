@@ -1025,48 +1025,16 @@ a {
      FİLTRELER
 ======================================================= -->
 
-<div class="filters">
+<div
+  class="filters"
+  id="filters"
+>
 
   <div
     class="filter active"
     data-source="Tümü"
   >
     Tümü
-  </div>
-
-  <div
-    class="filter"
-    data-source="Kocaeli Gazetesi"
-  >
-    Kocaeli Gazetesi
-  </div>
-
-  <div
-    class="filter"
-    data-source="Özgür Kocaeli"
-  >
-    Özgür Kocaeli
-  </div>
-
-  <div
-    class="filter"
-    data-source="Ses Kocaeli"
-  >
-    Ses Kocaeli
-  </div>
-
-  <div
-    class="filter"
-    data-source="En Kocaeli"
-  >
-    En Kocaeli
-  </div>
-
-  <div
-    class="filter"
-    data-source="Kocaeli Gündem"
-  >
-    Kocaeli Gündem
   </div>
 
 </div>
@@ -1138,6 +1106,59 @@ function normalize(str) {
   return String(str || "")
     .toLocaleLowerCase("tr-TR")
     .trim();
+
+}
+
+
+/* =========================================================
+   KAYNAK FİLTRELERİNİ OLUŞTUR
+   (haberlerde o an gerçekten var olan kaynaklardan)
+========================================================= */
+
+function renderFilters() {
+
+  const filtersContainer =
+    document.getElementById("filters");
+
+
+  const uniqueSources = [];
+
+  const seen = new Set();
+
+
+  allNews.forEach(item => {
+
+    const source =
+      String(item.source || "").trim();
+
+
+    if (source && !seen.has(source)) {
+
+      seen.add(source);
+
+      uniqueSources.push(source);
+
+    }
+
+  });
+
+
+  const allTabs =
+    ["Tümü", ...uniqueSources];
+
+
+  filtersContainer.innerHTML =
+
+    allTabs.map(source => `
+
+      <div
+        class="filter${source === currentSource ? " active" : ""}"
+        data-source="${escapeHtml(source)}"
+      >
+        ${escapeHtml(source)}
+      </div>
+
+    `).join("");
 
 }
 
@@ -1416,6 +1437,8 @@ async function loadNews() {
       data.items;
 
 
+    renderFilters();
+
     renderNews();
 
   }
@@ -1464,42 +1487,38 @@ async function loadNews() {
 
 /* =========================================================
    KAYNAK FİLTRELERİ
+   (filtreler dinamik oluştuğu için tıklamayı
+   sabit kapsayıcı üzerinden dinliyoruz)
 ========================================================= */
 
 document
-  .querySelectorAll(".filter")
-  .forEach(button => {
+  .getElementById("filters")
+  .addEventListener("click", event => {
 
-    button.addEventListener(
-      "click",
-      () => {
-
-        document
-          .querySelectorAll(
-            ".filter"
-          )
-          .forEach(btn =>
-
-            btn.classList.remove(
-              "active"
-            )
-
-          );
+    const button =
+      event.target.closest(".filter");
 
 
-        button.classList.add(
-          "active"
-        );
+    if (!button) return;
 
 
-        currentSource =
-          button.dataset.source;
+    document
+      .querySelectorAll(".filter")
+      .forEach(btn =>
+
+        btn.classList.remove("active")
+
+      );
 
 
-        renderNews();
+    button.classList.add("active");
 
-      }
-    );
+
+    currentSource =
+      button.dataset.source;
+
+
+    renderNews();
 
   });
 
