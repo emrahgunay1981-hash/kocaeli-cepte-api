@@ -584,6 +584,106 @@ a {
   font-size: 10px;
 }
 
+.hero-carousel-wrap {
+
+  position: relative;
+
+  margin-top: 14px;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 7px 23px
+    rgba(20,100,120,.09);
+}
+
+.hero-track {
+
+  display: flex;
+
+  overflow-x: auto;
+
+  scroll-snap-type: x mandatory;
+
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.hero-track::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-slide {
+
+  flex: 0 0 100%;
+
+  scroll-snap-align: start;
+
+  background: #ffffff;
+
+  border: 1px solid #dceff2;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  text-decoration: none;
+
+  color: inherit;
+
+  display: block;
+
+  position: relative;
+}
+
+.hero-dots {
+
+  position: absolute;
+
+  left: 0;
+
+  right: 0;
+
+  bottom: 10px;
+
+  z-index: 5;
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  pointer-events: none;
+}
+
+.hero-dot {
+
+  width: 6px;
+
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.55);
+
+  box-shadow: 0 0 3px rgba(0,0,0,.25);
+
+  transition: .2s ease;
+}
+
+.hero-dot.active {
+
+  width: 18px;
+
+  border-radius: 4px;
+
+  background: #ffffff;
+}
+
 
 /* =========================================================
    SECTIONS
@@ -2384,6 +2484,76 @@ a {
 
 
 /* =========================================================
+   MANŞET GALERİSİ (kayan pencere)
+========================================================= */
+
+let heroAutoplayTimer = null;
+
+function setupHeroCarousel(slideCount) {
+
+  if (heroAutoplayTimer) {
+    clearInterval(heroAutoplayTimer);
+    heroAutoplayTimer = null;
+  }
+
+  if (!slideCount || slideCount < 2) return;
+
+  const track = document.getElementById('heroTrack');
+  const dotsContainer = document.getElementById('heroDots');
+  if (!track || !dotsContainer) return;
+
+  const dots = dotsContainer.querySelectorAll('.hero-dot');
+
+  function setActiveDot(index) {
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+
+  function goToSlide(index) {
+    const slideWidth = track.clientWidth;
+    track.scrollTo({ left: slideWidth * index, behavior: 'smooth' });
+  }
+
+  let currentIndex = 0;
+  let userInteracting = false;
+
+  track.addEventListener('scroll', () => {
+    const slideWidth = track.clientWidth;
+    if (!slideWidth) return;
+    const index = Math.round(track.scrollLeft / slideWidth);
+    if (index !== currentIndex) {
+      currentIndex = index;
+      setActiveDot(currentIndex);
+    }
+  });
+
+  track.addEventListener('touchstart', () => { userInteracting = true; }, { passive: true });
+
+  dots.forEach(dot => {
+    dot.style.pointerEvents = 'auto';
+    dot.style.cursor = 'pointer';
+    dot.addEventListener('click', () => {
+      currentIndex = parseInt(dot.dataset.index, 10);
+      goToSlide(currentIndex);
+      setActiveDot(currentIndex);
+    });
+  });
+
+  heroAutoplayTimer = setInterval(() => {
+    if (userInteracting) {
+      userInteracting = false;
+      return;
+    }
+    currentIndex = (currentIndex + 1) % slideCount;
+    goToSlide(currentIndex);
+    setActiveDot(currentIndex);
+  }, 5000);
+
+}
+
+
+/* =========================================================
    PAYLAŞ
 ========================================================= */
 
@@ -2616,97 +2786,93 @@ async function loadNews() {
 
 
     /* =====================================================
-       MANŞET
+       MANŞET (kayan galeri)
     ===================================================== */
 
-    const first =
-      allNews[0];
+    const HERO_COUNT = 5;
+
+    const heroItems =
+      allNews.slice(0, HERO_COUNT);
 
 
-    const breakingText =
-      isBreakingNews(first)
-        ? "🔴 SON DAKİKA"
-        : "📰 MANŞET";
+    const slidesHtml =
+      heroItems.map(item => {
 
+        const breakingText =
+          isBreakingNews(item)
+            ? "🔴 SON DAKİKA"
+            : "📰 MANŞET";
 
-    hero.innerHTML = `
+        return `
+          <a
+            class="hero-slide"
+            href="${escapeHtml(item.link)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
 
-      <a
-        class="hero"
-        href="${escapeHtml(first.link)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="
-          display:block;
-          text-decoration:none;
-          color:inherit;
-        "
-      >
-
-        <button
-          class="hero-share-btn"
-          data-title="${escapeHtml(first.title)}"
-          data-url="${escapeHtml(first.link)}"
-          onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
-        >📤</button>
-
-        ${
-          first.image
-          ? `
-
-            <img
-              class="hero-image"
-              src="${escapeHtml(first.image)}"
-              alt=""
-              onerror="
-                this.style.display='none'
-              "
-            >
-
-          `
-          : ""
-        }
-
-
-        <div class="hero-content">
-
-          <div class="breaking">
-
-            ${breakingText}
-
-          </div>
-
-
-          <div class="hero-title">
-
-            ${escapeHtml(
-              first.title
-            )}
-
-          </div>
-
-
-          <div class="hero-meta">
-
-            ${escapeHtml(
-              first.source ||
-              "Kocaeli Haber"
-            )}
+            <button
+              class="hero-share-btn"
+              data-title="${escapeHtml(item.title)}"
+              data-url="${escapeHtml(item.link)}"
+              onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
+            >📤</button>
 
             ${
-              first.time
-              ? " • " +
-                escapeHtml(first.time)
+              item.image
+              ? `
+                <img
+                  class="hero-image"
+                  src="${escapeHtml(item.image)}"
+                  alt=""
+                  onerror="this.style.display='none'"
+                >
+              `
               : ""
             }
 
-          </div>
+            <div class="hero-content">
 
+              <div class="breaking">
+                ${breakingText}
+              </div>
+
+              <div class="hero-title">
+                ${escapeHtml(item.title)}
+              </div>
+
+              <div class="hero-meta">
+                ${escapeHtml(item.source || "Kocaeli Haber")}
+                ${item.time ? " • " + escapeHtml(item.time) : ""}
+              </div>
+
+            </div>
+
+          </a>
+        `;
+
+      }).join("");
+
+
+    const dotsHtml =
+      heroItems.map((item, index) =>
+        `<div class="hero-dot${index === 0 ? " active" : ""}" data-index="${index}"></div>`
+      ).join("");
+
+
+    hero.innerHTML = `
+      <div class="hero-carousel-wrap">
+        <div class="hero-track" id="heroTrack">
+          ${slidesHtml}
         </div>
-
-      </a>
-
+        <div class="hero-dots" id="heroDots">
+          ${dotsHtml}
+        </div>
+      </div>
     `;
+
+
+    setupHeroCarousel(heroItems.length);
 
 
     /* =====================================================
@@ -2714,7 +2880,7 @@ async function loadNews() {
     ===================================================== */
 
     const list =
-      allNews.slice(1, 6);
+      allNews.slice(HERO_COUNT, HERO_COUNT + 5);
 
 
     grid.innerHTML =
