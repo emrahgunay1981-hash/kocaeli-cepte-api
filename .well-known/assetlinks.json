@@ -1,1 +1,8 @@
-
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.kocaeli_cepte_api.twa",
+    "sha256_cert_fingerprints": ["53:E3:A5:84:B8:36:B5:4F:8B:F3:66:11:91:86:65:57:29:A7:0D:B5:FA:55:3B:1E:7E:A1:E1:DC:20:66:4E:06"]
+  }
+}]
