@@ -125,6 +125,7 @@ a {
 .header,
 .back,
 .page-title,
+.search-wrap,
 .filters,
 .news {
 
@@ -354,6 +355,105 @@ a {
   line-height: 1.45;
 
   margin-top: 6px;
+}
+
+
+/* =========================================================
+   ARAMA
+========================================================= */
+
+.search-wrap {
+
+  padding:
+    0 18px 14px;
+}
+
+.search-box {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  background:
+    #0a2948;
+
+  border:
+    1px solid
+    #174566;
+
+  border-radius: 14px;
+
+  padding:
+    11px 14px;
+}
+
+.search-box .icon {
+
+  font-size: 15px;
+
+  color: #4ee5ef;
+
+  flex-shrink: 0;
+}
+
+.search-box input {
+
+  flex: 1;
+
+  min-width: 0;
+
+  border: 0;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #f5faff;
+
+  font-size: 13px;
+
+  font-family: inherit;
+}
+
+.search-box input::placeholder {
+
+  color: #6d8ba1;
+}
+
+.search-box .clear {
+
+  border: 0;
+
+  background: #123a5d;
+
+  color: #9db7cc;
+
+  width: 22px;
+
+  height: 22px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+
+  line-height: 1;
+
+  flex-shrink: 0;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.search-box .clear.show {
+
+  display: flex;
 }
 
 
@@ -714,6 +814,12 @@ a {
     font-size: 24px;
   }
 
+  .search-wrap {
+
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .filters {
 
     padding-left: 16px;
@@ -751,6 +857,12 @@ a {
 
     padding:
       0 12px;
+  }
+
+  .search-wrap {
+
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .filters {
@@ -882,6 +994,34 @@ a {
 
 
 <!-- =======================================================
+     ARAMA
+======================================================= -->
+
+<div class="search-wrap">
+
+  <div class="search-box">
+
+    <span class="icon">🔍</span>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Haberlerde ara..."
+      autocomplete="off"
+    >
+
+    <button
+      class="clear"
+      id="clearSearch"
+      aria-label="Aramayı temizle"
+    >✕</button>
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
      FİLTRELER
 ======================================================= -->
 
@@ -961,6 +1101,8 @@ a {
 ========================================================= */
 
 let allNews = [];
+let currentSource = "Tümü";
+let searchQuery = "";
 
 
 /* =========================================================
@@ -987,10 +1129,24 @@ function escapeHtml(str) {
 
 
 /* =========================================================
+   ARAMA İÇİN METİN NORMALİZASYONU
+   (büyük/küçük harf ve Türkçe karakter farkı gözetmez)
+========================================================= */
+
+function normalize(str) {
+
+  return String(str || "")
+    .toLocaleLowerCase("tr-TR")
+    .trim();
+
+}
+
+
+/* =========================================================
    HABERLERİ GÖSTER
 ========================================================= */
 
-function renderNews(source = "Tümü") {
+function renderNews() {
 
   const container =
     document.getElementById("news");
@@ -1000,14 +1156,29 @@ function renderNews(source = "Tümü") {
     allNews;
 
 
-  if (source !== "Tümü") {
+  if (currentSource !== "Tümü") {
 
     news =
-      allNews.filter(item =>
+      news.filter(item =>
 
         String(
           item.source || ""
-        ).trim() === source
+        ).trim() === currentSource
+
+      );
+
+  }
+
+
+  if (searchQuery) {
+
+    const q =
+      normalize(searchQuery);
+
+    news =
+      news.filter(item =>
+
+        normalize(item.title).includes(q)
 
       );
 
@@ -1024,7 +1195,11 @@ function renderNews(source = "Tümü") {
 
         <br><br>
 
-        Bu kaynakta şu anda haber bulunamadı.
+        ${
+          searchQuery
+            ? "Aramanızla eşleşen bir haber bulunamadı."
+            : "Bu kaynakta şu anda haber bulunamadı."
+        }
 
       </div>
 
@@ -1317,14 +1492,59 @@ document
         );
 
 
-        renderNews(
-          button.dataset.source
-        );
+        currentSource =
+          button.dataset.source;
+
+
+        renderNews();
 
       }
     );
 
   });
+
+
+/* =========================================================
+   ARAMA KUTUSU
+========================================================= */
+
+const searchInput =
+  document.getElementById("searchInput");
+
+const clearButton =
+  document.getElementById("clearSearch");
+
+
+searchInput.addEventListener("input", () => {
+
+  searchQuery =
+    searchInput.value;
+
+
+  clearButton.classList.toggle(
+    "show",
+    searchQuery.length > 0
+  );
+
+
+  renderNews();
+
+});
+
+
+clearButton.addEventListener("click", () => {
+
+  searchInput.value = "";
+
+  searchQuery = "";
+
+  clearButton.classList.remove("show");
+
+  renderNews();
+
+  searchInput.focus();
+
+});
 
 
 /* =========================================================
