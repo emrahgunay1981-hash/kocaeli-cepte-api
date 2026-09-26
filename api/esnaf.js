@@ -14,7 +14,19 @@ const CATEGORIES = {
   terzi: "terzi",
   taksi: "taksi durağı",
   antikaci: "antikacı",
-  spor_salonu: "spor salonu"
+  spor_salonu: "spor salonu",
+  firin: "fırın",
+  kirtasiye: "kırtasiye",
+  nalbur: "nalbur hırdavat",
+  temizlikci: "temizlik şirketi",
+  mobilyaci: "mobilyacı",
+  emlakci: "emlakçı",
+  optik: "optik gözlükçü",
+  pet_shop: "pet shop",
+  cicekci: "çiçekçi",
+  kasap: "kasap",
+  manav: "manav",
+  kuru_temizleme: "kuru temizleme"
 };
 
 export default async function handler(req, res) {
