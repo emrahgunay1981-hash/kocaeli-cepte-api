@@ -294,6 +294,32 @@
       transform: scale(0.97);
     }
 
+    .news-buttons-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .news-buttons-row .news-button {
+      flex: 1;
+    }
+
+    .share-btn {
+      border: 0;
+      background: rgba(53,232,107,.14);
+      color: #35e86b;
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
     /* =========================
        HATA
     ========================== */
@@ -574,6 +600,25 @@
 
   <script>
 
+    function shareItem(title, url) {
+
+      if (navigator.share) {
+
+        navigator.share({ title: title, url: url }).catch(() => {});
+
+      } else {
+
+        const waUrl =
+          "https://wa.me/?text=" +
+          encodeURIComponent(title + " " + url);
+
+        window.open(waUrl, "_blank");
+
+      }
+
+    }
+
+
     async function kocaelisporHaberleriniGetir() {
 
       const status =
@@ -771,20 +816,31 @@
                       }
 
 
-                      ${
-                        link
-                          ? `
-                            <a
-                              class="news-button"
-                              href="${escapeHTML(link)}"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Haberi Oku →
-                            </a>
-                          `
-                          : ""
-                      }
+                      <div class="news-buttons-row">
+
+                        ${
+                          link
+                            ? `
+                              <a
+                                class="news-button"
+                                href="${escapeHTML(link)}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Haberi Oku →
+                              </a>
+                            `
+                            : ""
+                        }
+
+                        <button
+                          class="share-btn"
+                          data-title="${title}"
+                          data-url="${escapeHTML(link)}"
+                          onclick="shareItem(this.dataset.title, this.dataset.url);"
+                        >📤</button>
+
+                      </div>
 
                     </div>
 
