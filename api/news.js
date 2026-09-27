@@ -64,7 +64,7 @@ const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile
 let cachedResult = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 dakika
-const IMAGE_RESOLVE_LIMIT = 5; // sadece ilk 5 haber için görsel çözülür
+const IMAGE_RESOLVE_LIMIT = 10; // ana sayfada görünen ilk 10 haber için görsel çözülür
 
 // ==========================================
 // META GÖRSELİ BUL
@@ -321,7 +321,28 @@ async function resolveGoogleImages(itemsForImages) {
 
 async function getNews() {
 
-  const googleItems = await getGoogleNews();
+  const rawItems = await getGoogleNews();
+
+  // ======================================
+  // ÖNCE TEKİLLEŞTİR VE TARİHE GÖRE SIRALA
+  // (görsel çözme adımı, gerçekten en üstte
+  // görünecek haberleri hedeflesin diye bu
+  // sıralama görsel aramadan ÖNCE yapılıyor)
+  // ======================================
+
+  const seen = new Set();
+  const googleItems = rawItems.filter(item => {
+    const key = item.title.toLowerCase().replace(/[^a-z0-9çğıöşü\s]/gi, "").replace(/\s+/g, " ").trim();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  googleItems.sort((a, b) => {
+    const dateA = new Date(a.pubDate || 0).getTime();
+    const dateB = new Date(b.pubDate || 0).getTime();
+    return dateB - dateA;
+  });
 
   // ======================================
   // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
@@ -335,7 +356,7 @@ async function getNews() {
 
   await Promise.race([
     resolveGoogleImages(itemsForImages),
-    new Promise(resolve => setTimeout(resolve, 7000))
+    new Promise(resolve => setTimeout(resolve, 8000))
   ]);
 
   return googleItems;
@@ -356,21 +377,9 @@ export default async function handler(req, res) {
   try {
     const items = await getNews();
 
-    const seen = new Set();
-    const unique = items.filter(item => {
-      const key = item.title.toLowerCase().replace(/[^a-z0-9çğıöşü\s]/gi, "").replace(/\s+/g, " ").trim();
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-
-    unique.sort((a, b) => {
-      const dateA = new Date(a.pubDate || 0).getTime();
-      const dateB = new Date(b.pubDate || 0).getTime();
-      return dateB - dateA;
-    });
-
-    const balanced = unique.slice(0, 20);
+    // items zaten tekilleştirilmiş ve tarihe göre sıralanmış
+    // halde gelir (getNews içinde, görsel çözmeden önce yapıldı)
+    const balanced = items.slice(0, 20);
 
     const sourceCount = {};
     balanced.forEach(item => {
