@@ -245,6 +245,14 @@
       background: #0b3022;
     }
 
+    .news-image.no-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: #2a6b4a;
+    }
+
     .news-content {
       padding: 16px;
     }
@@ -947,12 +955,12 @@
                         src="${escapeHTML(image)}"
                         alt="${title}"
                         loading="lazy"
-                        onerror="this.style.display='none'"
+                        onerror="this.outerHTML='<div class=&quot;news-image no-image&quot;>⚽</div>'"
                       >
 
                     `
 
-                    : "";
+                    : `<div class="news-image no-image">⚽</div>`;
 
 
                 return `
@@ -964,39 +972,17 @@
                     rel="noopener noreferrer"
                   >
 
-                    ${
-                      image
-                        ? `
-                          <div class="hero-slide-badge">🟢 KOCAELİSPOR</div>
-                          <button
-                            class="hero-slide-share"
-                            data-title="${title}"
-                            data-url="${escapeHTML(link)}"
-                            onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
-                          >📤</button>
-                        `
-                        : ""
-                    }
+                    <div class="hero-slide-badge">🟢 KOCAELİSPOR</div>
+                    <button
+                      class="hero-slide-share"
+                      data-title="${title}"
+                      data-url="${escapeHTML(link)}"
+                      onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
+                    >📤</button>
 
                     ${imageHTML}
 
                     <div class="news-content">
-
-                      ${
-                        !image
-                          ? `
-                            <div class="hero-slide-badge-inline">
-                              <span>🟢 KOCAELİSPOR</span>
-                              <button
-                                class="share-btn"
-                                data-title="${title}"
-                                data-url="${escapeHTML(link)}"
-                                onclick="event.preventDefault(); event.stopPropagation(); shareItem(this.dataset.title, this.dataset.url);"
-                              >📤</button>
-                            </div>
-                          `
-                          : ""
-                      }
 
                       <div class="news-title">
                         ${title}
