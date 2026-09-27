@@ -64,7 +64,7 @@ const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile
 let cachedResult = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 dakika
-const IMAGE_RESOLVE_LIMIT = 8; // sadece ilk 8 haber için görsel çözülür
+const IMAGE_RESOLVE_LIMIT = 5; // sadece ilk 5 haber için görsel çözülür
 
 // ==========================================
 // META GÖRSELİ BUL
@@ -109,7 +109,7 @@ function findMetaImage(html) {
 async function getSignatureParams(googleNewsUrl) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch(googleNewsUrl, {
       redirect: "follow",
@@ -152,7 +152,7 @@ async function decodeGoogleNewsUrls(paramsList) {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
 
     const response = await fetch("https://news.google.com/_/DotsSplashUi/data/batchexecute", {
       method: "POST",
@@ -200,7 +200,7 @@ async function getImageFromUrl(url) {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch(url, {
       redirect: "follow",
@@ -280,16 +280,7 @@ async function getGoogleNews() {
   }
 }
 
-async function getNews() {
-
-  const googleItems = await getGoogleNews();
-
-  // ======================================
-  // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
-  // ======================================
-
-  const itemsForImages = googleItems.slice(0, IMAGE_RESOLVE_LIMIT);
-
+async function resolveGoogleImages(itemsForImages) {
   const paramsList = [];
   for (let i = 0; i < itemsForImages.length; i += 5) {
     const batch = itemsForImages.slice(i, i + 5);
@@ -326,6 +317,26 @@ async function getNews() {
       })
     );
   }
+}
+
+async function getNews() {
+
+  const googleItems = await getGoogleNews();
+
+  // ======================================
+  // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
+  // Bu işlem tek başına yavaş kaynaklarda çok uzayabildiği
+  // için sabit bir üst süre sınırı içinde çalıştırılır;
+  // süre dolarsa görselsiz de olsa haberler döner, fonksiyon
+  // hiçbir zaman zaman aşımıyla çökmez.
+  // ======================================
+
+  const itemsForImages = googleItems.slice(0, IMAGE_RESOLVE_LIMIT);
+
+  await Promise.race([
+    resolveGoogleImages(itemsForImages),
+    new Promise(resolve => setTimeout(resolve, 7000))
+  ]);
 
   return googleItems;
 }
@@ -394,4 +405,3 @@ export default async function handler(req, res) {
     });
   }
 }
-.
