@@ -64,8 +64,7 @@ const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile
 let cachedResult = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 dakika
-const IMAGE_RESOLVE_LIMIT = 5; // sadece ilk 5 Google News haberi için görsel çözülür
-const LOCAL_IMAGE_RESOLVE_LIMIT = 6; // yerel kaynaklardan görseli olmayan ilk 6 haber için
+const IMAGE_RESOLVE_LIMIT = 8; // sadece ilk 8 haber için görsel çözülür
 
 // ==========================================
 // META GÖRSELİ BUL
@@ -225,94 +224,7 @@ async function getImageFromUrl(url) {
 // ==========================================
 
 // ==========================================
-// YEREL KOCAELİ HABER SİTELERİ (doğrudan RSS)
-// Google News'in indeksleme gecikmesini atlamak için
-// bu siteleri doğrudan kendi RSS'lerinden okuyoruz.
-// ==========================================
-
-const LOCAL_SOURCES = [
-  { name: "Özgür Kocaeli", feedUrl: "https://www.ozgurkocaeli.com.tr/feed/" },
-  { name: "Kocaeli Gazetesi", feedUrl: "https://www.kocaeligazetesi.com.tr/feed/" },
-  { name: "Ses Kocaeli", feedUrl: "https://www.seskocaeli.com/feed/" },
-  { name: "Kocaeli Gündem", feedUrl: "https://kocaeligundem.com/feed/" },
-  { name: "Çağdaş Kocaeli", feedUrl: "https://www.cagdaskocaeli.com.tr/feed/" },
-  { name: "Kocaeli Barış Gazetesi", feedUrl: "https://www.kocaelibarisgazetesi.com/feed/" }
-];
-
-async function fetchWithTimeout(url, options, timeoutMs) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetch(url, { ...options, signal: controller.signal });
-    clearTimeout(timer);
-    return response;
-  } catch (err) {
-    clearTimeout(timer);
-    throw err;
-  }
-}
-
-function extractLocalImage(block) {
-  let match = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i);
-  if (match) return normalizeImage(match[1]);
-
-  match = block.match(/<media:content[^>]+url=["']([^"']+)["']/i);
-  if (match) return normalizeImage(match[1]);
-
-  match = block.match(/<img[^>]+src=["']([^"']+)["']/i);
-  if (match) return normalizeImage(match[1]);
-
-  return null;
-}
-
-async function getLocalSourceNews(source) {
-  try {
-    const response = await fetchWithTimeout(
-      source.feedUrl,
-      {
-        headers: {
-          "User-Agent": UA,
-          "Accept": "application/rss+xml, application/xml, text/xml, */*"
-        },
-        redirect: "follow",
-        cache: "no-store"
-      },
-      5000
-    );
-
-    if (!response.ok) return [];
-
-    const xml = await response.text();
-    const itemBlocks = xml.match(/<item[\s\S]*?<\/item>/gi) || [];
-    const items = [];
-
-    for (const block of itemBlocks.slice(0, 8)) {
-      const title = cleanText(extract(/<title>([\s\S]*?)<\/title>/i, block));
-      const link = cleanText(extract(/<link>([\s\S]*?)<\/link>/i, block));
-      const pubDate = cleanText(extract(/<pubDate>([\s\S]*?)<\/pubDate>/i, block));
-
-      if (!title || !link) continue;
-
-      items.push({
-        title,
-        link,
-        category: "Kocaeli",
-        image: extractLocalImage(block),
-        time: pubDate ? timeAgo(pubDate) : "",
-        pubDate,
-        source: source.name
-      });
-    }
-
-    return items;
-  } catch (error) {
-    console.log(source.name + " RSS alınamadı:", error.message);
-    return [];
-  }
-}
-
-// ==========================================
-// GOOGLE NEWS (yedek / genel kaynak)
+// GOOGLE NEWS
 // ==========================================
 
 async function getGoogleNews() {
@@ -370,23 +282,10 @@ async function getGoogleNews() {
 
 async function getNews() {
 
-  // Yerel siteler ve Google News paralel olarak, birbirini bekletmeden çekilir.
-  const [googleResult, ...localResults] = await Promise.allSettled([
-    getGoogleNews(),
-    ...LOCAL_SOURCES.map(source => getLocalSourceNews(source))
-  ]);
-
-  const googleItems =
-    googleResult.status === "fulfilled" ? googleResult.value : [];
-
-  const localItems =
-    localResults
-      .filter(r => r.status === "fulfilled")
-      .flatMap(r => r.value);
+  const googleItems = await getGoogleNews();
 
   // ======================================
   // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
-  // (yerel kaynakların zaten kendi görseli var, buna gerek yok)
   // ======================================
 
   const itemsForImages = googleItems.slice(0, IMAGE_RESOLVE_LIMIT);
@@ -428,22 +327,7 @@ async function getNews() {
     );
   }
 
-  // ======================================
-  // YEREL HABERLERDE GÖRSEL EKSİKSE
-  // KENDİ SAYFASINDAN ÇEK (RSS'de enclosure yoksa)
-  // ======================================
-
-  const localMissingImage = localItems
-    .filter(item => !item.image)
-    .slice(0, LOCAL_IMAGE_RESOLVE_LIMIT);
-
-  await Promise.all(
-    localMissingImage.map(async item => {
-      item.image = await getImageFromUrl(item.link);
-    })
-  );
-
-  return [...localItems, ...googleItems];
+  return googleItems;
 }
 
 // ==========================================
@@ -510,3 +394,4 @@ export default async function handler(req, res) {
     });
   }
 }
+.
