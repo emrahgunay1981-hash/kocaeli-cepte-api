@@ -7,15 +7,11 @@ const VOLEYBOL_URL =
     "https://kocaeli.voleyboliltemsilciligi.com/";
 
 
-// ==========================================
-// HTML ENTITY TEMİZLEME
-// ==========================================
-
-function decodeHtml(text) {
-
+function temizle(text) {
     if (!text) return "";
 
-    return text
+    return String(text)
+        .replace(/<[^>]*>/g, " ")
         .replace(/&nbsp;/gi, " ")
         .replace(/&amp;/gi, "&")
         .replace(/&quot;/gi, '"')
@@ -23,108 +19,59 @@ function decodeHtml(text) {
         .replace(/&#x27;/gi, "'")
         .replace(/&lt;/gi, "<")
         .replace(/&gt;/gi, ">")
-        .replace(/&#(\d+);/g, (_, dec) =>
-            String.fromCharCode(dec)
-        )
-        .replace(/&#x([0-9a-f]+);/gi, (_, hex) =>
-            String.fromCharCode(parseInt(hex, 16))
-        );
-}
-
-
-// ==========================================
-// METİN TEMİZLEME
-// ==========================================
-
-function cleanText(text) {
-
-    return decodeHtml(text || "")
-        .replace(/<[^>]*>/g, " ")
         .replace(/\s+/g, " ")
         .trim();
 }
 
 
-// ==========================================
-// TARİH KONTROLÜ
-// ==========================================
-
-function isDate(text) {
-
-    return /^\d{2}\.\d{2}\.\d{4}$/.test(
-        cleanText(text)
-    );
+function tarihMi(text) {
+    return /^\d{2}\.\d{2}\.\d{4}$/.test(text);
 }
 
 
-// ==========================================
-// SAAT KONTROLÜ
-// ==========================================
-
-function isTime(text) {
-
-    return /^\d{1,2}:\d{2}$/.test(
-        cleanText(text)
-    );
+function saatMi(text) {
+    return /^\d{1,2}:\d{2}$/.test(text);
 }
 
 
-// ==========================================
-// SALON KONTROLÜ
-// ==========================================
+function salonMu(text) {
 
-function isSportsHall(text) {
-
-    const value =
-        cleanText(text).toLocaleUpperCase("tr-TR");
+    const t = temizle(text)
+        .toLocaleUpperCase("tr-TR");
 
     return (
-        value.includes("SPOR SALONU") ||
-        value.includes("SALONU")
+        t.includes("SPOR SALONU") ||
+        t.includes("SALONU")
     );
 }
 
 
-// ==========================================
-// VOLEYBOL TABLOSUNU ÇEK
-// ==========================================
-
-async function getVoleybol() {
+async function voleybolGetir() {
 
     const response = await fetch(
         VOLEYBOL_URL,
         {
             headers: {
                 "User-Agent":
-                    "Mozilla/5.0 (compatible; KocaeliCepte/1.0)",
+                    "Mozilla/5.0",
                 "Accept":
-                    "text/html,application/xhtml+xml"
+                    "text/html"
             }
         }
     );
 
-
     if (!response.ok) {
-
         throw new Error(
             "Voleybol sitesi HTTP " +
             response.status
         );
-
     }
 
-
-    const html =
-        await response.text();
-
+    const html = await response.text();
 
     const events = [];
 
-
-    // ======================================
-    // TÜM TABLOLARI BUL
-    // ======================================
-
+    // Sayfadaki tabloları bul
     const tables =
         html.match(
             /<table[\s\S]*?<\/table>/gi
@@ -133,16 +80,12 @@ async function getVoleybol() {
 
     for (const table of tables) {
 
-
-        // ==================================
-        // SADECE SPOR MÜSABAKA TABLOLARI
-        // ==================================
-
         const tableText =
-            cleanText(table)
+            temizle(table)
                 .toLocaleLowerCase("tr-TR");
 
 
+        // Spor tablosu değilse geç
         if (
             !tableText.includes("ev sahibi") &&
             !tableText.includes("misafir")
@@ -151,10 +94,6 @@ async function getVoleybol() {
         }
 
 
-        // ==================================
-        // SATIRLARI BUL
-        // ==================================
-
         const rows =
             table.match(
                 /<tr[\s\S]*?<\/tr>/gi
@@ -162,90 +101,51 @@ async function getVoleybol() {
 
 
         let currentDate = "";
-
         let currentVenue = "";
 
 
         for (const row of rows) {
 
-
-            // ==================================
-            // HÜCRELER
-            // ==================================
-
             const cells =
                 row.match(
-                    /<(?:td|th)[^>]*>[\s\S]*?<\/(?:td|th)>/gi
+                    /<t[dh][^>]*>[\s\S]*?<\/t[dh]>/gi
                 ) || [];
 
 
-            if (cells.length === 0) {
+            if (!cells.length) {
                 continue;
             }
 
 
             const values =
-                cells.map(cell =>
-                    cleanText(cell)
-                );
+                cells.map(temizle);
 
 
-            // Boş hücreleri temizle
-            const filtered =
-                values.filter(value =>
-                    value.length > 0
-                );
+            // Tarih varsa güncel tarihi değiştir
+            for (const value of values) {
 
-
-            if (filtered.length === 0) {
-                continue;
-            }
-
-
-            // ==================================
-            // TARİH BUL
-            // ==================================
-
-            const dateIndex =
-                filtered.findIndex(value =>
-                    isDate(value)
-                );
-
-
-            if (dateIndex !== -1) {
-
-                currentDate =
-                    filtered[dateIndex];
+                if (tarihMi(value)) {
+                    currentDate = value;
+                    break;
+                }
 
             }
 
 
-            // ==================================
-            // SALON BUL
-            // ==================================
+            // Salon varsa güncel salonu değiştir
+            for (const value of values) {
 
-            const venueIndex =
-                filtered.findIndex(value =>
-                    isSportsHall(value)
-                );
-
-
-            if (venueIndex !== -1) {
-
-                currentVenue =
-                    filtered[venueIndex];
+                if (salonMu(value)) {
+                    currentVenue = value;
+                    break;
+                }
 
             }
 
 
-            // ==================================
-            // SAAT BUL
-            // ==================================
-
+            // Saat bul
             const timeIndex =
-                filtered.findIndex(value =>
-                    isTime(value)
-                );
+                values.findIndex(saatMi);
 
 
             if (timeIndex === -1) {
@@ -253,131 +153,84 @@ async function getVoleybol() {
             }
 
 
-            const time =
-                filtered[timeIndex];
-
-
-            // ==================================
-            // TARİH YOKSA ATLA
-            // ==================================
-
             if (!currentDate) {
                 continue;
             }
 
 
-            // ==================================
-            // TAKIMLARI BUL
-            // ==================================
+            const time =
+                values[timeIndex];
+
+
+            // Saatten sonraki dolu hücreleri al
+            const after =
+                values
+                    .slice(timeIndex + 1)
+                    .filter(x => x);
+
 
             /*
-             * Voleybol sitesinde takım isimleri
-             * genellikle saatten sonra gelir.
-             *
              * Örnek:
              *
-             * 15:00
-             * Gölcük Bld. Spor
-             * 3
-             * 0
-             * İstanbul Voleybol
+             * 12:00
+             * Cadence Boya Gölcük İhsaniye
+             * ...
+             * Büyük Kartepe Spor
+             *
+             * İlk ve son takım bilgisini alıyoruz.
              */
 
-
-            let afterTime =
-                filtered.slice(
-                    timeIndex + 1
-                );
-
-
-            // ==================================
-            // SAYISAL SONUÇLARI TEMİZLE
-            // ==================================
-
-            afterTime =
-                afterTime.filter(value => {
-
-                    return !(
-                        /^\d+$/.test(value) ||
-                        value === "-" ||
-                        value === "–"
-                    );
-
-                });
-
-
-            // ==================================
-            // GEREKSİZ KELİMELER
-            // ==================================
-
-            afterTime =
-                afterTime.filter(value => {
-
-                    const lower =
-                        value.toLocaleLowerCase(
-                            "tr-TR"
-                        );
-
-                    return (
-                        lower !== "image" &&
-                        lower !== "ev sahibi" &&
-                        lower !== "misafir" &&
-                        lower !== "set sonuçları"
-                    );
-
-                });
-
-
-            // ==================================
-            // TAKIM İSİMLERİ
-            // ==================================
-
-            if (afterTime.length < 2) {
+            if (after.length < 2) {
                 continue;
             }
 
 
             const homeTeam =
-                afterTime[0];
+                after[0];
+
 
             const awayTeam =
-                afterTime[1];
+                after[after.length - 1];
 
 
-            // ==================================
-            // GEÇERSİZ VERİ KONTROLÜ
-            // ==================================
-
+            // Sonuç / teknik bilgiler takım sanılmasın
             if (
-                !homeTeam ||
-                !awayTeam ||
-                homeTeam === awayTeam
+                /^\d+$/.test(homeTeam) ||
+                /^\d+$/.test(awayTeam)
             ) {
                 continue;
             }
 
 
-            // ==================================
-            // BAŞLIK
-            // ==================================
-
-            const title =
-                homeTeam +
-                " - " +
-                awayTeam;
+            if (
+                homeTeam.length < 2 ||
+                awayTeam.length < 2
+            ) {
+                continue;
+            }
 
 
-            // ==================================
-            // ETKİNLİK
-            // ==================================
+            if (
+                homeTeam.toLocaleLowerCase("tr-TR")
+                ===
+                awayTeam.toLocaleLowerCase("tr-TR")
+            ) {
+                continue;
+            }
+
 
             events.push({
 
-                title: title,
+                title:
+                    homeTeam +
+                    " - " +
+                    awayTeam,
 
-                date: currentDate,
+                date:
+                    currentDate,
 
-                time: time,
+                time:
+                    time,
 
                 location:
                     currentVenue ||
@@ -404,13 +257,12 @@ async function getVoleybol() {
 
 
 // ==========================================
-// TEKRAR EDEN ETKİNLİKLERİ TEMİZLE
+// TEKRARLARI TEMİZLE
 // ==========================================
 
-function removeDuplicates(events) {
+function tekrarSil(events) {
 
-    const map =
-        new Map();
+    const map = new Map();
 
 
     for (const event of events) {
@@ -421,106 +273,60 @@ function removeDuplicates(events) {
                 event.time,
                 event.location,
                 event.title
-            ]
-            .join("|")
-            .toLocaleLowerCase("tr-TR");
+            ].join("|");
 
 
         if (!map.has(key)) {
-
-            map.set(
-                key,
-                event
-            );
-
+            map.set(key, event);
         }
 
     }
 
 
-    return Array.from(
-        map.values()
-    );
-
+    return Array.from(map.values());
 }
 
 
 // ==========================================
-// TARİH + SAAT SIRALAMA
+// TARİH SIRALAMA
 // ==========================================
 
-function sortEvents(events) {
-
-    return events.sort(
-        (a, b) => {
-
-            const aDate =
-                parseDateTime(a);
-
-            const bDate =
-                parseDateTime(b);
-
-            return aDate - bDate;
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// TARİHİ DATE'E ÇEVİR
-// ==========================================
-
-function parseDateTime(event) {
+function tarihDegeri(event) {
 
     if (!event.date) {
         return 9999999999999;
     }
 
 
-    const parts =
+    const p =
         event.date.split(".");
 
 
-    if (parts.length !== 3) {
+    if (p.length !== 3) {
         return 9999999999999;
     }
 
 
     const day =
-        parseInt(parts[0], 10);
+        Number(p[0]);
 
     const month =
-        parseInt(parts[1], 10);
+        Number(p[1]);
 
     const year =
-        parseInt(parts[2], 10);
+        Number(p[2]);
 
 
-    let hour = 0;
+    const time =
+        (event.time || "00:00")
+        .split(":");
 
-    let minute = 0;
 
+    const hour =
+        Number(time[0]) || 0;
 
-    if (event.time) {
-
-        const timeParts =
-            event.time.split(":");
-
-        hour =
-            parseInt(
-                timeParts[0],
-                10
-            ) || 0;
-
-        minute =
-            parseInt(
-                timeParts[1],
-                10
-            ) || 0;
-
-    }
+    const minute =
+        Number(time[1]) || 0;
 
 
     return new Date(
@@ -530,25 +336,19 @@ function parseDateTime(event) {
         hour,
         minute
     ).getTime();
-
 }
 
 
 // ==========================================
-// API
+// VERCEL API
 // ==========================================
 
-export default async function handler(
+module.exports = async function handler(
     req,
     res
 ) {
 
     try {
-
-
-        // ==================================
-        // CACHE
-        // ==================================
 
         res.setHeader(
             "Cache-Control",
@@ -556,37 +356,20 @@ export default async function handler(
         );
 
 
-        // ==================================
-        // VOLEYBOL
-        // ==================================
-
         const voleybol =
-            await getVoleybol();
+            await voleybolGetir();
 
-
-        // ==================================
-        // DUPLICATE TEMİZLE
-        // ==================================
 
         let events =
-            removeDuplicates(
-                voleybol
-            );
+            tekrarSil(voleybol);
 
 
-        // ==================================
-        // SIRALA
-        // ==================================
+        events.sort(
+            (a, b) =>
+                tarihDegeri(a) -
+                tarihDegeri(b)
+        );
 
-        events =
-            sortEvents(
-                events
-            );
-
-
-        // ==================================
-        // SONUÇ
-        // ==================================
 
         return res.status(200).json({
 
@@ -595,17 +378,8 @@ export default async function handler(
             count:
                 events.length,
 
-            sources: [
-
-                {
-                    name:
-                        "Kocaeli Voleybol İl Temsilciliği",
-
-                    url:
-                        VOLEYBOL_URL
-                }
-
-            ],
+            source:
+                "Kocaeli Voleybol İl Temsilciliği",
 
             events:
                 events
@@ -615,9 +389,8 @@ export default async function handler(
 
     } catch (error) {
 
-
         console.error(
-            "SPOR ETKİNLİKLERİ API HATASI:",
+            "SPOR API HATASI:",
             error
         );
 
@@ -631,10 +404,11 @@ export default async function handler(
             events: [],
 
             error:
+                error.message ||
                 "Spor etkinlikleri alınamadı."
 
         });
 
     }
 
-}
+};
