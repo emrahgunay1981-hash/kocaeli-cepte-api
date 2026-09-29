@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#078897">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#078897"
+>
 
 <title>Kocaeli Cepte - Spor Etkinlikleri</title>
+
 <meta
-  name="description"
-  content="Kocaeli'deki voleybol, basketbol ve diğer spor salonu etkinlikleri."
+    name="description"
+    content="Kocaeli'deki voleybol, basketbol ve diğer spor salonu etkinlikleri."
 >
 
 <style>
+
+/* =========================================================
+   GENEL
+========================================================= */
 
 * {
     box-sizing: border-box;
@@ -24,7 +39,13 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
     background:
         radial-gradient(
@@ -36,7 +57,9 @@ body {
         );
 
     color: #f5faff;
+
     min-height: 100vh;
+
     padding-bottom: 30px;
 }
 
@@ -46,13 +69,15 @@ a {
 }
 
 
-/* =========================
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 .header {
+
     position: sticky;
     top: 0;
+
     z-index: 100;
 
     background:
@@ -64,28 +89,36 @@ a {
 
     padding: 17px 16px 15px;
 
-    border-bottom: 1px solid rgba(56,232,245,0.18);
+    border-bottom:
+        1px solid rgba(56,232,245,0.18);
 
     box-shadow:
         0 6px 22px rgba(0,0,0,0.28);
 }
 
 .header-inner {
+
     max-width: 800px;
+
     margin: auto;
 }
 
 .header-title {
+
     display: flex;
+
     align-items: center;
+
     gap: 10px;
 }
 
 .header-icon {
+
     width: 42px;
     height: 42px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -98,7 +131,8 @@ a {
             #078897
         );
 
-    border: 1px solid rgba(56,232,245,0.35);
+    border:
+        1px solid rgba(56,232,245,0.35);
 
     font-size: 21px;
 
@@ -107,21 +141,31 @@ a {
 }
 
 .header h1 {
+
     font-size: 21px;
+
     font-weight: 800;
+
     line-height: 1.1;
 }
 
 .header-subtitle {
+
     color: #9dd5df;
+
     font-size: 10px;
+
     margin-top: 4px;
+
     letter-spacing: 1.4px;
+
     text-transform: uppercase;
 }
 
 .back {
+
     display: inline-flex;
+
     align-items: center;
 
     margin-top: 12px;
@@ -129,142 +173,317 @@ a {
     color: #a9dce5;
 
     font-size: 12px;
+
     font-weight: 600;
 }
 
 .back:active {
-    transform: translateX(-3px);
+
+    transform:
+        translateX(-3px);
 }
 
 
-/* =========================
+/* =========================================================
    CONTAINER
-========================= */
+========================================================= */
 
 .container {
+
     max-width: 800px;
+
     margin: auto;
-    padding: 18px 16px 30px;
+
+    padding:
+        18px 16px 30px;
 }
+
+
+/* =========================================================
+   INTRO
+========================================================= */
 
 .intro {
+
     background:
-        linear-gradient(135deg, rgba(0,207,232,.96), rgba(7,136,151,.96));
+        linear-gradient(
+            135deg,
+            rgba(0,207,232,.96),
+            rgba(7,136,151,.96)
+        );
+
     border-radius: 17px;
-    padding: 17px 18px;
+
+    padding:
+        17px 18px;
+
     margin-bottom: 18px;
+
     color: #e9fcff;
+
     font-size: 13px;
+
     line-height: 1.6;
-    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.25);
 }
 
 
-/* =========================
+/* =========================================================
    DURUM
-========================= */
+========================================================= */
 
 .status {
+
     text-align: center;
+
     padding: 28px 10px;
+
     color: #9db7cc;
+
     font-size: 13px;
 }
 
 
-/* =========================
-   ETKİNLİK KARTLARI
-========================= */
+/* =========================================================
+   ETKİNLİK KARTI
+========================================================= */
 
 .event {
+
     position: relative;
+
     background:
         linear-gradient(
             145deg,
             rgba(10,41,72,0.98),
             rgba(7,32,57,0.99)
         );
-    border: 1px solid #174566;
+
+    border:
+        1px solid #174566;
+
     border-radius: 17px;
+
     padding: 17px;
+
     margin-bottom: 12px;
+
     box-shadow:
         0 7px 24px rgba(0,0,0,0.25),
         inset 0 1px 0 rgba(255,255,255,0.025);
 }
 
+
+/* =========================================================
+   BAŞLIK
+========================================================= */
+
 .event h2 {
-    margin: 0 0 11px;
+
+    margin:
+        0 0 12px;
+
     color: #f5fbff;
+
     font-size: 17px;
+
     line-height: 1.3;
+
     font-weight: 800;
 }
 
-.event p {
-    margin: 8px 0;
-    color: #b8ccda;
-    font-size: 12px;
-    line-height: 1.5;
+
+/* =========================================================
+   BİLGİ SATIRLARI
+========================================================= */
+
+.event-info {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 10px;
 }
 
-.event p:first-of-type {
-    color: #71dce8;
-    font-weight: 600;
-}
+.info-box {
 
-.event a.event-link {
     display: inline-flex;
+
     align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-    padding: 10px 14px;
+
+    gap: 5px;
+
+    padding:
+        7px 10px;
+
+    border-radius: 9px;
+
     background:
-        linear-gradient(135deg, #00cfe8, #078897);
-    color: #021b2c;
-    text-decoration: none;
-    border-radius: 10px;
+        rgba(0,207,232,0.08);
+
+    border:
+        1px solid rgba(56,232,245,0.14);
+
+    color: #71dce8;
+
     font-size: 12px;
-    font-weight: 800;
-    box-shadow: 0 5px 16px rgba(0,207,232,0.18);
-}
 
-.event a.event-link:active {
-    transform: scale(0.97);
-}
-
-
-/* =========================
-   BOŞ DURUM
-========================= */
-
-.empty {
-    text-align: center;
-    padding: 40px 15px;
-    color: #8eacbf;
-    font-size: 13px;
-    line-height: 1.7;
-    background: rgba(7,35,61,0.65);
-    border: 1px solid #17435f;
-    border-radius: 16px;
-}
-
-.empty a {
-    color: #38e8f5;
     font-weight: 700;
 }
 
 
-/* =========================
+/* =========================================================
+   AÇIKLAMA
+========================================================= */
+
+.event p.description {
+
+    margin:
+        8px 0;
+
+    color: #b8ccda;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SPOR ETİKETİ
+========================================================= */
+
+.sport-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-bottom: 10px;
+
+    padding:
+        5px 9px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(0,207,232,0.12);
+
+    color: #7eeaf4;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: .5px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   DETAY BUTONU
+========================================================= */
+
+.event a.event-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-top: 10px;
+
+    padding:
+        10px 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00cfe8,
+            #078897
+        );
+
+    color: #021b2c;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 5px 16px rgba(0,207,232,0.18);
+}
+
+.event a.event-link:active {
+
+    transform:
+        scale(0.97);
+}
+
+
+/* =========================================================
+   BOŞ DURUM
+========================================================= */
+
+.empty {
+
+    text-align: center;
+
+    padding: 40px 15px;
+
+    color: #8eacbf;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    background:
+        rgba(7,35,61,0.65);
+
+    border:
+        1px solid #17435f;
+
+    border-radius: 16px;
+}
+
+.empty a {
+
+    color: #38e8f5;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
    HATA
-========================= */
+========================================================= */
 
 .api-error {
+
     color: #ffc1c1;
-    background: rgba(73,27,35,0.82);
-    border: 1px solid #783742;
+
+    background:
+        rgba(73,27,35,0.82);
+
+    border:
+        1px solid #783742;
+
     border-radius: 15px;
+
     padding: 18px;
+
     line-height: 1.5;
 }
 
@@ -276,22 +495,39 @@ a {
 <body>
 
 
+<!-- ========================================================
+     HEADER
+========================================================= -->
+
 <div class="header">
 
     <div class="header-inner">
 
         <div class="header-title">
 
-            <div class="header-icon">🏐</div>
+            <div class="header-icon">
+                🏐
+            </div>
 
             <div>
-                <h1>Spor Etkinlikleri</h1>
-                <div class="header-subtitle">Voleybol, basketbol ve daha fazlası</div>
+
+                <h1>
+                    Spor Etkinlikleri
+                </h1>
+
+                <div class="header-subtitle">
+                    Voleybol, basketbol ve daha fazlası
+                </div>
+
             </div>
 
         </div>
 
-        <a class="back" href="etkinlikler.html">
+
+        <a
+            class="back"
+            href="etkinlikler.html"
+        >
             ← Etkinliklere Dön
         </a>
 
@@ -300,115 +536,537 @@ a {
 </div>
 
 
+
+<!-- ========================================================
+     CONTENT
+========================================================= -->
+
 <div class="container">
 
+
     <div class="intro">
-        🏐🏀 Kocaeli'deki voleybol, basketbol ve diğer spor salonu etkinlikleri; belediye ve şehir etkinlik kaynaklarından otomatik olarak derlenir.
+
+        🏐🏀 Kocaeli'deki voleybol, basketbol ve diğer spor
+        salonu etkinlikleri; resmi spor kaynaklarından ve şehir
+        etkinlik kaynaklarından otomatik olarak derlenir.
+
     </div>
 
-    <div id="status" class="status">
+
+    <div
+        id="status"
+        class="status"
+    >
+
         Spor etkinlikleri yükleniyor...
+
     </div>
+
 
     <div id="events"></div>
+
 
 </div>
 
 
+
 <script>
 
+/* =========================================================
+   HTML GÜVENLİK
+========================================================= */
+
 function escapeHtml(str) {
+
     if (!str) return "";
+
     return String(str)
+
         .replace(/&/g, "&amp;")
+
         .replace(/</g, "&lt;")
+
         .replace(/>/g, "&gt;")
+
         .replace(/"/g, "&quot;")
+
         .replace(/'/g, "&#039;");
 }
 
+
+/* =========================================================
+   API
+========================================================= */
+
+const API_URL =
+    "https://kocaeli-cepte-api.vercel.app/api/etkinlikler";
+
+
+/* =========================================================
+   SPOR ANAHTAR KELİMELERİ
+========================================================= */
+
 const SPORT_KEYWORDS = [
-    "voleybol", "basketbol", "hentbol", "spor salonu",
-    "futsal", "masa tenisi", "güreş", "judo", "taekwondo"
+
+    "voleybol",
+
+    "basketbol",
+
+    "hentbol",
+
+    "spor salonu",
+
+    "futsal",
+
+    "masa tenisi",
+
+    "güreş",
+
+    "gures",
+
+    "judo",
+
+    "taekwondo",
+
+    "badminton",
+
+    "tenis"
+
 ];
+
+
+/* =========================================================
+   TARİHİ DÜZENLE
+========================================================= */
+
+function formatDate(date) {
+
+    if (!date) return "";
+
+    const value =
+        String(date).trim();
+
+    /*
+       Zaten 30.09.2026 formatındaysa
+    */
+
+    if (
+        /^\d{2}\.\d{2}\.\d{4}$/.test(value)
+    ) {
+
+        return value;
+
+    }
+
+
+    /*
+       ISO:
+       2026-09-30
+    */
+
+    const match =
+        value.match(
+            /^(\d{4})-(\d{2})-(\d{2})/
+        );
+
+    if (match) {
+
+        return (
+            match[3] +
+            "." +
+            match[2] +
+            "." +
+            match[1]
+        );
+
+    }
+
+
+    return value;
+}
+
+
+/* =========================================================
+   SPOR ETKİNLİKLERİNİ GETİR
+========================================================= */
 
 async function sporEtkinlikleriGetir() {
 
-    const status = document.getElementById("status");
-    const eventsDiv = document.getElementById("events");
+    const status =
+        document.getElementById("status");
+
+    const eventsDiv =
+        document.getElementById("events");
+
 
     try {
 
-        const response = await fetch(
-            "https://kocaeli-cepte-api.vercel.app/api/etkinlikler?cache=" + Date.now()
+
+        /* --------------------------------------------------
+           API ÇAĞRISI
+        -------------------------------------------------- */
+
+        const response =
+            await fetch(
+                API_URL +
+                "?cache=" +
+                Date.now()
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "API bağlantısı başarısız"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.success ||
+            !Array.isArray(data.events)
+        ) {
+
+            throw new Error(
+                "Veri alınamadı"
+            );
+
+        }
+
+
+        /* --------------------------------------------------
+           SADECE SPOR ETKİNLİKLERİ
+        -------------------------------------------------- */
+
+        const sportEvents =
+            data.events.filter(
+                event => {
+
+                    const text = (
+
+                        (event.title || "") +
+                        " " +
+                        (event.description || "") +
+                        " " +
+                        (event.sport || "") +
+                        " " +
+                        (event.venue || "")
+
+                    ).toLocaleLowerCase(
+                        "tr-TR"
+                    );
+
+
+                    return SPORT_KEYWORDS.some(
+                        keyword =>
+                            text.includes(
+                                keyword
+                            )
+                    );
+
+                }
+            );
+
+
+        /* --------------------------------------------------
+           TARİH + SAAT SIRALA
+        -------------------------------------------------- */
+
+        sportEvents.sort(
+            (a, b) => {
+
+                const dateA =
+                    a.isoDate ||
+                    "";
+
+                const dateB =
+                    b.isoDate ||
+                    "";
+
+                const timeA =
+                    a.time ||
+                    "99:99";
+
+                const timeB =
+                    b.time ||
+                    "99:99";
+
+
+                return (
+                    `${dateA} ${timeA}`
+                ).localeCompare(
+                    `${dateB} ${timeB}`
+                );
+
+            }
         );
 
-        if (!response.ok) throw new Error("API bağlantısı başarısız");
 
-        const data = await response.json();
+        status.style.display =
+            "none";
 
-        if (!data.success || !Array.isArray(data.events)) {
-            throw new Error("Veri alınamadı");
-        }
 
-        const sportEvents = data.events.filter(event => {
-            const text = (
-                (event.title || "") + " " + (event.description || "")
-            ).toLocaleLowerCase("tr-TR");
+        /* --------------------------------------------------
+           BOŞSA
+        -------------------------------------------------- */
 
-            return SPORT_KEYWORDS.some(keyword => text.includes(keyword));
-        });
+        if (
+            sportEvents.length === 0
+        ) {
 
-        status.style.display = "none";
-
-        if (sportEvents.length === 0) {
             eventsDiv.innerHTML = `
+
                 <div class="empty">
-                    🏐<br><br>
-                    Şu anda listelenen bir spor etkinliği bulunamadı.
+
+                    🏐
+
                     <br><br>
-                    Tüm etkinlikler için <a href="etkinlikler.html">Etkinlikler sayfasına</a> göz atabilirsiniz.
+
+                    Şu anda listelenen
+                    bir spor etkinliği bulunamadı.
+
+                    <br><br>
+
+                    Tüm etkinlikler için
+
+                    <a href="etkinlikler.html">
+                        Etkinlikler sayfasına
+                    </a>
+
+                    göz atabilirsiniz.
+
                 </div>
+
             `;
+
             return;
+
         }
 
-        eventsDiv.innerHTML = sportEvents.map(event => {
 
-            const title = escapeHtml(event.title || "Spor Etkinliği");
-            const date = escapeHtml(event.date || "");
-            const location = escapeHtml(event.location || "");
-            const description = escapeHtml(event.description || "");
-            const url = escapeHtml(event.url || "");
+        /* --------------------------------------------------
+           KARTLARI OLUŞTUR
+        -------------------------------------------------- */
 
-            return `
-                <div class="event">
-                    <h2>${title}</h2>
-                    ${date ? `<p>📅 ${date}</p>` : ""}
-                    ${location ? `<p>📍 ${location}</p>` : ""}
-                    ${description ? `<p>${description}</p>` : ""}
-                    ${url ? `<a class="event-link" href="${url}" target="_blank" rel="noopener">Etkinlik Detayları →</a>` : ""}
-                </div>
-            `;
+        eventsDiv.innerHTML =
+            sportEvents.map(
+                event => {
 
-        }).join("");
 
-    } catch (error) {
+                    const title =
+                        escapeHtml(
+                            event.title ||
+                            "Spor Etkinliği"
+                        );
 
-        console.error("SPOR ETKİNLİK HATASI:", error);
 
-        status.style.display = "block";
+                    const date =
+                        escapeHtml(
+                            formatDate(
+                                event.date
+                            )
+                        );
+
+
+                    const time =
+                        escapeHtml(
+                            event.time ||
+                            ""
+                        );
+
+
+                    const venue =
+                        escapeHtml(
+                            event.venue ||
+                            ""
+                        );
+
+
+                    const description =
+                        escapeHtml(
+                            event.description ||
+                            ""
+                        );
+
+
+                    const sport =
+                        escapeHtml(
+                            event.sport ||
+                            "Spor"
+                        );
+
+
+                    const link =
+                        event.link ||
+                        "";
+
+
+                    const safeLink =
+                        escapeHtml(
+                            link
+                        );
+
+
+                    /* --------------------------------------
+                       SAAT SATIRI
+                    --------------------------------------- */
+
+                    const timeHtml =
+                        time
+                            ? `
+                                <div class="info-box">
+                                    🕐 ${time}
+                                </div>
+                              `
+                            : "";
+
+
+                    /* --------------------------------------
+                       TARİH SATIRI
+                    --------------------------------------- */
+
+                    const dateHtml =
+                        date
+                            ? `
+                                <div class="info-box">
+                                    📅 ${date}
+                                </div>
+                              `
+                            : "";
+
+
+                    /* --------------------------------------
+                       SALON SATIRI
+                    --------------------------------------- */
+
+                    const venueHtml =
+                        venue
+                            ? `
+                                <div class="info-box">
+                                    📍 ${venue}
+                                </div>
+                              `
+                            : "";
+
+
+                    /* --------------------------------------
+                       DETAY BUTONU
+                    --------------------------------------- */
+
+                    const linkHtml =
+                        safeLink
+                            ? `
+                                <a
+                                    class="event-link"
+                                    href="${safeLink}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Maç / Etkinlik Detayı →
+                                </a>
+                              `
+                            : "";
+
+
+                    return `
+
+                        <div class="event">
+
+
+                            <div class="sport-badge">
+
+                                🏐
+                                ${sport}
+
+                            </div>
+
+
+                            <h2>
+                                ${title}
+                            </h2>
+
+
+                            <div class="event-info">
+
+                                ${dateHtml}
+
+                                ${timeHtml}
+
+                            </div>
+
+
+                            ${venueHtml}
+
+
+                            ${
+                                description
+                                ?
+                                `
+                                    <p class="description">
+                                        ${description}
+                                    </p>
+                                `
+                                :
+                                ""
+                            }
+
+
+                            ${linkHtml}
+
+
+                        </div>
+
+                    `;
+
+                }
+            ).join("");
+
+
+    }
+
+
+    catch (error) {
+
+
+        console.error(
+            "SPOR ETKİNLİK HATASI:",
+            error
+        );
+
+
+        status.style.display =
+            "block";
+
+
         status.innerHTML = `
+
             <div class="api-error">
-                ❌ Spor etkinlikleri şu anda yüklenemedi.
+
+                ❌ Spor etkinlikleri
+                şu anda yüklenemedi.
+
                 <br><br>
-                Lütfen daha sonra tekrar deneyin.
+
+                Lütfen daha sonra
+                tekrar deneyin.
+
             </div>
+
         `;
 
     }
 
 }
+
+
+/* =========================================================
+   BAŞLAT
+========================================================= */
 
 sporEtkinlikleriGetir();
 
@@ -416,4 +1074,5 @@ sporEtkinlikleriGetir();
 
 
 </body>
+
 </html>
