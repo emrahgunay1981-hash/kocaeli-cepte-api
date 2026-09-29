@@ -6,69 +6,21 @@
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
 >
 
 <meta
-    name="theme-color"
-    content="#078897"
->
-
-<title>Kocaeli Cepte - Etkinlikler</title>
-
-<meta
-    name="description"
-    content="Kocaeli etkinlikleri, konserler, festivaller, kültür-sanat etkinlikleri ve şehirde gerçekleşen güncel etkinlikler."
->
-
-<link
-    rel="canonical"
-    href="https://kocaelicepte.tr/etkinlikler.html"
+  name="theme-color"
+  content="#063f3f"
 >
 
 <meta
-    name="robots"
-    content="index, follow"
+  name="description"
+  content="Kocaeli etkinlikleri, konserler, tiyatro, çocuk etkinlikleri ve spor karşılaşmaları."
 >
 
-<meta
-    property="og:title"
-    content="Kocaeli Etkinlikleri | Kocaeli Cepte"
->
-
-<meta
-    property="og:description"
-    content="Kocaeli'deki konser, festival, kültür-sanat ve diğer güncel etkinlikleri keşfedin."
->
-
-<meta
-    property="og:url"
-    content="https://kocaelicepte.tr/etkinlikler.html"
->
-
-<meta
-    property="og:type"
-    content="website"
->
-
-
-<script type="application/ld+json">
-
-{
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "Kocaeli Etkinlikleri",
-    "description": "Kocaeli'deki güncel konser, festival, kültür-sanat ve şehir etkinlikleri.",
-    "url": "https://kocaelicepte.tr/etkinlikler.html",
-    "isPartOf": {
-        "@type": "WebSite",
-        "name": "Kocaeli Cepte",
-        "url": "https://kocaelicepte.tr/"
-    }
-}
-
-</script>
+<title>Kocaeli Etkinlikleri | Kocaeli Cepte</title>
 
 
 <style>
@@ -78,335 +30,216 @@
 ========================================================= */
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
 }
 
 html {
-    background: #061B35;
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
 
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+  background:
+    linear-gradient(
+      180deg,
+      #052f35 0%,
+      #071f29 45%,
+      #061821 100%
+    );
 
-    background:
-        radial-gradient(
-            circle at top,
-            #0b4665 0%,
-            #082f50 35%,
-            #061B35 75%,
-            #04152a 100%
-        );
-
-    color: #f5faff;
-
-    min-height: 100vh;
-
-    padding-bottom: 30px;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
+  color: #ffffff;
+  min-height: 100vh;
 }
 
 
 /* =========================================================
-   HEADER
+   ÜST ALAN
 ========================================================= */
 
-.header {
+.topbar {
 
-    position: sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
-    top: 0;
+  background:
+    rgba(5, 47, 53, 0.96);
 
-    z-index: 100;
+  backdrop-filter:
+    blur(14px);
 
-    background:
-        linear-gradient(
-            135deg,
-            rgba(7,92,115,0.98),
-            rgba(5,54,82,0.98)
-        );
+  border-bottom:
+    1px solid rgba(255,255,255,0.08);
 
-    padding:
-        17px 16px 15px;
-
-    border-bottom:
-        1px solid rgba(56,232,245,0.18);
-
-    box-shadow:
-        0 6px 22px rgba(0,0,0,0.28);
-
-    backdrop-filter:
-        blur(14px);
+  padding:
+    14px 16px;
 }
 
-.header-inner {
 
-    max-width: 800px;
+.topbar-inner {
 
-    margin: auto;
+  max-width: 900px;
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.header-title {
 
-    display: flex;
+.back-btn {
 
-    align-items: center;
+  width: 42px;
+  height: 42px;
 
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 22px;
+
+  border:
+    1px solid rgba(255,255,255,0.08);
 }
 
-.header-icon {
 
-    width: 42px;
+.logo-area {
 
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 12px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #00cfe8,
-            #078897
-        );
-
-    border:
-        1px solid rgba(56,232,245,0.35);
-
-    font-size: 21px;
-
-    box-shadow:
-        0 5px 16px rgba(0,0,0,0.22);
+  flex: 1;
+  text-align: center;
 }
 
-.header h1 {
 
-    font-size: 21px;
+.logo-title {
 
-    font-weight: 800;
+  margin: 0;
 
-    line-height: 1.1;
+  font-size: 19px;
+  font-weight: 800;
+
+  letter-spacing: -0.3px;
 }
 
-.header-subtitle {
 
-    color: #9dd5df;
+.logo-subtitle {
 
-    font-size: 10px;
+  margin-top: 3px;
 
-    margin-top: 4px;
+  color: #8fd9d9;
 
-    letter-spacing: 1.4px;
-
-    text-transform: uppercase;
-}
-
-.back {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    margin-top: 12px;
-
-    color: #a9dce5;
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    transition:
-        0.2s ease;
-}
-
-.back:active {
-
-    transform:
-        translateX(-3px);
+  font-size: 11px;
 }
 
 
 /* =========================================================
-   CONTAINER
+   ANA KONTEYNER
 ========================================================= */
 
 .container {
 
-    max-width: 800px;
+  width: 100%;
+  max-width: 900px;
 
-    margin: auto;
+  margin: auto;
 
-    padding:
-        18px 16px 30px;
+  padding:
+    18px 14px 100px;
 }
 
 
 /* =========================================================
-   ÜST KARTLAR
+   SAYFA BAŞLIĞI
 ========================================================= */
 
-.theatre-card {
+.page-header {
 
-    display: flex;
+  margin:
+    8px 0 20px;
 
-    align-items: center;
+  padding:
+    22px 20px;
 
-    justify-content: space-between;
+  border-radius: 24px;
 
-    position: relative;
+  background:
+    linear-gradient(
+      135deg,
+      #087c82,
+      #07566a
+    );
 
-    overflow: hidden;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.22);
 
-    background:
-        linear-gradient(
-            135deg,
-            #0b6380,
-            #07506d
-        );
-
-    border:
-        1px solid rgba(56,232,245,0.24);
-
-    border-radius: 17px;
-
-    padding:
-        17px 18px;
-
-    margin-bottom: 12px;
-
-    color: white;
-
-    box-shadow:
-        0 7px 24px rgba(0,0,0,0.25);
-
-    transition:
-        transform 0.18s ease,
-        border-color 0.18s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.theatre-card::after {
 
-    content: "";
+.page-header::after {
 
-    position: absolute;
+  content: "";
 
-    width: 100px;
+  position: absolute;
 
-    height: 100px;
+  width: 170px;
+  height: 170px;
 
-    right: -40px;
+  right: -60px;
+  top: -70px;
 
-    top: -40px;
+  border-radius: 50%;
 
-    border-radius: 50%;
-
-    background:
-        rgba(56,232,245,0.10);
+  background:
+    rgba(255,255,255,0.08);
 }
 
-.theatre-card::before {
 
-    content: "";
+.page-header h1 {
 
-    position: absolute;
+  margin: 0;
 
-    width: 45px;
+  font-size: 27px;
 
-    height: 45px;
+  font-weight: 850;
 
-    left: -22px;
-
-    bottom: -22px;
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,255,255,0.035);
+  position: relative;
+  z-index: 2;
 }
 
-.theatre-card:active {
 
-    transform:
-        scale(0.985);
-}
+.page-header p {
 
-.theatre-card-text {
+  margin:
+    8px 0 0;
 
-    flex: 1;
+  color:
+    rgba(255,255,255,0.82);
 
-    min-width: 0;
+  font-size: 14px;
 
-    position: relative;
+  line-height: 1.5;
 
-    z-index: 2;
-}
-
-.theatre-card-title {
-
-    font-size: 15px;
-
-    font-weight: 800;
-
-    margin-bottom: 5px;
-}
-
-.theatre-card-sub {
-
-    font-size: 11px;
-
-    color: #b6e1e8;
-
-    line-height: 1.4;
-}
-
-.theatre-card-arrow {
-
-    position: relative;
-
-    z-index: 2;
-
-    width: 34px;
-
-    height: 34px;
-
-    border-radius: 10px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    margin-left: 12px;
-
-    background:
-        rgba(0,207,232,0.12);
-
-    border:
-        1px solid rgba(56,232,245,0.12);
-
-    color: #50e8f3;
-
-    font-size: 18px;
-
-    font-weight: 700;
+  position: relative;
+  z-index: 2;
 }
 
 
@@ -414,166 +247,375 @@ a {
    BÖLÜM BAŞLIĞI
 ========================================================= */
 
-.section-label {
+.section-title {
 
-    display: flex;
+  display: flex;
 
-    align-items: center;
+  align-items: center;
 
-    gap: 9px;
+  gap: 9px;
 
-    margin:
-        24px 2px 13px;
+  margin:
+    24px 2px 12px;
 
-    color: #e2f8fc;
+  font-size: 19px;
 
-    font-size: 13px;
-
-    font-weight: 800;
+  font-weight: 800;
 }
 
-.section-label::before {
 
-    content: "";
+.section-title span {
 
-    width: 4px;
+  font-size: 21px;
+}
 
-    height: 18px;
 
-    border-radius: 5px;
+.section-subtitle {
 
-    background:
-        linear-gradient(
-            180deg,
-            #38e8f5,
-            #00bcd4
-        );
+  margin:
+    -6px 2px 13px;
 
-    box-shadow:
-        0 0 10px rgba(56,232,245,0.35);
+  color:
+    #8fa9ad;
+
+  font-size: 12px;
 }
 
 
 /* =========================================================
-   DURUM
+   KÜLTÜR & EĞLENCE KARTLARI
 ========================================================= */
 
-.status {
+.category-grid {
 
-    text-align: center;
+  display: grid;
 
-    padding:
-        28px 10px;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
 
-    color: #9db7cc;
+  gap: 11px;
+}
 
-    font-size: 13px;
+
+.category-card {
+
+  min-height: 105px;
+
+  padding: 16px;
+
+  border-radius: 19px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(16,67,76,0.95),
+      rgba(9,43,54,0.95)
+    );
+
+  border:
+    1px solid rgba(255,255,255,0.07);
+
+  text-decoration: none;
+
+  color: white;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease;
+
+  box-shadow:
+    0 7px 18px rgba(0,0,0,0.14);
+}
+
+
+.category-card:hover {
+
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(88,213,213,0.35);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18,79,88,1),
+      rgba(10,48,59,1)
+    );
+}
+
+
+.category-icon {
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  font-size: 22px;
+
+  margin-bottom: 10px;
+}
+
+
+.category-name {
+
+  font-size: 14px;
+
+  font-weight: 750;
+}
+
+
+.category-description {
+
+  margin-top: 4px;
+
+  color:
+    #8eabb0;
+
+  font-size: 11px;
+
+  line-height: 1.35;
 }
 
 
 /* =========================================================
-   ETKİNLİK KARTLARI
+   SPOR ÖZEL KARTI
 ========================================================= */
 
-.event {
+.sports-card {
 
-    position: relative;
+  grid-column:
+    1 / -1;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(10,41,72,0.98),
-            rgba(7,32,57,0.99)
-        );
+  min-height: 118px;
 
-    border:
-        1px solid #174566;
+  padding: 18px;
 
-    border-radius: 17px;
+  border-radius: 20px;
 
-    padding: 17px;
+  background:
+    linear-gradient(
+      135deg,
+      #075d6a,
+      #087f82
+    );
 
-    margin-bottom: 12px;
+  border:
+    1px solid rgba(113,235,228,0.18);
 
-    box-shadow:
-        0 7px 24px rgba(0,0,0,0.25),
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.20);
 
-        inset 0 1px 0
-        rgba(255,255,255,0.025);
+  position: relative;
+
+  overflow: hidden;
 }
 
-.event h2 {
 
-    margin:
-        0 0 11px;
+.sports-card::after {
 
-    color: #f5fbff;
+  content: "🏐";
 
-    font-size: 17px;
+  position: absolute;
 
-    line-height: 1.3;
+  right: 18px;
+  bottom: -12px;
 
-    font-weight: 800;
+  font-size: 80px;
+
+  opacity: 0.10;
+
+  transform:
+    rotate(-10deg);
 }
 
-.event p {
 
-    margin:
-        8px 0;
+.sports-card .category-icon {
 
-    color: #b8ccda;
-
-    font-size: 12px;
-
-    line-height: 1.5;
+  background:
+    rgba(255,255,255,0.12);
 }
 
-.event p:first-of-type {
 
-    color: #71dce8;
+/* =========================================================
+   ETKİNLİK LİSTESİ
+========================================================= */
 
-    font-weight: 600;
+.events-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
 }
 
-.event a {
 
-    display: inline-flex;
+/* =========================================================
+   ETKİNLİK KARTI
+========================================================= */
 
-    align-items: center;
+.event-card {
 
-    justify-content: center;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15,54,64,0.98),
+      rgba(8,32,42,0.98)
+    );
 
-    margin-top: 10px;
+  border:
+    1px solid rgba(255,255,255,0.07);
 
-    padding:
-        10px 14px;
+  border-radius: 20px;
 
-    background:
-        linear-gradient(
-            135deg,
-            #00cfe8,
-            #078897
-        );
+  padding: 17px;
 
-    color: #021b2c;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.16);
 
-    text-decoration: none;
-
-    border-radius: 10px;
-
-    font-size: 12px;
-
-    font-weight: 800;
-
-    box-shadow:
-        0 5px 16px
-        rgba(0,207,232,0.18);
+  overflow: hidden;
 }
 
-.event a:active {
 
-    transform:
-        scale(0.97);
+.event-title {
+
+  margin: 0 0 11px;
+
+  font-size: 17px;
+
+  line-height: 1.35;
+
+  font-weight: 800;
+
+  color:
+    #ffffff;
+}
+
+
+.event-meta {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-bottom: 10px;
+}
+
+
+.meta-item {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  padding:
+    6px 9px;
+
+  border-radius: 10px;
+
+  background:
+    rgba(255,255,255,0.06);
+
+  color:
+    #b8d1d4;
+
+  font-size: 11px;
+
+  line-height: 1.2;
+}
+
+
+.event-description {
+
+  color:
+    #91aeb2;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  margin-top: 8px;
+}
+
+
+.event-link {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-top: 13px;
+
+  padding:
+    9px 12px;
+
+  border-radius: 11px;
+
+  background:
+    #087f82;
+
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+.event-link:hover {
+
+  background:
+    #0a9294;
+}
+
+
+/* =========================================================
+   YÜKLENİYOR
+========================================================= */
+
+.loading {
+
+  padding:
+    28px 15px;
+
+  text-align: center;
+
+  color:
+    #91aeb2;
+
+  font-size: 13px;
+}
+
+
+.loading-icon {
+
+  font-size: 28px;
+
+  margin-bottom: 8px;
 }
 
 
@@ -583,24 +625,23 @@ a {
 
 .empty {
 
-    text-align: center;
+  padding:
+    28px 18px;
 
-    padding:
-        45px 15px;
+  text-align: center;
 
-    color: #8eacbf;
+  border-radius: 18px;
 
-    font-size: 13px;
+  background:
+    rgba(255,255,255,0.04);
 
-    line-height: 1.7;
+  border:
+    1px solid rgba(255,255,255,0.06);
 
-    background:
-        rgba(7,35,61,0.65);
+  color:
+    #91aeb2;
 
-    border:
-        1px solid #17435f;
-
-    border-radius: 16px;
+  font-size: 13px;
 }
 
 
@@ -608,26 +649,47 @@ a {
    HATA
 ========================================================= */
 
-.api-error {
+.error-box {
 
-    color: #ffc1c1;
+  padding:
+    18px;
 
-    background:
-        rgba(73,27,35,0.82);
+  border-radius: 18px;
 
-    border:
-        1px solid #783742;
+  background:
+    rgba(190,70,70,0.12);
 
-    border-radius: 15px;
+  border:
+    1px solid rgba(255,100,100,0.15);
 
-    padding: 18px;
+  color:
+    #ffb1b1;
 
-    line-height: 1.5;
+  font-size: 13px;
+
+  line-height: 1.5;
 }
 
-.api-error strong {
 
-    color: #ffd4d4;
+/* =========================================================
+   ALT BİLGİ
+========================================================= */
+
+.footer-info {
+
+  margin-top: 28px;
+
+  padding:
+    14px;
+
+  text-align: center;
+
+  color:
+    #6e898e;
+
+  font-size: 10px;
+
+  line-height: 1.5;
 }
 
 
@@ -635,65 +697,90 @@ a {
    MOBİL
 ========================================================= */
 
-@media (max-width: 500px) {
+@media (max-width: 420px) {
 
-    .header {
+  .container {
 
-        padding:
-            15px 15px 14px;
-    }
+    padding-left: 11px;
+    padding-right: 11px;
 
-    .header h1 {
+  }
 
-        font-size: 20px;
-    }
 
-    .container {
+  .page-header {
 
-        padding:
-            16px 14px 25px;
-    }
+    padding:
+      19px 17px;
 
-    .theatre-card {
+  }
 
-        padding: 15px;
-    }
 
-    .theatre-card-title {
+  .page-header h1 {
 
-        font-size: 14px;
-    }
+    font-size: 24px;
 
-    .theatre-card-sub {
+  }
 
-        font-size: 10px;
-    }
 
-    .event {
+  .category-grid {
 
-        padding: 15px;
-    }
+    gap: 9px;
 
-    .event h2 {
+  }
 
-        font-size: 16px;
-    }
+
+  .category-card {
+
+    padding:
+      14px;
+
+  }
+
+
+  .category-name {
+
+    font-size: 13px;
+
+  }
+
+
+  .event-card {
+
+    padding:
+      15px;
+
+  }
+
+
+  .event-title {
+
+    font-size: 16px;
+
+  }
 
 }
 
 
 /* =========================================================
-   GENİŞ EKRAN
+   DAHA GENİŞ EKRAN
 ========================================================= */
 
 @media (min-width: 700px) {
 
-    .container {
+  .category-grid {
 
-        padding-left: 20px;
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
 
-        padding-right: 20px;
-    }
+  }
+
+
+  .sports-card {
+
+    grid-column:
+      auto;
+
+  }
 
 }
 
@@ -705,106 +792,111 @@ a {
 <body>
 
 
-<!-- ========================================================
-     HEADER
-========================================================= -->
+<!-- =======================================================
+     ÜST BAR
+======================================================= -->
 
-<div class="header">
+<header class="topbar">
 
-    <div class="header-inner">
+  <div class="topbar-inner">
 
-
-        <div class="header-title">
-
-
-            <div class="header-icon">
-
-                📅
-
-            </div>
+    <a
+      href="index.html"
+      class="back-btn"
+      aria-label="Ana sayfaya dön"
+    >
+      ←
+    </a>
 
 
-            <div>
+    <div class="logo-area">
 
-                <h1>
-                    Kocaeli Etkinlikleri
-                </h1>
+      <div class="logo-title">
+        Kocaeli Cepte
+      </div>
 
-                <div class="header-subtitle">
-                    Şehrin etkinlikleri
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-        <a
-            class="back"
-            href="index.html"
-        >
-
-            ← Kocaeli Cepte'ye Dön
-
-        </a>
-
+      <div class="logo-subtitle">
+        Şehrin etkinlik rehberi
+      </div>
 
     </div>
 
-</div>
+
+    <div
+      style="
+        width:42px;
+        height:42px;
+      "
+    ></div>
+
+  </div>
+
+</header>
 
 
 
-<!-- ========================================================
-     İÇERİK
-========================================================= -->
+<!-- =======================================================
+     ANA
+======================================================= -->
 
-<div class="container">
+<main class="container">
 
 
-    <!-- ====================================================
-         KÜLTÜR & EĞLENCE
-    ===================================================== -->
+  <!-- SAYFA BAŞLIĞI -->
 
-    <div class="section-label">
+  <section class="page-header">
 
-        🎭 Kültür & Eğlence
+    <h1>
+      📅 Kocaeli Etkinlikleri
+    </h1>
 
+    <p>
+      Kocaeli'deki konser, tiyatro, çocuk etkinlikleri
+      ve spor karşılaşmalarını tek yerde keşfet.
+    </p>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       KÜLTÜR & EĞLENCE
+  ====================================================== -->
+
+  <div class="section-title">
+
+    <span>🎭</span>
+
+    <div>
+      Kültür & Eğlence
     </div>
+
+  </div>
+
+
+  <div class="category-grid">
 
 
     <!-- ŞEHİR TİYATROSU -->
 
     <a
-        class="theatre-card"
-        href="https://tiyatro.kocaeli.bel.tr/tr/tiyatro/oyunlar"
-        target="_blank"
-        rel="noopener"
+      class="category-card"
+      href="https://tiyatro.kocaeli.bel.tr/tr/tiyatro/oyunlar"
+      target="_blank"
+      rel="noopener"
     >
 
-        <div class="theatre-card-text">
+      <div class="category-icon">
+        🎭
+      </div>
 
-            <div class="theatre-card-title">
+      <div class="category-name">
+        Kocaeli Şehir Tiyatrosu
+      </div>
 
-                🎭 Kocaeli Şehir Tiyatrosu
-
-            </div>
-
-            <div class="theatre-card-sub">
-
-                Güncel oyun takvimini görüntüle
-
-            </div>
-
-        </div>
-
-
-        <div class="theatre-card-arrow">
-
-            →
-
-        </div>
+      <div class="category-description">
+        Güncel oyunlar ve tiyatro programı
+      </div>
 
     </a>
 
@@ -813,34 +905,23 @@ a {
     <!-- SİNEMA -->
 
     <a
-        class="theatre-card"
-        href="https://boxofficeturkiye.com/seanslar/sehir/kocaeli/izmit"
-        target="_blank"
-        rel="noopener"
+      class="category-card"
+      href="https://boxofficeturkiye.com/seanslar/sehir/kocaeli/izmit"
+      target="_blank"
+      rel="noopener"
     >
 
-        <div class="theatre-card-text">
+      <div class="category-icon">
+        🎬
+      </div>
 
-            <div class="theatre-card-title">
+      <div class="category-name">
+        Sinema Seansları
+      </div>
 
-                🎬 Sinema Seansları
-
-            </div>
-
-            <div class="theatre-card-sub">
-
-                Vizyondaki filmler ve seans saatleri
-
-            </div>
-
-        </div>
-
-
-        <div class="theatre-card-arrow">
-
-            →
-
-        </div>
+      <div class="category-description">
+        Kocaeli sinema salonları ve seanslar
+      </div>
 
     </a>
 
@@ -849,32 +930,21 @@ a {
     <!-- ÇOCUK -->
 
     <a
-        class="theatre-card"
-        href="cocuk-etkinlikleri.html"
+      class="category-card"
+      href="cocuk-etkinlikleri.html"
     >
 
-        <div class="theatre-card-text">
+      <div class="category-icon">
+        🧒
+      </div>
 
-            <div class="theatre-card-title">
+      <div class="category-name">
+        Çocuk Etkinlikleri
+      </div>
 
-                👧 Çocuk Etkinlikleri
-
-            </div>
-
-            <div class="theatre-card-sub">
-
-                Çocuk tiyatrosu, gösteriler ve atölyeler
-
-            </div>
-
-        </div>
-
-
-        <div class="theatre-card-arrow">
-
-            →
-
-        </div>
+      <div class="category-description">
+        Çocuklar için etkinlik ve aktiviteler
+      </div>
 
     </a>
 
@@ -883,584 +953,712 @@ a {
     <!-- SPOR -->
 
     <a
-        class="theatre-card"
-        href="spor-etkinlikleri.html"
+      class="category-card sports-card"
+      href="spor-etkinlikleri.html"
     >
 
-        <div class="theatre-card-text">
+      <div class="category-icon">
+        🏐
+      </div>
 
-            <div class="theatre-card-title">
+      <div class="category-name">
+        Spor Etkinlikleri
+      </div>
 
-                🏐 Spor Etkinlikleri
-
-            </div>
-
-            <div class="theatre-card-sub">
-
-                Voleybol, basketbol ve diğer spor salonu etkinlikleri
-
-            </div>
-
-        </div>
-
-
-        <div class="theatre-card-arrow">
-
-            →
-
-        </div>
+      <div class="category-description">
+        Voleybol, basketbol ve diğer spor salonu
+        etkinlikleri
+      </div>
 
     </a>
 
 
+  </div>
 
-    <!-- ====================================================
-         GÜNCEL ETKİNLİKLER
-    ===================================================== -->
 
-    <div class="section-label">
 
-        📅 Güncel Etkinlikler
+  <!-- =====================================================
+       GÜNCEL ETKİNLİKLER
+  ====================================================== -->
+
+  <div class="section-title">
+
+    <span>📅</span>
+
+    <div>
+      Güncel Etkinlikler
+    </div>
+
+  </div>
+
+
+  <div class="section-subtitle">
+    Kocaeli'deki güncel kültür, sanat ve eğlence etkinlikleri
+  </div>
+
+
+  <div
+    id="events"
+    class="events-list"
+  >
+
+    <div class="loading">
+
+      <div class="loading-icon">
+        ⏳
+      </div>
+
+      Etkinlikler yükleniyor...
 
     </div>
 
-
-    <div
-        id="status"
-        class="status"
-    >
-
-        Etkinlikler yükleniyor...
-
-    </div>
+  </div>
 
 
-    <div id="events"></div>
+
+  <!-- ALT BİLGİ -->
+
+  <div class="footer-info">
+
+    Etkinlik bilgileri resmi ve yerel kaynaklardan
+    otomatik olarak güncellenmektedir.
+
+  </div>
 
 
-</div>
+</main>
 
 
 
 <script>
 
 /* =========================================================
-   API
+   KOCAELİ ETKİNLİKLERİ
 ========================================================= */
 
+
 const API_URL =
-    "https://kocaeli-cepte-api.vercel.app/api/etkinlikler";
+  "https://kocaeli-cepte-api.vercel.app/api/etkinlikler";
+
+
+const eventsContainer =
+  document.getElementById(
+    "events"
+  );
+
 
 
 /* =========================================================
-   HTML GÜVENLİĞİ
+   HTML GÜVENLİLEŞTİRME
 ========================================================= */
 
 function escapeHtml(value) {
 
-    if (!value) return "";
+  if (
+    value === null ||
+    value === undefined
+  ) {
 
-    return String(value)
+    return "";
 
-        .replace(/&/g, "&amp;")
+  }
 
-        .replace(/</g, "&lt;")
 
-        .replace(/>/g, "&gt;")
+  return String(value)
 
-        .replace(/"/g, "&quot;")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
 
-        .replace(/'/g, "&#039;");
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
 
+
 /* =========================================================
-   SPOR KONTROLÜ
+   TARİHİ GÖRÜNÜME ÇEVİR
+========================================================= */
+
+function formatDate(date) {
+
+  if (!date) {
+    return "";
+  }
+
+
+  let value =
+    String(date)
+      .trim();
+
+
+  /*
+   * 17 Eylül 2026 gibi zaten okunabilir
+   * bir tarih geldiyse aynen kullan.
+   */
+
+  if (
+    /[A-Za-zÇĞİÖŞÜçğıöşü]/.test(
+      value
+    )
+  ) {
+
+    return value;
+
+  }
+
+
+  /*
+   * 30.09.2026
+   */
+
+  const dotMatch =
+    value.match(
+      /^(\d{1,2})[./-](\d{1,2})[./-](20\d{2})$/
+    );
+
+
+  if (dotMatch) {
+
+    return (
+      dotMatch[1].padStart(2, "0") +
+      "." +
+      dotMatch[2].padStart(2, "0") +
+      "." +
+      dotMatch[3]
+    );
+
+  }
+
+
+  /*
+   * ISO
+   */
+
+  const isoMatch =
+    value.match(
+      /^(\d{4})-(\d{2})-(\d{2})/
+    );
+
+
+  if (isoMatch) {
+
+    return (
+      isoMatch[3] +
+      "." +
+      isoMatch[2] +
+      "." +
+      isoMatch[1]
+    );
+
+  }
+
+
+  return value;
+
+}
+
+
+
+/* =========================================================
+   SPOR ETKİNLİĞİ KONTROLÜ
 ========================================================= */
 
 function sporEtkinligiMi(event) {
 
-
-    /*
-       API artık sporları:
-       category = spor
-       sport = Voleybol
-       homeTeam
-       awayTeam
-
-       alanlarıyla gönderiyor.
-
-       Bu nedenle öncelikle bunları kontrol ediyoruz.
-    */
-
-    if (
-        event.category === "spor"
-    ) {
-
-        return true;
-
-    }
+  if (!event) {
+    return false;
+  }
 
 
-    if (
-        event.sport
-    ) {
+  /*
+   * API category
+   */
 
-        return true;
+  if (
+    String(
+      event.category || ""
+    ).toLocaleLowerCase("tr-TR")
+    ===
+    "spor"
+  ) {
 
-    }
+    return true;
 
-
-    if (
-        event.homeTeam ||
-        event.awayTeam
-    ) {
-
-        return true;
-
-    }
+  }
 
 
-    /*
-       Güvenlik amaçlı metin kontrolü.
-       Böylece eski kayıt formatında spor
-       bilgisi gelirse de ana sayfaya girmez.
-    */
+  /*
+   * sport alanı
+   */
 
-    const text = (
+  if (
+    event.sport
+  ) {
 
-        (event.title || "") +
-        " " +
-        (event.description || "") +
-        " " +
-        (event.venue || "") +
-        " " +
-        (event.location || "")
+    return true;
 
-    ).toLocaleLowerCase(
+  }
+
+
+  /*
+   * Takım alanları
+   */
+
+  if (
+    event.homeTeam ||
+    event.awayTeam
+  ) {
+
+    return true;
+
+  }
+
+
+  const text =
+    [
+      event.title || "",
+      event.description || "",
+      event.venue || ""
+    ]
+      .join(" ")
+      .toLocaleLowerCase(
         "tr-TR"
-    );
+      );
 
 
-    const sportWords = [
+  const keywords = [
 
-        "voleybol",
+    "voleybol",
 
-        "basketbol",
+    "basketbol",
 
-        "hentbol",
+    "hentbol",
 
-        "futsal",
+    "futsal",
 
-        "masa tenisi",
+    "masa tenisi",
 
-        "spor salonu",
+    "spor salonu",
 
-        "spor kompleksi",
+    "spor kompleksi",
 
-        "spor karşılaşması",
+    "spor karşılaşması",
 
-        "spor karşılasması",
+    "spor karsilasmasi",
 
-        "güreş",
+    "güreş",
 
-        "gures",
+    "gures",
 
-        "judo",
+    "judo",
 
-        "taekwondo",
+    "taekwondo",
 
-        "badminton"
+    "badminton",
 
-    ];
+    "futbol",
+
+    "atletizm"
+
+  ];
 
 
-    return sportWords.some(
-        word =>
-            text.includes(word)
-    );
+  return keywords.some(
+    keyword =>
+      text.includes(
+        keyword
+      )
+  );
 
 }
 
 
+
 /* =========================================================
-   ETKİNLİKLERİ GETİR
+   ETKİNLİK KARTI
 ========================================================= */
 
-async function etkinlikleriGetir() {
+function createEventCard(
+  event
+) {
 
+  const title =
+    escapeHtml(
+      event.title ||
+      "Etkinlik"
+    );
 
-    const status =
-        document.getElementById(
-            "status"
-        );
 
+  const date =
+    formatDate(
+      event.date ||
+      event.isoDate ||
+      ""
+    );
 
-    const eventsDiv =
-        document.getElementById(
-            "events"
-        );
 
+  const time =
+    event.time
+      ? escapeHtml(
+          event.time
+        )
+      : "";
 
-    try {
 
+  const venue =
+    event.venue
+      ? escapeHtml(
+          event.venue
+        )
+      : "";
 
-        /* --------------------------------------------------
-           API
-        -------------------------------------------------- */
 
-        const response =
-            await fetch(
-                API_URL +
-                "?cache=" +
-                Date.now()
-            );
+  const description =
+    event.description
+      ? escapeHtml(
+          event.description
+        )
+      : "";
 
 
-        if (!response.ok) {
+  const link =
+    event.link
+      ? String(
+          event.link
+        )
+      : "";
 
-            throw new Error(
-                "API bağlantısı başarısız"
-            );
 
-        }
+  let metaHtml =
+    "";
 
 
-        const data =
-            await response.json();
+  if (
+    date ||
+    time ||
+    venue
+  ) {
 
+    metaHtml +=
+      `<div class="event-meta">`;
 
-        if (
-            !data.success ||
-            !Array.isArray(
-                data.events
-            )
-        ) {
 
-            throw new Error(
-                "Etkinlik verileri alınamadı"
-            );
+    if (date) {
 
-        }
-
-
-        /* --------------------------------------------------
-           SPORLARI ÇIKAR
-           
-           AMA API'DEN SİLMİYORUZ.
-           
-           Sadece bu sayfada göstermiyoruz.
-        -------------------------------------------------- */
-
-        const genelEtkinlikler =
-            data.events.filter(
-                event =>
-                    !sporEtkinligiMi(
-                        event
-                    )
-            );
-
-
-        /* --------------------------------------------------
-           DURUMU GİZLE
-        -------------------------------------------------- */
-
-        status.style.display =
-            "none";
-
-
-        /* --------------------------------------------------
-           GENEL ETKİNLİK YOKSA
-        -------------------------------------------------- */
-
-        if (
-            genelEtkinlikler.length === 0
-        ) {
-
-            eventsDiv.innerHTML = `
-
-                <div class="empty">
-
-                    📅
-
-                    <br><br>
-
-                    Şu anda güncel etkinlik bulunamadı.
-
-                    <br><br>
-
-                    Yeni etkinlikler otomatik olarak
-                    güncellenecektir.
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        /* --------------------------------------------------
-           ETKİNLİKLERİ GÖSTER
-        -------------------------------------------------- */
-
-        eventsDiv.innerHTML =
-
-            genelEtkinlikler
-
-                .map(
-                    event => {
-
-
-                        const title =
-                            escapeHtml(
-                                event.title ||
-                                "Kocaeli Etkinliği"
-                            );
-
-
-                        const date =
-                            escapeHtml(
-                                event.date ||
-                                ""
-                            );
-
-
-                        const description =
-                            escapeHtml(
-                                event.description ||
-                                ""
-                            );
-
-
-                        /*
-                           API'de venue kullanıyoruz.
-                           Eski kayıtlar için location da
-                           destekleniyor.
-                        */
-
-                        const venue =
-                            escapeHtml(
-                                event.venue ||
-                                event.location ||
-                                ""
-                            );
-
-
-                        /*
-                           API'de link kullanıyoruz.
-                           Eski kayıtlar için url de
-                           destekleniyor.
-                        */
-
-                        const link =
-                            event.link ||
-                            event.url ||
-                            "";
-
-
-                        const safeLink =
-                            escapeHtml(
-                                link
-                            );
-
-
-                        /* ----------------------------------
-                           TARİH
-                        ----------------------------------- */
-
-                        const dateHtml =
-
-                            date
-
-                            ?
-
-                            `
-
-                                <p>
-
-                                    📅 ${date}
-
-                                </p>
-
-                            `
-
-                            :
-
-                            "";
-
-
-                        /* ----------------------------------
-                           YER
-                        ----------------------------------- */
-
-                        const venueHtml =
-
-                            venue
-
-                            ?
-
-                            `
-
-                                <p>
-
-                                    📍 ${venue}
-
-                                </p>
-
-                            `
-
-                            :
-
-                            "";
-
-
-                        /* ----------------------------------
-                           AÇIKLAMA
-                        ----------------------------------- */
-
-                        const descriptionHtml =
-
-                            description
-
-                            ?
-
-                            `
-
-                                <p>
-
-                                    ${description}
-
-                                </p>
-
-                            `
-
-                            :
-
-                            "";
-
-
-                        /* ----------------------------------
-                           LİNK
-                        ----------------------------------- */
-
-                        const linkHtml =
-
-                            safeLink
-
-                            ?
-
-                            `
-
-                                <a
-
-                                    href="${safeLink}"
-
-                                    target="_blank"
-
-                                    rel="noopener noreferrer"
-
-                                >
-
-                                    Etkinlik Detayları →
-
-                                </a>
-
-                            `
-
-                            :
-
-                            "";
-
-
-                        return `
-
-                            <div class="event">
-
-
-                                <h2>
-
-                                    ${title}
-
-                                </h2>
-
-
-                                ${dateHtml}
-
-
-                                ${venueHtml}
-
-
-                                ${descriptionHtml}
-
-
-                                ${linkHtml}
-
-
-                            </div>
-
-                        `;
-
-                    }
-                )
-
-                .join("");
-
-
-    }
-
-
-    catch (error) {
-
-
-        console.error(
-            "ETKİNLİK API HATASI:",
-            error
-        );
-
-
-        status.style.display =
-            "block";
-
-
-        status.innerHTML = `
-
-            <div class="api-error">
-
-                ❌ Etkinlikler yüklenemedi.
-
-                <br><br>
-
-                <strong>Hata:</strong>
-
-                ${escapeHtml(
-                    error.message ||
-                    error
-                )}
-
-                <br><br>
-
-                <small>
-
-                    API bağlantısı kontrol ediliyor...
-
-                </small>
-
-            </div>
-
+      metaHtml +=
+        `
+          <span class="meta-item">
+            📅 ${date}
+          </span>
         `;
 
     }
 
+
+    if (time) {
+
+      metaHtml +=
+        `
+          <span class="meta-item">
+            🕐 ${time}
+          </span>
+        `;
+
+    }
+
+
+    if (venue) {
+
+      metaHtml +=
+        `
+          <span class="meta-item">
+            📍 ${venue}
+          </span>
+        `;
+
+    }
+
+
+    metaHtml +=
+      `</div>`;
+
+  }
+
+
+
+  let linkHtml =
+    "";
+
+
+  if (link) {
+
+    linkHtml =
+      `
+        <a
+          class="event-link"
+          href="${escapeHtml(link)}"
+          target="_blank"
+          rel="noopener"
+        >
+          Bilet Al / Detay →
+        </a>
+      `;
+
+  }
+
+
+
+  return `
+
+    <article class="event-card">
+
+      <h3 class="event-title">
+        ${title}
+      </h3>
+
+      ${metaHtml}
+
+      ${
+        description
+          ? `
+            <div class="event-description">
+              ${description}
+            </div>
+          `
+          : ""
+      }
+
+      ${linkHtml}
+
+    </article>
+
+  `;
+
 }
+
+
+
+/* =========================================================
+   ETKİNLİKLERİ YÜKLE
+========================================================= */
+
+async function loadEvents() {
+
+  try {
+
+    eventsContainer.innerHTML = `
+
+      <div class="loading">
+
+        <div class="loading-icon">
+          ⏳
+        </div>
+
+        Etkinlikler yükleniyor...
+
+      </div>
+
+    `;
+
+
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    if (
+      !response.ok
+    ) {
+
+      throw new Error(
+        "API bağlantısı başarısız."
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      !data ||
+      !data.success
+    ) {
+
+      throw new Error(
+        "Etkinlik verisi alınamadı."
+      );
+
+    }
+
+
+    const events =
+      Array.isArray(
+        data.events
+      )
+        ? data.events
+        : [];
+
+
+
+    /* =====================================================
+       ÇOK ÖNEMLİ:
+       SPORLARI GENEL ETKİNLİKLERDEN ÇIKAR
+    ===================================================== */
+
+    const genelEtkinlikler =
+      events.filter(
+        event =>
+          !sporEtkinligiMi(
+            event
+          )
+      );
+
+
+
+    /* =====================================================
+       TARİH SIRALAMA
+    ===================================================== */
+
+    genelEtkinlikler.sort(
+      (a, b) => {
+
+        const aDate =
+          a.isoDate ||
+          a.date ||
+          "9999";
+
+
+        const bDate =
+          b.isoDate ||
+          b.date ||
+          "9999";
+
+
+        const aTime =
+          a.time ||
+          "99:99";
+
+
+        const bTime =
+          b.time ||
+          "99:99";
+
+
+        return (
+          `${aDate} ${aTime}`
+        ).localeCompare(
+          `${bDate} ${bTime}`
+        );
+
+      }
+    );
+
+
+
+    /* =====================================================
+       BOŞSA
+    ===================================================== */
+
+    if (
+      genelEtkinlikler.length === 0
+    ) {
+
+      eventsContainer.innerHTML = `
+
+        <div class="empty">
+
+          📅 Şu anda gösterilecek
+          güncel etkinlik bulunamadı.
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+
+    /* =====================================================
+       KARTLARI BAS
+    ===================================================== */
+
+    eventsContainer.innerHTML =
+      genelEtkinlikler
+        .map(
+          event =>
+            createEventCard(
+              event
+            )
+        )
+        .join("");
+
+
+  }
+  catch (error) {
+
+    console.error(
+      "Etkinlik yükleme hatası:",
+      error
+    );
+
+
+    eventsContainer.innerHTML = `
+
+      <div class="error-box">
+
+        ⚠️ Etkinlikler şu anda
+        yüklenemiyor.
+
+        <br><br>
+
+        Lütfen birkaç dakika sonra
+        tekrar deneyin.
+
+      </div>
+
+    `;
+
+  }
+
+}
+
 
 
 /* =========================================================
    BAŞLAT
 ========================================================= */
 
-etkinlikleriGetir();
+loadEvents();
+
 
 </script>
 
