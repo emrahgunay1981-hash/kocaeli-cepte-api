@@ -341,288 +341,329 @@ async function getBelediyeEtkinlikleri() {
 // ============================================================
 
 async function getSeyretEtkinlikleri() {
+    const urls = [
+        "https://kocaeliseyret.com/kocaeli-etkinlikler",
+        "https://www.kocaeliseyret.com/kocaeli-etkinlikler"
+    ];
 
-    const url =
-        "https://www.kocaeliseyret.com/kocaeli-etkinlikler";
+    let html = null;
+    let usedUrl = null;
+
+    for (const url of urls) {
+        try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 15000);
+
+            const response = await fetch(url, {
+                method: "GET",
+                signal: controller.signal,
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36",
+                    "Accept":
+                        "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8"
+                }
+            });
+
+            clearTimeout(timeout);
+
+            if (!response.ok) {
+                console.log(`Kocaeli Seyret: HTTP ${response.status} - ${url}`);
+                continue;
+            }
+
+            html = await response.text();
+            usedUrl = url;
+
+            if (html && html.length > 1000) {
+                break;
+            }
+
+        } catch (error) {
+            console.log(
+                `Kocaeli Seyret bağlantı hatası: ${url} - ${error.message}`
+            );
+        }
+    }
+
+    if (!html) {
+        console.log("Kocaeli Seyret: hiçbir kaynak erişilebilir değil");
+        return [];
+    }
 
     try {
-
-        const html =
-            await fetchWithTimeout(url);
-
         const events = [];
 
+        // HTML entity temizleme
+        const decode = (text) => {
+            if (!text) return "";
+
+            return text
+                .replace(/&nbsp;/gi, " ")
+                .replace(/&amp;/gi, "&")
+                .replace(/&quot;/gi, '"')
+                .replace(/&#39;/gi, "'")
+                .replace(/&apos;/gi, "'")
+                .replace(/&lt;/gi, "<")
+                .replace(/&gt;/gi, ">")
+                .replace(/&#(\d+);/g, (_, n) =>
+                    String.fromCharCode(Number(n))
+                )
+                .replace(/&#x([0-9a-f]+);/gi, (_, n) =>
+                    String.fromCharCode(parseInt(n, 16))
+                );
+        };
+
+        const clean = (text) => {
+            return decode(
+                text
+                    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+                    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+                    .replace(/<[^>]+>/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()
+            );
+        };
+
+        /*
+         * Kocaeli Seyret etkinlikleri genellikle h2/h3/h4
+         * başlıkları altında bulunuyor.
+         *
+         * Her başlığın kendisi ve bir sonraki başlığa kadar
+         * olan bölüm birlikte inceleniyor.
+         */
         const headingRegex =
-            /<(h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>/gi;
+            /<(h2|h3|h4)[^>]*>([\s\S]*?)<\/\1>/gi;
 
-        const matches =
-            [...html.matchAll(headingRegex)];
+        const headings = [];
+        let match;
 
-        const ignoredTitles = [
-
-            "içeriğe geç",
-            "hava durumu",
-            "gezilecek yerler",
-            "bilet al / detay",
-            "etkinlikler",
-            "anasayfa",
-            "ana sayfa",
-            "ulaşım",
-            "şehir & yaşam",
-            "kocaeli seyret",
-            "haberler",
-            "spor"
-
-        ];
-
-        for (
-            let i = 0;
-            i < matches.length;
-            i++
-        ) {
-
-            const title =
-                cleanText(matches[i][2]);
+        while ((match = headingRegex.exec(html)) !== null) {
+            const title = clean(match[2]);
 
             if (!title) continue;
 
-            const lowerTitle =
-                title.toLocaleLowerCase(
-                    "tr-TR"
-                );
+            headings.push({
+                title,
+                start: match.index,
+                end: headingRegex.lastIndex
+            });
+        }
+
+        for (let i = 0; i < headings.length; i++) {
+            const current = headings[i];
+
+            const nextStart =
+                i + 1 < headings.length
+                    ? headings[i + 1].start
+                    : html.length;
+
+            const sectionHtml = html.slice(
+                current.end,
+                nextStart
+            );
+
+            const sectionText = clean(sectionHtml);
+
+            /*
+             * Tarih örnekleri:
+             * 30 Eylül 2026
+             * 2 Ekim 2026
+             * 3 Ekim 2026
+             */
+            const dateMatch = sectionText.match(
+                /(\d{1,2})\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+(\d{4})/i
+            );
+
+            if (!dateMatch) continue;
+
+            /*
+             * Saat örnekleri:
+             * 17:30
+             * 18:00
+             * 19:15
+             */
+            const timeMatch = sectionText.match(
+                /\b([01]?\d|2[0-3]):([0-5]\d)\b/
+            );
+
+            if (!timeMatch) continue;
+
+            const dateText = dateMatch[0];
+
+            /*
+             * Menü / navigasyon / kategori başlıklarını
+             * etkinlik olarak almamak için bazı kontroller.
+             */
+            const ignoredTitles = [
+                "Ana Sayfa",
+                "Etkinlikler",
+                "Kocaeli Etkinlikleri",
+                "Kategoriler",
+                "İletişim",
+                "Hakkımızda",
+                "Blog",
+                "Tüm Etkinlikler",
+                "Yaklaşan Etkinlikler"
+            ];
 
             if (
-                ignoredTitles.includes(
-                    lowerTitle
+                ignoredTitles.some(
+                    x => current.title.toLowerCase() === x.toLowerCase()
                 )
             ) {
                 continue;
             }
 
-            const start =
-                matches[i].index +
-                matches[i][0].length;
+            if (current.title.length < 3) continue;
 
-            const end =
-                i + 1 < matches.length
-                    ? matches[i + 1].index
-                    : html.length;
+            /*
+             * Etkinlik linkini başlığın bulunduğu bölgeden almaya çalış.
+             */
+            const linkMatch = sectionHtml.match(
+                /<a[^>]+href=["']([^"']+)["'][^>]*>/i
+            );
 
-            const block =
-                html.substring(
-                    start,
-                    end
-                );
+            let link = "https://kocaeliseyret.com/kocaeli-etkinlikler";
 
-            const blockText =
-                cleanText(block);
+            if (linkMatch) {
+                let href = decode(linkMatch[1]).trim();
 
-            const dateTime =
-                blockText.match(
-                    /(\d{1,2}\s+(?:Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+20\d{2})\s*,?\s*[A-Za-zÇĞİÖŞÜçğıöşü]+\s+(\d{1,2}:\d{2})/i
-                );
-
-            if (!dateTime) continue;
-
-            const date =
-                dateTime[1];
-
-            const time =
-                dateTime[2];
-
-            let afterDate =
-                blockText.substring(
-                    dateTime.index +
-                    dateTime[0].length
-                );
-
-            afterDate =
-                afterDate
-                    .replace(
-                        /^[\s|•\-–—:]+/,
-                        ""
-                    )
-                    .trim();
-
-            let venue = "";
-
-            const venueParts =
-                afterDate.split(
-                    /Bilet\s*Al|Detay|Biletix|Satın\s*Al/i
-                );
-
-            if (venueParts[0]) {
-
-                venue =
-                    cleanText(
-                        venueParts[0]
-                    );
-
-            }
-
-            if (venue.length > 180) {
-
-                venue = "";
-
-            }
-
-            const links =
-                [
-                    ...block.matchAll(
-                        /<a\b[^>]*href=["']([^"']+)["']/gi
-                    )
-                ];
-
-            let link = "";
-
-            for (const item of links) {
-
-                const candidate =
-                    item[1];
-
-                if (
-                    /bilet|detay|etkinlik|event/i.test(
-                        candidate
-                    )
-                ) {
-
-                    link =
-                        candidate;
-
-                    break;
-
+                if (href.startsWith("/")) {
+                    href = "https://kocaeliseyret.com" + href;
                 }
 
+                if (
+                    href.startsWith("http://") ||
+                    href.startsWith("https://")
+                ) {
+                    link = href;
+                }
             }
+
+            /*
+             * Mekân bilgisini yakalamaya çalış.
+             */
+            let venue = "";
+
+            const venuePatterns = [
+                /(?:Mekan|Mekân|Yer|Salon|Adres)\s*[:\-]\s*([^|•\n]+)/i,
+                /(?:Etkinlik Yeri)\s*[:\-]\s*([^|•\n]+)/i
+            ];
+
+            for (const pattern of venuePatterns) {
+                const venueMatch = sectionText.match(pattern);
+
+                if (venueMatch) {
+                    venue = venueMatch[1]
+                        .replace(/\s+/g, " ")
+                        .trim();
+
+                    if (venue.length > 100) {
+                        venue = venue.substring(0, 100);
+                    }
+
+                    break;
+                }
+            }
+
+            /*
+             * Tarih + saat bilgisinden JS Date oluştur.
+             */
+            const aylar = {
+                Ocak: 0,
+                Şubat: 1,
+                Mart: 2,
+                Nisan: 3,
+                Mayıs: 4,
+                Haziran: 5,
+                Temmuz: 6,
+                Ağustos: 7,
+                Eylül: 8,
+                Ekim: 9,
+                Kasım: 10,
+                Aralık: 11
+            };
+
+            const ayAdi =
+                dateMatch[2]
+                    .charAt(0)
+                    .toUpperCase() +
+                dateMatch[2].slice(1).toLowerCase();
+
+            const day = Number(dateMatch[1]);
+            const year = Number(dateMatch[3]);
+            const month = aylar[ayAdi];
+
+            if (month === undefined) continue;
+
+            const hour = Number(timeMatch[1]);
+            const minute = Number(timeMatch[2]);
+
+            const eventDate = new Date(
+                year,
+                month,
+                day,
+                hour,
+                minute
+            );
+
+            if (isNaN(eventDate.getTime())) continue;
+
+            /*
+             * Geçmiş etkinlikleri alma.
+             */
+            if (eventDate < new Date()) {
+                continue;
+            }
+
+            /*
+             * Aynı etkinliğin tekrar eklenmesini engelle.
+             */
+            const duplicateKey =
+                `${current.title}-${dateText}-${timeMatch[0]}`
+                    .toLowerCase();
 
             if (
-                !link &&
-                links.length
-            ) {
-
-                link =
-                    links[0][1];
-
-            }
-
-            if (
-                link &&
-                link.startsWith("/")
-            ) {
-
-                link =
-                    "https://www.kocaeliseyret.com" +
-                    link;
-
-            }
-
-            let category =
-                "genel";
-
-            if (
-                /konser|müzik|muzik|dj|şarkıcı|sarkici|sanatçı|sanatci/.test(
-                    lowerTitle
+                events.some(
+                    e =>
+                        e.duplicateKey === duplicateKey
                 )
             ) {
-
-                category = "konser";
-
-            }
-            else if (
-                /tiyatro|müzikali|muzikali|stand up|stand-up|gösteri|gosteri/.test(
-                    lowerTitle
-                )
-            ) {
-
-                category = "tiyatro";
-
-            }
-            else if (
-                /çocuk|cocuk/.test(
-                    lowerTitle
-                )
-            ) {
-
-                category = "çocuk";
-
-            }
-            else if (
-                /atölye|atolye/.test(
-                    lowerTitle
-                )
-            ) {
-
-                category = "atölye";
-
+                continue;
             }
 
             events.push({
-
-                title,
-
-                description:
-                    venue
-                        ? `${title} - ${venue}`
-                        : title,
-
-                date,
-
-                time,
-
+                title: current.title,
+                description: sectionText.substring(0, 500),
+                date: eventDate.toISOString(),
+                dateText,
+                time: timeMatch[0],
                 venue,
-
-                category,
-
-                sport: "",
-
+                category: "kültür",
+                source: "Kocaeli Seyret",
                 link,
-
-                source:
-                    "Kocaeli Seyret"
-
+                duplicateKey
             });
-
         }
 
-        const unique = [];
+        console.log(
+            `Kocaeli Seyret: ${events.length} etkinlik bulundu (${usedUrl})`
+        );
 
-        const seen =
-            new Set();
+        return events.map(event => {
+            const copy = { ...event };
+            delete copy.duplicateKey;
+            return copy;
+        });
 
-        for (const event of events) {
-
-            const key =
-                [
-                    event.title,
-                    event.date,
-                    event.time,
-                    event.venue
-                ]
-                    .join("|")
-                    .toLocaleLowerCase(
-                        "tr-TR"
-                    );
-
-            if (seen.has(key)) continue;
-
-            seen.add(key);
-
-            unique.push(event);
-
-        }
-
-        return unique;
-
-    }
-    catch (error) {
-
-        console.error(
-            "Kocaeli Seyret:",
-            error.message
+    } catch (error) {
+        console.log(
+            `Kocaeli Seyret parser hatası: ${error.message}`
         );
 
         return [];
-
     }
 }
 
