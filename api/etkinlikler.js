@@ -1004,314 +1004,231 @@ async function getVoleybolEtkinlikleri() {
 // ============================================================
 // BASKETBOL
 // ============================================================
-// TBF erişimi engellenirse API'nin tamamı çökmez.
-// Basketbol kaynağını ayrı olarak ele alıyoruz.
+// TBF'nin genel sayfaları (ana sayfa, /ligler) fikstür bilgisi
+// içermiyor - onlar sadece tanıtım/duyuru sayfaları. Bu yüzden
+// Kocaeli'nin Basketbol Süper Ligi takımı Glint Körfez Basket
+// için Flashscore'un takım sayfasını kullanıyoruz. O sayfa,
+// "Sonraki maçlar: 04.10. Fenerbahçe - Korfez Basket, ..."
+// şeklinde düz metin bir özet cümlesi içeriyor; onu ayrıştırıyoruz.
+// Erişim engellenir veya sayfa yapısı değişirse tüm API'yi
+// bozmadan sessizce boş döner.
 // ============================================================
 
-async function getBasketbolEtkinlikleri() {
+const BASKETBOL_TAKIMLARI = [
 
-    const urls = [
+    {
 
-        "https://www.tbf.org.tr/",
+        adi: "Glint Körfez Basket",
 
-        "https://www.tbf.org.tr/ligler"
+        url:
+            "https://www.flashscore.com.tr/takim/korfez-basket/pbAAjuKU/",
 
-    ];
+        eslesmeAnahtari:
+            /korfez|körfez/i
 
-    const kocaeliTeams = [
+    }
 
-        "Biotekno Körfez Basket",
-        "Glint Körfez Basket",
-        "Körfez Basket",
-        "Çayırova Belediyesi",
-        "Kocaeli Büyükşehir Belediye Kağıtspor",
-        "Kocaeli Büyükşehir Belediye Kağıt Spor",
-        "Kocaeli BBSK"
+    // İleride başka bir Kocaeli takımı (ör. Çayırova
+    // Belediyesi) eklenmek istenirse buraya aynı formatta
+    // bir kayıt daha eklenebilir.
 
-    ];
+];
+
+
+function parseFlashscoreSonrakiMaclar(
+    cleanedText,
+    team
+) {
+
+    const helpMatch =
+        cleanedText.match(
+            /Sonraki maçlar\s*:\s*(.+?)(?:\s+Daha fazlası|\s+FUTBOL|\s+Diğer Sporlar|\s+Livescore|$)/i
+        );
+
+    if (!helpMatch) return [];
+
+    const raw =
+        helpMatch[1];
+
+    // "04.10. Fenerbahçe - Korfez Basket" gibi parçalara ayır.
+    const parts =
+        raw.match(
+            /\d{1,2}\.\s*\d{1,2}\.\s*[^,]+?(?:-\s*[^,]+)?(?=,\s*\d{1,2}\.\s*\d{1,2}\.|$)/g
+        ) || [];
+
+    const now =
+        new Date();
+
+    const currentYear =
+        now.getFullYear();
+
+    const currentMonth =
+        now.getMonth() + 1;
 
     const events = [];
 
-    try {
+    for (const part of parts) {
 
-        for (const url of urls) {
+        const match =
+            part.match(
+                /(\d{1,2})\.\s*(\d{1,2})\.\s*(.+?)\s*-\s*(.+)/
+            );
 
-            let html = "";
+        if (!match) continue;
 
-            try {
+        const day =
+            match[1].padStart(2, "0");
 
-                html =
-                    await fetchWithTimeout(
-                        url,
-                        15000
-                    );
+        const month =
+            match[2].padStart(2, "0");
 
-            }
-            catch (error) {
+        const monthNum =
+            parseInt(match[2], 10);
 
-                // TBF 403/engelleme durumunda
-                // tüm API'yi bozma.
-                console.warn(
-                    "Basketbol kaynağı erişilemedi:",
-                    error.message
+        const year =
+            monthNum < currentMonth
+                ? currentYear + 1
+                : currentYear;
+
+        const teamA =
+            cleanText(match[3]);
+
+        const teamB =
+            cleanText(match[4]);
+
+        if (!teamA || !teamB) continue;
+
+        const homeIsKocaeli =
+            team.eslesmeAnahtari.test(
+                teamA
+            );
+
+        const opponent =
+            homeIsKocaeli
+                ? teamB
+                : teamA;
+
+        events.push({
+
+            title:
+                `${teamA} × ${teamB}`,
+
+            description:
+                `${team.adi} - ${opponent} basketbol karşılaşması`,
+
+            date:
+                `${day}.${month}.${year}`,
+
+            isoDate:
+                `${year}-${month}-${day}`,
+
+            time: "",
+
+            venue:
+                homeIsKocaeli
+                    ? "Kocaeli"
+                    : `Deplasman (${teamA})`,
+
+            category:
+                "spor",
+
+            sport:
+                "Basketbol",
+
+            homeTeam:
+                teamA,
+
+            awayTeam:
+                teamB,
+
+            link:
+                team.url,
+
+            source:
+                "Flashscore"
+
+        });
+
+    }
+
+    return events;
+
+}
+
+
+async function getBasketbolEtkinlikleri() {
+
+    const events = [];
+
+    for (const team of BASKETBOL_TAKIMLARI) {
+
+        try {
+
+            const html =
+                await fetchWithTimeout(
+                    team.url,
+                    15000
                 );
 
-                continue;
+            const cleaned =
+                cleanText(html);
 
-            }
-
-            if (!html) continue;
-
-            const lowerHtml =
-                cleanText(html)
-                    .toLocaleLowerCase(
-                        "tr-TR"
-                    );
-
-            const hasKocaeliTeam =
-                kocaeliTeams.some(
-                    team =>
-                        lowerHtml.includes(
-                            team.toLocaleLowerCase(
-                                "tr-TR"
-                            )
-                        )
+            const teamEvents =
+                parseFlashscoreSonrakiMaclar(
+                    cleaned,
+                    team
                 );
 
-            if (!hasKocaeliTeam) {
-                continue;
-            }
+            events.push(
+                ...teamEvents
+            );
 
-            // Açık tarih/saat bilgilerini ara.
-            const dateMatches =
-                [
-                    ...html.matchAll(
-                        /(\d{1,2})[./-](\d{1,2})[./-](20\d{2})[\s\S]{0,250}?\b(\d{1,2}):(\d{2})\b/g
-                    )
-                ];
+        }
+        catch (error) {
 
-            for (const match of dateMatches) {
+            // Bir takımın kaynağı engellenirse/başarısız
+            // olursa tüm API'yi bozma, sessizce atla.
+            console.warn(
+                "Basketbol kaynağı erişilemedi (" +
+                team.adi +
+                "):",
+                error.message
+            );
 
-                const day =
-                    match[1].padStart(2, "0");
-
-                const month =
-                    match[2].padStart(2, "0");
-
-                const year =
-                    match[3];
-
-                const time =
-                    `${match[4].padStart(2, "0")}:${match[5]}`;
-
-                const date =
-                    `${day}.${month}.${year}`;
-
-                const isoDate =
-                    `${year}-${month}-${day}`;
-
-                const start =
-                    Math.max(
-                        0,
-                        match.index - 1800
-                    );
-
-                const end =
-                    Math.min(
-                        html.length,
-                        match.index + 1800
-                    );
-
-                const block =
-                    cleanText(
-                        html.substring(
-                            start,
-                            end
-                        )
-                    );
-
-                const lowerBlock =
-                    block.toLocaleLowerCase(
-                        "tr-TR"
-                    );
-
-                const kocaeliTeam =
-                    kocaeliTeams.find(
-                        team =>
-                            lowerBlock.includes(
-                                team.toLocaleLowerCase(
-                                    "tr-TR"
-                                )
-                            )
-                    );
-
-                if (!kocaeliTeam) {
-                    continue;
-                }
-
-                // Bilinen rakip adaylarını linklerden veya
-                // metinden çıkarmaya çalış.
-                const candidates = [];
-
-                const teamRegex =
-                    /[A-ZÇĞİÖŞÜ][A-Za-zÇĞİÖŞÜçğıöşü0-9.&'’\- ]{2,60}/g;
-
-                const textMatches =
-                    block.match(teamRegex) || [];
-
-                for (const candidate of textMatches) {
-
-                    const name =
-                        cleanText(candidate);
-
-                    if (!name) continue;
-
-                    if (
-                        name.length < 3 ||
-                        name.length > 70
-                    ) {
-                        continue;
-                    }
-
-                    if (
-                        /türkiye basketbol federasyonu|puan durumu|fikstür|basketbol ligi|spor salonu/i.test(
-                            name
-                        )
-                    ) {
-                        continue;
-                    }
-
-                    if (
-                        name.toLocaleLowerCase(
-                            "tr-TR"
-                        ) ===
-                        kocaeliTeam.toLocaleLowerCase(
-                            "tr-TR"
-                        )
-                    ) {
-                        continue;
-                    }
-
-                    if (
-                        !candidates.some(
-                            item =>
-                                item.toLocaleLowerCase(
-                                    "tr-TR"
-                                ) ===
-                                name.toLocaleLowerCase(
-                                    "tr-TR"
-                                )
-                        )
-                    ) {
-
-                        candidates.push(name);
-
-                    }
-
-                }
-
-                const opponent =
-                    candidates.find(
-                        candidate =>
-                            !kocaeliTeams.some(
-                                team =>
-                                    candidate
-                                        .toLocaleLowerCase(
-                                            "tr-TR"
-                                        )
-                                        .includes(
-                                            team.toLocaleLowerCase(
-                                                "tr-TR"
-                                            )
-                                        )
-                            )
-                    );
-
-                if (!opponent) {
-                    continue;
-                }
-
-                events.push({
-
-                    title:
-                        `${kocaeliTeam} × ${opponent}`,
-
-                    description:
-                        `${kocaeliTeam} - ${opponent} basketbol karşılaşması`,
-
-                    date,
-
-                    isoDate,
-
-                    time,
-
-                    venue:
-                        "Kocaeli",
-
-                    category:
-                        "spor",
-
-                    sport:
-                        "Basketbol",
-
-                    homeTeam:
-                        kocaeliTeam,
-
-                    awayTeam:
-                        opponent,
-
-                    link:
-                        url,
-
-                    source:
-                        "Türkiye Basketbol Federasyonu"
-
-                });
-
-            }
+            continue;
 
         }
 
-        const unique = [];
+    }
 
-        const seen =
-            new Set();
+    const unique = [];
 
-        for (const event of events) {
+    const seen =
+        new Set();
 
-            const key =
-                [
-                    event.date,
-                    event.time,
-                    event.homeTeam,
-                    event.awayTeam
-                ]
-                    .join("|")
-                    .toLocaleLowerCase(
-                        "tr-TR"
-                    );
+    for (const event of events) {
 
-            if (seen.has(key)) continue;
+        const key =
+            [
+                event.date,
+                event.homeTeam,
+                event.awayTeam
+            ]
+                .join("|")
+                .toLocaleLowerCase(
+                    "tr-TR"
+                );
 
-            seen.add(key);
+        if (seen.has(key)) continue;
 
-            unique.push(event);
+        seen.add(key);
 
-        }
-
-        return unique;
+        unique.push(event);
 
     }
-    catch (error) {
 
-        console.error(
-            "Basketbol:",
-            error.message
-        );
+    return unique;
 
-        return [];
-
-    }
 }
 
 
@@ -1415,6 +1332,7 @@ async function getAllEvents() {
     );
 
     return unique;
+
 }
 
 
