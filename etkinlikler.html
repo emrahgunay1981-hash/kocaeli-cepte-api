@@ -1298,138 +1298,192 @@ function sporEtkinligiMi(event) {
    ETKİNLİK KARTI
 ========================================================= */
 
-function createEventCard(
-  event
-) {
+function createEventCard(event) {
 
-  const title =
-    escapeHtml(
-      event.title ||
-      "Etkinlik"
+  const title = escapeHtml(
+    event.title || "Etkinlik"
+  );
+
+  /* =========================
+     TARİH
+  ========================= */
+
+  let date = "";
+
+  if (event.date || event.isoDate) {
+
+    const rawDate = event.date || event.isoDate;
+
+    const d = new Date(rawDate);
+
+    if (!isNaN(d.getTime())) {
+
+      const months = [
+        "Ocak",
+        "Şubat",
+        "Mart",
+        "Nisan",
+        "Mayıs",
+        "Haziran",
+        "Temmuz",
+        "Ağustos",
+        "Eylül",
+        "Ekim",
+        "Kasım",
+        "Aralık"
+      ];
+
+      const days = [
+        "Pazar",
+        "Pazartesi",
+        "Salı",
+        "Çarşamba",
+        "Perşembe",
+        "Cuma",
+        "Cumartesi"
+      ];
+
+      /*
+        ISO tarihindeki günü doğrudan kullanıyoruz.
+        Böylece Türkiye saat farkı tarihi değiştirmiyor.
+      */
+
+      const year = d.getUTCFullYear();
+      const month = months[d.getUTCMonth()];
+      const day = d.getUTCDate();
+      const weekday = days[d.getUTCDay()];
+
+      date = `${day} ${month} ${year}, ${weekday}`;
+    }
+  }
+
+  /* =========================
+     SAAT
+  ========================= */
+
+  let time = "";
+
+  if (event.time) {
+
+    const match = String(event.time).match(
+      /(\d{1,2}):(\d{2})/
     );
 
+    if (match) {
 
-  const date =
-    formatDate(
-      event.date ||
-      event.isoDate ||
-      ""
-    );
+      time =
+        match[1].padStart(2, "0") +
+        ":" +
+        match[2];
+    }
+  }
 
+  /* =========================
+     MEKAN
+  ========================= */
 
-  const time =
-    event.time
-      ? escapeHtml(
-          event.time
-        )
-      : "";
+  const venue = event.venue
+    ? escapeHtml(event.venue)
+    : "";
 
+  /* =========================
+     AÇIKLAMA TEMİZLE
+  ========================= */
 
-  const venue =
-    event.venue
-      ? escapeHtml(
-          event.venue
-        )
-      : "";
+  let description = event.description || "";
 
+  description = String(description)
+    .replace(/<[^>]*>/g, " ")
+    .replace(
+      /\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z?\b/g,
+      " "
+    )
+    .replace(
+      /\b\d{1,2}[./]\d{1,2}[./]\d{2,4}\b/g,
+      " "
+    )
+    .replace(
+      /\b\d{1,2}\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+\d{4}\b/gi,
+      " "
+    )
+    .replace(/\b\d{1,2}:\d{2}\b/g, " ")
+    .replace(/Bilet\s*Al\s*\/?\s*Detay/gi, " ")
+    .replace(/\s*[•|]\s*/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[\s\-–—:,.]+|[\s\-–—:,.]+$/g, "")
+    .trim();
 
-  const description =
-    event.description
-      ? escapeHtml(
-          event.description
-        )
-      : "";
+  description = escapeHtml(description);
 
+  /* =========================
+     META
+  ========================= */
 
-  const link =
-    event.link
-      ? String(
-          event.link
-        )
-      : "";
+  let metaHtml = "";
 
+  if (date || time || venue) {
 
-  let metaHtml =
-    "";
-
-
-  if (
-    date ||
-    time ||
-    venue
-  ) {
-
-    metaHtml +=
-      `<div class="event-meta">`;
-
+    metaHtml += `
+      <div class="event-meta">
+    `;
 
     if (date) {
 
-      metaHtml +=
-        `
-          <span class="meta-item">
-            📅 ${date}
-          </span>
-        `;
-
+      metaHtml += `
+        <span class="meta-item">
+          📅 ${date}
+        </span>
+      `;
     }
-
 
     if (time) {
 
-      metaHtml +=
-        `
-          <span class="meta-item">
-            🕐 ${time}
-          </span>
-        `;
-
+      metaHtml += `
+        <span class="meta-item">
+          🕒 ${time}
+        </span>
+      `;
     }
-
 
     if (venue) {
 
-      metaHtml +=
-        `
-          <span class="meta-item">
-            📍 ${venue}
-          </span>
-        `;
-
+      metaHtml += `
+        <span class="meta-item">
+          📍 ${venue}
+        </span>
+      `;
     }
 
-
-    metaHtml +=
-      `</div>`;
-
+    metaHtml += `
+      </div>
+    `;
   }
 
+  /* =========================
+     LİNK
+  ========================= */
 
+  let linkHtml = "";
 
-  let linkHtml =
-    "";
+  if (event.link) {
 
-
-  if (link) {
-
-    linkHtml =
-      `
-        <a
-          class="event-link"
-          href="${escapeHtml(link)}"
-          target="_blank"
-          rel="noopener"
-        >
-          Bilet Al / Detay →
-        </a>
-      `;
-
+    linkHtml = `
+      <a
+        class="event-link"
+        href="${escapeHtml(String(event.link))}"
+        target="_blank"
+        rel="noopener"
+      >
+        Bilet Al / Detay →
+      </a>
+    `;
   }
 
-
+  /* =========================
+     KART
+  ========================= */
 
   return `
-
     <article class="event-card">
 
       <h3 class="event-title">
@@ -1451,9 +1505,7 @@ function createEventCard(
       ${linkHtml}
 
     </article>
-
   `;
-
 }
 
 
