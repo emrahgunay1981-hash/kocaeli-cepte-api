@@ -11,7 +11,7 @@ let cache = {
 
 
 // ============================================================
-// HTML TEMİZLEME
+// HTML ENTITY ÇÖZÜMLEME
 // ============================================================
 
 function decodeHtmlEntities(text) {
@@ -19,6 +19,7 @@ function decodeHtmlEntities(text) {
     if (!text) return "";
 
     const entities = {
+
         "&nbsp;": " ",
         "&amp;": "&",
         "&quot;": '"',
@@ -26,54 +27,80 @@ function decodeHtmlEntities(text) {
         "&#39;": "'",
         "&lt;": "<",
         "&gt;": ">",
+
         "&uuml;": "ü",
         "&Uuml;": "Ü",
+
         "&ouml;": "ö",
         "&Ouml;": "Ö",
+
         "&ccedil;": "ç",
         "&Ccedil;": "Ç",
+
         "&scedil;": "ş",
         "&Scedil;": "Ş",
+
         "&gbreve;": "ğ",
         "&Gbreve;": "Ğ",
+
         "&inodot;": "ı",
         "&Idot;": "İ"
     };
+
 
     text = text.replace(
         /&[a-zA-Z0-9#]+;/g,
         entity => entities[entity] || entity
     );
 
+
     text = text.replace(
         /&#(\d+);/g,
         (_, code) => {
+
             try {
+
                 return String.fromCodePoint(
                     parseInt(code, 10)
                 );
+
             } catch {
+
                 return _;
+
             }
+
         }
     );
+
 
     text = text.replace(
         /&#x([0-9a-fA-F]+);/g,
         (_, code) => {
+
             try {
+
                 return String.fromCodePoint(
                     parseInt(code, 16)
                 );
+
             } catch {
+
                 return _;
+
             }
+
         }
     );
+
 
     return text;
 }
 
+
+// ============================================================
+// TEMİZ METİN
+// ============================================================
 
 function cleanText(text) {
 
@@ -81,39 +108,46 @@ function cleanText(text) {
 
     let value = String(text);
 
+
     value = value.replace(
         /<script[\s\S]*?<\/script>/gi,
         " "
     );
+
 
     value = value.replace(
         /<style[\s\S]*?<\/style>/gi,
         " "
     );
 
+
     value = value.replace(
         /<br\s*\/?>/gi,
         " "
     );
+
 
     value = value.replace(
         /<[^>]*>/g,
         " "
     );
 
+
     value = decodeHtmlEntities(value);
+
 
     value = value.replace(
         /\s+/g,
         " "
     );
 
+
     return value.trim();
 }
 
 
 // ============================================================
-// FETCH
+// TIMEOUTLU FETCH
 // ============================================================
 
 async function fetchWithTimeout(
@@ -124,11 +158,13 @@ async function fetchWithTimeout(
     const controller =
         new AbortController();
 
+
     const timer =
         setTimeout(
             () => controller.abort(),
             timeout
         );
+
 
     try {
 
@@ -136,18 +172,23 @@ async function fetchWithTimeout(
             await fetch(
                 url,
                 {
+
                     signal:
                         controller.signal,
 
                     headers: {
+
                         "User-Agent":
                             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130 Safari/537.36",
 
                         "Accept":
                             "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+
                     }
+
                 }
             );
+
 
         if (!response.ok) {
 
@@ -157,33 +198,40 @@ async function fetchWithTimeout(
 
         }
 
+
         return await response.text();
 
-    } finally {
+    }
+    finally {
 
         clearTimeout(timer);
 
     }
+
 }
 
 
 // ============================================================
-// TARİH
+// TARİHİ ISO'YA ÇEVİR
 // ============================================================
 
 function parseEventDate(dateText) {
 
     if (!dateText) return null;
 
+
     const value =
         cleanText(dateText);
+
 
     const match =
         value.match(
             /(\d{1,2})[./-](\d{1,2})[./-](20\d{2})/
         );
 
+
     if (!match) return null;
+
 
     return (
         match[3] +
@@ -192,11 +240,13 @@ function parseEventDate(dateText) {
         "-" +
         match[1].padStart(2, "0")
     );
+
 }
 
 
 // ============================================================
-// BELEDİYE ETKİNLİKLERİ
+// GENEL ETKİNLİKLER
+// KOCAELİ BÜYÜKŞEHİR BELEDİYESİ
 // ============================================================
 
 async function getBelediyeEtkinlikleri() {
@@ -204,19 +254,25 @@ async function getBelediyeEtkinlikleri() {
     const url =
         "https://kultursanat.kocaeli.bel.tr/etkinlik/feed/";
 
+
     try {
 
         const xml =
             await fetchWithTimeout(url);
+
 
         const items =
             xml.match(
                 /<item[\s\S]*?<\/item>/gi
             ) || [];
 
+
         const events = [];
 
-        for (const item of items) {
+
+        for (
+            const item of items
+        ) {
 
             const title =
                 cleanText(
@@ -227,6 +283,7 @@ async function getBelediyeEtkinlikleri() {
                     )[1] || ""
                 );
 
+
             const description =
                 cleanText(
                     (
@@ -235,6 +292,7 @@ async function getBelediyeEtkinlikleri() {
                         ) || []
                     )[1] || ""
                 );
+
 
             const link =
                 cleanText(
@@ -245,6 +303,7 @@ async function getBelediyeEtkinlikleri() {
                     )[1] || ""
                 );
 
+
             const pubDate =
                 cleanText(
                     (
@@ -254,35 +313,60 @@ async function getBelediyeEtkinlikleri() {
                     )[1] || ""
                 );
 
-            if (!title) continue;
+
+            if (!title) {
+                continue;
+            }
+
 
             const lower =
                 (
                     title +
                     " " +
                     description
-                ).toLocaleLowerCase("tr-TR");
+                )
+                    .toLocaleLowerCase(
+                        "tr-TR"
+                    );
+
 
             let category =
                 "genel";
 
+
             if (
-                /konser|müzik|muzik|dj|şarkıcı|sarkici/.test(lower)
+                /konser|müzik|muzik|dj|şarkıcı|sarkici/.test(
+                    lower
+                )
             ) {
-                category = "konser";
+
+                category =
+                    "konser";
+
             }
 
             else if (
-                /tiyatro|sahne|müzikali|muzikali/.test(lower)
+                /tiyatro|sahne|müzikali|muzikali/.test(
+                    lower
+                )
             ) {
-                category = "tiyatro";
+
+                category =
+                    "tiyatro";
+
             }
 
             else if (
-                /çocuk|cocuk/.test(lower)
+                /çocuk|cocuk/.test(
+                    lower
+                )
             ) {
-                category = "çocuk";
+
+                category =
+                    "çocuk";
+
             }
+
 
             events.push({
 
@@ -313,10 +397,10 @@ async function getBelediyeEtkinlikleri() {
 
         }
 
+
         return events;
 
     }
-
     catch (error) {
 
         console.error(
@@ -324,9 +408,11 @@ async function getBelediyeEtkinlikleri() {
             error.message
         );
 
+
         return [];
 
     }
+
 }
 
 
@@ -339,35 +425,54 @@ async function getSeyretEtkinlikleri() {
     const url =
         "https://www.kocaeliseyret.com/kocaeli-etkinlikler";
 
+
     try {
 
         const html =
             await fetchWithTimeout(url);
 
+
         const events = [];
+
 
         const headingRegex =
             /<(h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>/gi;
 
-        const matches =
-            [...html.matchAll(headingRegex)];
 
-        const ignored = [
+        const matches =
+            [...html.matchAll(
+                headingRegex
+            )];
+
+
+        const ignoredTitles = [
 
             "içeriğe geç",
+
             "hava durumu",
+
             "gezilecek yerler",
+
             "bilet al / detay",
+
             "etkinlikler",
+
             "anasayfa",
+
             "ana sayfa",
+
             "ulaşım",
+
             "şehir & yaşam",
+
             "kocaeli seyret",
+
             "haberler",
+
             "spor"
 
         ];
+
 
         for (
             let i = 0;
@@ -380,29 +485,39 @@ async function getSeyretEtkinlikleri() {
                     matches[i][2]
                 );
 
-            if (!title) continue;
+
+            if (!title) {
+                continue;
+            }
+
 
             const lowerTitle =
                 title.toLocaleLowerCase(
                     "tr-TR"
                 );
 
+
             if (
-                ignored.includes(
+                ignoredTitles.includes(
                     lowerTitle
                 )
             ) {
+
                 continue;
+
             }
+
 
             const start =
                 matches[i].index +
                 matches[i][0].length;
 
+
             const end =
                 i + 1 < matches.length
                     ? matches[i + 1].index
                     : html.length;
+
 
             const block =
                 html.substring(
@@ -410,29 +525,36 @@ async function getSeyretEtkinlikleri() {
                     end
                 );
 
+
             const blockText =
                 cleanText(block);
+
 
             const dateTime =
                 blockText.match(
                     /(\d{1,2}\s+(?:Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+20\d{2})\s*,?\s*[A-Za-zÇĞİÖŞÜçğıöşü]+\s+(\d{1,2}:\d{2})/i
                 );
 
+
             if (!dateTime) {
                 continue;
             }
 
+
             const date =
                 dateTime[1];
 
+
             const time =
                 dateTime[2];
+
 
             let afterDate =
                 blockText.substring(
                     dateTime.index +
                     dateTime[0].length
                 );
+
 
             afterDate =
                 afterDate
@@ -442,14 +564,19 @@ async function getSeyretEtkinlikleri() {
                     )
                     .trim();
 
+
             let venue = "";
+
 
             const venueParts =
                 afterDate.split(
                     /Bilet\s*Al|Detay|Biletix|Satın\s*Al/i
                 );
 
-            if (venueParts[0]) {
+
+            if (
+                venueParts[0]
+            ) {
 
                 venue =
                     cleanText(
@@ -458,11 +585,15 @@ async function getSeyretEtkinlikleri() {
 
             }
 
+
             if (
                 venue.length > 180
             ) {
+
                 venue = "";
+
             }
+
 
             const links =
                 [
@@ -471,7 +602,9 @@ async function getSeyretEtkinlikleri() {
                     )
                 ];
 
+
             let link = "";
+
 
             for (
                 const item of links
@@ -479,6 +612,7 @@ async function getSeyretEtkinlikleri() {
 
                 const candidate =
                     item[1];
+
 
                 if (
                     /bilet|detay|etkinlik|event/i.test(
@@ -495,6 +629,7 @@ async function getSeyretEtkinlikleri() {
 
             }
 
+
             if (
                 !link &&
                 links.length
@@ -504,6 +639,7 @@ async function getSeyretEtkinlikleri() {
                     links[0][1];
 
             }
+
 
             if (
                 link &&
@@ -516,8 +652,10 @@ async function getSeyretEtkinlikleri() {
 
             }
 
+
             let category =
                 "genel";
+
 
             if (
                 /konser|müzik|muzik|dj|şarkıcı|sarkici|sanatçı|sanatci/.test(
@@ -563,6 +701,7 @@ async function getSeyretEtkinlikleri() {
 
             }
 
+
             events.push({
 
                 title,
@@ -592,10 +731,53 @@ async function getSeyretEtkinlikleri() {
 
         }
 
-        return events;
+
+        // Duplicate temizle
+
+        const unique = [];
+
+        const seen =
+            new Set();
+
+
+        for (
+            const event of events
+        ) {
+
+            const key =
+                [
+                    event.title,
+                    event.date,
+                    event.time,
+                    event.venue
+                ]
+                    .join("|")
+                    .toLocaleLowerCase(
+                        "tr-TR"
+                    );
+
+
+            if (
+                seen.has(key)
+            ) {
+
+                continue;
+
+            }
+
+
+            seen.add(key);
+
+            unique.push(
+                event
+            );
+
+        }
+
+
+        return unique;
 
     }
-
     catch (error) {
 
         console.error(
@@ -603,9 +785,11 @@ async function getSeyretEtkinlikleri() {
             error.message
         );
 
+
         return [];
 
     }
+
 }
 
 
@@ -617,47 +801,84 @@ function looksLikeTeam(value) {
 
     if (!value) return false;
 
+
     const text =
         cleanText(value);
 
-    if (text.length < 3) {
-        return false;
-    }
-
-    // 2LK / 1LK / 2BK gibi lig kodlarını ele
-    if (
-        /^\d+\s*[A-ZÇĞİÖŞÜ]{1,5}$/i.test(text)
-    ) {
-        return false;
-    }
 
     if (
-        /^\d+[A-ZÇĞİÖŞÜ]{1,5}$/i.test(text)
+        text.length < 3
     ) {
+
         return false;
+
     }
 
-    if (
-        /\b\d{1,2}:\d{2}\b/.test(text)
-    ) {
-        return false;
-    }
+
+    // 2LK / 1LK / 2BK gibi lig kodlarını engelle
 
     if (
-        /SPOR SALONU|SPOR KOMPLEKSİ|SPOR KOMPLEKSI/i.test(text)
+        /^\d+\s*[A-ZÇĞİÖŞÜ]{1,5}$/i.test(
+            text
+        )
     ) {
+
         return false;
+
     }
 
+
     if (
-        /^(tarih|saat|salon|yer|takım|takim|maç|mac|kategori|lig)$/i.test(text)
+        /^\d+[A-ZÇĞİÖŞÜ]{1,5}$/i.test(
+            text
+        )
     ) {
+
         return false;
+
     }
+
+
+    if (
+        /\b\d{1,2}:\d{2}\b/.test(
+            text
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        /SPOR SALONU|SPOR KOMPLEKSİ|SPOR KOMPLEKSI/i.test(
+            text
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        /^(tarih|saat|salon|yer|takım|takim|maç|mac|kategori|lig)$/i.test(
+            text
+        )
+    ) {
+
+        return false;
+
+    }
+
 
     return true;
 }
 
+
+// ============================================================
+// SAAT BUL
+// ============================================================
 
 function findTime(values) {
 
@@ -669,6 +890,7 @@ function findTime(values) {
             cleanText(value).match(
                 /\b([01]?\d|2[0-3]):([0-5]\d)\b/
             );
+
 
         if (match) {
 
@@ -682,9 +904,14 @@ function findTime(values) {
 
     }
 
+
     return "";
 }
 
+
+// ============================================================
+// TARİH BUL
+// ============================================================
 
 function findDate(values) {
 
@@ -696,6 +923,7 @@ function findDate(values) {
             cleanText(value).match(
                 /\b(\d{1,2})[./-](\d{1,2})[./-](20\d{2})\b/
             );
+
 
         if (match) {
 
@@ -711,9 +939,14 @@ function findDate(values) {
 
     }
 
+
     return "";
 }
 
+
+// ============================================================
+// SALON BUL
+// ============================================================
 
 function findVenue(values) {
 
@@ -724,8 +957,11 @@ function findVenue(values) {
         const text =
             cleanText(value);
 
+
         if (
-            /SPOR SALONU|SPOR KOMPLEKSİ|SPOR KOMPLEKSI|SPOR TESİSLERİ|SPOR TESISLERI|KAPALI SPOR/i.test(text)
+            /SPOR SALONU|SPOR KOMPLEKSİ|SPOR KOMPLEKSI|SPOR TESİSLERİ|SPOR TESISLERI|KAPALI SPOR/i.test(
+                text
+            )
         ) {
 
             return text;
@@ -734,9 +970,14 @@ function findVenue(values) {
 
     }
 
+
     return "";
 }
 
+
+// ============================================================
+// TAKIMLARI BUL
+// ============================================================
 
 function findTeams(
     values,
@@ -747,6 +988,7 @@ function findTeams(
 
     const teams = [];
 
+
     for (
         const value of values
     ) {
@@ -754,68 +996,109 @@ function findTeams(
         const text =
             cleanText(value);
 
-        if (!looksLikeTeam(text)) {
+
+        if (
+            !looksLikeTeam(text)
+        ) {
+
             continue;
+
         }
+
 
         if (
             venue &&
             text === venue
         ) {
+
             continue;
+
         }
+
 
         if (
             time &&
             text.includes(time)
         ) {
+
             continue;
+
         }
+
 
         if (
             date &&
             text.includes(date)
         ) {
+
             continue;
+
         }
+
 
         if (
             !teams.some(
                 item =>
-                    item.toLocaleLowerCase("tr-TR") ===
-                    text.toLocaleLowerCase("tr-TR")
+                    item.toLocaleLowerCase(
+                        "tr-TR"
+                    ) ===
+                    text.toLocaleLowerCase(
+                        "tr-TR"
+                    )
             )
         ) {
 
-            teams.push(text);
+            teams.push(
+                text
+            );
 
         }
 
     }
 
-    return teams.slice(0, 2);
+
+    return teams.slice(
+        0,
+        2
+    );
+
 }
 
+
+// ============================================================
+// VOLEYBOL ETKİNLİKLERİ
+// ============================================================
 
 async function getVoleybolEtkinlikleri() {
 
     const url =
         "https://kocaeli.voleyboliltemsilciligi.com/";
 
+
     try {
 
         const html =
-            await fetchWithTimeout(url);
+            await fetchWithTimeout(
+                url
+            );
+
 
         const rows =
             html.match(
                 /<tr\b[^>]*>[\s\S]*?<\/tr>/gi
             ) || [];
 
+
         const events = [];
 
-        let currentDate = "";
-        let currentVenue = "";
+
+        let currentDate =
+            "";
+
+
+        let currentVenue =
+            "";
+
 
         for (
             const row of rows
@@ -826,60 +1109,87 @@ async function getVoleybolEtkinlikleri() {
                     /<t[dh]\b[^>]*>[\s\S]*?<\/t[dh]>/gi
                 ) || [];
 
+
             if (!cells.length) {
                 continue;
             }
+
 
             const values =
                 cells
                     .map(cleanText)
                     .filter(Boolean);
 
+
             if (!values.length) {
                 continue;
             }
 
+
             const rowText =
-                values.join(" | ");
+                values.join(
+                    " | "
+                );
+
 
             const dateMatch =
                 rowText.match(
                     /\b(\d{1,2})[./-](\d{1,2})[./-](20\d{2})\b/
                 );
 
-            if (dateMatch) {
+
+            if (
+                dateMatch
+            ) {
 
                 currentDate =
                     `${dateMatch[1].padStart(2, "0")}.${dateMatch[2].padStart(2, "0")}.${dateMatch[3]}`;
 
             }
 
+
             const venue =
-                findVenue(values);
+                findVenue(
+                    values
+                );
+
 
             if (venue) {
-                currentVenue = venue;
+
+                currentVenue =
+                    venue;
+
             }
 
+
             const time =
-                findTime(values);
+                findTime(
+                    values
+                );
+
 
             if (!time) {
                 continue;
             }
 
+
             const date =
-                findDate(values) ||
+                findDate(
+                    values
+                ) ||
                 currentDate;
+
 
             if (!date) {
                 continue;
             }
 
+
             const finalVenue =
                 venue ||
                 currentVenue ||
                 "";
+
 
             const teams =
                 findTeams(
@@ -889,23 +1199,37 @@ async function getVoleybolEtkinlikleri() {
                     date
                 );
 
+
             if (
                 teams.length < 2
             ) {
+
                 continue;
+
             }
+
 
             const homeTeam =
                 teams[0];
 
+
             const awayTeam =
                 teams[1];
 
+
             if (
-                homeTeam === awayTeam
+                homeTeam.toLocaleLowerCase(
+                    "tr-TR"
+                ) ===
+                awayTeam.toLocaleLowerCase(
+                    "tr-TR"
+                )
             ) {
+
                 continue;
+
             }
+
 
             events.push({
 
@@ -918,7 +1242,9 @@ async function getVoleybolEtkinlikleri() {
                 date,
 
                 isoDate:
-                    parseEventDate(date),
+                    parseEventDate(
+                        date
+                    ),
 
                 time,
 
@@ -945,10 +1271,54 @@ async function getVoleybolEtkinlikleri() {
 
         }
 
-        return events;
+
+        // Duplicate
+
+        const unique = [];
+
+        const seen =
+            new Set();
+
+
+        for (
+            const event of events
+        ) {
+
+            const key =
+                [
+                    event.date,
+                    event.time,
+                    event.venue,
+                    event.homeTeam,
+                    event.awayTeam
+                ]
+                    .join("|")
+                    .toLocaleLowerCase(
+                        "tr-TR"
+                    );
+
+
+            if (
+                seen.has(key)
+            ) {
+
+                continue;
+
+            }
+
+
+            seen.add(key);
+
+            unique.push(
+                event
+            );
+
+        }
+
+
+        return unique;
 
     }
-
     catch (error) {
 
         console.error(
@@ -956,682 +1326,617 @@ async function getVoleybolEtkinlikleri() {
             error.message
         );
 
+
         return [];
 
     }
+
 }
 
 
 // ============================================================
 // BASKETBOL
 // ============================================================
-// TBF ana sayfasındaki basketbol maçlarını tarar.
-// Kocaeli takımlarını otomatik seçer.
-//
-// Özellikle:
-// - Biotekno Körfez Basket
-// - Kocaeli Büyükşehir Belediye Kağıt Spor
-// - Çayırova Belediyesi
-// - Darıca Basketbol Feneri
-// gibi Kocaeli bağlantılı takımları yakalar.
-//
-// Ayrıca maç salonu Kocaeli ise maçı alır.
+// TBF kaynaklarından Kocaeli bağlantılı maçları bulur.
 // ============================================================
 
 async function getBasketbolEtkinlikleri() {
 
-    const url =
-        "https://www.tbf.org.tr/";
+    const urls = [
+
+        "https://www.tbf.org.tr/",
+
+        "https://www.tbf.org.tr/ligler"
+
+    ];
+
+
+    const kocaeliTeams = [
+
+        "Biotekno Körfez Basket",
+
+        "Glint Körfez Basket",
+
+        "Kocaeli Büyükşehir Belediye Kağıt Spor",
+
+        "Kocaeli Büyükşehir Belediye Kağıtspor",
+
+        "Kocaeli BBSK",
+
+        "Çayırova Belediyesi",
+
+        "Darıca Basketbol Feneri",
+
+        "Körfez Basket"
+
+    ];
+
+
+    const kocaeliVenues = [
+
+        "Şehit Polis Recep Topaloğlu Spor Salonu",
+
+        "Gebze Spor Salonu",
+
+        "Hergeleci İbrahim Spor Salonu",
+
+        "Şampiyon Hasan Gemici Spor Salonu",
+
+        "Derince Spor Salonu",
+
+        "Kandıra Spor Salonu",
+
+        "Çayırova Spor Salonu",
+
+        "Darıca Spor Salonu",
+
+        "Kocaeli Atatürk Spor Salonu"
+
+    ];
+
+
+    const events = [];
+
 
     try {
 
-        const html =
-            await fetchWithTimeout(
-                url
-            );
-
-        const text =
-            cleanText(html);
-
-        const events = [];
-
-
-        // ----------------------------------------------------
-        // Kocaeli takımları
-        // ----------------------------------------------------
-
-        const kocaeliTeams = [
-
-            "Biotekno Körfez Basket",
-
-            "Kocaeli Büyükşehir Belediye Kağıt Spor",
-
-            "Kocaeli Büyükşehir Belediye Kağıtspor",
-
-            "Kağıt Spor",
-
-            "Kocaeli BBSK",
-
-            "Çayırova Belediyesi",
-
-            "Darıca Basketbol Feneri"
-
-        ];
-
-
-        // ----------------------------------------------------
-        // HTML içindeki tarih/saat + takım eşleşmeleri
-        // ----------------------------------------------------
-
-        const dateRegex =
-            /(\d{2})\.(\d{2})\.(20\d{2})\s+(\d{1,2}):(\d{2})/g;
-
-
-        const dateMatches =
-            [...html.matchAll(dateRegex)];
-
-
         for (
-            const match of dateMatches
+            const url of urls
         ) {
 
-            const date =
-                `${match[1]}.${match[2]}.${match[3]}`;
-
-            const isoDate =
-                `${match[3]}-${match[2]}-${match[1]}`;
-
-            const time =
-                `${match[4].padStart(2, "0")}:${match[5]}`;
+            let html = "";
 
 
-            const start =
-                Math.max(
-                    0,
-                    match.index - 1500
-                );
+            try {
+
+                html =
+                    await fetchWithTimeout(
+                        url,
+                        20000
+                    );
+
+            }
+            catch {
+
+                continue;
+
+            }
 
 
-            const end =
-                Math.min(
-                    html.length,
-                    match.index + 3000
-                );
-
-
-            const block =
-                html.substring(
-                    start,
-                    end
-                );
-
-
-            const blockText =
-                cleanText(block);
-
-
-            // ------------------------------------------------
-            // Kocaeli takımı var mı?
-            // ------------------------------------------------
-
-            const matchedTeam =
-                kocaeliTeams.find(
-                    team =>
-                        blockText
-                            .toLocaleLowerCase("tr-TR")
-                            .includes(
-                                team.toLocaleLowerCase("tr-TR")
-                            )
-                );
-
-
-            if (!matchedTeam) {
+            if (!html) {
                 continue;
             }
 
 
             // ------------------------------------------------
-            // Takım isimlerini bul
+            // A) HTML içindeki açık tarih/saatleri ara
             // ------------------------------------------------
 
-            const teamPattern =
-                /([A-ZÇĞİÖŞÜa-zçğıöşü0-9&.\- ]{3,60})\s+(?:×|x|X|vs\.?|VS\.?)\s+([A-ZÇĞİÖŞÜa-zçğıöşü0-9&.\- ]{3,60})/;
+            const datePatterns = [
 
+                /(\d{1,2})[./-](\d{1,2})[./-](20\d{2})\s*(?:[-|,]|\s)+\s*(\d{1,2}):(\d{2})/g,
 
-            let homeTeam = "";
-            let awayTeam = "";
-
-
-            const teamMatch =
-                blockText.match(
-                    teamPattern
-                );
-
-
-            if (teamMatch) {
-
-                homeTeam =
-                    teamMatch[1].trim();
-
-                awayTeam =
-                    teamMatch[2].trim();
-
-            }
-
-
-            // ------------------------------------------------
-            // Takım bulunamadıysa Kocaeli takımını kullan
-            // ------------------------------------------------
-
-            if (
-                !homeTeam ||
-                !awayTeam
-            ) {
-
-                const knownTeam =
-                    kocaeliTeams.find(
-                        team =>
-                            blockText
-                                .toLocaleLowerCase("tr-TR")
-                                .includes(
-                                    team.toLocaleLowerCase("tr-TR")
-                                )
-                    );
-
-
-                if (!knownTeam) {
-                    continue;
-                }
-
-
-                const words =
-                    blockText
-                        .split(/\s+/)
-                        .filter(Boolean);
-
-
-                const index =
-                    words.findIndex(
-                        word =>
-                            knownTeam
-                                .toLocaleLowerCase("tr-TR")
-                                .includes(
-                                    word.toLocaleLowerCase("tr-TR")
-                                )
-                    );
-
-
-                // Bu durumda sadece bilinen Kocaeli takımını
-                // başlıkta göstermek yerine kaydı yine de
-                // oluşturabiliriz.
-
-                homeTeam =
-                    knownTeam;
-
-                awayTeam =
-                    "";
-
-            }
-
-
-            // ------------------------------------------------
-            // Salon bul
-            // ------------------------------------------------
-
-            let venue = "";
-
-
-            const venueMatch =
-                blockText.match(
-                    /([A-ZÇĞİÖŞÜa-zçğıöşü0-9 .,'’\-]+(?:Spor Salonu|Spor Kompleksi|Spor Merkezi|Spor Salonu))/i
-                );
-
-
-            if (venueMatch) {
-
-                venue =
-                    cleanText(
-                        venueMatch[1]
-                    );
-
-            }
-
-
-            // ------------------------------------------------
-            // Kocaeli salonları
-            // ------------------------------------------------
-
-            const kocaeliVenues = [
-
-                "Şehit Polis Recep Topaloğlu Spor Salonu",
-
-                "Gebze Spor Salonu",
-
-                "Hergeleci İbrahim Spor Salonu",
-
-                "Şampiyon Hasan Gemici Spor Salonu",
-
-                "Derince Spor Salonu",
-
-                "Kandıra Spor Salonu",
-
-                "Çayırova Spor Salonu",
-
-                "Darıca Spor Salonu",
-
-                "Kocaeli Atatürk Spor Salonu"
+                /(20\d{2})-(\d{2})-(\d{2})[^0-9]{0,30}(\d{1,2}):(\d{2})/g
 
             ];
 
 
-            const foundVenue =
-                kocaeliVenues.find(
-                    item =>
-                        blockText
-                            .toLocaleLowerCase("tr-TR")
-                            .includes(
-                                item.toLocaleLowerCase("tr-TR")
-                            )
-                );
-
-
-            if (foundVenue) {
-
-                venue =
-                    foundVenue;
-
-            }
-
-
-            // ------------------------------------------------
-            // Eğer salon Kocaeli'ye ait değilse:
-            // sadece Kocaeli takımı içeren maçları kabul et.
-            // ------------------------------------------------
-
-            if (
-                !venue &&
-                !matchedTeam
+            for (
+                const dateRegex
+                of datePatterns
             ) {
 
-                continue;
-
-            }
-
-
-            // ------------------------------------------------
-            // Link
-            // ------------------------------------------------
-
-            let link =
-                url;
+                const matches =
+                    [
+                        ...html.matchAll(
+                            dateRegex
+                        )
+                    ];
 
 
-            const hrefMatch =
-                block.match(
-                    /href=["']([^"']+)["']/i
-                );
-
-
-            if (
-                hrefMatch &&
-                hrefMatch[1]
-            ) {
-
-                link =
-                    hrefMatch[1];
-
-                if (
-                    link.startsWith("/")
+                for (
+                    const match
+                    of matches
                 ) {
 
-                    link =
-                        "https://www.tbf.org.tr" +
-                        link;
+                    let day;
+                    let month;
+                    let year;
+                    let hour;
+                    let minute;
 
-                }
 
-            }
+                    if (
+                        match[0].includes("-") &&
+                        /^\d{4}-/.test(
+                            match[0]
+                        )
+                    ) {
 
+                        year =
+                            match[1];
 
-            // ------------------------------------------------
-            // Başlık
-            // ------------------------------------------------
+                        month =
+                            match[2];
 
-            let title = "";
+                        day =
+                            match[3];
 
+                        hour =
+                            match[4];
 
-            if (
-                homeTeam &&
-                awayTeam
-            ) {
+                        minute =
+                            match[5];
 
-                title =
-                    `${homeTeam} × ${awayTeam}`;
+                    }
+                    else {
 
-            }
+                        day =
+                            match[1];
 
-            else {
+                        month =
+                            match[2];
 
-                title =
-                    `${matchedTeam} - Basketbol Maçı`;
+                        year =
+                            match[3];
 
-            }
+                        hour =
+                            match[4];
 
+                        minute =
+                            match[5];
 
-            // ------------------------------------------------
-            // Tekrar kontrol
-            // ------------------------------------------------
+                    }
 
-            const duplicate =
-                events.some(
-                    event =>
-                        event.date === date &&
-                        event.time === time &&
-                        event.title === title
-                );
 
+                    const date =
+                        `${day.padStart(2, "0")}.${month.padStart(2, "0")}.${year}`;
 
-            if (duplicate) {
-                continue;
-            }
 
+                    const isoDate =
+                        `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 
-            events.push({
 
-                title,
+                    const time =
+                        `${hour.padStart(2, "0")}:${minute}`;
 
-                description:
-                    `${title} basketbol karşılaşması`,
 
-                date,
+                    // ------------------------------------------------
+                    // Tarihin etrafındaki HTML alanı
+                    // ------------------------------------------------
 
-                isoDate,
+                    const start =
+                        Math.max(
+                            0,
+                            match.index - 2500
+                        );
 
-                time,
 
-                venue,
+                    const end =
+                        Math.min(
+                            html.length,
+                            match.index + 3500
+                        );
 
-                category:
-                    "spor",
 
-                sport:
-                    "Basketbol",
+                    const block =
+                        html.substring(
+                            start,
+                            end
+                        );
 
-                homeTeam,
 
-                awayTeam,
+                    const blockText =
+                        cleanText(
+                            block
+                        );
 
-                link,
 
-                source:
-                    "Türkiye Basketbol Federasyonu"
+                    const lowerBlock =
+                        blockText.toLocaleLowerCase(
+                            "tr-TR"
+                        );
 
-            });
 
-        }
+                    // ------------------------------------------------
+                    // Kocaeli takımı veya salonu var mı?
+                    // ------------------------------------------------
 
+                    const team =
+                        kocaeliTeams.find(
+                            item =>
+                                lowerBlock.includes(
+                                    item.toLocaleLowerCase(
+                                        "tr-TR"
+                                    )
+                                )
+                        );
 
-        return events;
 
-    }
+                    const venue =
+                        kocaeliVenues.find(
+                            item =>
+                                lowerBlock.includes(
+                                    item.toLocaleLowerCase(
+                                        "tr-TR"
+                                    )
+                                )
+                        );
 
-    catch (error) {
 
-        console.error(
-            "Basketbol:",
-            error.message
-        );
+                    if (
+                        !team &&
+                        !venue
+                    ) {
 
-        return [];
+                        continue;
 
-    }
-}
+                    }
 
 
-// ============================================================
-// ANA API
-// ============================================================
+                    // ------------------------------------------------
+                    // Linkleri bul
+                    // ------------------------------------------------
 
-export default async function handler(
-    req,
-    res
-) {
+                    const linkRegex =
+                        /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
 
-    res.setHeader(
-        "Access-Control-Allow-Origin",
-        "*"
-    );
 
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, OPTIONS"
-    );
+                    const candidates = [];
 
-    res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type"
-    );
 
+                    for (
+                        const linkMatch
+                        of block.matchAll(
+                            linkRegex
+                        )
+                    ) {
 
-    if (
-        req.method === "OPTIONS"
-    ) {
+                        const linkText =
+                            cleanText(
+                                linkMatch[2]
+                            );
 
-        return res
-            .status(200)
-            .end();
 
-    }
+                        if (!linkText) {
+                            continue;
+                        }
 
 
-    const now =
-        Date.now();
+                        if (
+                            linkText.length < 3
+                        ) {
+                            continue;
+                        }
 
 
-    // --------------------------------------------------------
-    // CACHE
-    // --------------------------------------------------------
+                        if (
+                            /ana sayfa|haberler|ligler|puan durumu|fikstür|takımlar|takimlar|canlı|canli/i.test(
+                                linkText
+                            )
+                        ) {
 
-    if (
-        cache.data &&
-        now - cache.timestamp <
-        CACHE_TIME
-    ) {
+                            continue;
 
-        return res
-            .status(200)
-            .json(
-                cache.data
-            );
+                        }
 
-    }
 
+                        candidates.push({
 
-    // --------------------------------------------------------
-    // TÜM KAYNAKLAR
-    // --------------------------------------------------------
+                            text:
+                                linkText,
 
-    const results =
-        await Promise.allSettled([
+                            href:
+                                linkMatch[1]
 
-            getBelediyeEtkinlikleri(),
+                        });
 
-            getSeyretEtkinlikleri(),
+                    }
 
-            getVoleybolEtkinlikleri(),
 
-            getBasketbolEtkinlikleri()
+                    // ------------------------------------------------
+                    // Takımları seç
+                    // ------------------------------------------------
 
-        ]);
+                    const possibleTeams =
+                        [];
 
 
-    let allEvents = [];
+                    for (
+                        const candidate
+                        of candidates
+                    ) {
 
+                        let name =
+                            cleanText(
+                                candidate.text
+                            );
 
-    for (
-        const result of results
-    ) {
 
-        if (
-            result.status === "fulfilled" &&
-            Array.isArray(result.value)
-        ) {
+                        if (
+                            !name
+                        ) {
+                            continue;
+                        }
 
-            allEvents =
-                allEvents.concat(
-                    result.value
-                );
 
-        }
+                        if (
+                            name.length > 80
+                        ) {
+                            continue;
+                        }
 
-    }
 
+                        if (
+                            /\d{1,2}:\d{2}/.test(
+                                name
+                            )
+                        ) {
+                            continue;
+                        }
 
-    // --------------------------------------------------------
-    // DUPLICATE TEMİZLE
-    // --------------------------------------------------------
 
-    const uniqueEvents = [];
+                        if (
+                            /basketbol|lig|fikstür|puan|türkiye basketbol federasyonu/i.test(
+                                name
+                            ) &&
+                            !kocaeliTeams.some(
+                                teamName =>
+                                    name
+                                        .toLocaleLowerCase(
+                                            "tr-TR"
+                                        )
+                                        .includes(
+                                            teamName.toLocaleLowerCase(
+                                                "tr-TR"
+                                            )
+                                        )
+                            )
+                        ) {
 
-    const seen =
-        new Set();
+                            continue;
 
+                        }
 
-    for (
-        const event of allEvents
-    ) {
 
-        const key =
-            [
-                event.title,
-                event.date,
-                event.time,
-                event.venue,
-                event.source
-            ]
-                .join("|")
-                .toLocaleLowerCase("tr-TR")
-                .trim();
+                        if (
+                            !possibleTeams.some(
+                                item =>
+                                    item.name
+                                        .toLocaleLowerCase(
+                                            "tr-TR"
+                                        ) ===
+                                    name
+                                        .toLocaleLowerCase(
+                                            "tr-TR"
+                                        )
+                            )
+                        ) {
 
+                            possibleTeams.push({
 
-        if (
-            seen.has(key)
-        ) {
-            continue;
-        }
+                                name,
 
+                                href:
+                                    candidate.href
 
-        seen.add(key);
+                            });
 
-        uniqueEvents.push(
-            event
-        );
+                        }
 
-    }
+                    }
 
 
-    // --------------------------------------------------------
-    // TARİH SIRALAMA
-    // --------------------------------------------------------
+                    // ------------------------------------------------
+                    // Kocaeli takımını bul
+                    // ------------------------------------------------
 
-    uniqueEvents.sort(
-        (a, b) => {
+                    let homeTeam = "";
+                    let awayTeam = "";
+                    let link = "https://www.tbf.org.tr/";
 
-            const aDate =
-                a.isoDate ||
-                parseEventDate(a.date) ||
-                "9999-99-99";
 
-            const bDate =
-                b.isoDate ||
-                parseEventDate(b.date) ||
-                "9999-99-99";
+                    const kocaeliIndex =
+                        possibleTeams.findIndex(
+                            candidate =>
+                                kocaeliTeams.some(
+                                    kocaeliTeam =>
+                                        candidate.name
+                                            .toLocaleLowerCase(
+                                                "tr-TR"
+                                            )
+                                            .includes(
+                                                kocaeliTeam
+                                                    .toLocaleLowerCase(
+                                                        "tr-TR"
+                                                    )
+                                            )
+                                )
+                        );
 
-            const aTime =
-                a.time ||
-                "99:99";
 
-            const bTime =
-                b.time ||
-                "99:99";
+                    if (
+                        kocaeliIndex >= 0
+                    ) {
 
-            return (
-                `${aDate} ${aTime}`
-            ).localeCompare(
-                `${bDate} ${bTime}`
-            );
+                        homeTeam =
+                            possibleTeams[
+                                kocaeliIndex
+                            ].name;
 
-        }
-    );
 
+                        if (
+                            possibleTeams[
+                                kocaeliIndex
+                            ].href
+                        ) {
 
-    // --------------------------------------------------------
-    // KAYNAK SAYILARI
-    // --------------------------------------------------------
+                            link =
+                                possibleTeams[
+                                    kocaeliIndex
+                                ].href;
 
-    const sources = {};
+                        }
 
 
-    for (
-        const event of uniqueEvents
-    ) {
+                        for (
+                            let j = 0;
+                            j < possibleTeams.length;
+                            j++
+                        ) {
 
-        const source =
-            event.source ||
-            "Bilinmeyen";
+                            if (
+                                j === kocaeliIndex
+                            ) {
+                                continue;
+                            }
 
 
-        sources[source] =
-            (
-                sources[source] ||
-                0
-            ) + 1;
+                            const candidate =
+                                possibleTeams[j].name;
 
-    }
 
+                            if (
+                                candidate
+                                    .toLocaleLowerCase(
+                                        "tr-TR"
+                                    )
+                                    .includes(
+                                        "basketbol"
+                                    )
+                            ) {
+                                continue;
+                            }
 
-    // --------------------------------------------------------
-    // RESPONSE
-    // --------------------------------------------------------
 
-    const response = {
+                            awayTeam =
+                                candidate;
 
-        success:
-            true,
+                            break;
 
-        count:
-            uniqueEvents.length,
+                        }
 
-        events:
-            uniqueEvents,
+                    }
 
-        sources,
 
-        updatedAt:
-            new Date().toISOString()
+                    // ------------------------------------------------
+                    // Takım adı düz metinde bulunuyorsa
+                    // ------------------------------------------------
 
-    };
+                    if (
+                        !homeTeam
+                    ) {
 
+                        const known =
+                            kocaeliTeams.find(
+                                item =>
+                                    lowerBlock.includes(
+                                        item.toLocaleLowerCase(
+                                            "tr-TR"
+                                        )
+                                    )
+                            );
 
-    // --------------------------------------------------------
-    // CACHE
-    // --------------------------------------------------------
 
-    cache = {
+                        if (known) {
 
-        timestamp:
-            now,
+                            homeTeam =
+                                known;
 
-        data:
-            response
+                        }
 
-    };
+                    }
 
 
-    return res
-        .status(200)
-        .json(
-            response
-        );
+                    // ------------------------------------------------
+                    // Rakip bulunamazsa kaydı oluşturma
+                    // ------------------------------------------------
 
-}
+                    if (
+                        !homeTeam ||
+                        !awayTeam
+                    ) {
+
+                        continue;
+
+                    }
+
+
+                    // ------------------------------------------------
+                    // Salon yoksa Kocaeli
+                    // ------------------------------------------------
+
+                    const finalVenue =
+                        venue ||
+                        "Kocaeli";
+
+
+                    // ------------------------------------------------
+                    // Relative link
+                    // ------------------------------------------------
+
+                    if (
+                        link.startsWith("/")
+                    ) {
+
+                        link =
+                            "https://www.tbf.org.tr" +
+                            link;
+
+                    }
+
+
+                    // ------------------------------------------------
+                    // Duplicate
+                    // ------------------------------------------------
+
+                    const exists =
+                        events.some(
+                            event =>
+                                event.date === date &&
+                                event.time === time &&
+                                event.homeTeam === homeTeam &&
+                                event.awayTeam === awayTeam
+                        );
+
+
+                    if (
+                        exists
+                    ) {
+
+                        continue;
+
+                    }
+
+
+                    // ------------------------------------------------
+                    // EKLE
+                    // ------------------------------------------------
+
+                    events.push({
+
+                        title:
+                            `${homeTeam} × ${awayTeam}`,
+
+                        description:
+                            `${homeTeam} - ${awayTeam} basketbol
