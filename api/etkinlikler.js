@@ -387,6 +387,87 @@ async function fetchWithRetry(
 
 
 // ============================================================
+// KOCAELİ SEYRET - SAAT DÜZELTME
+// ============================================================
+// kocaeliseyret.com, etkinlik saatlerini Türkiye yerel saati
+// (UTC+3) yerine UTC olarak gösteriyor (3 örnekte doğrulandı:
+// Blues Kontrol, Sagopa Kajmer, Dj Ali Taş - hepsinde tutarlı
+// 3 saatlik fark). Bu yüzden siteden okunan saate +3 saat
+// ekliyoruz; gece yarısını geçen etkinliklerde tarih de buna
+// göre bir gün ileri kayar.
+// ============================================================
+
+const TURKCE_AYLAR_SAYI = {
+    "ocak": 1, "şubat": 2, "mart": 3, "nisan": 4,
+    "mayıs": 5, "haziran": 6, "temmuz": 7, "ağustos": 8,
+    "eylül": 9, "ekim": 10, "kasım": 11, "aralık": 12
+};
+
+const AY_ADLARI_TR = [
+    "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+    "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+];
+
+function seyretZamaniniDuzelt(dateText, timeText) {
+
+    const dMatch =
+        dateText.match(
+            /(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/
+        );
+
+    const tMatch =
+        timeText.match(/^(\d{1,2}):(\d{2})$/);
+
+    if (!dMatch || !tMatch) {
+        return { date: dateText, time: timeText };
+    }
+
+    const day = parseInt(dMatch[1], 10);
+
+    const monthName =
+        dMatch[2].toLocaleLowerCase("tr-TR");
+
+    const month =
+        TURKCE_AYLAR_SAYI[monthName];
+
+    const year = parseInt(dMatch[3], 10);
+
+    if (!month) {
+        return { date: dateText, time: timeText };
+    }
+
+    const hour = parseInt(tMatch[1], 10);
+    const minute = parseInt(tMatch[2], 10);
+
+    const utcDate =
+        new Date(
+            Date.UTC(year, month - 1, day, hour, minute)
+        );
+
+    utcDate.setUTCHours(utcDate.getUTCHours() + 3);
+
+    const newDay = utcDate.getUTCDate();
+    const newMonth = utcDate.getUTCMonth() + 1;
+    const newYear = utcDate.getUTCFullYear();
+
+    const newHour =
+        String(utcDate.getUTCHours()).padStart(2, "0");
+
+    const newMinute =
+        String(utcDate.getUTCMinutes()).padStart(2, "0");
+
+    const newDateText =
+        newDay + " " + AY_ADLARI_TR[newMonth - 1] + " " + newYear;
+
+    return {
+        date: newDateText,
+        time: newHour + ":" + newMinute
+    };
+
+}
+
+
+// ============================================================
 // KOCAELİ SEYRET
 // ============================================================
 
@@ -474,11 +555,17 @@ async function getSeyretEtkinlikleri() {
 
             if (!dateTime) continue;
 
+            const duzeltilmis =
+                seyretZamaniniDuzelt(
+                    dateTime[1],
+                    dateTime[2]
+                );
+
             const date =
-                dateTime[1];
+                duzeltilmis.date;
 
             const time =
-                dateTime[2];
+                duzeltilmis.time;
 
             let afterDate =
                 blockText.substring(
