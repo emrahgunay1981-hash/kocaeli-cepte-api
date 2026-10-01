@@ -1198,6 +1198,122 @@ function formatDate(date) {
 
 
 /* =========================================================
+   SIRALAMA İÇİN GERÇEK TAKVİM TARİHİNE ÇEVİR
+========================================================= */
+
+const TURKCE_AYLAR = {
+  "ocak": 1,
+  "şubat": 2,
+  "subat": 2,
+  "mart": 3,
+  "nisan": 4,
+  "mayıs": 5,
+  "mayis": 5,
+  "haziran": 6,
+  "temmuz": 7,
+  "ağustos": 8,
+  "agustos": 8,
+  "eylül": 9,
+  "eylul": 9,
+  "ekim": 10,
+  "kasım": 11,
+  "kasim": 11,
+  "aralık": 12,
+  "aralik": 12
+};
+
+
+function sortableDate(event) {
+
+  if (event.isoDate) {
+    return String(event.isoDate).slice(0, 10);
+  }
+
+
+  const value =
+    String(event.date || "").trim();
+
+
+  if (!value) {
+    return "9999-12-31";
+  }
+
+
+  // "01 Aralık 2026" gibi Türkçe tarih
+  const turkishMatch =
+    value.match(
+      /(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/
+    );
+
+
+  if (turkishMatch) {
+
+    const day =
+      turkishMatch[1].padStart(2, "0");
+
+    const monthName =
+      turkishMatch[2].toLocaleLowerCase("tr-TR");
+
+    const month =
+      TURKCE_AYLAR[monthName];
+
+    const year =
+      turkishMatch[3];
+
+
+    if (month) {
+
+      return (
+        year +
+        "-" +
+        String(month).padStart(2, "0") +
+        "-" +
+        day
+      );
+
+    }
+
+  }
+
+
+  // 30.09.2026 / 30-09-2026
+  const dotMatch =
+    value.match(
+      /^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/
+    );
+
+
+  if (dotMatch) {
+
+    return (
+      dotMatch[3] +
+      "-" +
+      dotMatch[2].padStart(2, "0") +
+      "-" +
+      dotMatch[1].padStart(2, "0")
+    );
+
+  }
+
+
+  // Zaten ISO: 2026-09-30
+  const isoMatch =
+    value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+
+  if (isoMatch) {
+    return value.slice(0, 10);
+  }
+
+
+  // Tanınamayan format: sona at
+  return "9999-12-31";
+
+}
+
+
+
+/* =========================================================
    SPOR ETKİNLİĞİ KONTROLÜ
 ========================================================= */
 
@@ -1570,15 +1686,11 @@ async function loadEvents() {
       (a, b) => {
 
         const aDate =
-          a.isoDate ||
-          a.date ||
-          "9999";
+          sortableDate(a);
 
 
         const bDate =
-          b.isoDate ||
-          b.date ||
-          "9999";
+          sortableDate(b);
 
 
         const aTime =
