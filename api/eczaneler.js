@@ -7,6 +7,8 @@ const DISTRICTS = [
   "Gebze", "Gölcük", "İzmit", "Kandıra", "Karamürsel", "Kartepe", "Körfez"
 ];
 
+const PHONE_SOURCE = "0?\\s*\\(?(?:262|5\\d{2})\\)?[\\s.-]*\\d{3}[\\s.-]*\\d{2}[\\s.-]*\\d{2}";
+
 function cleanText(text) {
   if (!text) return "";
   return String(text)
@@ -33,7 +35,7 @@ function normalize(text) {
 }
 
 function getPhone(text) {
-  const match = String(text).match(/0?\s*\(?262\)?[\s.-]*\d{3}[\s.-]*\d{2}[\s.-]*\d{2}|0?\s*\(?5\d{2}\)?[\s.-]*\d{3}[\s.-]*\d{2}[\s.-]*\d{2}/);
+  const match = String(text).match(new RegExp(PHONE_SOURCE));
   return match ? match[0].replace(/\s+/g, " ").trim() : "";
 }
 
@@ -41,19 +43,46 @@ function getMapLink(address) {
   return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address + ", Kocaeli");
 }
 
+// Yakalanan ham metinden sadece eczane adını ayıklar.
+// Önceki eczanenin telefonu, "Pazar sabahına kadar." gibi cümleler ve
+// küçük harfle başlayan artıklar temizlenir.
+function extractName(raw) {
+  let s = String(raw);
+
+  // 1) Son telefon numarasından sonrasını al
+  const phoneRe = new RegExp(PHONE_SOURCE, "g");
+  let lastEnd = -1;
+  let pm;
+  while ((pm = phoneRe.exec(s)) !== null) lastEnd = pm.index + pm[0].length;
+  if (lastEnd >= 0) s = s.slice(lastEnd);
+
+  // 2) Son cümle sonundan (". ") sonrasını al
+  const sentenceEnd = Math.max(s.lastIndexOf(". "), s.lastIndexOf("! "), s.lastIndexOf("? "));
+  if (sentenceEnd >= 0) s = s.slice(sentenceEnd + 2);
+
+  // 3) Büyük harf veya rakamla başlayana kadar baştaki artıkları sil
+  s = s.replace(/^[^A-ZÇĞİÖŞÜ0-9]+/, "");
+
+  return s.trim();
+}
+
 function parsePharmacies(html) {
   const text = cleanText(html);
   const districtPattern = DISTRICTS.join("|");
   // Sitede her eczane "... Eczanesi Kocaeli / <İlçe>" kalıbıyla başlıyor, ardından "Adres:" ve "Telefon:" geliyor.
-  const anchorRegex = new RegExp("([^:]{2,40}?Eczanesi)\\s*Kocaeli\\s*/\\s*(" + districtPattern + ")", "g");
+  const anchorRegex = new RegExp("([^:]{2,60}?Eczanesi)\\s*Kocaeli\\s*/\\s*(" + districtPattern + ")", "g");
 
   const anchors = [];
   let m;
   while ((m = anchorRegex.exec(text)) !== null) {
+    const name = extractName(m[1]);
+    if (!name) continue;
+    // Adın metindeki gerçek başlangıcı: önceki eczanenin telefonu önceki blokta kalsın
+    const realStart = m.index + (m[1].length - name.length);
     anchors.push({
-      name: cleanText(m[1]),
+      name,
       district: m[2],
-      start: m.index,
+      start: realStart,
       contentStart: anchorRegex.lastIndex
     });
   }
@@ -66,7 +95,9 @@ function parsePharmacies(html) {
 
     const adresMatch = block.match(/Adres:\s*([\s\S]*?)\s*Telefon:/i);
     const address = adresMatch ? cleanText(adresMatch[1]) : "";
-    const phone = getPhone(block);
+
+    const telefonPart = block.split(/Telefon:/i)[1] || block;
+    const phone = getPhone(telefonPart);
 
     if (!address && !phone) continue;
 
