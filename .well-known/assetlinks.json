@@ -1,8 +1,17 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "app.vercel.kocaeli_cepte_api.twa",
-    "sha256_cert_fingerprints": ["53:E3:A5:84:B8:36:B5:4F:8B:F3:66:11:91:86:65:57:29:A7:0D:B5:FA:55:3B:1E:7E:A1:E1:DC:20:66:4E:06"]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.vercel.kocaeli_cepte_api.twa",
+      "sha256_cert_fingerprints": [
+        "53:E3:A5:84:B8:36:B5:4F:8B:F3:66:11:91:86:65:57:29:A7:0D:B5:FA:55:3B:1E:7E:A1:E1:DC:20:66:4E:06",
+        "06:5B:61:77:A3:01:9D:8F:F1:EC:E0:24:A5:83:45:38:A6:C3:2F:4F:F0:45:FF:61:D3:BF:F4:E3:B5:8D:2D:1E",
+        "3C:F5:6F:C5:9D:83:4C:40:CA:23:13:B8:30:9C:E5:D3:F0:4F:1A:20:8E:D8:72:95:B1:56:6B:84:AD:4D:0F:9A",
+        "16:85:7C:04:AF:4F:48:BB:6D:08:21:C3:8F:96:5B:73:29:C4:71:CC:0C:B8:00:FF:25:70:77:47:7B:BE:9F:1E"
+      ]
+    }
   }
-}]
+]
