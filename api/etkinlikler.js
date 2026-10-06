@@ -773,6 +773,59 @@ async function getSeyretEtkinlikleri() {
 // engellenirse tüm API'yi bozmadan sessizce boş döner.
 // ============================================================
 
+// Bubilet, basit sunucu isteklerini 403 ile engelliyor. Bu
+// yardımcı, isteği gerçek bir Chrome (Android) tarayıcısı gibi
+// tüm alışıldık başlıklarla gönderir.
+async function fetchBrowserLike(url, timeout = 10000) {
+
+    const controller = new AbortController();
+
+    const timer =
+        setTimeout(() => controller.abort(), timeout);
+
+    try {
+
+        const response =
+            await fetch(url, {
+                signal: controller.signal,
+                redirect: "follow",
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (Linux; Android 14; SM-A546B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36",
+                    "Accept":
+                        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                    "Accept-Language":
+                        "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "Cache-Control": "no-cache",
+                    "Pragma": "no-cache",
+                    "Referer": "https://www.google.com/",
+                    "Sec-Ch-Ua":
+                        '"Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"',
+                    "Sec-Ch-Ua-Mobile": "?1",
+                    "Sec-Ch-Ua-Platform": '"Android"',
+                    "Sec-Fetch-Dest": "document",
+                    "Sec-Fetch-Mode": "navigate",
+                    "Sec-Fetch-Site": "cross-site",
+                    "Sec-Fetch-User": "?1",
+                    "Upgrade-Insecure-Requests": "1"
+                }
+            });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        return await response.text();
+
+    }
+    finally {
+
+        clearTimeout(timer);
+
+    }
+}
+
+
 let bubiletDurum = "henüz çalışmadı";
 
 async function getBubiletEtkinlikleri() {
@@ -783,7 +836,7 @@ async function getBubiletEtkinlikleri() {
     try {
 
         const html =
-            await fetchWithRetry(url, 2, 8000);
+            await fetchBrowserLike(url, 10000);
 
         // Sayfadaki tüm etkinlik linklerini (<a href=".../etkinlik/...">)
         // sırasıyla topla.
