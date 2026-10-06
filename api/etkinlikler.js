@@ -765,6 +765,203 @@ async function getSeyretEtkinlikleri() {
 
 
 // ============================================================
+// BUBİLET (YEDEK KAYNAK)
+// ============================================================
+// Kocaeli Seyret çöktüğünde veya engellediğinde de kültür-sanat
+// etkinlikleri (konser, tiyatro, stand-up) gelmeye devam etsin
+// diye Bubilet'in Kocaeli sayfasını da okuyoruz. Erişim
+// engellenirse tüm API'yi bozmadan sessizce boş döner.
+// ============================================================
+
+async function getBubiletEtkinlikleri() {
+
+    const base = "https://www.bubilet.com.tr";
+    const url = base + "/kocaeli";
+
+    try {
+
+        const html =
+            await fetchWithRetry(url, 2, 8000);
+
+        const headingRegex =
+            /<(h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>/gi;
+
+        const matches =
+            [...html.matchAll(headingRegex)];
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1;
+
+        const events = [];
+
+        for (let i = 0; i < matches.length; i++) {
+
+            const headingHtml = matches[i][2];
+
+            const linkMatch =
+                headingHtml.match(
+                    /href=["']([^"']*\/etkinlik\/[^"']+)["']/i
+                );
+
+            if (!linkMatch) continue;
+
+            const title = cleanText(headingHtml);
+
+            if (!title) continue;
+
+            const start =
+                matches[i].index +
+                matches[i][0].length;
+
+            const end =
+                i + 1 < matches.length
+                    ? matches[i + 1].index
+                    : html.length;
+
+            const block =
+                html.substring(
+                    start,
+                    Math.min(end, start + 3000)
+                );
+
+            const venueMatch =
+                block.match(
+                    /<a\b[^>]*href=["'][^"']*\/mekan\/[^"']*["'][^>]*>([\s\S]*?)<\/a>/i
+                );
+
+            const venue =
+                venueMatch
+                    ? cleanText(venueMatch[1])
+                    : "";
+
+            const blockText = cleanText(block);
+
+            const dt =
+                blockText.match(
+                    /(\d{1,2})\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)(?:\s+(?:Pzt|Sal|Çar|Per|Cum|Cts|Paz))?(?:\s+(\d{1,2}:\d{2}))?/i
+                );
+
+            if (!dt) continue;
+
+            const day = parseInt(dt[1], 10);
+
+            const month =
+                TURKCE_AYLAR_SAYI[
+                    dt[2].toLocaleLowerCase("tr-TR")
+                ];
+
+            if (!month) continue;
+
+            const year =
+                month < currentMonth
+                    ? currentYear + 1
+                    : currentYear;
+
+            const time =
+                dt[3]
+                    ? dt[3].padStart(5, "0")
+                    : "";
+
+            let link = linkMatch[1];
+
+            if (link.startsWith("/")) {
+                link = base + link;
+            }
+
+            const lower =
+                title.toLocaleLowerCase("tr-TR");
+
+            let category = "genel";
+
+            if (
+                /tiyatro|müzikal|muzikal|stand|oyun/.test(lower)
+            ) {
+
+                category = "tiyatro";
+
+            }
+            else if (
+                /konser|müzik|muzik|dj|live|concert/.test(lower)
+            ) {
+
+                category = "konser";
+
+            }
+            else if (
+                /çocuk|cocuk/.test(lower)
+            ) {
+
+                category = "çocuk";
+
+            }
+
+            events.push({
+
+                title,
+
+                description:
+                    venue
+                        ? `${title} - ${venue}`
+                        : title,
+
+                date:
+                    day + " " + AY_ADLARI_TR[month - 1] + " " + year,
+
+                isoDate:
+                    `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+
+                time,
+
+                venue,
+
+                category,
+
+                sport: "",
+
+                link,
+
+                source: "Bubilet"
+
+            });
+
+        }
+
+        const unique = [];
+
+        const seen = new Set();
+
+        for (const event of events) {
+
+            const key =
+                event.link ||
+                (event.title + "|" + event.date);
+
+            if (seen.has(key)) continue;
+
+            seen.add(key);
+
+            unique.push(event);
+
+        }
+
+        return unique;
+
+    }
+    catch (error) {
+
+        console.error(
+            "Bubilet:",
+            error.message
+        );
+
+        return [];
+
+    }
+}
+
+
+// ============================================================
 // VOLEYBOL YARDIMCILARI
 // ============================================================
 
@@ -1381,6 +1578,8 @@ async function getAllEvents() {
             getBelediyeEtkinlikleri(),
 
             getSeyretEtkinlikleri(),
+
+            getBubiletEtkinlikleri(),
 
             getVoleybolEtkinlikleri(),
 
