@@ -439,6 +439,124 @@
       white-space: nowrap;
     }
 
+
+    /* =========================
+       HODRİ MEYDAN
+    ========================== */
+
+    .hm-card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #050f0b 0%, #0b2a1d 60%, #0d3a27 100%);
+      border: 1px solid rgba(53,232,107,0.3);
+      border-radius: 20px;
+      padding: 18px 16px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.3);
+    }
+
+    .hm-card::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(53,232,107,0.10) 0 10px,
+        rgba(0,0,0,0) 10px 20px
+      );
+    }
+
+    .hm-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #35e86b;
+    }
+
+    .hm-title {
+      margin-top: 6px;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+    }
+
+    .hm-desc {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #9fc8b0;
+      line-height: 1.45;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hm-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hm-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 11px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .hm-btn.insta {
+      background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+      color: #ffffff;
+    }
+
+    .hm-btn.web {
+      background: rgba(53,232,107,0.14);
+      color: #35e86b;
+      border: 1px solid rgba(53,232,107,0.3);
+    }
+
+    .hm-news {
+      margin-top: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hm-news-title {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #86b99d;
+      margin-bottom: 4px;
+    }
+
+    .hm-news a {
+      display: block;
+      padding: 9px 0;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 13px;
+      font-weight: 700;
+      color: #f4fff7;
+      line-height: 1.35;
+    }
+
+    .hm-news a small {
+      display: block;
+      margin-top: 3px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #86b99d;
+    }
+
     /* =========================
        DURUM
     ========================== */
@@ -907,6 +1025,37 @@
     <div id="mac-karti"></div>
 
 
+    <!-- HODRİ MEYDAN -->
+
+    <section class="hm-card">
+
+      <div class="hm-label">📣 TRİBÜNÜN SESİ</div>
+
+      <div class="hm-title">HODRİ MEYDAN</div>
+
+      <div class="hm-desc">
+        Kocaelispor'un taraftar grubu. Tribün duyuruları, kortejler
+        ve deplasman organizasyonları için resmi hesapları takip et.
+      </div>
+
+      <div class="hm-buttons">
+
+        <a class="hm-btn insta" href="https://www.instagram.com/hodrimeydan89/" target="_blank" rel="noopener">
+          📷 Instagram
+        </a>
+
+        <a class="hm-btn web" href="https://hodrimeydan.org.tr" target="_blank" rel="noopener">
+          🌐 Web Sitesi
+        </a>
+
+      </div>
+
+      <!-- Haberlerde Hodri Meydan / taraftar geçenler (yoksa gizli kalır) -->
+      <div class="hm-news" id="hm-news" style="display:none"></div>
+
+    </section>
+
+
     <!-- HABER DURUMU -->
 
     <div id="status">
@@ -1169,6 +1318,11 @@
 
           const slideItems =
             benzerHaberleriTemizle(guncelHaberler(data.items)).slice(0, 20);
+
+
+          tribunHaberleriniGoster(
+            benzerHaberleriTemizle(guncelHaberler(data.items))
+          );
 
 
           const slidesHTML =
@@ -1558,6 +1712,48 @@
     }
 
     macKartiniGetir();
+
+    /* =========================================================
+       HODRİ MEYDAN: TRİBÜNDEN HABERLER
+       Kocaelispor haberleri arasında taraftarla ilgili olanlar
+    ========================================================= */
+
+    function tribunHaberleriniGoster(items) {
+
+      const alan = document.getElementById("hm-news");
+      if (!alan) return;
+
+      const tribun =
+        (items || []).filter(item =>
+          /hodri|taraftar|tribün|kortej|deplasman yasağı|bilet/i.test(
+            String(item.title || "")
+          )
+        ).slice(0, 3);
+
+      if (!tribun.length) {
+        alan.style.display = "none";
+        return;
+      }
+
+      const kacis = t => {
+        const d = document.createElement("div");
+        d.textContent = t || "";
+        return d.innerHTML.replace(/"/g, "&quot;");
+      };
+
+      alan.innerHTML =
+        `<div class="hm-news-title">TRİBÜNDEN HABERLER</div>` +
+        tribun.map(item => `
+          <a href="${kacis(item.realUrl || item.link)}" target="_blank" rel="noopener">
+            ${kacis(item.title)}
+            <small>${kacis(item.source || "")}${item.time ? " • " + kacis(item.time) : ""}</small>
+          </a>
+        `).join("");
+
+      alan.style.display = "block";
+
+    }
+
 
 
   </script>
