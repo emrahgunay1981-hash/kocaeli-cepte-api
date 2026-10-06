@@ -1314,6 +1314,51 @@ function sortableDate(event) {
 
 
 /* =========================================================
+   BUGÜNÜN TARİHİ (YYYY-AA-GG, telefonun yerel saatine göre)
+========================================================= */
+
+function bugununTarihi() {
+
+  const d =
+    new Date();
+
+  return (
+    d.getFullYear() +
+    "-" +
+    String(d.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(d.getDate()).padStart(2, "0")
+  );
+
+}
+
+
+
+/* =========================================================
+   GEÇMİŞ ETKİNLİK KONTROLÜ
+   Tarihi bugünden önceyse true döner. Bugünkü etkinlikler
+   gün bitene kadar listede kalır. Tarihi okunamayan
+   etkinlikler gizlenmez.
+========================================================= */
+
+function gecmisEtkinlikMi(event) {
+
+  const tarih =
+    sortableDate(event);
+
+
+  if (tarih === "9999-12-31") {
+    return false;
+  }
+
+
+  return tarih < bugununTarihi();
+
+}
+
+
+
+/* =========================================================
    SPOR ETKİNLİĞİ KONTROLÜ
 ========================================================= */
 
@@ -1665,13 +1710,17 @@ async function loadEvents() {
 
     /* =====================================================
        ÇOK ÖNEMLİ:
-       SPORLARI GENEL ETKİNLİKLERDEN ÇIKAR
+       SPORLARI VE TARİHİ GEÇMİŞ ETKİNLİKLERİ
+       GENEL ETKİNLİKLERDEN ÇIKAR
     ===================================================== */
 
     const genelEtkinlikler =
       events.filter(
         event =>
           !sporEtkinligiMi(
+            event
+          ) &&
+          !gecmisEtkinlikMi(
             event
           )
       );
