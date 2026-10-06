@@ -34,6 +34,7 @@ const KAYNAK_SITELERI = {
   "trt spor": "trtspor.com.tr",
   "yeni şafak": "yenisafak.com",
   "haber7": "haber7.com",
+  "haber 7": "haber7.com",
   "mynet": "mynet.com",
   "son dakika": "sondakika.com",
   "cumhuriyet": "cumhuriyet.com.tr",
@@ -201,4 +202,3 @@ function resimAcilmadi(img) {
   );
 
 }
-
