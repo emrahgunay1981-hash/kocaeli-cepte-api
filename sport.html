@@ -1645,9 +1645,6 @@
                 <br>${yer}
               </div>
               <div class="mk-countdown" id="mk-countdown"></div>
-              <a class="mk-link" href="${mkKacis(mac.link)}" target="_blank" rel="noopener">
-                Maç Merkezi →
-              </a>
             </div>
           `;
         }
@@ -1659,7 +1656,7 @@
 
           html += `
             <div class="mk-row">
-              <a class="mk-mini" href="${mkKacis(son.link)}" target="_blank" rel="noopener">
+              <div class="mk-mini">
                 <div class="mk-mini-title">SON MAÇ</div>
                 <div class="mk-result">
                   <div class="mk-badge ${mkKacis(son.sonuc)}">${mkKacis(son.sonuc)}</div>
@@ -1668,7 +1665,7 @@
                     <small>${mkKacis(son.gunYazi)} • ${sonucYazi}</small>
                   </div>
                 </div>
-              </a>
+              </div>
             </div>
           `;
         }
