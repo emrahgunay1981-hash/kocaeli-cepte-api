@@ -933,7 +933,7 @@ async function getBubiletEtkinlikleri() {
                     /<a\b[^>]*href=["'][^"']*\/mekan\/[^"']*["'][^>]*>([\s\S]*?)<\/a>/i
                 );
 
-            const venue =
+            let venue =
                 venueMatch
                     ? cleanText(venueMatch[1])
                     : "";
@@ -946,6 +946,30 @@ async function getBubiletEtkinlikleri() {
                 );
 
             if (!dt) continue;
+
+            // Mekan linki bulunamadıysa: kartta başlık ile tarih
+            // arasında kalan yazı genelde mekan adıdır.
+            if (!venue) {
+
+                let aday =
+                    blockText
+                        .slice(0, dt.index)
+                        .split(title)
+                        .join(" ")
+                        .replace(/%\s*\d+/g, " ")
+                        .replace(/\s+/g, " ")
+                        .trim();
+
+                if (
+                    aday.length >= 3 &&
+                    aday.length <= 150 &&
+                    aday.toLocaleLowerCase("tr-TR") !==
+                        title.toLocaleLowerCase("tr-TR")
+                ) {
+                    venue = aday;
+                }
+
+            }
 
             const day = parseInt(dt[1], 10);
 
@@ -1050,7 +1074,8 @@ async function getBubiletEtkinlikleri() {
             "sayfa " + html.length + " karakter, " +
             anchors.length + " link, " +
             groups.length + " kart, " +
-            unique.length + " etkinlik";
+            unique.length + " etkinlik, " +
+            unique.filter(e => e.venue).length + " mekanlı";
 
         return unique;
 
