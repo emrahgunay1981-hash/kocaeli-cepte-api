@@ -641,6 +641,30 @@ a {
 
 
 /* =========================================================
+   RESİM YOKSA: KAYNAK SİTENİN LOGOSU
+========================================================= */
+
+.logo-fallback img {
+
+  width: 46px;
+
+  height: 46px;
+
+  object-fit: contain;
+
+  background: #ffffff;
+
+  border-radius: 11px;
+
+  padding: 6px;
+
+  box-shadow:
+    0 3px 10px
+    rgba(0,0,0,.25);
+}
+
+
+/* =========================================================
    HABER İÇERİĞİ
 ========================================================= */
 
@@ -1062,6 +1086,9 @@ a {
 </div>
 
 
+<!-- Ortak kaynak logosu kodu -->
+<script src="kaynak-logo.js"></script>
+
 <script>
 
 /* =========================================================
@@ -1278,6 +1305,7 @@ function renderNews() {
 
       if (image) {
 
+        // Fotoğraf varsa göster; açılmazsa kaynak logosu gelsin
         imageHtml = `
 
           <img
@@ -1292,10 +1320,15 @@ function renderNews() {
 
             referrerpolicy="no-referrer"
 
-            onerror="
-              this.outerHTML=
-              '<div class=&quot;news-image no-image&quot;>📰</div>'
-            "
+            data-source="${escapeHtml(item.source)}"
+
+            data-link="${escapeHtml(item.link)}"
+
+            data-fallback-class="news-image no-image"
+
+            data-icon="📰"
+
+            onerror="resimAcilmadi(this)"
 
           >
 
@@ -1305,15 +1338,13 @@ function renderNews() {
 
       else {
 
-        imageHtml = `
-
-          <div class="news-image no-image">
-
-            📰
-
-          </div>
-
-        `;
+        // Fotoğraf yoksa kaynak logosu (o da yoksa 📰)
+        imageHtml =
+          logoKutusuHtml(
+            item,
+            "news-image no-image",
+            "📰"
+          );
 
       }
 
