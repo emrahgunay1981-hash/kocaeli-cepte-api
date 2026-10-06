@@ -2545,6 +2545,9 @@ a {
 </nav>
 
 
+<!-- Ortak kaynak logosu kodu -->
+<script src="kaynak-logo.js"></script>
+
 <script>
 
 
@@ -2672,153 +2675,6 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;")
 
     .replace(/'/g, "&#039;");
-
-}
-
-
-/* =========================================================
-   KAYNAK SİTENİN LOGOSU
-   Fotoğrafı olmayan (veya fotoğrafı açılmayan) haberlerde
-   gazete ikonu yerine haberin geldiği sitenin logosunu
-   gösterir. Örn. kaynak "hurriyet.com.tr" ise Hürriyet logosu.
-========================================================= */
-
-// Haber kaynaklarının adları ve siteleri.
-// Yeni bir kaynak görürsen buraya ekleyebilirsin:
-//   "kaynağın adı (küçük harfle)": "sitesi.com.tr",
-const KAYNAK_SITELERI = {
-  "özgür kocaeli": "ozgurkocaeli.com.tr",
-  "kocaeli gazetesi": "kocaeligazetesi.com.tr",
-  "kocaeli barış": "kocaelibarisgazetesi.com",
-  "çağdaş kocaeli": "cagdaskocaeli.com.tr",
-  "bizim yaka": "bizimyaka.com",
-  "ses kocaeli": "seskocaeli.com",
-  "ihlas haber ajansı": "iha.com.tr",
-  "i̇hlas haber ajansı": "iha.com.tr",
-  "iha": "iha.com.tr",
-  "demirören haber ajansı": "dha.com.tr",
-  "dha": "dha.com.tr",
-  "anadolu ajansı": "aa.com.tr",
-  "hürriyet": "hurriyet.com.tr",
-  "milliyet": "milliyet.com.tr",
-  "sabah": "sabah.com.tr",
-  "sözcü": "sozcu.com.tr",
-  "habertürk": "haberturk.com",
-  "ntv": "ntv.com.tr",
-  "cnn türk": "cnnturk.com",
-  "trt haber": "trthaber.com",
-  "yeni şafak": "yenisafak.com",
-  "haber7": "haber7.com",
-  "mynet": "mynet.com",
-  "sondakika.com": "sondakika.com",
-  "son dakika": "sondakika.com",
-  "cumhuriyet": "cumhuriyet.com.tr",
-  "posta": "posta.com.tr",
-  "takvim": "takvim.com.tr",
-  "star": "star.com.tr",
-  "a haber": "ahaber.com.tr",
-  "haber global": "haberglobal.com.tr",
-  "t24": "t24.com.tr",
-  "fanatik": "fanatik.com.tr"
-};
-
-
-function sourceDomain(item) {
-
-  const source =
-    String(item.source || "")
-      .trim()
-      .toLocaleLowerCase("tr-TR");
-
-  // 1) Kaynak adı zaten bir alan adıysa (hurriyet.com.tr gibi)
-  if (/^[a-z0-9.-]+\.[a-z]{2,}$/.test(source)) {
-    return source.replace(/^www\./, "");
-  }
-
-  // 2) Kaynak adı listede varsa (Özgür Kocaeli gibi)
-  if (KAYNAK_SITELERI[source]) {
-    return KAYNAK_SITELERI[source];
-  }
-
-  // 3) Değilse haberin bağlantısındaki siteye bak
-  //    (Google Haberler yönlendirmesi ise kullanma)
-  try {
-
-    const host =
-      new URL(item.link)
-        .hostname
-        .replace(/^www\./, "");
-
-    if (!/google\./.test(host)) {
-      return host;
-    }
-
-  } catch (e) {}
-
-  return "";
-
-}
-
-
-function sourceLogoUrl(item) {
-
-  const domain =
-    sourceDomain(item);
-
-  if (!domain) return "";
-
-  return (
-    "https://www.google.com/s2/favicons?sz=128&domain=" +
-    encodeURIComponent(domain)
-  );
-
-}
-
-
-// Fotoğraf yerine gösterilecek kutu (logo, o da yoksa 📰)
-function placeholderHtml(item, className) {
-
-  const logo =
-    sourceLogoUrl(item);
-
-  if (!logo) {
-    return `<div class="${className}">📰</div>`;
-  }
-
-  return `
-    <div class="${className} logo-fallback">
-      <img
-        src="${escapeHtml(logo)}"
-        alt=""
-        loading="lazy"
-        onerror="var p=this.parentNode; p.classList.remove('logo-fallback'); p.textContent='📰';"
-      >
-    </div>
-  `;
-
-}
-
-
-// Haber fotoğrafı açılmazsa yerine logo kutusunu koy
-function imageFailed(img) {
-
-  const item = {
-    source: img.dataset.source,
-    link: img.dataset.link
-  };
-
-  const wrapper =
-    document.createElement("div");
-
-  wrapper.innerHTML =
-    placeholderHtml(
-      item,
-      img.dataset.fallbackClass
-    ).trim();
-
-  img.replaceWith(
-    wrapper.firstElementChild
-  );
 
 }
 
@@ -3040,10 +2896,11 @@ async function loadNews() {
                   data-source="${escapeHtml(item.source)}"
                   data-link="${escapeHtml(item.link)}"
                   data-fallback-class="hero-image-placeholder"
-                  onerror="imageFailed(this)"
+                  data-icon="📰"
+                  onerror="resimAcilmadi(this)"
                 >
               `
-              : placeholderHtml(item, "hero-image-placeholder")
+              : logoKutusuHtml(item, "hero-image-placeholder", "📰")
             }
 
             <div class="hero-content">
@@ -3120,11 +2977,12 @@ async function loadNews() {
                 data-source="${escapeHtml(item.source)}"
                 data-link="${escapeHtml(item.link)}"
                 data-fallback-class="news-image no-image"
-                onerror="imageFailed(this)"
+                data-icon="📰"
+                  onerror="resimAcilmadi(this)"
               >
 
             `
-            : placeholderHtml(item, "news-image no-image")
+            : logoKutusuHtml(item, "news-image no-image", "📰")
           }
 
 
