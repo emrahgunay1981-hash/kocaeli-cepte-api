@@ -198,6 +198,247 @@
       text-shadow: 0 2px 7px rgba(0,0,0,0.85);
     }
 
+
+    /* =========================
+       MAÇ KARTI + GERİ SAYIM
+    ========================== */
+
+    #mac-karti {
+      margin-top: 14px;
+    }
+
+    .mk-card {
+      background: linear-gradient(150deg, #0a5a3c 0%, #063f2b 55%, #032a1d 100%);
+      border: 1px solid rgba(53,232,107,0.35);
+      border-radius: 20px;
+      padding: 16px 14px 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      margin-bottom: 12px;
+    }
+
+    .mk-label {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #35e86b;
+      margin-bottom: 12px;
+    }
+
+    .mk-teams {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mk-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      text-align: center;
+      min-width: 0;
+    }
+
+    .mk-team img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 50%;
+      padding: 7px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .mk-team span {
+      font-size: 13px;
+      font-weight: 800;
+      color: #f4fff7;
+      line-height: 1.2;
+    }
+
+    .mk-team.kocaeli span {
+      color: #35e86b;
+    }
+
+    .mk-vs {
+      font-size: 22px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .mk-info {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #bfe6cd;
+    }
+
+    .mk-countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .mk-box {
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(53,232,107,0.22);
+      border-radius: 12px;
+      padding: 9px 4px 7px;
+      text-align: center;
+    }
+
+    .mk-box b {
+      display: block;
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mk-box small {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #86b99d;
+    }
+
+    .mk-live {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #ff5b5b;
+      letter-spacing: 1px;
+    }
+
+    .mk-link {
+      display: block;
+      margin-top: 14px;
+      text-align: center;
+      padding: 10px;
+      border-radius: 11px;
+      background: rgba(53,232,107,0.14);
+      color: #35e86b;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mk-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mk-mini {
+      flex: 1;
+      background: rgba(6,60,42,0.9);
+      border: 1px solid #17583d;
+      border-radius: 16px;
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .mk-mini-title {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #86b99d;
+      margin-bottom: 8px;
+    }
+
+    .mk-result {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mk-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 13px;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .mk-badge.G { background: #16b955; }
+    .mk-badge.B { background: #8a8f8c; }
+    .mk-badge.M { background: #d64545; }
+
+    .mk-result-text {
+      font-size: 12px;
+      color: #f4fff7;
+      font-weight: 700;
+      line-height: 1.35;
+      min-width: 0;
+    }
+
+    .mk-result-text small {
+      display: block;
+      color: #86b99d;
+      font-weight: 600;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .mk-fixture {
+      background: rgba(6,60,42,0.9);
+      border: 1px solid #17583d;
+      border-radius: 16px;
+      padding: 12px 12px 4px;
+      margin-bottom: 14px;
+    }
+
+    .mk-fix-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+    }
+
+    .mk-fix-item:first-of-type {
+      border-top: 0;
+    }
+
+    .mk-fix-item img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 50%;
+      padding: 3px;
+      flex-shrink: 0;
+    }
+
+    .mk-fix-name {
+      flex: 1;
+      min-width: 0;
+      color: #f4fff7;
+      font-weight: 700;
+    }
+
+    .mk-fix-name small {
+      color: #86b99d;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    .mk-fix-date {
+      color: #86b99d;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
     /* =========================
        DURUM
     ========================== */
@@ -659,6 +900,11 @@
       </div>
 
     </section>
+
+
+    <!-- MAÇ KARTI (sıradaki maç, geri sayım, son maç, fikstür) -->
+
+    <div id="mac-karti"></div>
 
 
     <!-- HABER DURUMU -->
@@ -1125,6 +1371,194 @@
 
 
     kocaelisporHaberleriniGetir();
+
+    /* =========================================================
+       MAÇ KARTI + GERİ SAYIM
+    ========================================================= */
+
+    const MAC_API =
+      "https://kocaeli-cepte-api.vercel.app/api/kocaelispor-mac";
+
+    let geriSayimTimer = null;
+
+    function mkKacis(text) {
+      const d = document.createElement("div");
+      d.textContent = text || "";
+      return d.innerHTML.replace(/"/g, "&quot;");
+    }
+
+    function mkLogo(url, ad) {
+      return url
+        ? `<img src="${mkKacis(url)}" alt="${mkKacis(ad)}" onerror="this.style.visibility='hidden'">`
+        : `<img alt="" style="visibility:hidden">`;
+    }
+
+    function mkTakim(ad, logo) {
+      const kocaeli = /kocaelispor/i.test(ad);
+      return `
+        <div class="mk-team${kocaeli ? " kocaeli" : ""}">
+          ${mkLogo(logo, ad)}
+          <span>${mkKacis(ad)}</span>
+        </div>
+      `;
+    }
+
+    function geriSayimiBaslat(mac) {
+
+      if (geriSayimTimer) clearInterval(geriSayimTimer);
+
+      const kutu = document.getElementById("mk-countdown");
+      if (!kutu) return;
+
+      // Saat belli değilse maç gününün başlangıcına göre gün say
+      const hedef = mac.baslangic
+        ? new Date(mac.baslangic).getTime()
+        : new Date(mac.tarih + "T00:00:00+03:00").getTime();
+
+      function guncelle() {
+
+        const kalan = hedef - Date.now();
+
+        if (kalan <= 0) {
+
+          clearInterval(geriSayimTimer);
+
+          kutu.outerHTML = mac.baslangic && kalan > -2.5 * 60 * 60 * 1000
+            ? `<div class="mk-live">🔴 MAÇ BAŞLADI • HAYDİ KOCAELİ!</div>`
+            : `<div class="mk-live" style="color:#35e86b">📅 BUGÜN MAÇ GÜNÜ!</div>`;
+
+          return;
+        }
+
+        const gun = Math.floor(kalan / 86400000);
+        const saat = Math.floor((kalan % 86400000) / 3600000);
+        const dk = Math.floor((kalan % 3600000) / 60000);
+        const sn = Math.floor((kalan % 60000) / 1000);
+
+        const kutular = mac.baslangic
+          ? [[gun, "GÜN"], [saat, "SAAT"], [dk, "DAKİKA"], [sn, "SANİYE"]]
+          : [[gun, "GÜN"]];
+
+        kutu.style.gridTemplateColumns =
+          `repeat(${kutular.length}, 1fr)`;
+
+        kutu.innerHTML = kutular.map(([deger, etiket]) => `
+          <div class="mk-box">
+            <b>${String(deger).padStart(2, "0")}</b>
+            <small>${etiket}</small>
+          </div>
+        `).join("");
+
+      }
+
+      guncelle();
+      geriSayimTimer = setInterval(guncelle, 1000);
+
+    }
+
+    async function macKartiniGetir() {
+
+      const alan = document.getElementById("mac-karti");
+
+      try {
+
+        const response = await fetch(MAC_API + "?t=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+
+        const data = await response.json();
+        if (!data.success) throw new Error("Veri yok");
+
+        const mac = data.siradakiMac;
+        const son = data.sonMac;
+        let html = "";
+
+        // ---------- SIRADAKİ MAÇ ----------
+        if (mac) {
+
+          const yer = mac.kocaeliEvde ? "🏟️ İç saha" : "✈️ Deplasman";
+
+          html += `
+            <div class="mk-card">
+              <div class="mk-label">SIRADAKİ MAÇ</div>
+              <div class="mk-teams">
+                ${mkTakim(mac.evSahibi, mac.evSahibiLogo)}
+                <div class="mk-vs">VS</div>
+                ${mkTakim(mac.deplasman, mac.deplasmanLogo)}
+              </div>
+              <div class="mk-info">
+                📅 ${mkKacis(mac.gunYazi)}
+                ${mac.saat ? " • 🕖 " + mkKacis(mac.saat) : " • Saat henüz açıklanmadı"}
+                <br>${yer}
+              </div>
+              <div class="mk-countdown" id="mk-countdown"></div>
+              <a class="mk-link" href="${mkKacis(mac.link)}" target="_blank" rel="noopener">
+                Maç Merkezi →
+              </a>
+            </div>
+          `;
+        }
+
+        // ---------- SON MAÇ ----------
+        if (son) {
+
+          const sonucYazi = { G: "Galibiyet", B: "Beraberlik", M: "Mağlubiyet" }[son.sonuc] || "";
+
+          html += `
+            <div class="mk-row">
+              <a class="mk-mini" href="${mkKacis(son.link)}" target="_blank" rel="noopener">
+                <div class="mk-mini-title">SON MAÇ</div>
+                <div class="mk-result">
+                  <div class="mk-badge ${mkKacis(son.sonuc)}">${mkKacis(son.sonuc)}</div>
+                  <div class="mk-result-text">
+                    ${mkKacis(son.evSahibi)} ${mkKacis(son.skor)} ${mkKacis(son.deplasman)}
+                    <small>${mkKacis(son.gunYazi)} • ${sonucYazi}</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+        }
+
+        // ---------- FİKSTÜR ----------
+        const sonraki = (data.gelecekMaclar || []).slice(1, 5);
+
+        if (sonraki.length) {
+
+          html += `
+            <div class="mk-fixture">
+              <div class="mk-mini-title">FİKSTÜR</div>
+              ${sonraki.map(m => `
+                <div class="mk-fix-item">
+                  ${mkLogo(m.kocaeliEvde ? m.deplasmanLogo : m.evSahibiLogo, m.rakip)}
+                  <div class="mk-fix-name">
+                    ${mkKacis(m.rakip)}
+                    <small>${m.kocaeliEvde ? "(İç saha)" : "(Deplasman)"}</small>
+                  </div>
+                  <div class="mk-fix-date">
+                    ${mkKacis(m.gunYazi.split(",")[0])}${m.saat ? " • " + mkKacis(m.saat) : ""}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          `;
+        }
+
+        alan.innerHTML = html;
+
+        if (mac) geriSayimiBaslat(mac);
+
+      }
+      catch (error) {
+
+        console.error("Maç kartı:", error);
+        alan.innerHTML = "";
+
+      }
+
+    }
+
+    macKartiniGetir();
+
 
   </script>
 
