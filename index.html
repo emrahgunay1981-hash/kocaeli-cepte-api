@@ -570,6 +570,42 @@ a {
   color: #9dc9ce;
 }
 
+
+/* =========================================================
+   FOTOĞRAFI OLMAYAN HABERLER: KAYNAK SİTENİN LOGOSU
+========================================================= */
+
+.logo-fallback img {
+
+  width: 64px;
+
+  height: 64px;
+
+  object-fit: contain;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  padding: 8px;
+
+  box-shadow:
+    0 3px 10px
+    rgba(20,100,120,.12);
+}
+
+.news-image.logo-fallback img {
+
+  width: 46px;
+
+  height: 46px;
+
+  padding: 6px;
+
+  border-radius: 11px;
+}
+
+
 .hero-content {
 
   padding: 14px 15px 15px;
@@ -1185,14 +1221,6 @@ a {
   font-size: 20px;
 
   flex-shrink: 0;
-}
-.traffic-icon {
-    width: 40px;
-    height: 40px;
-    ...
-    display: flex;
-    ...
-    flex-shrink: 0;
 }
 
 .traffic-content{
@@ -2649,6 +2677,108 @@ function escapeHtml(text) {
 
 
 /* =========================================================
+   KAYNAK SİTENİN LOGOSU
+   Fotoğrafı olmayan (veya fotoğrafı açılmayan) haberlerde
+   gazete ikonu yerine haberin geldiği sitenin logosunu
+   gösterir. Örn. kaynak "hurriyet.com.tr" ise Hürriyet logosu.
+========================================================= */
+
+function sourceDomain(item) {
+
+  // 1) Kaynak adı zaten bir alan adıysa (hurriyet.com.tr gibi)
+  const source =
+    String(item.source || "")
+      .trim()
+      .toLowerCase();
+
+  if (/^[a-z0-9.-]+\.[a-z]{2,}$/.test(source)) {
+    return source.replace(/^www\./, "");
+  }
+
+  // 2) Değilse haberin bağlantısındaki siteye bak
+  //    (Google Haberler yönlendirmesi ise kullanma)
+  try {
+
+    const host =
+      new URL(item.link)
+        .hostname
+        .replace(/^www\./, "");
+
+    if (!/google\./.test(host)) {
+      return host;
+    }
+
+  } catch (e) {}
+
+  return "";
+
+}
+
+
+function sourceLogoUrl(item) {
+
+  const domain =
+    sourceDomain(item);
+
+  if (!domain) return "";
+
+  return (
+    "https://www.google.com/s2/favicons?sz=128&domain=" +
+    encodeURIComponent(domain)
+  );
+
+}
+
+
+// Fotoğraf yerine gösterilecek kutu (logo, o da yoksa 📰)
+function placeholderHtml(item, className) {
+
+  const logo =
+    sourceLogoUrl(item);
+
+  if (!logo) {
+    return `<div class="${className}">📰</div>`;
+  }
+
+  return `
+    <div class="${className} logo-fallback">
+      <img
+        src="${escapeHtml(logo)}"
+        alt=""
+        loading="lazy"
+        onerror="var p=this.parentNode; p.classList.remove('logo-fallback'); p.textContent='📰';"
+      >
+    </div>
+  `;
+
+}
+
+
+// Haber fotoğrafı açılmazsa yerine logo kutusunu koy
+function imageFailed(img) {
+
+  const item = {
+    source: img.dataset.source,
+    link: img.dataset.link
+  };
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.innerHTML =
+    placeholderHtml(
+      item,
+      img.dataset.fallbackClass
+    ).trim();
+
+  img.replaceWith(
+    wrapper.firstElementChild
+  );
+
+}
+
+
+/* =========================================================
    HABER SAATİ
 ========================================================= */
 
@@ -2862,10 +2992,13 @@ async function loadNews() {
                   class="hero-image"
                   src="${escapeHtml(item.image)}"
                   alt=""
-                  onerror="this.outerHTML='<div class=&quot;hero-image-placeholder&quot;>📰</div>'"
+                  data-source="${escapeHtml(item.source)}"
+                  data-link="${escapeHtml(item.link)}"
+                  data-fallback-class="hero-image-placeholder"
+                  onerror="imageFailed(this)"
                 >
               `
-              : `<div class="hero-image-placeholder">📰</div>`
+              : placeholderHtml(item, "hero-image-placeholder")
             }
 
             <div class="hero-content">
@@ -2939,19 +3072,14 @@ async function loadNews() {
                 src="${escapeHtml(item.image)}"
                 alt=""
                 loading="lazy"
-                onerror="
-                  this.style.display='none'
-                "
+                data-source="${escapeHtml(item.source)}"
+                data-link="${escapeHtml(item.link)}"
+                data-fallback-class="news-image no-image"
+                onerror="imageFailed(this)"
               >
 
             `
-            : `
-
-              <div
-                class="news-image no-image"
-              >📰</div>
-
-            `
+            : placeholderHtml(item, "news-image no-image")
           }
 
 
