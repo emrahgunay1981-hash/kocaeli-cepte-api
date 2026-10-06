@@ -253,6 +253,17 @@
       color: #2a6b4a;
     }
 
+    /* Resim yoksa: kaynak sitenin logosu */
+    .logo-fallback img {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 9px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    }
+
     .news-content {
       padding: 16px;
     }
@@ -713,6 +724,9 @@
   </nav>
 
 
+  <!-- Ortak kaynak logosu kodu -->
+  <script src="kaynak-logo.js"></script>
+
   <script>
 
     let heroAutoplayTimer = null;
@@ -869,7 +883,7 @@
 
             div.textContent = text;
 
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, "&quot;");
           }
 
 
@@ -945,6 +959,13 @@
                   "";
 
 
+                // Logo için kaynak adı ve gerçek bağlantı
+                const logoItem = {
+                  source: item.source || "",
+                  link: link
+                };
+
+
                 const imageHTML =
                   image
 
@@ -955,12 +976,20 @@
                         src="${escapeHTML(image)}"
                         alt="${title}"
                         loading="lazy"
-                        onerror="this.outerHTML='<div class=&quot;news-image no-image&quot;>⚽</div>'"
+                        data-source="${escapeHTML(logoItem.source)}"
+                        data-link="${escapeHTML(logoItem.link)}"
+                        data-fallback-class="news-image no-image"
+                        data-icon="⚽"
+                        onerror="resimAcilmadi(this)"
                       >
 
                     `
 
-                    : `<div class="news-image no-image">⚽</div>`;
+                    : logoKutusuHtml(
+                        logoItem,
+                        "news-image no-image",
+                        "⚽"
+                      );
 
 
                 return `
