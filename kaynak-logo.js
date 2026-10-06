@@ -202,3 +202,203 @@ function resimAcilmadi(img) {
   );
 
 }
+
+
+// =========================================================
+// AYNI HABERİ TEKRAR GÖSTERME
+// =========================================================
+// Farklı gazeteler aynı olayı neredeyse aynı başlıkla
+// verebiliyor ("Beşiktaş, Kocaelispor maçı hazırlıklarını
+// sürdürdü - Ajansspor" ve "... - Sözcü" gibi). Bu fonksiyon
+// başlıkları karşılaştırır, benzer olanlardan sadece birini
+// bırakır. Fotoğraflı olanı tercih eder.
+//
+// BENZERLIK_ESIGI: 0 ile 1 arası. Büyüdükçe sadece çok benzer
+// başlıklar elenir. Fazla haber kayboluyorsa 0.7 yap.
+// =========================================================
+
+const BENZERLIK_ESIGI = 0.6;
+
+const ONEMSIZ_KELIMELER = new Set([
+  "bir", "ve", "ile", "için", "icin", "da", "de", "bu", "şu",
+  "olan", "oldu", "gibi", "daha", "çok", "son", "dakika"
+]);
+
+
+function baslikKelimeleri(title) {
+
+  let text =
+    String(title || "");
+
+  // Sondaki " - Kaynak Adı" kısmını at
+  const dashIndex =
+    text.lastIndexOf(" - ");
+
+  if (dashIndex > 20) {
+    text = text.slice(0, dashIndex);
+  }
+
+  const kelimeler =
+    text
+      .toLocaleLowerCase("tr-TR")
+      .replace(/[^a-zçğıöşü0-9\s]/gi, " ")
+      .split(/\s+/)
+      .filter(k => k.length >= 3 && !ONEMSIZ_KELIMELER.has(k))
+      // Türkçe ekleri yok saymak için kelimenin ilk 5 harfi
+      // ("maçı" / "maçının", "kocaelispor'da" / "kocaelispor")
+      .map(k => k.slice(0, 5));
+
+  return new Set(kelimeler);
+
+}
+
+
+function baslikBenzerligi(a, b) {
+
+  if (!a.size || !b.size) return 0;
+
+  let ortak = 0;
+
+  a.forEach(k => {
+    if (b.has(k)) ortak++;
+  });
+
+  return ortak / (a.size + b.size - ortak);
+
+}
+
+
+function benzerHaberleriTemizle(items) {
+
+  if (!Array.isArray(items)) return [];
+
+  const sonuc = [];
+
+  for (const item of items) {
+
+    const kelimeler =
+      baslikKelimeleri(item.title);
+
+    let ayniIndex = -1;
+
+    for (let i = 0; i < sonuc.length; i++) {
+
+      if (
+        baslikBenzerligi(kelimeler, sonuc[i]._kelimeler) >=
+        BENZERLIK_ESIGI
+      ) {
+        ayniIndex = i;
+        break;
+      }
+
+    }
+
+    if (ayniIndex === -1) {
+
+      sonuc.push({ ...item, _kelimeler: kelimeler });
+
+    }
+    else if (!sonuc[ayniIndex].image && item.image) {
+
+      // Öncekinde fotoğraf yoksa, fotoğraflı olanı tut
+      // (listedeki yeri değişmez)
+      sonuc[ayniIndex] = { ...item, _kelimeler: kelimeler };
+
+    }
+
+  }
+
+  return sonuc.map(item => {
+    const temiz = { ...item };
+    delete temiz._kelimeler;
+    return temiz;
+  });
+
+}
+
+
+// =========================================================
+// ESKİ HABERLERİ GİZLE
+// =========================================================
+// HABER_EN_FAZLA_GUN: Kaç günden eski haberler gizlensin.
+// Sakin günlerde sayfa boş kalmasın diye, kalan haber sayısı
+// HABER_EN_AZ_SAYI'nın altına düşerse süre YEDEK_GUN'e uzatılır.
+// Tarihi hiç anlaşılamayan haberler gizlenmez.
+// =========================================================
+
+const HABER_EN_FAZLA_GUN = 3;
+const YEDEK_GUN = 7;
+const HABER_EN_AZ_SAYI = 5;
+
+
+// Haberin kaç gün önce yayımlandığını bulur (bulamazsa null)
+function haberKacGunOnce(item) {
+
+  const simdi = Date.now();
+  const GUN = 24 * 60 * 60 * 1000;
+
+  // 1) Gerçek tarih alanları
+  for (const alan of [item.pubDate, item.isoDate, item.date]) {
+
+    if (!alan) continue;
+
+    const t = new Date(alan).getTime();
+
+    if (!isNaN(t)) {
+      return (simdi - t) / GUN;
+    }
+
+  }
+
+  // 2) "4 saat önce", "2 hafta önce", "dün" gibi yazılar
+  const yazi =
+    String(item.time || "")
+      .toLocaleLowerCase("tr-TR");
+
+  if (!yazi) return null;
+
+  if (yazi.includes("az önce") || yazi.includes("şimdi")) return 0;
+  if (yazi.includes("dün")) return 1;
+
+  const m =
+    yazi.match(/(\d+)\s*(saniye|dakika|saat|gün|hafta|ay|yıl)/);
+
+  if (!m) return null;
+
+  const sayi = parseInt(m[1], 10);
+
+  const carpan = {
+    "saniye": 1 / 86400,
+    "dakika": 1 / 1440,
+    "saat": 1 / 24,
+    "gün": 1,
+    "hafta": 7,
+    "ay": 30,
+    "yıl": 365
+  }[m[2]];
+
+  return sayi * carpan;
+
+}
+
+
+function guncelHaberler(items) {
+
+  if (!Array.isArray(items)) return [];
+
+  const filtrele = gunSiniri =>
+    items.filter(item => {
+      const gun = haberKacGunOnce(item);
+      return gun === null || gun <= gunSiniri;
+    });
+
+  const sonuc =
+    filtrele(HABER_EN_FAZLA_GUN);
+
+  if (sonuc.length >= HABER_EN_AZ_SAYI) {
+    return sonuc;
+  }
+
+  return filtrele(YEDEK_GUN);
+
+}
