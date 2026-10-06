@@ -29,7 +29,16 @@ const CACHE_TIME = 30 * 60 * 1000;
 // ------------------------------------------------------------
 
 const MANUEL_SAATLER = {
-    "2026-10-11": "19:00"   // Beşiktaş - Kocaelispor
+    "2026-10-11": "19:00",  // Beşiktaş - Kocaelispor
+    "2026-10-18": "16:00",  // Kocaelispor - Göztepe
+    "2026-10-23": "20:00",  // Alanyaspor - Kocaelispor
+    "2026-10-31": "16:00",  // Kocaelispor - Ç. Rizespor
+    "2026-11-07": "13:30",  // Eyüpspor - Kocaelispor
+    "2026-11-21": "19:00",  // Kocaelispor - Fenerbahçe
+    "2026-11-29": "13:30",  // Çorum FK - Kocaelispor
+    "2026-12-06": "13:30",  // Erzurumspor FK - Kocaelispor
+    "2026-12-13": "13:30",  // Kocaelispor - Gençlerbirliği
+    "2026-12-21": "20:00"   // Trabzonspor - Kocaelispor
 };
 
 let cache = { timestamp: 0, data: null };
@@ -387,4 +396,3 @@ module.exports = async function handler(req, res) {
     }
 
 };
-
