@@ -773,6 +773,8 @@ async function getSeyretEtkinlikleri() {
 // engellenirse tüm API'yi bozmadan sessizce boş döner.
 // ============================================================
 
+let bubiletDurum = "henüz çalışmadı";
+
 async function getBubiletEtkinlikleri() {
 
     const base = "https://www.bubilet.com.tr";
@@ -783,11 +785,61 @@ async function getBubiletEtkinlikleri() {
         const html =
             await fetchWithRetry(url, 2, 8000);
 
-        const headingRegex =
-            /<(h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>/gi;
+        // Sayfadaki tüm etkinlik linklerini (<a href=".../etkinlik/...">)
+        // sırasıyla topla.
+        const anchors = [];
 
-        const matches =
-            [...html.matchAll(headingRegex)];
+        const tagRegex = /<a\b[^>]*>/gi;
+
+        let m;
+
+        while ((m = tagRegex.exec(html)) !== null) {
+
+            const tag = m[0];
+
+            const hrefMatch =
+                tag.match(/href=["']([^"']+)["']/i);
+
+            if (!hrefMatch) continue;
+
+            const href = hrefMatch[1];
+
+            if (!/\/etkinlik\//i.test(href)) continue;
+
+            const titleMatch =
+                tag.match(/title=["']([^"']*)["']/i);
+
+            anchors.push({
+                href,
+                title: titleMatch ? cleanText(titleMatch[1]) : "",
+                index: m.index
+            });
+
+        }
+
+        // Aynı linke ait art arda gelen <a> etiketlerini tek
+        // bir etkinlik kartı olarak grupla.
+        const groups = [];
+
+        for (const a of anchors) {
+
+            const last = groups[groups.length - 1];
+
+            if (last && last.href === a.href) {
+
+                if (!last.title && a.title) last.title = a.title;
+
+                continue;
+
+            }
+
+            groups.push({
+                href: a.href,
+                title: a.title,
+                start: a.index
+            });
+
+        }
 
         const now = new Date();
         const currentYear = now.getFullYear();
@@ -795,35 +847,33 @@ async function getBubiletEtkinlikleri() {
 
         const events = [];
 
-        for (let i = 0; i < matches.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
 
-            const headingHtml = matches[i][2];
-
-            const linkMatch =
-                headingHtml.match(
-                    /href=["']([^"']*\/etkinlik\/[^"']+)["']/i
-                );
-
-            if (!linkMatch) continue;
-
-            const title = cleanText(headingHtml);
-
-            if (!title) continue;
-
-            const start =
-                matches[i].index +
-                matches[i][0].length;
+            const g = groups[i];
 
             const end =
-                i + 1 < matches.length
-                    ? matches[i + 1].index
+                i + 1 < groups.length
+                    ? groups[i + 1].start
                     : html.length;
 
             const block =
                 html.substring(
-                    start,
-                    Math.min(end, start + 3000)
+                    g.start,
+                    Math.min(end, g.start + 4000)
                 );
+
+            let title = g.title;
+
+            if (!title) {
+
+                const h =
+                    block.match(/<(h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>/i);
+
+                title = h ? cleanText(h[2]) : "";
+
+            }
+
+            if (!title) continue;
 
             const venueMatch =
                 block.match(
@@ -863,7 +913,7 @@ async function getBubiletEtkinlikleri() {
                     ? dt[3].padStart(5, "0")
                     : "";
 
-            let link = linkMatch[1];
+            let link = g.href;
 
             if (link.startsWith("/")) {
                 link = base + link;
@@ -933,9 +983,7 @@ async function getBubiletEtkinlikleri() {
 
         for (const event of events) {
 
-            const key =
-                event.link ||
-                (event.title + "|" + event.date);
+            const key = event.link;
 
             if (seen.has(key)) continue;
 
@@ -945,10 +993,18 @@ async function getBubiletEtkinlikleri() {
 
         }
 
+        bubiletDurum =
+            "sayfa " + html.length + " karakter, " +
+            anchors.length + " link, " +
+            groups.length + " kart, " +
+            unique.length + " etkinlik";
+
         return unique;
 
     }
     catch (error) {
+
+        bubiletDurum = "hata: " + error.message;
 
         console.error(
             "Bubilet:",
@@ -1831,7 +1887,9 @@ module.exports = async function handler(
                     now,
 
                 cached:
-                    false
+                    false,
+
+                bubiletDurum
 
             });
 
