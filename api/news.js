@@ -135,20 +135,33 @@ async function getSignatureParams(googleNewsUrl) {
   }
 }
 
-async function decodeGoogleNewsUrls(paramsList) {
-  // paramsList: [{articleId, signature, timestamp}, ...] - sırayla
-  const reqs = paramsList.map(p => [
-    "Fbv4je",
-    JSON.stringify([
-      "garturlreq",
-      [["X", "X", ["X", "X"], null, null, 1, 1, "US:en", null, 1, null, null, null, null, null, 0, 1], "X", "X", 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0],
-      p.articleId,
-      Number(p.timestamp),
-      p.signature
-    ])
-  ]);
+// ------------------------------------------
+// TEK BİR HABERİN GERÇEK ADRESİNİ ÇÖZ
+// ------------------------------------------
+// ÖNEMLİ DÜZELTME: Eskiden tüm haberler TEK bir istekte
+// toplu soruluyordu. Cevaplardan biri hatalı gelince sıra
+// kayıyor, haberlere BAŞKA haberlerin adresi (ve dolayısıyla
+// başka haberlerin fotoğrafı) atanıyordu. Artık her haber
+// kendi ayrı isteğiyle çözülüyor; karışma imkânsız.
 
-  const body = "f.req=" + encodeURIComponent(JSON.stringify([reqs]));
+async function decodeOneGoogleNewsUrl(p) {
+
+  if (!p) return null;
+
+  const req = [[
+    [
+      "Fbv4je",
+      JSON.stringify([
+        "garturlreq",
+        [["X", "X", ["X", "X"], null, null, 1, 1, "US:en", null, 1, null, null, null, null, null, 0, 1], "X", "X", 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0],
+        p.articleId,
+        Number(p.timestamp),
+        p.signature
+      ])
+    ]
+  ]];
+
+  const body = "f.req=" + encodeURIComponent(JSON.stringify(req));
 
   try {
     const controller = new AbortController();
@@ -166,28 +179,30 @@ async function decodeGoogleNewsUrls(paramsList) {
     });
 
     clearTimeout(timeout);
-    if (!response.ok) return [];
+    if (!response.ok) return null;
 
     const text = await response.text();
     const parts = text.split("\n\n");
-    if (parts.length < 2) return [];
+    if (parts.length < 2) return null;
 
     const parsed = JSON.parse(parts[1]);
-    const urls = [];
 
     for (const row of parsed) {
       if (!Array.isArray(row) || row[0] !== "wrb.fr" || typeof row[2] !== "string") continue;
       try {
         const inner = JSON.parse(row[2]);
-        urls.push(inner[1] || null);
+        const url = inner[1];
+        if (typeof url === "string" && /^https?:\/\//.test(url)) {
+          return url;
+        }
       } catch (e) {
-        urls.push(null);
+        return null;
       }
     }
 
-    return urls;
+    return null;
   } catch (error) {
-    return [];
+    return null;
   }
 }
 
@@ -218,10 +233,6 @@ async function getImageFromUrl(url) {
     return null;
   }
 }
-
-// ==========================================
-// HABERLERİ AL
-// ==========================================
 
 // ==========================================
 // GOOGLE NEWS
@@ -281,41 +292,27 @@ async function getGoogleNews() {
 }
 
 async function resolveGoogleImages(itemsForImages) {
-  const paramsList = [];
+
+  // Her haberi kendi başına çöz: imza -> gerçek adres -> görsel.
+  // Bir haberin başarısız olması diğerlerini asla etkilemez.
   for (let i = 0; i < itemsForImages.length; i += 5) {
+
     const batch = itemsForImages.slice(i, i + 5);
-    const results = await Promise.all(batch.map(item => getSignatureParams(item.link)));
-    results.forEach((params, idx) => { paramsList[i + idx] = params; });
-  }
 
-  const validIndexes = [];
-  const validParams = [];
-  paramsList.forEach((params, idx) => {
-    if (params) {
-      validIndexes.push(idx);
-      validParams.push(params);
-    }
-  });
-
-  if (validParams.length > 0) {
-    const decodedUrls = await decodeGoogleNewsUrls(validParams);
-    decodedUrls.forEach((realUrl, i) => {
-      const itemIndex = validIndexes[i];
-      if (itemIndex !== undefined && realUrl) {
-        itemsForImages[itemIndex].realUrl = realUrl;
-      }
-    });
-  }
-
-  for (let i = 0; i < itemsForImages.length; i += 5) {
-    const batch = itemsForImages.slice(i, i + 5);
     await Promise.all(
       batch.map(async item => {
-        if (item.realUrl) {
-          item.image = await getImageFromUrl(item.realUrl);
+
+        const params = await getSignatureParams(item.link);
+        const realUrl = await decodeOneGoogleNewsUrl(params);
+
+        if (realUrl) {
+          item.realUrl = realUrl;
+          item.image = await getImageFromUrl(realUrl);
         }
+
       })
     );
+
   }
 }
 
