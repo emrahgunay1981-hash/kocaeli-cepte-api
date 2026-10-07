@@ -1701,6 +1701,44 @@ async function getBasketbolEtkinlikleri() {
 
 
 // ============================================================
+// ETKİNLİĞİN TARİHİNİ BUL (YYYY-AA-GG)
+// isoDate, "05.10.2026" ya da "12 Ekim 2026" biçimlerini anlar.
+// ============================================================
+
+function etkinlikTarihi(event) {
+
+    if (event.isoDate) {
+        return String(event.isoDate).slice(0, 10);
+    }
+
+    const sayisal =
+        parseEventDate(event.date);
+
+    if (sayisal) return sayisal;
+
+    const m =
+        String(event.date || "").match(
+            /(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(20\d{2})/
+        );
+
+    if (m) {
+
+        const ay =
+            TURKCE_AYLAR_SAYI[m[2].toLocaleLowerCase("tr-TR")];
+
+        if (ay) {
+            return m[3] + "-" +
+                String(ay).padStart(2, "0") + "-" +
+                m[1].padStart(2, "0");
+        }
+
+    }
+
+    return null;
+}
+
+
+// ============================================================
 // TÜM ETKİNLİKLER
 // ============================================================
 
@@ -1768,6 +1806,29 @@ async function getAllEvents() {
         unique.push(event);
 
     }
+
+    // --------------------------------------------------------
+    // GEÇMİŞ ETKİNLİKLERİ AT
+    // Tarihi bugünden (Türkiye saatiyle) önce olan etkinlik ve
+    // maçlar listeden çıkarılır. Bugünküler gün boyunca kalır.
+    // Tarihi anlaşılamayanlara dokunulmaz.
+    // --------------------------------------------------------
+
+    const bugunTR = (() => {
+        const d = new Date(Date.now() + 3 * 60 * 60 * 1000);
+        return d.getUTCFullYear() + "-" +
+            String(d.getUTCMonth() + 1).padStart(2, "0") + "-" +
+            String(d.getUTCDate()).padStart(2, "0");
+    })();
+
+    const guncel =
+        unique.filter(event => {
+            const tarih = etkinlikTarihi(event);
+            return !tarih || tarih >= bugunTR;
+        });
+
+    unique.length = 0;
+    unique.push(...guncel);
 
     // --------------------------------------------------------
     // TARİHE GÖRE SIRALA
