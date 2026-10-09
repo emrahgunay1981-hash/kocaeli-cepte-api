@@ -1,1 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#078897">
+<title>Kocaeli Cepte - Esnaf Mutfağı Cepte</title>
+<meta name="description" content="Kocaeli esnafından komisyonsuz sipariş. Sipariş doğrudan işletmenin WhatsApp hattına gider.">
+
+<style>
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top right, rgba(0,207,232,.12), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(0,207,232,.07), transparent 35%),
+        #061B35;
+    color: #F5FAFF;
+    min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(135deg, #087F91, #00AFC3);
+    padding: 17px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,.20);
+}
+.header h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: .2px; }
+.header .sub { margin: 4px 0 0; font-size: 13px; color: rgba(255,255,255,.9); }
+.back {
+    display: inline-block;
+    margin-top: 8px;
+    color: rgba(255,255,255,.88);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* CONTAINER */
+.container { padding: 15px; max-width: 800px; margin: auto; }
+
+/* INFO */
+.info {
+    background: rgba(0,207,232,.08);
+    border: 1px solid rgba(56,232,245,.18);
+    border-radius: 16px;
+    padding: 14px 15px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #D7EAF5;
+}
+.info b { color: #38E8F5; }
+
+/* FILTER */
+.filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.chip {
+    flex: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(56,232,245,.18);
+    background: #0A2948;
+    color: #AFC3D2;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.chip.active { background: #00AFC3; color: #04223A; border-color: #00AFC3; }
+
+/* CARD */
+.card {
+    background: linear-gradient(145deg, #0A2948, #08243F);
+    border: 1px solid rgba(56,232,245,.12);
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 9px 28px rgba(0,0,0,.20);
+}
+.card-top {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 15px 16px 0;
+}
+.mono {
+    flex: none;
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 19px;
+    background: #123A5D; color: #38E8F5;
+    border: 1px solid rgba(56,232,245,.15);
+}
+.card-name { font-size: 18px; font-weight: 800; color: #F5FAFF; }
+.card-place { color: #AFC3D2; font-size: 13px; margin-top: 2px; }
+.card-body { padding: 12px 16px 15px; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 11px; }
+.badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #123A5D;
+    color: #9CCFFF;
+    border: 1px solid rgba(156,207,255,.08);
+}
+.badge.free { background: rgba(0,207,232,.12); color: #38E8F5; border-color: rgba(56,232,245,.10); }
+.desc { color: #D7EAF5; font-size: 14px; line-height: 1.55; margin: 0 0 10px; }
+.terms { color: #8FA9BC; font-size: 12.5px; line-height: 1.6; margin-bottom: 13px; }
+.actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 8px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 800;
+    border: 1px solid rgba(56,232,245,.18);
+    color: #38E8F5;
+    background: #0D3558;
+    text-align: center;
+}
+.btn.primary { grid-column: 1 / -1; background: #25D366; color: #06331A; border-color: #25D366; font-size: 15px; padding: 13px 8px; }
+.btn:focus-visible, .chip:focus-visible { outline: 2px solid #38E8F5; outline-offset: 2px; }
+
+/* JOIN */
+.join {
+    margin-top: 6px;
+    border: 1px dashed rgba(56,232,245,.35);
+    border-radius: 18px;
+    padding: 18px 16px;
+    text-align: center;
+    color: #AFC3D2;
+    font-size: 14px;
+    line-height: 1.6;
+}
+.join h2 { margin: 0 0 6px; font-size: 17px; color: #F5FAFF; }
+.join a { color: #38E8F5; font-weight: 700; }
+
+.empty { text-align: center; padding: 26px 10px; color: #9DB7CC; }
+
+@media (max-width: 480px) {
+    .header { padding: 16px 15px; }
+    .header h1 { font-size: 21px; }
+    .container { padding: 13px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🥘 Esnaf Mutfağı Cepte</h1>
+    <p class="sub">Kocaeli esnafından komisyonsuz sipariş</p>
+    <a class="back" href="index.html">← Kocaeli Cepte'ye Dön</a>
+</div>
+
+<div class="container">
+
+    <div class="info">
+        Burada siparişiniz <b>aracı olmadan</b>, doğrudan işletmenin WhatsApp hattına gider.
+        Esnaf platform komisyonu ödemez, siz de mahallenizin emekçisini doğrudan desteklersiniz.
+    </div>
+
+    <div class="filters" id="filters" role="tablist" aria-label="İlçe"></div>
+
+    <div id="list"></div>
+
+    <div class="join">
+        <h2>İşletmenizi ekleyin</h2>
+        Ev yemeği, börek, tatlı ya da restoran işletiyorsanız Esnaf Mutfağı Cepte'de yer alabilirsiniz.
+        Size komisyonsuz bir sipariş sayfası da hazırlıyoruz.<br>
+        İletişim: <a href="mailto:kocaelicepte@gmail.com">kocaelicepte@gmail.com</a>
+    </div>
+
+</div>
+
+<script>
+/* ============================================
+   ÜYE İŞLETMELER
+   Yeni işletme eklemek için bu listeye bir
+   kayıt daha ekleyin.
+   ============================================ */
+const ISLETMELER = [
+  {
+    ad: "Duru El Lezzetleri",
+    kisa: "DE",
+    ilce: "İzmit",
+    mahalle: "Yenişehir Mah.",
+    adres: "Paşa Cd. Şht. Selçuk Gökdağ Sk. No:1/A, İzmit",
+    etiketler: ["Börek", "Baklava", "İçli köfte", "Mantı", "Sarma"],
+    aciklama: "El açması börek, tepsi baklava, içli köfte, mantı ve yaprak sarması. Ev usulü, günlük üretim.",
+    kosullar: "3.500 ₺ ve üzeri siparişlerde eve teslim · Gel-al için saat seçilebilir · Kredi kartı geçerli",
+    siparis: "https://duru-siparis.vercel.app",
+    telefon: "05078053878",
+    telefonGoster: "0507 805 38 78",
+    harita: "https://www.google.com/maps/search/?api=1&query=Duru+El+Lezzetleri+Yeni%C5%9Fehir+%C4%B0zmit",
+    instagram: "https://www.instagram.com/duru.el.lezzetleri/"
+  }
+];
+
+const list = document.getElementById("list");
+const filters = document.getElementById("filters");
+let secili = "Tümü";
+
+function ilceler() {
+  return ["Tümü", ...new Set(ISLETMELER.map(i => i.ilce))];
+}
+
+function cizFiltre() {
+  filters.innerHTML = "";
+  ilceler().forEach(ad => {
+    const b = document.createElement("button");
+    b.className = "chip" + (ad === secili ? " active" : "");
+    b.textContent = ad;
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", ad === secili);
+    b.onclick = () => { secili = ad; cizFiltre(); cizListe(); };
+    filters.append(b);
+  });
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+function cizListe() {
+  const gorunen = ISLETMELER.filter(i => secili === "Tümü" || i.ilce === secili);
+  if (!gorunen.length) {
+    list.innerHTML = '<div class="empty">Bu ilçede henüz üye işletme yok.</div>';
+    return;
+  }
+  list.innerHTML = gorunen.map(i => `
+    <article class="card">
+      <div class="card-top">
+        <div class="mono" aria-hidden="true">${esc(i.kisa)}</div>
+        <div>
+          <div class="card-name">${esc(i.ad)}</div>
+          <div class="card-place">${esc(i.mahalle)} · ${esc(i.ilce)}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="badges">
+          <span class="badge free">Komisyonsuz</span>
+          ${i.etiketler.map(t => `<span class="badge">${esc(t)}</span>`).join("")}
+        </div>
+        <p class="desc">${esc(i.aciklama)}</p>
+        <div class="terms">${esc(i.kosullar)}<br>${esc(i.adres)}</div>
+        <div class="actions">
+          <a class="btn primary" href="${i.siparis}" target="_blank" rel="noopener">Menü ve Sipariş</a>
+          <a class="btn" href="tel:${i.telefon}" aria-label="Ara: ${esc(i.telefonGoster)}">📞 Ara</a>
+          <a class="btn" href="${i.harita}" target="_blank" rel="noopener">📍 Yol tarifi</a>
+          <a class="btn" href="${i.instagram}" target="_blank" rel="noopener">📷 Instagram</a>
+        </div>
+      </div>
+    </article>`).join("");
+}
+
+cizFiltre();
+cizListe();
+</script>
+
+</body>
+</html>
 
