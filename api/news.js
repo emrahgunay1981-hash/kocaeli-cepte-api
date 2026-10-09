@@ -135,33 +135,20 @@ async function getSignatureParams(googleNewsUrl) {
   }
 }
 
-// ------------------------------------------
-// TEK BİR HABERİN GERÇEK ADRESİNİ ÇÖZ
-// ------------------------------------------
-// ÖNEMLİ DÜZELTME: Eskiden tüm haberler TEK bir istekte
-// toplu soruluyordu. Cevaplardan biri hatalı gelince sıra
-// kayıyor, haberlere BAŞKA haberlerin adresi (ve dolayısıyla
-// başka haberlerin fotoğrafı) atanıyordu. Artık her haber
-// kendi ayrı isteğiyle çözülüyor; karışma imkânsız.
+async function decodeGoogleNewsUrls(paramsList) {
+  // paramsList: [{articleId, signature, timestamp}, ...] - sırayla
+  const reqs = paramsList.map(p => [
+    "Fbv4je",
+    JSON.stringify([
+      "garturlreq",
+      [["X", "X", ["X", "X"], null, null, 1, 1, "US:en", null, 1, null, null, null, null, null, 0, 1], "X", "X", 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0],
+      p.articleId,
+      Number(p.timestamp),
+      p.signature
+    ])
+  ]);
 
-async function decodeOneGoogleNewsUrl(p) {
-
-  if (!p) return null;
-
-  const req = [[
-    [
-      "Fbv4je",
-      JSON.stringify([
-        "garturlreq",
-        [["X", "X", ["X", "X"], null, null, 1, 1, "US:en", null, 1, null, null, null, null, null, 0, 1], "X", "X", 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0],
-        p.articleId,
-        Number(p.timestamp),
-        p.signature
-      ])
-    ]
-  ]];
-
-  const body = "f.req=" + encodeURIComponent(JSON.stringify(req));
+  const body = "f.req=" + encodeURIComponent(JSON.stringify([reqs]));
 
   try {
     const controller = new AbortController();
@@ -179,30 +166,28 @@ async function decodeOneGoogleNewsUrl(p) {
     });
 
     clearTimeout(timeout);
-    if (!response.ok) return null;
+    if (!response.ok) return [];
 
     const text = await response.text();
     const parts = text.split("\n\n");
-    if (parts.length < 2) return null;
+    if (parts.length < 2) return [];
 
     const parsed = JSON.parse(parts[1]);
+    const urls = [];
 
     for (const row of parsed) {
       if (!Array.isArray(row) || row[0] !== "wrb.fr" || typeof row[2] !== "string") continue;
       try {
         const inner = JSON.parse(row[2]);
-        const url = inner[1];
-        if (typeof url === "string" && /^https?:\/\//.test(url)) {
-          return url;
-        }
+        urls.push(inner[1] || null);
       } catch (e) {
-        return null;
+        urls.push(null);
       }
     }
 
-    return null;
+    return urls;
   } catch (error) {
-    return null;
+    return [];
   }
 }
 
@@ -233,6 +218,10 @@ async function getImageFromUrl(url) {
     return null;
   }
 }
+
+// ==========================================
+// HABERLERİ AL
+// ==========================================
 
 // ==========================================
 // GOOGLE NEWS
@@ -292,28 +281,49 @@ async function getGoogleNews() {
 }
 
 async function resolveGoogleImages(itemsForImages) {
-
-  // Her haberi kendi başına çöz: imza -> gerçek adres -> görsel.
-  // Bir haberin başarısız olması diğerlerini asla etkilemez.
+  const paramsList = [];
   for (let i = 0; i < itemsForImages.length; i += 5) {
-
     const batch = itemsForImages.slice(i, i + 5);
+    const results = await Promise.all(batch.map(item => getSignatureParams(item.link)));
+    results.forEach((params, idx) => { paramsList[i + idx] = params; });
+  }
 
+  const validIndexes = [];
+  const validParams = [];
+  paramsList.forEach((params, idx) => {
+    if (params) {
+      validIndexes.push(idx);
+      validParams.push(params);
+    }
+  });
+
+  if (validParams.length > 0) {
+    const decodedUrls = await decodeGoogleNewsUrls(validParams);
+    decodedUrls.forEach((realUrl, i) => {
+      const itemIndex = validIndexes[i];
+      if (itemIndex !== undefined && realUrl) {
+        itemsForImages[itemIndex].realUrl = realUrl;
+      }
+    });
+  }
+
+  for (let i = 0; i < itemsForImages.length; i += 5) {
+    const batch = itemsForImages.slice(i, i + 5);
     await Promise.all(
       batch.map(async item => {
-
-        const params = await getSignatureParams(item.link);
-        const realUrl = await decodeOneGoogleNewsUrl(params);
-
-        if (realUrl) {
-          item.realUrl = realUrl;
-          item.image = await getImageFromUrl(realUrl);
+        if (item.realUrl) {
+          item.image = await getImageFromUrl(item.realUrl);
         }
-
       })
     );
-
   }
+}
+
+const BLOCKED_SOURCES = ["haberler.com", "haberler"];
+function isBlockedItem(item) {
+  const s = String(item.source || "").toLocaleLowerCase("tr-TR").trim();
+  const t = String(item.title || "").toLocaleLowerCase("tr-TR");
+  return BLOCKED_SOURCES.some(b => s === b || s.includes("haberler.com") || t.endsWith("- " + b));
 }
 
 async function getNews() {
@@ -329,6 +339,7 @@ async function getNews() {
 
   const seen = new Set();
   const googleItems = rawItems.filter(item => {
+    if (isBlockedItem(item)) return false;
     const key = item.title.toLowerCase().replace(/[^a-z0-9çğıöşü\s]/gi, "").replace(/\s+/g, " ").trim();
     if (seen.has(key)) return false;
     seen.add(key);
