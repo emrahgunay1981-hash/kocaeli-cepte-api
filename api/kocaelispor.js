@@ -223,6 +223,13 @@ async function getImageFromUrl(url) {
 // HABERLERİ AL
 // ==========================================
 
+const BLOCKED_SOURCES = ["haberler.com", "haberler"];
+function isBlockedItem(item) {
+  const s = String(item.source || "").toLocaleLowerCase("tr-TR").trim();
+  const t = String(item.title || "").toLocaleLowerCase("tr-TR");
+  return BLOCKED_SOURCES.some(b => s === b || s.includes("haberler.com") || t.endsWith("- " + b));
+}
+
 async function getNews() {
   try {
     const response = await fetch(RSS_URL, {
@@ -272,6 +279,8 @@ async function getNews() {
     // ======================================
     // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
     // ======================================
+
+    for (let i = items.length - 1; i >= 0; i--) if (isBlockedItem(items[i])) items.splice(i, 1);
 
     const itemsForImages = items.slice(0, IMAGE_RESOLVE_LIMIT);
 
