@@ -1,1 +1,176 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#078897">
+<title>Sipariş - Esnaf Mutfağı Cepte</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Nunito+Sans:wght@400;600;800&display=swap">
+
+<style>
+/* Renkler seçilen işletmenin "tema" bilgisinden gelir (isletmeler.js) */
+:root{
+  --bg:#061B35; --panel:#0A2948; --line:#1d4a6e; --fg:#F5FAFF; --muted:#AFC3D2;
+  --accent:#38E8F5; --accent-deep:#00AFC3; --wa:#25D366;
+  --f-head:"Marcellus",Georgia,serif; --f-body:"Nunito Sans",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.top{background:linear-gradient(135deg,#087F91,#00AFC3);padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.top a{color:rgba(255,255,255,.92);text-decoration:none;font-size:13px;font-weight:700;font-family:Arial,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:24px 150px}
+header{text-align:center;display:grid;gap:4px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--f-head);font-size:1.85rem;letter-spacing:.05em;color:var(--accent);text-transform:uppercase}
+.tag{color:var(--muted);font-style:italic}
+.info{font-size:.88rem;color:var(--muted)}
+h2{font-family:var(--f-head);font-weight:400;color:var(--accent);font-size:1.1rem;letter-spacing:.12em;text-transform:uppercase;margin:28px 0 8px}
+.item{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding-block:12px;border-bottom:1px dashed var(--line)}
+.name{font-weight:600;min-width:0}
+.unit{font-size:.85rem;color:var(--muted)}
+.price{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:800;text-align:right}
+.qty{grid-column:1/-1;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.qty button{width:38px;height:38px;border-radius:50%;border:1px solid var(--accent-deep);background:transparent;color:var(--accent);font-size:1.3rem;cursor:pointer}
+.qty button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qty output{min-width:3.2em;text-align:center;font-variant-numeric:tabular-nums;font-weight:800}
+.item.on .name{color:var(--accent)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;background:var(--panel)}
+.opt input{accent-color:var(--accent)}
+.opt:has(input:checked){border-color:var(--accent);color:var(--accent)}
+label.f{display:grid;gap:4px;margin-top:12px;font-size:.9rem;color:var(--muted)}
+input,textarea{background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:8px;padding:10px;font:inherit}
+.note{font-size:.8rem;color:var(--muted);margin-top:20px;text-align:center}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--accent-deep);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.bar-in{max-width:560px;margin:0 auto;display:flex;gap:12px;align-items:center}
+.total{flex:1;min-width:0}
+.total small{display:block;color:var(--muted);font-size:.8rem}
+.total b{font-size:1.3rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.send{background:var(--wa);color:#0b2a16;font-weight:800;border-radius:999px;padding:12px 18px;text-decoration:none;white-space:nowrap}
+.send[aria-disabled="true"]{opacity:.4;pointer-events:none}
+.yok{text-align:center;padding:60px 16px;color:var(--muted)}
+.yok a{color:var(--accent);font-weight:700}
+.powered{text-align:center;font-size:.75rem;color:var(--muted);margin-top:14px}
+.powered a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="top"><a href="esnaf-mutfagi.html">← Esnaf Mutfağı</a></div>
+
+<div class="wrap" id="sayfa"></div>
+
+<div class="bar" id="bar" hidden><div class="bar-in">
+  <div class="total"><small id="count">Ürün seçilmedi</small><b id="sum">0 ₺</b></div>
+  <a class="send" id="send" href="#" target="_blank" rel="noopener" aria-disabled="true">WhatsApp'tan Sipariş Ver</a>
+</div></div>
+
+<script src="isletmeler.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => n.toLocaleString("tr-TR") + " ₺";
+const nq = n => String(n).replace(".", ",");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+
+const id = new URLSearchParams(location.search).get("isletme");
+const is = (window.ISLETMELER || []).find(x => x.id === id);
+
+if (!is) {
+  $("sayfa").innerHTML = '<div class="yok">Bu işletme bulunamadı.<br><br><a href="esnaf-mutfagi.html">Esnaf Mutfağı\'na dön</a></div>';
+} else {
+  baslat(is);
+}
+
+function baslat(is) {
+  document.title = is.ad + " - Sipariş";
+
+  // İşletmenin kendi renkleri
+  const t = is.tema || {};
+  const r = document.documentElement.style;
+  if (t.bg) r.setProperty("--bg", t.bg);
+  if (t.panel) r.setProperty("--panel", t.panel);
+  if (t.line) r.setProperty("--line", t.line);
+  if (t.fg) r.setProperty("--fg", t.fg);
+  if (t.muted) r.setProperty("--muted", t.muted);
+  if (t.accent) r.setProperty("--accent", t.accent);
+  if (t.accentDeep) r.setProperty("--accent-deep", t.accentDeep);
+
+  const tes = is.teslimat || { eveTeslim: true, eveTeslimMin: 0, gelAl: true };
+  const ikiSecenek = tes.eveTeslim && tes.gelAl;
+  const minYazi = tes.eveTeslimMin ? `<br><small class="unit">${fmt(tes.eveTeslimMin)} ve üzeri</small>` : "";
+
+  $("sayfa").innerHTML = `
+    <header>
+      <div class="brand">${esc(is.ad)}</div>
+      ${is.slogan ? `<div class="tag">${esc(is.slogan)}</div>` : ""}
+      <div class="info">${esc(is.mahalle || "")}, ${esc(is.ilce || "")} · ${esc(is.telefonGoster || "")}${is.instagram ? " · @" + esc(is.instagram) : ""}</div>
+    </header>
+    <main id="menu"></main>
+    <label class="f" for="ad">Adınız<input id="ad" placeholder="Ad Soyad"></label>
+    <h2>Teslimat</h2>
+    <div class="opts" ${ikiSecenek ? "" : "hidden"}>
+      ${tes.eveTeslim ? `<label class="opt" for="t-ev"><input type="radio" name="t" id="t-ev" ${tes.eveTeslim ? "checked" : ""}><span>Eve teslim${minYazi}</span></label>` : ""}
+      ${tes.gelAl ? `<label class="opt" for="t-dk"><input type="radio" name="t" id="t-dk" ${tes.eveTeslim ? "" : "checked"}><span>Dükkandan teslim al</span></label>` : ""}
+    </div>
+    ${!ikiSecenek ? `<p class="unit">${tes.eveTeslim ? "Sadece eve teslim" : "Sadece dükkandan teslim alınır"}</p>` : ""}
+    <label class="f" id="w-adres" for="adres">Teslim adresi<textarea id="adres" rows="2" placeholder="Mahalle, sokak, bina no, daire"></textarea></label>
+    <label class="f" id="w-saat" for="saat" hidden>Teslim alma saati<input id="saat" type="time" value="12:00"></label>
+    <label class="f" for="not">Not (isteğe bağlı)<input id="not" placeholder="Örn. akşam 6'dan sonra"></label>
+    <p class="note">Siparişiniz WhatsApp'tan doğrudan işletmeye iletilir. ${esc(is.odeme || "")}</p>
+    <p class="powered">Esnaf Mutfağı Cepte · <a href="index.html">Kocaeli Cepte</a></p>`;
+
+  // Menü
+  const q = {}, veri = {};
+  const menu = $("menu");
+  (is.menu || []).forEach(([kat, urunler], ki) => {
+    const h = document.createElement("h2"); h.textContent = kat; menu.append(h);
+    urunler.forEach(([ad, birim, fiyat, adim], ui) => {
+      const k = ki + "-" + ui; q[k] = 0; veri[k] = { ad, birim, fiyat };
+      const d = document.createElement("div"); d.className = "item";
+      d.innerHTML = `<div class="name">${esc(ad)}<div class="unit">${esc(birim)}</div></div><div class="price">${fmt(fiyat)}</div>
+        <div class="qty"><button aria-label="${esc(ad)} azalt">−</button><output>0</output><button aria-label="${esc(ad)} artır">+</button></div>`;
+      const [m, p] = d.querySelectorAll("button"), o = d.querySelector("output");
+      const set = v => { q[k] = Math.max(0, Math.round(v * 2) / 2); o.textContent = nq(q[k]); d.classList.toggle("on", q[k] > 0); guncelle(); };
+      m.onclick = () => set(q[k] - (adim || 1));
+      p.onclick = () => set(q[k] + (adim || 1));
+      menu.append(d);
+    });
+  });
+
+  $("bar").hidden = false;
+
+  function guncelle() {
+    let sum = 0, n = 0; const satirlar = [];
+    for (const k in q) {
+      if (!q[k]) continue;
+      const { ad, birim, fiyat } = veri[k], tut = q[k] * fiyat;
+      sum += tut; n++; satirlar.push(`• ${ad} (${birim}) x ${nq(q[k])} = ${fmt(tut)}`);
+    }
+    const v = x => ($(x) ? $(x).value.trim() : "");
+    const ev = $("t-ev") ? $("t-ev").checked : false;
+    $("w-adres").hidden = !ev; $("w-saat").hidden = ev;
+
+    let ipucu = n ? n + " çeşit ürün" : "Ürün seçilmedi", ok = n > 0;
+    if (n && ev && tes.eveTeslimMin && sum < tes.eveTeslimMin) { ipucu = `Eve teslim için ${fmt(tes.eveTeslimMin - sum)} daha ekleyin`; ok = false; }
+    else if (n && ev && !v("adres")) { ipucu = "Teslim adresini yazın"; ok = false; }
+
+    $("sum").textContent = fmt(sum);
+    $("count").textContent = ipucu;
+
+    const teslim = ev ? "Eve teslim" + (v("adres") ? `\nAdres: ${v("adres")}` : "") : `Dükkandan teslim alacağım\nSaat: ${v("saat") || "-"}`;
+    const msg = `Merhaba, Esnaf Mutfağı Cepte'den sipariş vermek istiyorum:\n${satirlar.join("\n")}\nToplam: ${fmt(sum)}`
+      + (v("ad") ? `\nAd: ${v("ad")}` : "") + `\nTeslimat: ${teslim}` + (v("not") ? `\nNot: ${v("not")}` : "");
+    const a = $("send");
+    a.href = `https://wa.me/${is.whatsapp}?text=${encodeURIComponent(msg)}`;
+    a.setAttribute("aria-disabled", ok ? "false" : "true");
+  }
+
+  ["ad", "adres", "saat", "not", "t-ev", "t-dk"].forEach(x => {
+    const e = $(x); if (!e) return;
+    e.addEventListener("input", guncelle); e.addEventListener("change", guncelle);
+  });
+  guncelle();
+}
+</script>
+</body>
+</html>
 
