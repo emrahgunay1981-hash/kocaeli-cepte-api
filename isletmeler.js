@@ -70,7 +70,10 @@ window.ISLETMELER = [
         ["Kısır", "kilo", 850, 0.5],
         ["Mercimek köfte", "kilo", 900, 0.5],
         ["Kuru dolma", "kilo", 1000, 0.5],
-        ["Gül böreği (donuk)", "adet", 40, 1],
+        ["Gül böreği, patatesli (donuk)", "adet", 40, 1],
+        ["Gül böreği, ıspanaklı (donuk)", "adet", 40, 1],
+        ["Gül böreği, peynirli (donuk)", "adet", 40, 1],
+        ["Gül böreği, kıymalı (donuk)", "adet", 50, 1],
         ["Fellah köfte (donuk)", "kilo", 650, 0.5]
       ]]
     ]
