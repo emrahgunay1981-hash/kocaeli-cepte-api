@@ -40,6 +40,9 @@ h2{font-family:var(--f-head);font-weight:400;color:var(--accent);font-size:1.1re
 label.f{display:grid;gap:4px;margin-top:12px;font-size:.9rem;color:var(--muted)}
 input,textarea{background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:8px;padding:10px;font:inherit}
 .note{font-size:.8rem;color:var(--muted);margin-top:20px;text-align:center}
+[hidden]{display:none!important}
+.dt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dt input{min-width:0;width:100%}
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--accent-deep);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
 .bar-in{max-width:560px;margin:0 auto;display:flex;gap:12px;align-items:center}
 .total{flex:1;min-width:0}
@@ -113,7 +116,7 @@ function baslat(is) {
     </div>
     ${!ikiSecenek ? `<p class="unit">${tes.eveTeslim ? "Sadece eve teslim" : "Sadece dükkandan teslim alınır"}</p>` : ""}
     <label class="f" id="w-adres" for="adres">Teslim adresi<textarea id="adres" rows="2" placeholder="Mahalle, sokak, bina no, daire"></textarea></label>
-    <label class="f" id="w-saat" for="saat" hidden>Teslim alma saati<input id="saat" type="time" value="12:00"></label>
+    <div class="dt"><label class="f" for="tarih">Teslim tarihi<input id="tarih" type="date"></label><label class="f" for="saat"><span id="saat-lbl">Teslim saati</span><input id="saat" type="time" value="12:00"></label></div>
     <label class="f" for="not">Not (isteğe bağlı)<input id="not" placeholder="Örn. akşam 6'dan sonra"></label>
     <p class="note">Siparişiniz WhatsApp'tan doğrudan işletmeye iletilir. ${esc(is.odeme || "")}</p>
     <p class="powered">Esnaf Mutfağı Cepte · <a href="index.html">Kocaeli Cepte</a></p>`;
@@ -147,16 +150,18 @@ function baslat(is) {
     }
     const v = x => ($(x) ? $(x).value.trim() : "");
     const ev = $("t-ev") ? $("t-ev").checked : false;
-    $("w-adres").hidden = !ev; $("w-saat").hidden = ev;
+    $("w-adres").hidden = !ev; $("saat-lbl").textContent = ev ? "Teslim saati" : "Teslim alma saati";
 
     let ipucu = n ? n + " çeşit ürün" : "Ürün seçilmedi", ok = n > 0;
     if (n && ev && tes.eveTeslimMin && sum < tes.eveTeslimMin) { ipucu = `Eve teslim için ${fmt(tes.eveTeslimMin - sum)} daha ekleyin`; ok = false; }
     else if (n && ev && !v("adres")) { ipucu = "Teslim adresini yazın"; ok = false; }
 
+    if (ok && !v("tarih")) { ipucu = "Teslim tarihini seçin"; ok = false; }
     $("sum").textContent = fmt(sum);
     $("count").textContent = ipucu;
 
-    const teslim = ev ? "Eve teslim" + (v("adres") ? `\nAdres: ${v("adres")}` : "") : `Dükkandan teslim alacağım\nSaat: ${v("saat") || "-"}`;
+    const zaman = `\nTarih: ${tarihYaz(v("tarih")) || "-"}\nSaat: ${v("saat") || "-"}`;
+    const teslim = (ev ? "Eve teslim" + (v("adres") ? `\nAdres: ${v("adres")}` : "") : "Dükkandan teslim alacağım") + zaman;
     const msg = `Merhaba, Esnaf Mutfağı Cepte'den sipariş vermek istiyorum:\n${satirlar.join("\n")}\nToplam: ${fmt(sum)}`
       + (v("ad") ? `\nAd: ${v("ad")}` : "") + `\nTeslimat: ${teslim}` + (v("not") ? `\nNot: ${v("not")}` : "");
     const a = $("send");
@@ -164,10 +169,14 @@ function baslat(is) {
     a.setAttribute("aria-disabled", ok ? "false" : "true");
   }
 
-  ["ad", "adres", "saat", "not", "t-ev", "t-dk"].forEach(x => {
+  ["ad", "adres", "tarih", "saat", "not", "t-ev", "t-dk"].forEach(x => {
     const e = $(x); if (!e) return;
     e.addEventListener("input", guncelle); e.addEventListener("change", guncelle);
   });
+
+function gunStr(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function tarihYaz(s){if(!s)return "";const [y,m,g]=s.split("-").map(Number);return new Date(y,m-1,g).toLocaleDateString("tr-TR",{day:"numeric",month:"long",weekday:"long"});}
+(function(){const t=document.getElementById("tarih");if(!t)return;const bugun=new Date(),yarin=new Date();yarin.setDate(bugun.getDate()+1);t.min=gunStr(bugun);t.value=gunStr(yarin);})();
   guncelle();
 }
 </script>
