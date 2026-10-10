@@ -182,29 +182,10 @@ body {
 
 </div>
 
+<script src="isletmeler.js"></script>
 <script>
-/* ============================================
-   ÜYE İŞLETMELER
-   Yeni işletme eklemek için bu listeye bir
-   kayıt daha ekleyin.
-   ============================================ */
-const ISLETMELER = [
-  {
-    ad: "Duru El Lezzetleri",
-    kisa: "DE",
-    ilce: "İzmit",
-    mahalle: "Yenişehir Mah.",
-    adres: "Paşa Cd. Şht. Selçuk Gökdağ Sk. No:1/A, İzmit",
-    etiketler: ["Börek", "Baklava", "İçli köfte", "Mantı", "Sarma"],
-    aciklama: "El açması börek, tepsi baklava, içli köfte, mantı ve yaprak sarması. Ev usulü, günlük üretim.",
-    kosullar: "3.500 ₺ ve üzeri siparişlerde eve teslim · Gel-al için saat seçilebilir · Kredi kartı geçerli",
-    siparis: "https://duru-siparis.vercel.app",
-    telefon: "05078053878",
-    telefonGoster: "0507 805 38 78",
-    harita: "https://www.google.com/maps/search/?api=1&query=Duru+El+Lezzetleri+Yeni%C5%9Fehir+%C4%B0zmit",
-    instagram: "https://www.instagram.com/duru.el.lezzetleri/"
-  }
-];
+/* Üye işletmeler isletmeler.js dosyasından gelir. */
+const ISLETMELER = window.ISLETMELER || [];
 
 const list = document.getElementById("list");
 const filters = document.getElementById("filters");
@@ -231,6 +212,14 @@ function esc(s) {
   return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
+function kosullar(i) {
+  const t = i.teslimat || {}, p = [];
+  if (t.eveTeslim) p.push(t.eveTeslimMin ? t.eveTeslimMin.toLocaleString("tr-TR") + " ₺ ve üzeri siparişlerde eve teslim" : "Eve teslim");
+  if (t.gelAl) p.push("Gel-al için saat seçilebilir");
+  if (i.odeme && /kart/i.test(i.odeme)) p.push("Kredi kartı geçerli");
+  return p.join(" · ");
+}
+
 function cizListe() {
   const gorunen = ISLETMELER.filter(i => secili === "Tümü" || i.ilce === secili);
   if (!gorunen.length) {
@@ -252,12 +241,12 @@ function cizListe() {
           ${i.etiketler.map(t => `<span class="badge">${esc(t)}</span>`).join("")}
         </div>
         <p class="desc">${esc(i.aciklama)}</p>
-        <div class="terms">${esc(i.kosullar)}<br>${esc(i.adres)}</div>
+        <div class="terms">${esc(kosullar(i))}<br>${esc(i.adres)}</div>
         <div class="actions">
-          <a class="btn primary" href="${i.siparis}" target="_blank" rel="noopener">Menü ve Sipariş</a>
-          <a class="btn" href="tel:${i.telefon}" aria-label="Ara: ${esc(i.telefonGoster)}">📞 Ara</a>
+          <a class="btn primary" href="siparis.html?isletme=${encodeURIComponent(i.id)}">Menü ve Sipariş</a>
+          <a class="btn" href="tel:+${i.whatsapp}" aria-label="Ara: ${esc(i.telefonGoster)}">📞 Ara</a>
           <a class="btn" href="${i.harita}" target="_blank" rel="noopener">📍 Yol tarifi</a>
-          <a class="btn" href="${i.instagram}" target="_blank" rel="noopener">📷 Instagram</a>
+          ${i.instagram ? `<a class="btn" href="https://www.instagram.com/${encodeURIComponent(i.instagram)}/" target="_blank" rel="noopener">📷 Instagram</a>` : ""}
         </div>
       </div>
     </article>`).join("");
