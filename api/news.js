@@ -137,7 +137,11 @@ async function getSignatureParams(googleNewsUrl) {
 
 async function decodeGoogleNewsUrls(paramsList) {
   // paramsList: [{articleId, signature, timestamp}, ...] - sırayla
-  const reqs = paramsList.map(p => [
+  // Her isteğe kendi sıra numarası verilir ("1", "2", ...). Google cevapta
+  // bu numarayı geri döndürür; böylece biri başarısız olsa bile diğer
+  // adresler yanlış habere kaymaz. Sonuç dizisi, paramsList ile aynı
+  // uzunluktadır; çözülemeyen yerlerde null bulunur.
+  const reqs = paramsList.map((p, i) => [
     "Fbv4je",
     JSON.stringify([
       "garturlreq",
@@ -145,7 +149,9 @@ async function decodeGoogleNewsUrls(paramsList) {
       p.articleId,
       Number(p.timestamp),
       p.signature
-    ])
+    ]),
+    null,
+    String(i + 1)
   ]);
 
   const body = "f.req=" + encodeURIComponent(JSON.stringify([reqs]));
@@ -173,15 +179,23 @@ async function decodeGoogleNewsUrls(paramsList) {
     if (parts.length < 2) return [];
 
     const parsed = JSON.parse(parts[1]);
-    const urls = [];
+    const urls = new Array(paramsList.length).fill(null);
 
     for (const row of parsed) {
-      if (!Array.isArray(row) || row[0] !== "wrb.fr" || typeof row[2] !== "string") continue;
+      if (!Array.isArray(row) || row[0] !== "wrb.fr") continue;
+
+      // Cevaptaki sıra numarası hangi habere ait olduğunu söyler.
+      // Numara yoksa bu satırı hiçbir habere bağlamıyoruz; yanlış
+      // görsel göstermektense görselsiz göstermek daha iyi.
+      const idx = Number(row[6]) - 1;
+      if (!Number.isInteger(idx) || idx < 0 || idx >= urls.length) continue;
+      if (typeof row[2] !== "string") continue;
+
       try {
         const inner = JSON.parse(row[2]);
-        urls.push(inner[1] || null);
+        urls[idx] = inner[1] || null;
       } catch (e) {
-        urls.push(null);
+        urls[idx] = null;
       }
     }
 
@@ -194,6 +208,66 @@ async function decodeGoogleNewsUrls(paramsList) {
 // ==========================================
 // GERÇEK HABER SAYFASINDAN GÖRSEL AL
 // ==========================================
+
+// Haber sayfasının kendi başlığını bulur (og:title ya da <title>).
+function findPageTitle(html) {
+  let m = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
+       || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i)
+       || html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  return m ? cleanText(m[1]) : null;
+}
+
+// İki başlığın aynı haberi anlatıp anlatmadığını kaba şekilde ölçer:
+// ortak anlamlı kelimelerin oranı.
+// Neredeyse her haberde geçen kelimeler eşleşmeye sayılmaz.
+const TITLE_STOPWORDS = new Set(["kocaeli", "için", "ile", "bir", "olan", "son", "dakika", "haber", "haberi", "haberleri"]);
+
+function titleWords(str) {
+  return new Set(
+    String(str || "")
+      .toLocaleLowerCase("tr-TR")
+      .replace(/[^a-z0-9çğıöşü\s]/gi, " ")
+      .split(/\s+/)
+      .filter(w => w.length > 2 && !TITLE_STOPWORDS.has(w))
+  );
+}
+
+function titlesMatch(a, b) {
+  const wa = titleWords(a), wb = titleWords(b);
+  if (!wa.size || !wb.size) return false;
+  let common = 0;
+  wa.forEach(w => { if (wb.has(w)) common++; });
+  return common / Math.min(wa.size, wb.size) >= 0.5;
+}
+
+// Görseli yalnızca sayfa gerçekten bu habere aitse kabul eder.
+// Sayfanın başlığı okunamazsa görsel kabul edilir (eski davranış).
+async function getImageForItem(item) {
+  if (!item.realUrl) return null;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+
+    const response = await fetch(item.realUrl, {
+      redirect: "follow",
+      headers: { "User-Agent": UA, "Accept": "text/html,application/xhtml+xml" },
+      signal: controller.signal,
+      cache: "no-store"
+    });
+
+    clearTimeout(timeout);
+    if (!response.ok) return null;
+
+    const html = await response.text();
+    const pageTitle = findPageTitle(html);
+    if (pageTitle && !titlesMatch(pageTitle, item.title)) return null;
+
+    return findMetaImage(html);
+  } catch (error) {
+    return null;
+  }
+}
 
 async function getImageFromUrl(url) {
   if (!url) return null;
@@ -260,6 +334,10 @@ async function getGoogleNews() {
           finalSource = parts[parts.length - 1].trim();
           finalTitle = parts.slice(0, -1).join(" - ").trim();
         }
+      } else if (source && title.endsWith(" - " + source)) {
+        // Google başlığın sonuna kaynağı da ekliyor; kaynak zaten
+        // ayrıca gösterildiği için başlıktan çıkarılır.
+        finalTitle = title.slice(0, -(" - " + source).length).trim();
       }
 
       items.push({
@@ -312,7 +390,7 @@ async function resolveGoogleImages(itemsForImages) {
     await Promise.all(
       batch.map(async item => {
         if (item.realUrl) {
-          item.image = await getImageFromUrl(item.realUrl);
+          item.image = await getImageForItem(item);
         }
       })
     );
