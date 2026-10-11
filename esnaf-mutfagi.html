@@ -99,6 +99,7 @@ body {
     background: #123A5D; color: #38E8F5;
     border: 1px solid rgba(56,232,245,.15);
 }
+.logo { flex: none; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(56,232,245,.15); }
 .card-name { font-size: 18px; font-weight: 800; color: #F5FAFF; }
 .card-place { color: #AFC3D2; font-size: 13px; margin-top: 2px; }
 .card-body { padding: 12px 16px 15px; }
@@ -145,6 +146,14 @@ body {
 .join h2 { margin: 0 0 6px; font-size: 17px; color: #F5FAFF; }
 .join a { color: #38E8F5; font-weight: 700; }
 
+/* AÇIK / KAPALI DURUMU */
+.card.kapali .card-top, .card.kapali .desc, .card.kapali .terms { opacity: .5; }
+.card.kapali { filter: saturate(.6); }
+.badge.durum { font-weight: 800; }
+.badge.durum.acik { background: rgba(37,211,102,.15); color: #4BE38B; }
+.badge.durum.yakinda { background: rgba(255,193,7,.15); color: #FFC94D; }
+.badge.durum.kapali { background: rgba(255,90,90,.15); color: #FF8A8A; }
+.uyari { background: rgba(255,90,90,.10); border: 1px solid rgba(255,90,90,.25); color: #FFC2C2; border-radius: 10px; padding: 8px 10px; font-size: 12.5px; line-height: 1.5; margin-bottom: 12px; }
 .empty { text-align: center; padding: 26px 10px; color: #9DB7CC; }
 
 @media (max-width: 480px) {
@@ -186,6 +195,7 @@ body {
 </div>
 
 <script src="isletmeler.js"></script>
+<script src="saatler.js"></script>
 <script>
 /* Üye işletmeler isletmeler.js dosyasından gelir. */
 const ISLETMELER = window.ISLETMELER || [];
@@ -224,15 +234,18 @@ function kosullar(i) {
 }
 
 function cizListe() {
-  const gorunen = ISLETMELER.filter(i => secili === "Tümü" || i.ilce === secili);
+  const gorunen = ISLETMELER.filter(i => secili === "Tümü" || i.ilce === secili)
+    .map(i => ({ i, d: Saatler.durum(i) }))
+    .sort((a, b) => a.d.kapali - b.d.kapali)   // açık olanlar üstte
+    .map(x => Object.assign({}, x.i, { _d: x.d }));
   if (!gorunen.length) {
     list.innerHTML = '<div class="empty">Bu ilçede henüz üye işletme yok.</div>';
     return;
   }
   list.innerHTML = gorunen.map(i => `
-    <article class="card">
+    <article class="card${i._d.kapali ? " kapali" : ""}">
       <div class="card-top">
-        <div class="mono" aria-hidden="true">${esc(i.kisa)}</div>
+        ${i.logo ? `<img class="logo" src="${esc(i.logo)}" alt="${esc(i.ad)} logosu">` : `<div class="mono" aria-hidden="true">${esc(i.kisa)}</div>`}
         <div>
           <div class="card-name">${esc(i.ad)}</div>
           <div class="card-place">${esc(i.mahalle)} · ${esc(i.ilce)}</div>
@@ -240,13 +253,15 @@ function cizListe() {
       </div>
       <div class="card-body">
         <div class="badges">
+          <span class="badge durum ${i._d.tur}">${esc(i._d.metin)}</span>
           <span class="badge free">Komisyonsuz</span>
           ${i.etiketler.map(t => `<span class="badge">${esc(t)}</span>`).join("")}
         </div>
+        ${i._d.kapali ? `<div class="uyari">Bu işletme şu an sipariş almıyor. Menüye bakıp açık olduğu bir saate ileri tarihli sipariş verebilirsiniz.</div>` : ""}
         <p class="desc">${esc(i.aciklama)}</p>
         <div class="terms">${esc(kosullar(i))}<br>${esc(i.adres)}</div>
         <div class="actions">
-          <a class="btn primary" href="siparis.html?isletme=${encodeURIComponent(i.id)}">Menü ve Sipariş</a>
+          <a class="btn primary" href="siparis.html?isletme=${encodeURIComponent(i.id)}">${i._d.kapali ? "Menü ve İleri Tarihli Sipariş" : "Menü ve Sipariş"}</a>
           <a class="btn" href="tel:+${i.whatsapp}" aria-label="Ara: ${esc(i.telefonGoster)}">📞 Ara</a>
           <a class="btn" href="${i.harita}" target="_blank" rel="noopener">📍 Yol tarifi</a>
           ${i.instagram ? `<a class="btn" href="https://www.instagram.com/${encodeURIComponent(i.instagram)}/" target="_blank" rel="noopener">📷 Instagram</a>` : ""}
@@ -257,8 +272,8 @@ function cizListe() {
 
 cizFiltre();
 cizListe();
+setInterval(cizListe, 60000);   // açık/kapalı durumu dakikada bir yenilenir
 </script>
 
 </body>
 </html>
-
