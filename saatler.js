@@ -10,12 +10,13 @@
    id'si burada olmayan işletme her zaman açık sayılır.
    ========================================================== */
 window.SAATLER = {
-  // DİKKAT: Duru için saatler örnektir, gerçek saatlere göre düzeltin.
-  duru: {
-    pzt: ["09:00","20:00"], sal: ["09:00","20:00"], car: ["09:00","20:00"],
-    per: ["09:00","20:00"], cum: ["09:00","20:00"], cmt: ["09:00","20:00"],
-    paz: null
-  }
+  // Duru siparişe göre çalıştığı için burada yok: her zaman sipariş alır.
+  // Örnek (saatli bir işletme için):
+  // "ali-usta-pide": {
+  //   pzt: ["10:00","22:00"], sal: ["10:00","22:00"], car: ["10:00","22:00"],
+  //   per: ["10:00","22:00"], cum: ["10:00","23:00"], cmt: ["10:00","23:00"],
+  //   paz: null
+  // }
 };
 
 (function () {
@@ -110,4 +111,3 @@ window.SAATLER = {
     }
   };
 })();
-
