@@ -570,42 +570,6 @@ a {
   color: #9dc9ce;
 }
 
-
-/* =========================================================
-   FOTOĞRAFI OLMAYAN HABERLER: KAYNAK SİTENİN LOGOSU
-========================================================= */
-
-.logo-fallback img {
-
-  width: 64px;
-
-  height: 64px;
-
-  object-fit: contain;
-
-  background: #ffffff;
-
-  border-radius: 14px;
-
-  padding: 8px;
-
-  box-shadow:
-    0 3px 10px
-    rgba(20,100,120,.12);
-}
-
-.news-image.logo-fallback img {
-
-  width: 46px;
-
-  height: 46px;
-
-  padding: 6px;
-
-  border-radius: 11px;
-}
-
-
 .hero-content {
 
   padding: 14px 15px 15px;
@@ -1221,6 +1185,14 @@ a {
   font-size: 20px;
 
   flex-shrink: 0;
+}
+.traffic-icon {
+    width: 40px;
+    height: 40px;
+    ...
+    display: flex;
+    ...
+    flex-shrink: 0;
 }
 
 .traffic-content{
@@ -2133,26 +2105,6 @@ a {
 
     <a
       class="category"
-      href="esnaf-mutfagi.html"
-    >
-
-      <div class="category-icon">
-        🥘
-      </div>
-
-      <div class="category-name">
-        Esnaf Mutfağı
-      </div>
-
-      <div class="category-desc">
-        Esnaftan komisyonsuz sipariş
-      </div>
-
-    </a>
-
-
-    <a
-      class="category"
       href="esnaf.html"
     >
 
@@ -2229,57 +2181,6 @@ a {
 </div>
 
 
-<!-- KOCAELİ VALİLİĞİ -->
-
-<a
-  class="traffic-card"
-  href="https://www.kocaeli.gov.tr/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div class="traffic-icon">🏛️</div>
-
-  <div class="traffic-content">
-    <strong>Kocaeli Valiliği</strong>
-    <span>Son dakika haberleri ve resmî duyurular</span>
-  </div>
-
-  <div class="traffic-arrow">›</div>
-</a>
-<!-- KOCAELİ İL NÜFUS VE VATANDAŞLIK MÜDÜRLÜĞÜ -->
-
-<a
-  class="traffic-card"
-  href="https://nvi.gov.tr/kocaeli"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div class="traffic-icon">🪪</div>
-
-  <div class="traffic-content">
-    <strong>Kocaeli İl Nüfus ve Vatandaşlık Müdürlüğü</strong>
-    <span>Kimlik, pasaport, ehliyet, adres ve vatandaşlık işlemleri</span>
-  </div>
-
-  <div class="traffic-arrow">›</div>
-</a>
-<!-- KOCAELİ İL SAĞLIK MÜDÜRLÜĞÜ -->
-
-<a
-  class="traffic-card"
-  href="https://kocaeliism.saglik.gov.tr/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div class="traffic-icon">🏥</div>
-
-  <div class="traffic-content">
-    <strong>Kocaeli İl Sağlık Müdürlüğü</strong>
-    <span>Sağlık hizmetleri, hastaneler ve resmî duyurular</span>
-  </div>
-
-  <div class="traffic-arrow">›</div>
-</a>
 <!-- KOCAELİ BELEDİYELERİ -->
 
 <a
@@ -2297,76 +2198,6 @@ a {
 </a>
 
 
-<!-- KOCAELİ İL EMNİYET MÜDÜRLÜĞÜ -->
-
-<a
-  class="traffic-card"
-  href="https://www.kocaeli.pol.tr/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div class="traffic-icon">👮</div>
-
-  <div class="traffic-content">
-    <strong>Kocaeli İl Emniyet Müdürlüğü</strong>
-    <span>Haberler, duyurular ve emniyet hizmetleri</span>
-  </div>
-
-  <div class="traffic-arrow">›</div>
-</a>
-<!-- KOCAELİ ADLİYESİ -->
-<a
-  class="traffic-card"
-  href="https://kocaeli.adalet.gov.tr/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div class="traffic-icon">⚖️</div>
-
-  <div class="traffic-content">
-    <strong>Kocaeli Adliyesi</strong>
-    <span>Duyurular, mahkemeler ve adliye hizmetleri</span>
-  </div>
-
-  <div class="traffic-arrow">›</div>
-</a>
-    
-<!-- İL MİLLÎ EĞİTİM -->
-
-<a
-  class="traffic-card"
-  href="https://kocaeli.meb.gov.tr/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div class="traffic-icon">🎓</div>
-
-  <div class="traffic-content">
-    <strong>Kocaeli İl Millî Eğitim Müdürlüğü</strong>
-    <span>Eğitim haberleri, duyurular ve bilgiler</span>
-  </div>
-
-  <div class="traffic-arrow">›</div>
-</a>
-
-
-<!-- İLÇE MİLLÎ EĞİTİM -->
-
-<a
-  class="traffic-card"
-  href="https://www.meb.gov.tr/baglantilar/mem/index_ilmem.php?ILKODU=41"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div class="traffic-icon">🏫</div>
-
-  <div class="traffic-content">
-    <strong>İlçe Millî Eğitim Müdürlükleri</strong>
-    <span>Kocaeli'nin 12 ilçesine ulaşın</span>
-  </div>
-
-  <div class="traffic-arrow">›</div>
-</a>
 <!-- DİĞER KAMU KURULUŞLARI -->
 
 <a
@@ -2376,8 +2207,8 @@ a {
   <div class="traffic-icon">🏢</div>
 
   <div class="traffic-content">
-    <strong>Diğer Kamu Kuruluşları</strong>
-    <span>Kocaeli'deki diğer resmî kurum ve kuruluşlar</span>
+    <strong>Kamu Kurumları</strong>
+    <span>Valilik, emniyet, adliye, sağlık, eğitim ve diğer kurumlar</span>
   </div>
 
   <div class="traffic-arrow">›</div>
@@ -2564,9 +2395,6 @@ a {
 
 </nav>
 
-
-<!-- Ortak kaynak logosu kodu -->
-<script src="kaynak-logo.js"></script>
 
 <script>
 
@@ -2870,7 +2698,7 @@ async function loadNews() {
 
 
     allNews =
-      benzerHaberleriTemizle(guncelHaberler(data.items));
+      data.items;
 
 
     /* =====================================================
@@ -2913,14 +2741,10 @@ async function loadNews() {
                   class="hero-image"
                   src="${escapeHtml(item.image)}"
                   alt=""
-                  data-source="${escapeHtml(item.source)}"
-                  data-link="${escapeHtml(item.link)}"
-                  data-fallback-class="hero-image-placeholder"
-                  data-icon="📰"
-                  onerror="resimAcilmadi(this)"
+                  onerror="this.outerHTML='<div class=&quot;hero-image-placeholder&quot;>📰</div>'"
                 >
               `
-              : logoKutusuHtml(item, "hero-image-placeholder", "📰")
+              : `<div class="hero-image-placeholder">📰</div>`
             }
 
             <div class="hero-content">
@@ -2994,15 +2818,19 @@ async function loadNews() {
                 src="${escapeHtml(item.image)}"
                 alt=""
                 loading="lazy"
-                data-source="${escapeHtml(item.source)}"
-                data-link="${escapeHtml(item.link)}"
-                data-fallback-class="news-image no-image"
-                data-icon="📰"
-                  onerror="resimAcilmadi(this)"
+                onerror="
+                  this.style.display='none'
+                "
               >
 
             `
-            : logoKutusuHtml(item, "news-image no-image", "📰")
+            : `
+
+              <div
+                class="news-image no-image"
+              >📰</div>
+
+            `
           }
 
 
