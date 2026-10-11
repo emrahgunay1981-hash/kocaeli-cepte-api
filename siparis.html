@@ -52,6 +52,17 @@ input,textarea{background:var(--panel);border:1px solid var(--line);color:var(--
 .send[aria-disabled="true"]{opacity:.4;pointer-events:none}
 .yok{text-align:center;padding:60px 16px;color:var(--muted)}
 .yok a{color:var(--accent);font-weight:700}
+.durum{margin-top:12px;border-radius:10px;padding:10px 12px;font-size:.88rem;line-height:1.5;border:1px solid var(--line)}
+.durum.acik{background:rgba(37,211,102,.12);color:#4BE38B}
+.durum.yakinda{background:rgba(255,193,7,.12);color:#FFC94D}
+.durum.kapali{background:rgba(255,90,90,.12);color:#FFB3B3}
+.onay{margin-top:20px;border:1px solid var(--accent-deep);border-radius:10px;padding:10px 12px;font-size:.85rem;color:var(--muted);background:var(--panel)}
+.onay b{color:var(--accent)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:20px;z-index:50}
+.modal-in{background:var(--panel);border:1px solid var(--accent-deep);border-radius:16px;padding:20px;max-width:420px;line-height:1.55}
+.modal-in h3{margin:0 0 8px;color:var(--accent);font-size:1.15rem}
+.modal-in .acts{display:grid;gap:8px;margin-top:14px}
+.modal-in .acts a,.modal-in .acts button{display:block;text-align:center;padding:12px;border-radius:12px;font:inherit;font-weight:800;text-decoration:none;cursor:pointer;border:1px solid var(--accent-deep);background:transparent;color:var(--accent)}
 .powered{text-align:center;font-size:.75rem;color:var(--muted);margin-top:14px}
 .powered a{color:var(--muted)}
 </style>
@@ -68,6 +79,7 @@ input,textarea{background:var(--panel);border:1px solid var(--line);color:var(--
 </div></div>
 
 <script src="isletmeler.js"></script>
+<script src="saatler.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const fmt = n => n.toLocaleString("tr-TR") + " ₺";
@@ -107,6 +119,7 @@ function baslat(is) {
       ${is.slogan ? `<div class="tag">${esc(is.slogan)}</div>` : ""}
       <div class="info">${esc(is.mahalle || "")}, ${esc(is.ilce || "")} · ${esc(is.telefonGoster || "")}${is.instagram ? " · @" + esc(is.instagram) : ""}</div>
     </header>
+    <div class="durum" id="durum"></div>
     <main id="menu"></main>
     <label class="f" for="ad">Adınız<input id="ad" placeholder="Ad Soyad"></label>
     <h2>Teslimat</h2>
@@ -118,7 +131,8 @@ function baslat(is) {
     <label class="f" id="w-adres" for="adres">Teslim adresi<textarea id="adres" rows="2" placeholder="Mahalle, sokak, bina no, daire"></textarea></label>
     <div class="dt"><label class="f" for="tarih">Teslim tarihi<input id="tarih" type="date"></label><label class="f" for="saat"><span id="saat-lbl">Teslim saati</span><input id="saat" type="time" value="12:00"></label></div>
     <label class="f" for="not">Not (isteğe bağlı)<input id="not" placeholder="Örn. akşam 6'dan sonra"></label>
-    <p class="note">Siparişiniz WhatsApp'tan doğrudan işletmeye iletilir. ${esc(is.odeme || "")}</p>
+    <div class="onay">⏳ Siparişiniz WhatsApp'tan doğrudan işletmeye iletilir. <b>İşletme onay mesajı gönderene kadar siparişiniz kesinleşmez.</b></div>
+    <p class="note">${esc(is.odeme || "")}</p>
     <p class="powered">Esnaf Mutfağı Cepte · <a href="index.html">Kocaeli Cepte</a></p>`;
 
   // Menü
@@ -141,6 +155,15 @@ function baslat(is) {
 
   $("bar").hidden = false;
 
+  // Açık / kapalı bilgisi
+  (function durumYaz() {
+    const d = Saatler.durum(is), b = Saatler.bugun(is), el = $("durum");
+    el.className = "durum " + d.tur;
+    el.innerHTML = "<b>" + esc(d.metin) + "</b>" + (b ? "<br>" + esc(b) : "") +
+      (d.kapali ? "<br>İleri tarihli sipariş verebilirsiniz; teslim saatini işletmenin açık olduğu saatlerden seçin." : "");
+    setTimeout(durumYaz, 60000);
+  })();
+
   function guncelle() {
     let sum = 0, n = 0; const satirlar = [];
     for (const k in q) {
@@ -157,17 +180,35 @@ function baslat(is) {
     else if (n && ev && !v("adres")) { ipucu = "Teslim adresini yazın"; ok = false; }
 
     if (ok && !v("tarih")) { ipucu = "Teslim tarihini seçin"; ok = false; }
+    if (ok) { const kk = Saatler.kontrol(is, v("tarih"), v("saat")); if (!kk.ok) { ipucu = kk.mesaj; ok = false; } }
     $("sum").textContent = fmt(sum);
     $("count").textContent = ipucu;
 
     const zaman = `\nTarih: ${tarihYaz(v("tarih")) || "-"}\nSaat: ${v("saat") || "-"}`;
     const teslim = (ev ? "Eve teslim" + (v("adres") ? `\nAdres: ${v("adres")}` : "") : "Dükkandan teslim alacağım") + zaman;
     const msg = `Merhaba, Esnaf Mutfağı Cepte'den sipariş vermek istiyorum:\n${satirlar.join("\n")}\nToplam: ${fmt(sum)}`
-      + (v("ad") ? `\nAd: ${v("ad")}` : "") + `\nTeslimat: ${teslim}` + (v("not") ? `\nNot: ${v("not")}` : "");
+      + (v("ad") ? `\nAd: ${v("ad")}` : "") + `\nTeslimat: ${teslim}` + (v("not") ? `\nNot: ${v("not")}` : "")
+      + `\n\nLütfen siparişi "Onaylandı + tahmini süre" diye yanıtlayın.`;
     const a = $("send");
     a.href = `https://wa.me/${is.whatsapp}?text=${encodeURIComponent(msg)}`;
     a.setAttribute("aria-disabled", ok ? "false" : "true");
   }
+
+  // Sipariş gönderilince "onay bekleniyor" uyarısı
+  $("send").addEventListener("click", () => {
+    if ($("send").getAttribute("aria-disabled") === "true") return;
+    setTimeout(() => {
+      const m = document.createElement("div");
+      m.className = "modal";
+      m.innerHTML = `<div class="modal-in" role="dialog" aria-modal="true">
+        <h3>⏳ Siparişiniz iletildi, onay bekleniyor</h3>
+        WhatsApp'ta mesajı <b>göndermeyi</b> unutmayın. İşletme onay mesajı gönderdiğinde siparişiniz kesinleşir.<br><br>
+        10 dakika içinde cevap gelmezse işletmeyi arayabilirsiniz.
+        <div class="acts"><a href="tel:+${is.whatsapp}">📞 ${esc(is.telefonGoster || "İşletmeyi ara")}</a><button type="button">Tamam</button></div></div>`;
+      m.querySelector("button").onclick = () => m.remove();
+      document.body.append(m);
+    }, 400);
+  });
 
   ["ad", "adres", "tarih", "saat", "not", "t-ev", "t-dk"].forEach(x => {
     const e = $(x); if (!e) return;
@@ -182,4 +223,3 @@ function tarihYaz(s){if(!s)return "";const [y,m,g]=s.split("-").map(Number);retu
 </script>
 </body>
 </html>
-
