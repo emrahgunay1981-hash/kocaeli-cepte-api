@@ -3,13 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#078897">
-<title>Kocaeli Cepte - Esnaf Mutfağı Cepte</title>
-<meta name="description" content="Kocaeli esnafından komisyonsuz sipariş. Sipariş doğrudan işletmenin WhatsApp hattına gider.">
 
+<meta name="theme-color" content="#078897">
+
+<title>Kocaeli Cepte - Esnaf Rehberi</title>
+<meta
+  name="description"
+  content="Kocaeli esnaf rehberi. Kocaeli'deki işletmeler, yerel esnaf ve hizmet veren işletmeleri kolayca keşfedin."
+>
+
+<link
+  rel="canonical"
+  href="https://kocaelicepte.tr/esnaf.html"
+>
+
+<meta
+  name="robots"
+  content="index, follow"
+>
+
+<meta
+  property="og:title"
+  content="Kocaeli Esnaf Rehberi | Kocaeli Cepte"
+>
+
+<meta
+  property="og:description"
+  content="Kocaeli'deki yerel esnaf, işletmeler ve hizmet noktalarını keşfedin."
+>
+
+<meta
+  property="og:url"
+  content="https://kocaelicepte.tr/esnaf.html"
+>
+
+<meta
+  property="og:type"
+  content="website"
+>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Kocaeli Esnaf Rehberi",
+  "description": "Kocaeli'deki yerel esnaf, işletmeler ve hizmet noktaları.",
+  "url": "https://kocaelicepte.tr/esnaf.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Kocaeli Cepte",
+    "url": "https://kocaelicepte.tr/"
+  }
+}
+</script>
 <style>
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     margin: 0;
@@ -22,18 +77,28 @@ body {
     min-height: 100vh;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
+
 .header {
     position: sticky;
     top: 0;
     z-index: 10;
-    background: linear-gradient(135deg, #087F91, #00AFC3);
+    background:
+        linear-gradient(135deg, #087F91, #00AFC3);
     padding: 17px 16px;
     border-bottom: 1px solid rgba(255,255,255,.15);
     box-shadow: 0 8px 25px rgba(0,0,0,.20);
 }
-.header h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: .2px; }
-.header .sub { margin: 4px 0 0; font-size: 13px; color: rgba(255,255,255,.9); }
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: .2px;
+}
+
 .back {
     display: inline-block;
     margin-top: 8px;
@@ -43,235 +108,1236 @@ body {
     font-weight: 600;
 }
 
-/* CONTAINER */
-.container { padding: 15px; max-width: 800px; margin: auto; }
+/* =========================
+   CONTAINER
+========================= */
 
-/* INFO */
-.info {
-    background: rgba(0,207,232,.08);
-    border: 1px solid rgba(56,232,245,.18);
-    border-radius: 16px;
-    padding: 14px 15px;
+.container {
+    padding: 15px;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* =========================
+   CATEGORY GRID
+========================= */
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 9px;
     margin-bottom: 16px;
-    font-size: 14px;
-    line-height: 1.55;
-    color: #D7EAF5;
 }
-.info b { color: #38E8F5; }
 
-/* FILTER */
-.filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
-.filters::-webkit-scrollbar { display: none; }
-.chip {
-    flex: none;
-    padding: 8px 14px;
-    border-radius: 20px;
-    border: 1px solid rgba(56,232,245,.18);
-    background: #0A2948;
+.category-btn {
+    background:
+        linear-gradient(145deg, #0A2948, #08243F);
+    border: 1px solid rgba(56,232,245,.12);
+    border-radius: 14px;
+    padding: 12px 4px;
+    text-align: center;
     color: #AFC3D2;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 11px;
     cursor: pointer;
-}
-.chip.active { background: #00AFC3; color: #04223A; border-color: #00AFC3; }
+    transition: .2s ease;
+    min-height: 72px;
 
-/* CARD */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.category-btn:active {
+    transform: scale(.96);
+}
+
+.category-btn .icon {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.category-btn.active {
+    background:
+        linear-gradient(145deg, #073F58, #07556B);
+    border-color: #00CFE8;
+    color: #38E8F5;
+    box-shadow:
+        0 7px 20px rgba(0,207,232,.12);
+}
+
+.category-btn.active .icon {
+    transform: scale(1.05);
+}
+
+/* =========================
+   DISTRICT SELECT
+========================= */
+
+select {
+    width: 100%;
+    padding: 14px 15px;
+    border-radius: 14px;
+    border: 1px solid rgba(56,232,245,.16);
+    background: #0A2948;
+    color: #F5FAFF;
+    font-size: 15px;
+    margin-bottom: 14px;
+    outline: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+select:focus {
+    border-color: #00CFE8;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    text-align: center;
+    padding: 28px 10px;
+    color: #9DB7CC;
+}
+
+/* =========================
+   BUSINESS CARD
+========================= */
+
 .card {
-    background: linear-gradient(145deg, #0A2948, #08243F);
+    background:
+        linear-gradient(145deg, #0A2948, #08243F);
     border: 1px solid rgba(56,232,245,.12);
     border-radius: 18px;
     overflow: hidden;
     margin-bottom: 16px;
     box-shadow: 0 9px 28px rgba(0,0,0,.20);
 }
-.card-top {
+
+.card img {
+    width: 100%;
+    height: 175px;
+    object-fit: cover;
+    display: block;
+    background: #0D3558;
+}
+
+.card-body {
+    padding: 15px 16px;
+}
+
+.card-name {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 7px;
+    color: #F5FAFF;
+}
+
+.card-address {
+    color: #AFC3D2;
+    font-size: 13px;
+    margin-bottom: 11px;
+    line-height: 1.5;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badges {
     display: flex;
-    align-items: center;
-    gap: 13px;
-    padding: 15px 16px 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 4px;
 }
-.mono {
-    flex: none;
-    width: 52px; height: 52px;
-    border-radius: 14px;
-    display: grid; place-items: center;
-    font-weight: 800; font-size: 19px;
-    background: #123A5D; color: #38E8F5;
-    border: 1px solid rgba(56,232,245,.15);
-}
-.card-name { font-size: 18px; font-weight: 800; color: #F5FAFF; }
-.card-place { color: #AFC3D2; font-size: 13px; margin-top: 2px; }
-.card-body { padding: 12px 16px 15px; }
-.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 11px; }
+
 .badge {
     padding: 5px 10px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
-    background: #123A5D;
-    color: #9CCFFF;
-    border: 1px solid rgba(156,207,255,.08);
 }
-.badge.free { background: rgba(0,207,232,.12); color: #38E8F5; border-color: rgba(56,232,245,.10); }
-.desc { color: #D7EAF5; font-size: 14px; line-height: 1.55; margin: 0 0 10px; }
-.terms { color: #8FA9BC; font-size: 12.5px; line-height: 1.6; margin-bottom: 13px; }
-.actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.btn {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 11px 8px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-size: 13.5px;
-    font-weight: 800;
-    border: 1px solid rgba(56,232,245,.18);
+
+.badge-google {
+    background: rgba(0,207,232,.12);
     color: #38E8F5;
-    background: #0D3558;
-    text-align: center;
+    border: 1px solid rgba(56,232,245,.10);
 }
-.btn.primary { grid-column: 1 / -1; background: #25D366; color: #06331A; border-color: #25D366; font-size: 15px; padding: 13px 8px; }
-.btn:focus-visible, .chip:focus-visible { outline: 2px solid #38E8F5; outline-offset: 2px; }
 
-/* JOIN */
-.join {
-    margin-top: 6px;
-    border: 1px dashed rgba(56,232,245,.35);
-    border-radius: 18px;
-    padding: 18px 16px;
+.badge-open {
+    background: rgba(0,207,232,.12);
+    color: #38E8F5;
+    border: 1px solid rgba(56,232,245,.10);
+}
+
+.badge-closed {
+    background: rgba(248,113,113,.10);
+    color: #FF9A9A;
+    border: 1px solid rgba(248,113,113,.10);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 13px;
+}
+
+.btn {
+    flex: 1;
     text-align: center;
-    color: #AFC3D2;
-    font-size: 14px;
+    padding: 12px 8px;
+    border-radius: 11px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    transition: .2s ease;
+}
+
+.btn:active {
+    transform: scale(.97);
+}
+
+.btn-call {
+    background:
+        linear-gradient(135deg, #00CFE8, #00AFC3);
+    color: #03202A;
+    box-shadow:
+        0 5px 15px rgba(0,207,232,.14);
+}
+
+.btn-map {
+    background: #123A5D;
+    color: #F5FAFF;
+    border: 1px solid rgba(56,232,245,.10);
+}
+
+/* =========================
+   KOCAELİ CEPTE PUANI
+========================= */
+
+.our-rating {
+    border-top: 1px solid rgba(56,232,245,.10);
+    padding-top: 12px;
+    margin-top: 13px;
+}
+
+.our-rating-label {
+    font-size: 12px;
+    color: #8FA9BC;
+    margin-bottom: 7px;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+    font-size: 25px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.star {
+    color: #28425A;
+    transition: .15s ease;
+}
+
+.star.filled {
+    color: #FFD166;
+}
+
+.star:hover {
+    transform: scale(1.12);
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error {
+    background:
+        linear-gradient(135deg, #32151A, #421B22);
+    color: #FFB4B4;
+    padding: 15px;
+    border-radius: 14px;
+    font-size: 13px;
     line-height: 1.6;
+    border: 1px solid rgba(255,100,100,.15);
 }
-.join h2 { margin: 0 0 6px; font-size: 17px; color: #F5FAFF; }
-.join a { color: #38E8F5; font-weight: 700; }
 
-/* AÇIK / KAPALI DURUMU */
-.card.kapali .card-top, .card.kapali .desc, .card.kapali .terms { opacity: .5; }
-.card.kapali { filter: saturate(.6); }
-.badge.durum { font-weight: 800; }
-.badge.durum.acik { background: rgba(37,211,102,.15); color: #4BE38B; }
-.badge.durum.yakinda { background: rgba(255,193,7,.15); color: #FFC94D; }
-.badge.durum.kapali { background: rgba(255,90,90,.15); color: #FF8A8A; }
-.uyari { background: rgba(255,90,90,.10); border: 1px solid rgba(255,90,90,.25); color: #FFC2C2; border-radius: 10px; padding: 8px 10px; font-size: 12.5px; line-height: 1.5; margin-bottom: 12px; }
-.empty { text-align: center; padding: 26px 10px; color: #9DB7CC; }
+/* =========================
+   MOBILE
+========================= */
 
-@media (max-width: 480px) {
-    .header { padding: 16px 15px; }
-    .header h1 { font-size: 21px; }
-    .container { padding: 13px; }
+@media (max-width: 600px) {
+
+    .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    .category-btn {
+        padding: 10px 3px;
+        min-height: 70px;
+        font-size: 10.5px;
+    }
+
+    .category-btn .icon {
+        font-size: 21px;
+    }
+
 }
+
+@media (max-width: 380px) {
+
+    .category-grid {
+        gap: 6px;
+    }
+
+    .category-btn {
+        min-height: 67px;
+        font-size: 9.5px;
+    }
+
+    .category-btn .icon {
+        font-size: 20px;
+    }
+
+    .card img {
+        height: 160px;
+    }
+
+}
+
 </style>
 </head>
+
 <body>
 
 <div class="header">
-    <h1>🥘 Esnaf Mutfağı Cepte</h1>
-    <p class="sub">Kocaeli esnafından komisyonsuz sipariş</p>
-    <a class="back" href="index.html">← Kocaeli Cepte'ye Dön</a>
+
+    <h1>🏪 Esnaf Rehberi</h1>
+
+    <a class="back" href="index.html">
+        ← Kocaeli Cepte'ye Dön
+    </a>
+
 </div>
+
 
 <div class="container">
 
-    <div class="info">
-        Burada siparişiniz <b>aracı olmadan</b>, doğrudan işletmenin WhatsApp hattına gider.
-        Esnaf platform komisyonu ödemez, siz de mahallenizin emekçisini doğrudan desteklersiniz.
-        <br><br>🛵 Teslimatı <b>işletmenin kendi kuryesi</b> yapar. Teslimat koşulları ve minimum tutar her işletmenin kartında yazar.
+    <a href="esnaf-mutfagi.html" style="display:flex;align-items:center;gap:12px;margin:0 0 16px;padding:14px 15px;border-radius:16px;background:linear-gradient(135deg,#087F91,#00AFC3);color:#fff;text-decoration:none;box-shadow:0 4px 14px rgba(0,80,90,.18);">
+        <span style="font-size:30px;">🥘</span>
+        <span style="flex:1;min-width:0;">
+            <strong style="display:block;font-size:16px;">Esnaf Mutfağı Cepte</strong>
+            <span style="display:block;margin-top:3px;font-size:12.5px;opacity:.92;">Yerel esnaftan komisyonsuz sipariş · Yeni</span>
+        </span>
+        <span style="font-size:26px;">›</span>
+    </a>
+
+    <div class="category-grid" id="category-grid">
+
+        <div class="category-btn" data-kategori="kuafor">
+            <span class="icon">💇</span>
+            Kuaför
+        </div>
+
+        <div class="category-btn" data-kategori="market">
+            <span class="icon">🛒</span>
+            Market
+        </div>
+
+        <div class="category-btn" data-kategori="oto_tamirci">
+            <span class="icon">🚗</span>
+            Oto Tamirci
+        </div>
+
+        <div class="category-btn" data-kategori="elektrikci">
+            <span class="icon">⚡</span>
+            Elektrikçi
+        </div>
+
+        <div class="category-btn" data-kategori="su_tesisatcisi">
+            <span class="icon">🚰</span>
+            Tesisatçı
+        </div>
+
+        <div class="category-btn" data-kategori="cilingir">
+            <span class="icon">🔑</span>
+            Çilingir
+        </div>
+
+        <div class="category-btn" data-kategori="veteriner">
+            <span class="icon">🐾</span>
+            Veteriner
+        </div>
+
+        <div class="category-btn" data-kategori="terzi">
+            <span class="icon">👔</span>
+            Terzi
+        </div>
+
+        <div class="category-btn" data-kategori="taksi">
+            <span class="icon">🚕</span>
+            Taksi
+        </div>
+
+        <div class="category-btn" data-kategori="antikaci">
+            <span class="icon">🏺</span>
+            Antikacı
+        </div>
+
+        <div class="category-btn" data-kategori="spor_salonu">
+            <span class="icon">💪</span>
+            Spor Salonu
+        </div>
+
+        <div class="category-btn" data-kategori="firin">
+            <span class="icon">🍞</span>
+            Fırın
+        </div>
+
+        <div class="category-btn" data-kategori="kirtasiye">
+            <span class="icon">✏️</span>
+            Kırtasiye
+        </div>
+
+        <div class="category-btn" data-kategori="nalbur">
+            <span class="icon">🔨</span>
+            Nalbur
+        </div>
+
+        <div class="category-btn" data-kategori="temizlikci">
+            <span class="icon">🧹</span>
+            Temizlikçi
+        </div>
+
+        <div class="category-btn" data-kategori="mobilyaci">
+            <span class="icon">🛋️</span>
+            Mobilyacı
+        </div>
+
+        <div class="category-btn" data-kategori="emlakci">
+            <span class="icon">🏠</span>
+            Emlakçı
+        </div>
+
+        <div class="category-btn" data-kategori="optik">
+            <span class="icon">👓</span>
+            Optik
+        </div>
+
+        <div class="category-btn" data-kategori="pet_shop">
+            <span class="icon">🐶</span>
+            Pet Shop
+        </div>
+
+        <div class="category-btn" data-kategori="cicekci">
+            <span class="icon">💐</span>
+            Çiçekçi
+        </div>
+
+        <div class="category-btn" data-kategori="kasap">
+            <span class="icon">🥩</span>
+            Kasap
+        </div>
+
+        <div class="category-btn" data-kategori="manav">
+            <span class="icon">🥬</span>
+            Manav
+        </div>
+
+        <div class="category-btn" data-kategori="kuru_temizleme">
+            <span class="icon">🧺</span>
+            Kuru Temizleme
+        </div>
+
     </div>
 
-    <div class="filters" id="filters" role="tablist" aria-label="İlçe"></div>
 
-    <div id="list"></div>
+    <select id="district">
 
-    <div class="join">
-        <h2>İşletmenizi ekleyin</h2>
-        Ev yemeği, börek, tatlı ya da restoran işletiyorsanız Esnaf Mutfağı Cepte'de yer alabilirsiniz.
-        Size komisyonsuz bir sipariş sayfası da hazırlıyoruz.<br><br>
-        <b>Katılım şartı:</b> Siparişleri kendi kuryenizle teslim ediyor olmanız gerekir.
-        Esnaf Mutfağı kurye hizmeti vermez; sipariş doğrudan size gelir, teslimatı siz yaparsınız.<br><br>
-        İletişim: <a href="mailto:kocaelicepte@gmail.com">kocaelicepte@gmail.com</a>
+        <option value="Kocaeli">
+            Kocaeli - Tüm İlçeler
+        </option>
+
+        <option value="İzmit">İzmit</option>
+        <option value="Gebze">Gebze</option>
+        <option value="Darıca">Darıca</option>
+        <option value="Körfez">Körfez</option>
+        <option value="Başiskele">Başiskele</option>
+        <option value="Kartepe">Kartepe</option>
+        <option value="Gölcük">Gölcük</option>
+        <option value="Derince">Derince</option>
+        <option value="Çayırova">Çayırova</option>
+        <option value="Dilovası">Dilovası</option>
+        <option value="Kandıra">Kandıra</option>
+        <option value="Karamürsel">Karamürsel</option>
+
+    </select>
+
+
+    <div id="status" class="status">
+        Bir kategori seçin.
     </div>
+
+
+    <div id="businesses"></div>
 
 </div>
 
-<script src="isletmeler.js"></script>
-<script src="saatler.js"></script>
+
 <script>
-/* Üye işletmeler isletmeler.js dosyasından gelir. */
-const ISLETMELER = window.ISLETMELER || [];
 
-const list = document.getElementById("list");
-const filters = document.getElementById("filters");
-let secili = "Tümü";
+const categoryGrid =
+    document.getElementById("category-grid");
 
-function ilceler() {
-  return ["Tümü", ...new Set(ISLETMELER.map(i => i.ilce))];
+const district =
+    document.getElementById("district");
+
+const status =
+    document.getElementById("status");
+
+const businessesDiv =
+    document.getElementById("businesses");
+
+
+let currentCategory = null;
+
+
+const categoryLabels = {
+
+    kuafor:
+        "Kuaför/Berber",
+
+    market:
+        "Market",
+
+    oto_tamirci:
+        "Oto Tamirci",
+
+    elektrikci:
+        "Elektrikçi",
+
+    su_tesisatcisi:
+        "Su Tesisatçısı",
+
+    cilingir:
+        "Çilingir",
+
+    veteriner:
+        "Veteriner",
+
+    terzi:
+        "Terzi",
+
+    taksi:
+        "Taksi Durağı",
+
+    antikaci:
+        "Antikacı",
+
+    spor_salonu:
+        "Spor Salonu",
+
+    firin:
+        "Fırın",
+
+    kirtasiye:
+        "Kırtasiye",
+
+    nalbur:
+        "Nalbur",
+
+    temizlikci:
+        "Temizlikçi",
+
+    mobilyaci:
+        "Mobilyacı",
+
+    emlakci:
+        "Emlakçı",
+
+    optik:
+        "Optik",
+
+    pet_shop:
+        "Pet Shop",
+
+    cicekci:
+        "Çiçekçi",
+
+    kasap:
+        "Kasap",
+
+    manav:
+        "Manav",
+
+    kuru_temizleme:
+        "Kuru Temizleme"
+
+};
+
+
+// ==========================================
+// KATEGORİ SEÇİMİ
+// ==========================================
+
+categoryGrid.addEventListener(
+    "click",
+    (e) => {
+
+        const btn =
+            e.target.closest(".category-btn");
+
+        if (!btn) return;
+
+
+        document
+            .querySelectorAll(".category-btn")
+            .forEach(b =>
+                b.classList.remove("active")
+            );
+
+
+        btn.classList.add("active");
+
+
+        currentCategory =
+            btn.dataset.kategori;
+
+
+        esnafGetir();
+
+    }
+);
+
+
+// ==========================================
+// İLÇE DEĞİŞİKLİĞİ
+// ==========================================
+
+district.addEventListener(
+    "change",
+    () => {
+
+        if (currentCategory) {
+            esnafGetir();
+        }
+
+    }
+);
+
+
+// ==========================================
+// ESNAF GETİR
+// ==========================================
+
+async function esnafGetir() {
+
+    status.style.display =
+        "block";
+
+    status.textContent =
+        categoryLabels[currentCategory] +
+        " aranıyor...";
+
+    businessesDiv.innerHTML =
+        "";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "https://kocaeli-cepte-api.vercel.app/api/esnaf?kategori=" +
+                encodeURIComponent(currentCategory) +
+                "&ilce=" +
+                encodeURIComponent(district.value)
+            );
+
+
+        if (!response.ok) {
+
+            const errBody =
+                await response.text();
+
+            throw new Error(
+                "HTTP " +
+                response.status +
+                " — " +
+                errBody.slice(0, 500)
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Bilinmeyen hata"
+            );
+
+        }
+
+
+        status.style.display =
+            "none";
+
+
+        if (
+            !data.businesses ||
+            data.businesses.length === 0
+        ) {
+
+            businessesDiv.innerHTML =
+                '<div class="status">' +
+                'Bu bölgede sonuç bulunamadı.' +
+                '</div>';
+
+            return;
+
+        }
+
+
+        businessesDiv.innerHTML =
+            data.businesses.map(b => {
+
+                const openBadge =
+                    b.openNow === true
+
+                        ? '<span class="badge badge-open">Açık</span>'
+
+                        : b.openNow === false
+
+                        ? '<span class="badge badge-closed">Kapalı</span>'
+
+                        : '';
+
+
+                const ratingBadge =
+                    b.rating
+
+                        ? '<span class="badge badge-google">⭐ ' +
+                          b.rating +
+                          ' (' +
+                          b.ratingCount +
+                          ')</span>'
+
+                        : '';
+
+
+                const imgHtml =
+                    b.photoUrl
+
+                        ? '<img src="' +
+                          b.photoUrl +
+                          '" alt="' +
+                          b.name +
+                          '">'
+
+                        : '';
+
+
+                const mapsUrl =
+                    "https://www.google.com/maps/search/?api=1&query=" +
+                    encodeURIComponent(
+                        b.name +
+                        " " +
+                        b.address
+                    ) +
+                    "&query_place_id=" +
+                    b.id;
+
+
+                const phoneClean =
+                    b.phone
+                        ? b.phone.replace(
+                            /[^0-9+]/g,
+                            ""
+                          )
+                        : "";
+
+
+                return `
+
+                    <div class="card">
+
+                        ${imgHtml}
+
+                        <div class="card-body">
+
+                            <div class="card-name">
+                                ${b.name}
+                            </div>
+
+                            <div class="card-address">
+                                📍 ${b.address}
+                            </div>
+
+                            <div class="badges">
+
+                                ${ratingBadge}
+
+                                ${openBadge}
+
+                            </div>
+
+
+                            <div class="buttons">
+
+                                ${
+                                    b.phone
+                                        ? '<a class="btn btn-call" href="tel:' +
+                                          phoneClean +
+                                          '">📞 Ara</a>'
+                                        : ''
+                                }
+
+
+                                <a
+                                    class="btn btn-map"
+                                    href="${mapsUrl}"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    🗺️ Yol Tarifi
+                                </a>
+
+                            </div>
+
+
+                            <div class="our-rating">
+
+                                <div
+                                    class="our-rating-label"
+                                    data-label-for="${b.id}"
+                                >
+                                    Kocaeli Cepte Puanı
+                                </div>
+
+
+                                <div
+                                    class="stars"
+                                    data-place-id="${b.id}"
+                                >
+
+                                    <span
+                                        class="star"
+                                        data-value="1"
+                                    >
+                                        ★
+                                    </span>
+
+                                    <span
+                                        class="star"
+                                        data-value="2"
+                                    >
+                                        ★
+                                    </span>
+
+                                    <span
+                                        class="star"
+                                        data-value="3"
+                                    >
+                                        ★
+                                    </span>
+
+                                    <span
+                                        class="star"
+                                        data-value="4"
+                                    >
+                                        ★
+                                    </span>
+
+                                    <span
+                                        class="star"
+                                        data-value="5"
+                                    >
+                                        ★
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join("");
+
+
+        // ==========================================
+        // KAYITLI PUANLARI GETİR
+        // ==========================================
+
+        try {
+
+            const placeIds =
+                data.businesses
+                    .map(b => b.id)
+                    .join(",");
+
+
+            const ratingsResponse =
+                await fetch(
+                    "https://kocaeli-cepte-api.vercel.app/api/puan?placeIds=" +
+                    encodeURIComponent(placeIds)
+                );
+
+
+            if (ratingsResponse.ok) {
+
+                const ratingsData =
+                    await ratingsResponse.json();
+
+
+                if (ratingsData.success) {
+
+                    Object.keys(
+                        ratingsData.ratings
+                    ).forEach(placeId => {
+
+                        const info =
+                            ratingsData.ratings[placeId];
+
+
+                        const label =
+                            document.querySelector(
+                                '[data-label-for="' +
+                                placeId +
+                                '"]'
+                            );
+
+
+                        const starGroup =
+                            document.querySelector(
+                                '.stars[data-place-id="' +
+                                placeId +
+                                '"]'
+                            );
+
+
+                        if (label) {
+
+                            label.textContent =
+                                info.count > 0
+
+                                    ? "Kocaeli Cepte Puanı: " +
+                                      info.average +
+                                      " (" +
+                                      info.count +
+                                      " oy)"
+
+                                    : "Kocaeli Cepte Puanı (henüz oy yok)";
+
+                        }
+
+
+                        if (
+                            starGroup &&
+                            info.count > 0
+                        ) {
+
+                            const stars =
+                                starGroup.querySelectorAll(
+                                    ".star"
+                                );
+
+
+                            const rounded =
+                                Math.round(
+                                    info.average
+                                );
+
+
+                            stars.forEach(
+                                (star, index) => {
+
+                                    star.classList.toggle(
+                                        "filled",
+                                        index < rounded
+                                    );
+
+                                }
+                            );
+
+                        }
+
+                    });
+
+                }
+
+            }
+
+        } catch (ratingError) {
+
+            console.error(
+                "Puanlar getirilemedi:",
+                ratingError
+            );
+
+        }
+
+
+        // ==========================================
+        // YILDIZ OYLAMA
+        // ==========================================
+
+        document
+            .querySelectorAll(".stars")
+            .forEach(starGroup => {
+
+                const placeId =
+                    starGroup.dataset.placeId;
+
+
+                const votedKey =
+                    "oy_verildi_" +
+                    placeId;
+
+
+                const label =
+                    document.querySelector(
+                        '[data-label-for="' +
+                        placeId +
+                        '"]'
+                    );
+
+
+                const previousVote =
+                    localStorage.getItem(
+                        votedKey
+                    );
+
+
+                // Daha önce oy verilmişse
+
+                if (previousVote) {
+
+                    const stars =
+                        starGroup.querySelectorAll(
+                            ".star"
+                        );
+
+
+                    stars.forEach(
+                        (star, index) => {
+
+                            star.classList.toggle(
+                                "filled",
+                                index <
+                                parseInt(previousVote)
+                            );
+
+                        }
+                    );
+
+
+                    starGroup.style.opacity =
+                        "0.6";
+
+                    starGroup.style.pointerEvents =
+                        "none";
+
+
+                    if (label) {
+
+                        label.textContent =
+                            label.textContent +
+                            " (Bu işletmeye oy verdiniz)";
+
+                    }
+
+                }
+
+
+                // Yeni oy verme
+
+                starGroup.addEventListener(
+                    "click",
+                    async (e) => {
+
+                        if (
+                            !e.target.classList.contains(
+                                "star"
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        if (
+                            localStorage.getItem(
+                                votedKey
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        const value =
+                            parseInt(
+                                e.target.dataset.value
+                            );
+
+
+                        const stars =
+                            starGroup.querySelectorAll(
+                                ".star"
+                            );
+
+
+                        // Görsel olarak göster
+
+                        stars.forEach(
+                            (star, index) => {
+
+                                star.classList.toggle(
+                                    "filled",
+                                    index < value
+                                );
+
+                            }
+                        );
+
+
+                        if (label) {
+
+                            label.textContent =
+                                "Kaydediliyor...";
+
+                        }
+
+
+                        try {
+
+                            const saveResponse =
+                                await fetch(
+                                    "https://kocaeli-cepte-api.vercel.app/api/puan",
+                                    {
+                                        method: "POST",
+
+                                        headers: {
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+                                                placeId,
+                                                rating: value
+                                            })
+                                    }
+                                );
+
+
+                            const saveData =
+                                await saveResponse.json();
+
+
+                            if (
+                                saveData.success &&
+                                label
+                            ) {
+
+                                localStorage.setItem(
+                                    votedKey,
+                                    value
+                                );
+
+
+                                label.textContent =
+                                    "Kocaeli Cepte Puanı: " +
+                                    saveData.average +
+                                    " (" +
+                                    saveData.count +
+                                    " oy) — Teşekkürler!";
+
+
+                                starGroup.style.opacity =
+                                    "0.6";
+
+
+                                starGroup.style.pointerEvents =
+                                    "none";
+
+                            }
+
+                            else if (label) {
+
+                                label.textContent =
+                                    "Puan kaydedilemedi, tekrar deneyin.";
+
+                            }
+
+                        } catch (err) {
+
+                            console.error(
+                                "Puan kaydetme hatası:",
+                                err
+                            );
+
+
+                            if (label) {
+
+                                label.textContent =
+                                    "Puan kaydedilemedi, tekrar deneyin.";
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            });
+
+
+    } catch (error) {
+
+        console.error(
+            "ESNAF API HATASI:",
+            error
+        );
+
+
+        status.style.display =
+            "block";
+
+
+        status.innerHTML = `
+
+            <div class="error">
+
+                ❌ Sonuçlar yüklenemedi.
+
+                <br><br>
+
+                <strong>Hata:</strong>
+                ${error.message || error}
+
+            </div>
+
+        `;
+
+    }
+
 }
 
-function cizFiltre() {
-  filters.innerHTML = "";
-  ilceler().forEach(ad => {
-    const b = document.createElement("button");
-    b.className = "chip" + (ad === secili ? " active" : "");
-    b.textContent = ad;
-    b.setAttribute("role", "tab");
-    b.setAttribute("aria-selected", ad === secili);
-    b.onclick = () => { secili = ad; cizFiltre(); cizListe(); };
-    filters.append(b);
-  });
-}
-
-function esc(s) {
-  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-}
-
-function kosullar(i) {
-  const t = i.teslimat || {}, p = [];
-  if (t.eveTeslim) p.push(t.eveTeslimMin ? t.eveTeslimMin.toLocaleString("tr-TR") + " ₺ ve üzeri siparişlerde eve teslim" : "Eve teslim");
-  if (t.gelAl) p.push("Gel-al için saat seçilebilir");
-  if (i.odeme && /kart/i.test(i.odeme)) p.push("Kredi kartı geçerli");
-  return p.join(" · ");
-}
-
-function cizListe() {
-  const gorunen = ISLETMELER.filter(i => secili === "Tümü" || i.ilce === secili)
-    .map(i => ({ i, d: Saatler.durum(i) }))
-    .sort((a, b) => a.d.kapali - b.d.kapali)   // açık olanlar üstte
-    .map(x => Object.assign({}, x.i, { _d: x.d }));
-  if (!gorunen.length) {
-    list.innerHTML = '<div class="empty">Bu ilçede henüz üye işletme yok.</div>';
-    return;
-  }
-  list.innerHTML = gorunen.map(i => `
-    <article class="card${i._d.kapali ? " kapali" : ""}">
-      <div class="card-top">
-        <div class="mono" aria-hidden="true">${esc(i.kisa)}</div>
-        <div>
-          <div class="card-name">${esc(i.ad)}</div>
-          <div class="card-place">${esc(i.mahalle)} · ${esc(i.ilce)}</div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="badges">
-          <span class="badge durum ${i._d.tur}">${esc(i._d.metin)}</span>
-          <span class="badge free">Komisyonsuz</span>
-          ${i.etiketler.map(t => `<span class="badge">${esc(t)}</span>`).join("")}
-        </div>
-        ${i._d.kapali ? `<div class="uyari">Bu işletme şu an sipariş almıyor. Menüye bakıp açık olduğu bir saate ileri tarihli sipariş verebilirsiniz.</div>` : ""}
-        <p class="desc">${esc(i.aciklama)}</p>
-        <div class="terms">${esc(kosullar(i))}<br>${esc(i.adres)}</div>
-        <div class="actions">
-          <a class="btn primary" href="siparis.html?isletme=${encodeURIComponent(i.id)}">${i._d.kapali ? "Menü ve İleri Tarihli Sipariş" : "Menü ve Sipariş"}</a>
-          <a class="btn" href="tel:+${i.whatsapp}" aria-label="Ara: ${esc(i.telefonGoster)}">📞 Ara</a>
-          <a class="btn" href="${i.harita}" target="_blank" rel="noopener">📍 Yol tarifi</a>
-          ${i.instagram ? `<a class="btn" href="https://www.instagram.com/${encodeURIComponent(i.instagram)}/" target="_blank" rel="noopener">📷 Instagram</a>` : ""}
-        </div>
-      </div>
-    </article>`).join("");
-}
-
-cizFiltre();
-cizListe();
-setInterval(cizListe, 60000);   // açık/kapalı durumu dakikada bir yenilenir
 </script>
 
 </body>
