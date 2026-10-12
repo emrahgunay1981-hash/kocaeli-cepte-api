@@ -200,7 +200,29 @@ async function decodeGoogleNewsUrls(paramsList) {
 // GERÇEK HABER SAYFASINDAN GÖRSEL AL
 // ==========================================
 
-async function getImageFromUrl(url) {
+// Haber başlığı ile sayfanın başlığı örtüşüyor mu? (yanlış görseli engeller)
+function titleWords(text) {
+  return String(text || "")
+    .toLocaleLowerCase("tr-TR")
+    .replace(/[^a-z0-9çğıöşü\s]/gi, " ")
+    .split(/\s+/)
+    .filter(w => w.length >= 4);
+}
+
+function pageMatchesTitle(html, title) {
+  const m =
+    html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i) ||
+    html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i) ||
+    html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  if (!m) return true; // başlık bulunamazsa engelleme
+  const pageWords = new Set(titleWords(m[1]));
+  const itemWords = titleWords(title);
+  if (!itemWords.length || !pageWords.size) return true;
+  const common = itemWords.filter(w => pageWords.has(w)).length;
+  return common >= Math.min(2, itemWords.length);
+}
+
+async function getImageFromUrl(url, title) {
   if (!url) return null;
 
   try {
@@ -218,6 +240,7 @@ async function getImageFromUrl(url) {
     if (!response.ok) return null;
 
     const html = await response.text();
+    if (title && !pageMatchesTitle(html, title)) return null;
     return findMetaImage(html);
   } catch (error) {
     return null;
@@ -302,9 +325,13 @@ async function resolveGoogleImages(itemsForImages) {
     }
   });
 
+  // Her haber için adresi AYRI ayrı çöz: toplu çözümde bir satır atlanırsa
+  // sıralama kayar ve görseller yanlış habere gider.
   if (validParams.length > 0) {
-    const decodedUrls = await decodeGoogleNewsUrls(validParams);
-    decodedUrls.forEach((realUrl, i) => {
+    const decoded = await Promise.all(
+      validParams.map(p => decodeGoogleNewsUrls([p]).then(r => (r && r[0]) || null).catch(() => null))
+    );
+    decoded.forEach((realUrl, i) => {
       const itemIndex = validIndexes[i];
       if (itemIndex !== undefined && realUrl) {
         itemsForImages[itemIndex].realUrl = realUrl;
@@ -317,7 +344,7 @@ async function resolveGoogleImages(itemsForImages) {
     await Promise.all(
       batch.map(async item => {
         if (item.realUrl) {
-          item.image = await getImageFromUrl(item.realUrl);
+          item.image = await getImageFromUrl(item.realUrl, item.title);
         }
       })
     );
