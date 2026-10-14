@@ -499,7 +499,7 @@ body {
     <div class="note">
 
         ℹ️ Bu liste Bubilet'in Kocaeli çocuk etkinlikleri kategorisinden
-        derlenmiştir (26 Eylül 2026 itibarıyla güncel). Etkinlik tarihleri,
+        derlenmiştir. Tarihi geçen etkinlikler otomatik olarak gizlenir. Etkinlik tarihleri,
         saatleri ve bilet fiyatları organizatörler tarafından değiştirilebilir.
         Bilet bilgileri satın alma öncesinde ilgili etkinlik sayfasından
         kontrol edilmelidir.
@@ -508,6 +508,52 @@ body {
 
 
 </div>
+
+
+<script>
+/* Tarihi geçen etkinlikleri gizle, kalanları tarihe göre sırala */
+(function () {
+  var AYLAR = { "ocak":0, "şubat":1, "mart":2, "nisan":3, "mayıs":4, "haziran":5,
+                "temmuz":6, "ağustos":7, "eylül":8, "ekim":9, "kasım":10, "aralık":11 };
+
+  var simdi = new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Istanbul" }));
+  var bugun = new Date(simdi.getFullYear(), simdi.getMonth(), simdi.getDate());
+
+  var events = Array.prototype.slice.call(document.querySelectorAll(".event"));
+  if (!events.length) return;
+
+  var parent = events[0].parentNode;
+  var anchor = document.querySelector(".note");
+
+  var liste = events.map(function (el) {
+    var s = el.querySelector(".event-info strong");
+    var m = s && s.textContent.match(/(\d{1,2})\s+([A-Za-zÇĞİıÖŞÜçğöşü]+)\s+(\d{4})/);
+    var d = null;
+    if (m) {
+      var ay = AYLAR[m[2].toLocaleLowerCase("tr-TR")];
+      if (ay !== undefined) d = new Date(+m[3], ay, +m[1]);
+    }
+    return { el: el, d: d };
+  });
+
+  var gelecek = liste.filter(function (x) { return !x.d || x.d >= bugun; });
+  var gecmis = liste.filter(function (x) { return x.d && x.d < bugun; });
+
+  gecmis.forEach(function (x) { x.el.style.display = "none"; });
+
+  gelecek.sort(function (a, b) {
+    return (a.d ? a.d.getTime() : 9e15) - (b.d ? b.d.getTime() : 9e15);
+  });
+  gelecek.forEach(function (x) { parent.insertBefore(x.el, anchor); });
+
+  if (!gelecek.length) {
+    var bos = document.createElement("div");
+    bos.className = "note";
+    bos.textContent = "Şu anda listelenen yaklaşan çocuk etkinliği yok. Yeni etkinlikler eklendikçe burada görünecek.";
+    parent.insertBefore(bos, anchor);
+  }
+})();
+</script>
 
 </body>
 </html>
