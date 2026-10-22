@@ -1746,6 +1746,32 @@ a {
   margin-left: 0;
 }
 
+
+/* Görseli olmayan haberlerde gazete adı */
+.hero-image-placeholder {
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px;
+  text-align: center;
+}
+.hero-image-placeholder .ph-name {
+  font-size: 22px;
+  font-weight: 900;
+  color: #0b7f8c;
+  line-height: 1.2;
+}
+.news-image.no-image {
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px;
+  text-align: center;
+}
+.news-image.no-image .ph-name {
+  font-size: 11px;
+  font-weight: 900;
+  color: #0b7f8c;
+  line-height: 1.15;
+}
 </style>
 <script type="application/ld+json">
 {
@@ -2742,6 +2768,28 @@ function isBreakingNews(item) {
    HABERLERİ GETİR
 ========================================================= */
 
+function heroPlaceholder(source) {
+  return `<div class="hero-image-placeholder">
+    <div class="ph-icon">📰</div>
+    <div class="ph-name">${escapeHtml(source || "")}</div>
+  </div>`;
+}
+
+function listPlaceholder(source) {
+  return `<div class="news-image no-image">
+    <div class="ph-icon">📰</div>
+    <div class="ph-name">${escapeHtml(source || "")}</div>
+  </div>`;
+}
+
+function heroImgFail(img) {
+  img.outerHTML = heroPlaceholder(img.dataset.source);
+}
+
+function listImgFail(img) {
+  img.outerHTML = listPlaceholder(img.dataset.source);
+}
+
 async function loadNews() {
 
   const grid =
@@ -2861,10 +2909,11 @@ async function loadNews() {
                   class="hero-image"
                   src="${escapeHtml(item.image)}"
                   alt=""
-                  onerror="this.outerHTML='<div class=&quot;hero-image-placeholder&quot;>📰</div>'"
+                  data-source="${escapeHtml(item.source || "")}"
+                  onerror="heroImgFail(this)"
                 >
               `
-              : `<div class="hero-image-placeholder">📰</div>`
+              : heroPlaceholder(item.source)
             }
 
             <div class="hero-content">
@@ -2938,19 +2987,12 @@ async function loadNews() {
                 src="${escapeHtml(item.image)}"
                 alt=""
                 loading="lazy"
-                onerror="
-                  this.style.display='none'
-                "
+                data-source="${escapeHtml(item.source || "")}"
+                onerror="listImgFail(this)"
               >
 
             `
-            : `
-
-              <div
-                class="news-image no-image"
-              >📰</div>
-
-            `
+            : listPlaceholder(item.source)
           }
 
 
