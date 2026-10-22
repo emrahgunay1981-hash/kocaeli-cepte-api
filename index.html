@@ -1766,6 +1766,24 @@ a {
   padding: 4px;
   text-align: center;
 }
+.hero-image-placeholder .ph-logo {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 9px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+}
+.logo-fallback img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 11px;
+  padding: 6px;
+  box-shadow: 0 3px 10px rgba(0,0,0,.12);
+}
 .news-image.no-image .ph-name {
   font-size: 11px;
   font-weight: 900;
@@ -2542,6 +2560,8 @@ GİZLİ SONU -->
 </nav>
 
 
+<script src="kaynak-logo.js"></script>
+
 <script>
 
 
@@ -2768,26 +2788,40 @@ function isBreakingNews(item) {
    HABERLERİ GETİR
 ========================================================= */
 
-function heroPlaceholder(source) {
+function heroPlaceholder(item) {
+  const logo =
+    (typeof kaynakLogoUrl === "function") ? kaynakLogoUrl(item) : "";
+  const ikon = logo
+    ? `<img class="ph-logo" src="${escapeHtml(logo)}" alt="" onerror="this.outerHTML='<div class=&quot;ph-icon&quot;>📰</div>'">`
+    : `<div class="ph-icon">📰</div>`;
   return `<div class="hero-image-placeholder">
-    <div class="ph-icon">📰</div>
-    <div class="ph-name">${escapeHtml(source || "")}</div>
+    ${ikon}
+    <div class="ph-name">${escapeHtml(item.source || "")}</div>
   </div>`;
 }
 
-function listPlaceholder(source) {
+function listPlaceholder(item) {
+  if (typeof logoKutusuHtml === "function" && kaynakLogoUrl(item)) {
+    return logoKutusuHtml(item, "news-image no-image", "📰");
+  }
   return `<div class="news-image no-image">
     <div class="ph-icon">📰</div>
-    <div class="ph-name">${escapeHtml(source || "")}</div>
+    <div class="ph-name">${escapeHtml(item.source || "")}</div>
   </div>`;
 }
 
 function heroImgFail(img) {
-  img.outerHTML = heroPlaceholder(img.dataset.source);
+  img.outerHTML = heroPlaceholder({
+    source: img.dataset.source,
+    link: img.dataset.link
+  });
 }
 
 function listImgFail(img) {
-  img.outerHTML = listPlaceholder(img.dataset.source);
+  img.outerHTML = listPlaceholder({
+    source: img.dataset.source,
+    link: img.dataset.link
+  });
 }
 
 async function loadNews() {
@@ -2910,10 +2944,11 @@ async function loadNews() {
                   src="${escapeHtml(item.image)}"
                   alt=""
                   data-source="${escapeHtml(item.source || "")}"
+                  data-link="${escapeHtml(item.link || "")}"
                   onerror="heroImgFail(this)"
                 >
               `
-              : heroPlaceholder(item.source)
+              : heroPlaceholder(item)
             }
 
             <div class="hero-content">
@@ -2988,11 +3023,12 @@ async function loadNews() {
                 alt=""
                 loading="lazy"
                 data-source="${escapeHtml(item.source || "")}"
+                data-link="${escapeHtml(item.link || "")}"
                 onerror="listImgFail(this)"
               >
 
             `
-            : listPlaceholder(item.source)
+            : listPlaceholder(item)
           }
 
 
