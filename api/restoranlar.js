@@ -27,7 +27,9 @@ export default async function handler(req, res) {
   // Google tek seferde en fazla 20 sonuç verir.
   // Sonraki sayfaları nextPageToken ile alıyoruz.
   // SAYFA_SAYISI: 1 = 20 restoran, 2 = 40, 3 = 60 (en fazla)
-  const SAYFA_SAYISI = 3;
+  // 2 seçildi: 24 saat önbellekle ayda en fazla ~780 arama,
+  // Google'ın ücretsiz kotası (1.000) içinde kalır.
+  const SAYFA_SAYISI = 2;
 
   try {
 
@@ -58,7 +60,7 @@ export default async function handler(req, res) {
               "nextPageToken," +
               "places.id,places.displayName,places.formattedAddress," +
               "places.rating,places.userRatingCount,places.priceLevel," +
-              "places.photos,places.location,places.currentOpeningHours.openNow"
+              "places.location,places.currentOpeningHours.openNow"
           },
           body: JSON.stringify(body)
         }
@@ -103,14 +105,9 @@ export default async function handler(req, res) {
 
     const restaurants = places.map(place => {
 
-      let photoUrl = null;
-
-      if (place.photos && place.photos.length > 0) {
-        const photoName = place.photos[0].name;
-        photoUrl =
-          `https://places.googleapis.com/v1/${photoName}/media` +
-          `?maxWidthPx=400&key=${apiKey}`;
-      }
+      // Fotoğraflar kullanıcı sayısıyla artan masraf yaptığı için
+      // ve API anahtarını sayfada açığa çıkardığı için kaldırıldı.
+      const photoUrl = null;
 
       return {
         id: place.id,
@@ -129,11 +126,11 @@ export default async function handler(req, res) {
 
     });
 
-    // 6 saat önbellek: aynı ilçeyi tekrar açanlar için Google'a
-    // yeniden sorulmaz (hem hızlı hem ucuz).
+    // 24 saat önbellek: aynı ilçeyi tekrar açanlar için Google'a
+    // yeniden sorulmaz. Masraf kullanıcı sayısına bağlı olmaz.
     res.setHeader(
       "Cache-Control",
-      "public, s-maxage=21600, stale-while-revalidate=86400"
+      "public, s-maxage=86400, stale-while-revalidate=172800"
     );
 
     return res.status(200).json({
