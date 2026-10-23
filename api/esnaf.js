@@ -29,6 +29,12 @@ const CATEGORIES = {
   kuru_temizleme: "kuru temizleme"
 };
 
+const ILCELER = [
+  "Kocaeli", "İzmit", "Gebze", "Darıca", "Körfez", "Başiskele",
+  "Kartepe", "Gölcük", "Derince", "Çayırova", "Dilovası",
+  "Kandıra", "Karamürsel"
+];
+
 export default async function handler(req, res) {
 
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -49,6 +55,15 @@ export default async function handler(req, res) {
   }
 
   const ilce = req.query.ilce || "Kocaeli";
+
+  // Sadece bilinen ilçeler kabul edilir (rastgele yazıyla
+  // Google'a istek attırılmasını ve önbelleğin atlatılmasını önler)
+  if (!ILCELER.includes(ilce)) {
+    return res.status(400).json({
+      success: false,
+      error: "Geçersiz ilçe."
+    });
+  }
   const kategori = req.query.kategori || "";
 
   const searchTerm = CATEGORIES[kategori];
