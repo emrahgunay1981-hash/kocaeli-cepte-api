@@ -21,47 +21,85 @@ export default async function handler(req, res) {
     });
   }
 
-  // İlçe parametresi (opsiyonel) - örn: ?ilce=izmit
+  // İlçe parametresi (opsiyonel) - örn: ?ilce=İzmit
   const ilce = req.query.ilce || "Kocaeli";
+
+  // Google tek seferde en fazla 20 sonuç verir.
+  // Sonraki sayfaları nextPageToken ile alıyoruz.
+  // SAYFA_SAYISI: 1 = 20 restoran, 2 = 40, 3 = 60 (en fazla)
+  const SAYFA_SAYISI = 3;
 
   try {
 
-    // Yeni nesil Places API (Text Search) kullanıyoruz
-    const response = await fetch(
-      "https://places.googleapis.com/v1/places:searchText",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Goog-Api-Key": apiKey,
-          "X-Goog-FieldMask":
-            "places.id,places.displayName,places.formattedAddress," +
-            "places.rating,places.userRatingCount,places.priceLevel," +
-            "places.photos,places.location,places.currentOpeningHours.openNow"
-        },
-        body: JSON.stringify({
-          textQuery: `${ilce} restoran`,
-          languageCode: "tr",
-          maxResultCount: 20
-        })
+    const places = [];
+    const gorulen = new Set();
+    let pageToken = null;
+
+    for (let sayfa = 0; sayfa < SAYFA_SAYISI; sayfa++) {
+
+      const body = {
+        textQuery: `${ilce} restoran`,
+        languageCode: "tr",
+        pageSize: 20
+      };
+
+      if (pageToken) {
+        body.pageToken = pageToken;
       }
-    );
 
-    if (!response.ok) {
+      const response = await fetch(
+        "https://places.googleapis.com/v1/places:searchText",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": apiKey,
+            "X-Goog-FieldMask":
+              "nextPageToken," +
+              "places.id,places.displayName,places.formattedAddress," +
+              "places.rating,places.userRatingCount,places.priceLevel," +
+              "places.photos,places.location,places.currentOpeningHours.openNow"
+          },
+          body: JSON.stringify(body)
+        }
+      );
 
-      const errorText = await response.text();
+      if (!response.ok) {
 
-      return res.status(response.status).json({
-        success: false,
-        error: "Google Places API hatası",
-        detail: errorText.slice(0, 300)
+        // İlk sayfa hata verirse hata dön; sonraki sayfalarda
+        // eldeki sonuçlarla devam et.
+        if (sayfa === 0) {
+
+          const errorText = await response.text();
+
+          return res.status(response.status).json({
+            success: false,
+            error: "Google Places API hatası",
+            detail: errorText.slice(0, 300)
+          });
+
+        }
+
+        break;
+
+      }
+
+      const data = await response.json();
+
+      (data.places || []).forEach(place => {
+
+        if (!gorulen.has(place.id)) {
+          gorulen.add(place.id);
+          places.push(place);
+        }
+
       });
 
+      pageToken = data.nextPageToken || null;
+
+      if (!pageToken) break;
+
     }
-
-    const data = await response.json();
-
-    const places = data.places || [];
 
     const restaurants = places.map(place => {
 
@@ -91,6 +129,13 @@ export default async function handler(req, res) {
 
     });
 
+    // 6 saat önbellek: aynı ilçeyi tekrar açanlar için Google'a
+    // yeniden sorulmaz (hem hızlı hem ucuz).
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=21600, stale-while-revalidate=86400"
+    );
+
     return res.status(200).json({
       success: true,
       count: restaurants.length,
@@ -111,5 +156,4 @@ export default async function handler(req, res) {
 
   }
 
-      }
-
+}
