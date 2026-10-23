@@ -164,6 +164,30 @@ a { text-decoration: none; color: inherit; }
 
 .day-temps .min { color: #92a9b0; font-weight: 600; }
 
+.loc-bar {
+  margin-bottom: 14px;
+}
+
+.loc-select {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #173f4e;
+  background: #ffffff;
+  border: 1px solid #cfe7ea;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(24,105,120,.05);
+  appearance: auto;
+}
+
+.loc-note {
+  margin: 7px 3px 0;
+  font-size: 11px;
+  color: #829ba2;
+  line-height: 1.4;
+}
+
 .loading, .error {
   text-align: center;
   padding: 40px 15px;
@@ -179,18 +203,72 @@ a { text-decoration: none; color: inherit; }
   <a class="back-link" href="index.html">←</a>
   <div>
     <h1>🌤️ Hava Durumu</h1>
-    <p>İzmit, Kocaeli</p>
+    <p id="loc-name">İzmit, Kocaeli</p>
   </div>
 </div>
 
 <main class="container">
+  <div class="loc-bar">
+    <select id="loc-select" class="loc-select" aria-label="Konum seç">
+      <option value="gps">📍 Konumum</option>
+      <option value="izmit">İzmit</option>
+      <option value="kartepe">Kartepe</option>
+      <option value="gebze">Gebze</option>
+      <option value="darica">Darıca</option>
+      <option value="korfez">Körfez</option>
+      <option value="basiskele">Başiskele</option>
+      <option value="golcuk">Gölcük</option>
+      <option value="derince">Derince</option>
+      <option value="cayirova">Çayırova</option>
+      <option value="dilovasi">Dilovası</option>
+      <option value="kandira">Kandıra</option>
+      <option value="karamursel">Karamürsel</option>
+    </select>
+    <div id="loc-note" class="loc-note"></div>
+  </div>
+
   <div id="content" class="loading">Hava durumu yükleniyor...</div>
 </main>
 
 <script>
 
-const LAT = 40.7654;
-const LNG = 29.9408;
+// İlçe merkezleri (yaklaşık koordinatlar)
+const PLACES = {
+  izmit:      { name: "İzmit",      lat: 40.7654, lng: 29.9408 },
+  kartepe:    { name: "Kartepe",    lat: 40.6850, lng: 30.0300 },
+  gebze:      { name: "Gebze",      lat: 40.8027, lng: 29.4307 },
+  darica:     { name: "Darıca",     lat: 40.7699, lng: 29.3754 },
+  korfez:     { name: "Körfez",     lat: 40.7544, lng: 29.7667 },
+  basiskele:  { name: "Başiskele",  lat: 40.7133, lng: 29.9272 },
+  golcuk:     { name: "Gölcük",     lat: 40.7175, lng: 29.8306 },
+  derince:    { name: "Derince",    lat: 40.7556, lng: 29.8156 },
+  cayirova:   { name: "Çayırova",   lat: 40.8272, lng: 29.3728 },
+  dilovasi:   { name: "Dilovası",   lat: 40.7878, lng: 29.5381 },
+  kandira:    { name: "Kandıra",    lat: 41.0709, lng: 30.1527 },
+  karamursel: { name: "Karamürsel", lat: 40.6919, lng: 29.6150 }
+};
+
+let requestId = 0;
+
+function distanceKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function nearestPlace(lat, lng) {
+  let best = null;
+  let bestDist = Infinity;
+  Object.keys(PLACES).forEach(function(key) {
+    const p = PLACES[key];
+    const d = distanceKm(lat, lng, p.lat, p.lng);
+    if (d < bestDist) { bestDist = d; best = p; }
+  });
+  return { place: best, km: bestDist };
+}
 
 function weatherInfo(code) {
   if (code === 0) return { icon: "☀️", desc: "Açık" };
@@ -211,8 +289,11 @@ function dayLabel(dateStr, index) {
   return DAY_NAMES[date.getDay()];
 }
 
-async function loadWeather() {
+async function loadWeather(LAT, LNG) {
+  const myRequest = ++requestId;
   const content = document.getElementById("content");
+  content.className = "loading";
+  content.textContent = "Hava durumu yükleniyor...";
 
   try {
     const url =
@@ -229,6 +310,7 @@ async function loadWeather() {
     if (!response.ok) throw new Error("Hava durumu alınamadı");
 
     const data = await response.json();
+    if (myRequest !== requestId) return;
     if (!data.current || !data.hourly || !data.daily) throw new Error("Eksik veri");
 
     const current = data.current;
@@ -318,15 +400,91 @@ async function loadWeather() {
     content.classList.remove("loading");
 
   } catch (error) {
+    if (myRequest !== requestId) return;
     console.error("Hava durumu hatası:", error);
     content.className = "error";
     content.textContent = "Hava durumu şu anda yüklenemedi. Lütfen tekrar deneyin.";
   }
 }
 
-loadWeather();
+function setHeader(text) {
+  document.getElementById("loc-name").textContent = text + ", Kocaeli";
+}
+
+function setNote(text) {
+  document.getElementById("loc-note").textContent = text || "";
+}
+
+function saveChoice(value) {
+  try { localStorage.setItem("havaKonum", value); } catch (e) {}
+}
+
+function readChoice() {
+  try { return localStorage.getItem("havaKonum"); } catch (e) { return null; }
+}
+
+function showPlace(key) {
+  const p = PLACES[key] || PLACES.izmit;
+  setHeader(p.name);
+  setNote("");
+  loadWeather(p.lat, p.lng);
+}
+
+function showMyLocation() {
+  const select = document.getElementById("loc-select");
+
+  function fallback(message) {
+    select.value = "izmit";
+    showPlace("izmit");
+    setNote(message + " İzmit gösteriliyor, istersen listeden başka ilçe seçebilirsin.");
+  }
+
+  if (!navigator.geolocation) {
+    fallback("Konum bu cihazda kullanılamıyor.");
+    return;
+  }
+
+  setNote("Konumun alınıyor...");
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      const lat = Math.round(pos.coords.latitude * 100) / 100;
+      const lng = Math.round(pos.coords.longitude * 100) / 100;
+      const near = nearestPlace(lat, lng);
+
+      if (near.km > 60) {
+        // Kocaeli dışında: yine de bulunduğu yerin havasını göster
+        document.getElementById("loc-name").textContent = "Konumun";
+        setNote("Konumun Kocaeli dışında görünüyor, bulunduğun yerin hava durumu gösteriliyor.");
+      } else {
+        setHeader(near.place.name + " civarı");
+        setNote("Konumuna göre gösteriliyor.");
+      }
+      loadWeather(lat, lng);
+    },
+    function() {
+      fallback("Konum izni verilmedi ya da alınamadı.");
+    },
+    { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+  );
+}
+
+function onChoice(value) {
+  saveChoice(value);
+  if (value === "gps") showMyLocation();
+  else showPlace(value);
+}
+
+(function init() {
+  const select = document.getElementById("loc-select");
+  select.addEventListener("change", function() { onChoice(select.value); });
+
+  let start = readChoice();
+  if (start !== "gps" && !PLACES[start]) start = "gps";
+  select.value = start;
+  onChoice(start);
+})();
 </script>
 
 </body>
 </html>
-
