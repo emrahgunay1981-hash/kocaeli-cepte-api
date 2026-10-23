@@ -72,7 +72,7 @@ export default async function handler(req, res) {
           "X-Goog-Api-Key": apiKey,
           "X-Goog-FieldMask":
             "places.id,places.displayName,places.formattedAddress," +
-            "places.rating,places.userRatingCount,places.photos," +
+            "places.rating,places.userRatingCount," +
             "places.location,places.currentOpeningHours.openNow," +
             "places.nationalPhoneNumber"
         },
@@ -102,14 +102,9 @@ export default async function handler(req, res) {
 
     const businesses = places.map(place => {
 
-      let photoUrl = null;
-
-      if (place.photos && place.photos.length > 0) {
-        const photoName = place.photos[0].name;
-        photoUrl =
-          `https://places.googleapis.com/v1/${photoName}/media` +
-          `?maxWidthPx=400&key=${apiKey}`;
-      }
+      // Fotoğraflar kullanıcı sayısıyla artan masraf yaptığı için
+      // ve API anahtarını sayfada açığa çıkardığı için kaldırıldı.
+      const photoUrl = null;
 
       return {
         id: place.id,
@@ -127,6 +122,13 @@ export default async function handler(req, res) {
       };
 
     });
+
+    // 7 gün önbellek: esnaf listesi çok az değişir. Aynı ilçe ve
+    // kategoriyi açanlar için Google'a yeniden sorulmaz.
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=604800, stale-while-revalidate=1209600"
+    );
 
     return res.status(200).json({
       success: true,
