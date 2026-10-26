@@ -29,6 +29,7 @@ const CACHE_TIME = 30 * 60 * 1000;
 // ------------------------------------------------------------
 
 const MANUEL_SAATLER = {
+   '2026-10-27': "18:00",  // Kocaelispor - Mazidagi Fosfatspor 
     "2026-10-11": "19:00",  // Beşiktaş - Kocaelispor
     "2026-10-18": "16:00",  // Kocaelispor - Göztepe
     "2026-10-23": "20:00",  // Alanyaspor - Kocaelispor
