@@ -55,7 +55,12 @@ function timeAgo(pubDate) {
 // GOOGLE NEWS RSS
 // ==========================================
 
-const RSS_URL = "https://news.google.com/rss/search?q=Kocaelispor&hl=tr&gl=TR&ceid=TR%3Atr";
+const RSS_URL = "https://news.google.com/rss/search?q=Kocaeli&hl=tr&gl=TR&ceid=TR%3Atr";
+
+// Ek kaynaklar: yerel haber sitelerini doğrudan ara (genel "Kocaeli" aramasında çıkmayabiliyorlar)
+const EXTRA_FEEDS = [
+  "https://news.google.com/rss/search?q=site:kocaeligundem.com&hl=tr&gl=TR&ceid=TR%3Atr"
+];
 
 const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36";
 
@@ -64,7 +69,7 @@ const UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/120 Mobile
 let cachedResult = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 dakika
-const IMAGE_RESOLVE_LIMIT = 8; // sadece ilk 8 haber için görsel çözülür
+const IMAGE_RESOLVE_LIMIT = 10; // ana sayfada görünen ilk 10 haber için görsel çözülür
 
 // ==========================================
 // META GÖRSELİ BUL
@@ -109,7 +114,7 @@ function findMetaImage(html) {
 async function getSignatureParams(googleNewsUrl) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch(googleNewsUrl, {
       redirect: "follow",
@@ -152,7 +157,7 @@ async function decodeGoogleNewsUrls(paramsList) {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
 
     const response = await fetch("https://news.google.com/_/DotsSplashUi/data/batchexecute", {
       method: "POST",
@@ -209,7 +214,7 @@ function pageMatchesTitle(html, title) {
     html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i) ||
     html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i) ||
     html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  if (!m) return true;
+  if (!m) return true; // başlık bulunamazsa engelleme
   const pageWords = new Set(titleWords(m[1]));
   const itemWords = titleWords(title);
   if (!itemWords.length || !pageWords.size) return true;
@@ -222,7 +227,7 @@ async function getImageFromUrl(url, title) {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch(url, {
       redirect: "follow",
@@ -243,48 +248,16 @@ async function getImageFromUrl(url, title) {
 }
 
 // ==========================================
-// SPAM / KAÇAK YAYIN FİLTRESİ
-// ==========================================
-
-// Engellenen kaynaklar
-const BLOCKED_SOURCES = ["haberler.com", "haberler", "port of rotterdam"];
-
-// Kaçak yayın spam'ine özgü ifadeler (başlıkta geçerse haber atılır)
-const BLOCKED_WORDS = [
-  "justin",
-  "şifresiz",
-  "canlı yayın ücretsiz",
-  "canlı yayın tv",
-  "canlı yayın linki",
-  "canlı spor!!",
-  "canlı izle:",
-  "maçı izle !"
-];
-
-function isBlockedItem(item) {
-  const s = String(item.source || "").toLocaleLowerCase("tr-TR").trim();
-  const t = String(item.title || "").toLocaleLowerCase("tr-TR");
-
-  // Kaynak engelli mi?
-  if (BLOCKED_SOURCES.some(b => s === b || t.endsWith("- " + b))) return true;
-  if (s.includes("haberler.com") || s.includes("port of rotterdam")) return true;
-
-  // Başlıkta spam ifadesi var mı?
-  if (BLOCKED_WORDS.some(w => t.includes(w))) return true;
-
-  // Başlıkta @ işareti geçen haberler spam sayılır
-  if (t.includes("@")) return true;
-
-  return false;
-}
-
-// ==========================================
 // HABERLERİ AL
 // ==========================================
 
-async function getNews() {
+// ==========================================
+// GOOGLE NEWS
+// ==========================================
+
+async function getGoogleNews(feedUrl = RSS_URL) {
   try {
-    const response = await fetch(RSS_URL, {
+    const response = await fetch(feedUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 KocaeliCepte/1.0",
         "Accept": "application/rss+xml, application/xml, text/xml"
@@ -328,63 +301,109 @@ async function getNews() {
       });
     }
 
-    // ======================================
-    // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
-    // ======================================
-
-    for (let i = items.length - 1; i >= 0; i--) if (isBlockedItem(items[i])) items.splice(i, 1);
-
-    const itemsForImages = items.slice(0, IMAGE_RESOLVE_LIMIT);
-
-    const paramsList = [];
-    for (let i = 0; i < itemsForImages.length; i += 5) {
-      const batch = itemsForImages.slice(i, i + 5);
-      const results = await Promise.all(batch.map(item => getSignatureParams(item.link)));
-      results.forEach((params, idx) => { paramsList[i + idx] = params; });
-    }
-
-    const validIndexes = [];
-    const validParams = [];
-    paramsList.forEach((params, idx) => {
-      if (params) {
-        validIndexes.push(idx);
-        validParams.push(params);
-      }
-    });
-
-    // Her haber için adresi AYRI ayrı çöz (toplu çözümde sıra kayarsa görseller yanlış habere gider)
-    if (validParams.length > 0) {
-      const decodedUrls = await Promise.all(
-        validParams.map(p => decodeGoogleNewsUrls([p]).then(r => (r && r[0]) || null).catch(() => null))
-      );
-      decodedUrls.forEach((realUrl, i) => {
-        const itemIndex = validIndexes[i];
-        if (itemIndex !== undefined && realUrl) {
-          items[itemIndex].realUrl = realUrl;
-        }
-      });
-    }
-
-    // ======================================
-    // GERÇEK HABER SAYFALARINDAN GÖRSEL ÇEK
-    // ======================================
-
-    for (let i = 0; i < itemsForImages.length; i += 5) {
-      const batch = itemsForImages.slice(i, i + 5);
-      await Promise.all(
-        batch.map(async item => {
-          if (item.realUrl) {
-            item.image = await getImageFromUrl(item.realUrl, item.title);
-          }
-        })
-      );
-    }
-
     return items;
   } catch (error) {
     console.log("Google News alınamadı:", error.message);
     return [];
   }
+}
+
+async function resolveGoogleImages(itemsForImages) {
+  const paramsList = [];
+  for (let i = 0; i < itemsForImages.length; i += 5) {
+    const batch = itemsForImages.slice(i, i + 5);
+    const results = await Promise.all(batch.map(item => getSignatureParams(item.link)));
+    results.forEach((params, idx) => { paramsList[i + idx] = params; });
+  }
+
+  const validIndexes = [];
+  const validParams = [];
+  paramsList.forEach((params, idx) => {
+    if (params) {
+      validIndexes.push(idx);
+      validParams.push(params);
+    }
+  });
+
+  // Her haber için adresi AYRI ayrı çöz: toplu çözümde bir satır atlanırsa
+  // sıralama kayar ve görseller yanlış habere gider.
+  if (validParams.length > 0) {
+    const decoded = await Promise.all(
+      validParams.map(p => decodeGoogleNewsUrls([p]).then(r => (r && r[0]) || null).catch(() => null))
+    );
+    decoded.forEach((realUrl, i) => {
+      const itemIndex = validIndexes[i];
+      if (itemIndex !== undefined && realUrl) {
+        itemsForImages[itemIndex].realUrl = realUrl;
+      }
+    });
+  }
+
+  for (let i = 0; i < itemsForImages.length; i += 5) {
+    const batch = itemsForImages.slice(i, i + 5);
+    await Promise.all(
+      batch.map(async item => {
+        if (item.realUrl) {
+          item.image = await getImageFromUrl(item.realUrl, item.title);
+        }
+      })
+    );
+  }
+}
+
+const BLOCKED_SOURCES = ["haberler.com", "haberler"];
+function isBlockedItem(item) {
+  const s = String(item.source || "").toLocaleLowerCase("tr-TR").trim();
+  const t = String(item.title || "").toLocaleLowerCase("tr-TR");
+  return BLOCKED_SOURCES.some(b => s === b || s.includes("haberler.com") || t.endsWith("- " + b));
+}
+
+async function getNews() {
+
+  const feedResults = await Promise.all([
+    getGoogleNews(RSS_URL),
+    ...EXTRA_FEEDS.map(u => getGoogleNews(u))
+  ]);
+  const rawItems = feedResults.flat();
+
+  // ======================================
+  // ÖNCE TEKİLLEŞTİR VE TARİHE GÖRE SIRALA
+  // (görsel çözme adımı, gerçekten en üstte
+  // görünecek haberleri hedeflesin diye bu
+  // sıralama görsel aramadan ÖNCE yapılıyor)
+  // ======================================
+
+  const seen = new Set();
+  const googleItems = rawItems.filter(item => {
+    if (isBlockedItem(item)) return false;
+    const key = item.title.toLowerCase().replace(/[^a-z0-9çğıöşü\s]/gi, "").replace(/\s+/g, " ").trim();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  googleItems.sort((a, b) => {
+    const dateA = new Date(a.pubDate || 0).getTime();
+    const dateB = new Date(b.pubDate || 0).getTime();
+    return dateB - dateA;
+  });
+
+  // ======================================
+  // GOOGLE NEWS LİNKLERİNİ GERÇEK ADRESE ÇÖZ
+  // Bu işlem tek başına yavaş kaynaklarda çok uzayabildiği
+  // için sabit bir üst süre sınırı içinde çalıştırılır;
+  // süre dolarsa görselsiz de olsa haberler döner, fonksiyon
+  // hiçbir zaman zaman aşımıyla çökmez.
+  // ======================================
+
+  const itemsForImages = googleItems.slice(0, IMAGE_RESOLVE_LIMIT);
+
+  await Promise.race([
+    resolveGoogleImages(itemsForImages),
+    new Promise(resolve => setTimeout(resolve, 8000))
+  ]);
+
+  return googleItems;
 }
 
 // ==========================================
@@ -402,21 +421,9 @@ export default async function handler(req, res) {
   try {
     const items = await getNews();
 
-    const seen = new Set();
-    const unique = items.filter(item => {
-      const key = item.title.toLowerCase().replace(/[^a-z0-9çğıöşü\s]/gi, "").replace(/\s+/g, " ").trim();
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-
-    unique.sort((a, b) => {
-      const dateA = new Date(a.pubDate || 0).getTime();
-      const dateB = new Date(b.pubDate || 0).getTime();
-      return dateB - dateA;
-    });
-
-    const balanced = unique.slice(0, 20);
+    // items zaten tekilleştirilmiş ve tarihe göre sıralanmış
+    // halde gelir (getNews içinde, görsel çözmeden önce yapıldı)
+    const balanced = items.slice(0, 20);
 
     const sourceCount = {};
     balanced.forEach(item => {
