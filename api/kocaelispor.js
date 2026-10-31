@@ -243,15 +243,44 @@ async function getImageFromUrl(url, title) {
 }
 
 // ==========================================
-// HABERLERİ AL
+// SPAM / KAÇAK YAYIN FİLTRESİ
 // ==========================================
 
-const BLOCKED_SOURCES = ["haberler.com", "haberler"];
+// Engellenen kaynaklar
+const BLOCKED_SOURCES = ["haberler.com", "haberler", "port of rotterdam"];
+
+// Kaçak yayın spam'ine özgü ifadeler (başlıkta geçerse haber atılır)
+const BLOCKED_WORDS = [
+  "justin",
+  "şifresiz",
+  "canlı-yayın-tv",
+  "canlı yayın tv",
+  "canlı yayın ücretsiz",
+  "canlı yayın linki",
+  "[trt1]",
+  "canlı spor!!",
+  "port of rotterdam"
+];
+
 function isBlockedItem(item) {
   const s = String(item.source || "").toLocaleLowerCase("tr-TR").trim();
   const t = String(item.title || "").toLocaleLowerCase("tr-TR");
-  return BLOCKED_SOURCES.some(b => s === b || s.includes("haberler.com") || t.endsWith("- " + b));
+
+  // Kaynak engelli mi?
+  if (BLOCKED_SOURCES.some(b => s === b || s.includes(b) || t.endsWith("- " + b))) return true;
+
+  // Başlıkta spam ifadesi var mı?
+  if (BLOCKED_WORDS.some(w => t.includes(w))) return true;
+
+  // Başlıkta @ veya $# geçen haberler spam sayılır
+  if (t.includes("@") || t.includes("$#")) return true;
+
+  return false;
 }
+
+// ==========================================
+// HABERLERİ AL
+// ==========================================
 
 async function getNews() {
   try {
