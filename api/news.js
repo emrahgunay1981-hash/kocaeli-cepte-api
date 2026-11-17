@@ -443,8 +443,12 @@ export default async function handler(req, res) {
       items: balanced
     };
 
-    cachedResult = payload;
-    cachedAt = Date.now();
+    // Boş sonucu önbelleğe alma: Google News bir kez cevap vermezse
+    // 15 dakika boyunca boş haber göstermesin.
+    if (balanced.length > 0) {
+      cachedResult = payload;
+      cachedAt = Date.now();
+    }
 
     res.status(200).json(payload);
   } catch (error) {
@@ -457,4 +461,4 @@ export default async function handler(req, res) {
       items: []
     });
   }
-}
+  }
